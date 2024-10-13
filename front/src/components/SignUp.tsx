@@ -1,80 +1,75 @@
-"use client"
-import { ISignUpComponentProps, ISignUp, ISignUpErrors } from "@/interface/types";
-import React, { useEffect, useState, useRef } from "react";
-import { useRouter } from "next/navigation";
-import { validateRegister } from "@/helpers/validateRegister";
-import { registerProps } from "@/helpers/signUpHelpers";
-import Swal from "sweetalert2";
+import React, { useState } from "react";
+import { ISignUpComponentProps, IUserType } from "@/interface/types";
+import styles from "../styles/LogSign.module.css";
+import { FaGoogle, FaApple, FaEnvelope } from "react-icons/fa";
+import { signIn } from "next-auth/react";
 
-const SignUp: React.FC<ISignUpComponentProps> = ({onClose}) => {
-   
-    const initialState: ISignUp = {
-        name: "",
-        lastName: "",
-        password: "",
-        email: "",
-        country: "",
-        phone: 0,
-    };
+const SignUp: React.FC<ISignUpComponentProps> = ({ onCloseSignUp, onSwitchToLogin }) => {
+    const [userData, setUserData] = useState<IUserType | null>(null);
 
-    const [ userData, setUserData ] = useState<ISignUp>(initialState);
-    const [ errors, setErrors ] = useState<ISignUpErrors>(initialState);
-    const formRef = useRef<HTMLDivElement>(null);
-    const router = useRouter();
-
-    const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = event.target;
+    const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { name } = event.target;
         setUserData({
             ...userData,
-            [name]: value
+            role: name as "supplier" | "buyer",
         });
     };
 
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        onClose();
-        await registerProps(userData);
-        Swal.fire({
-            icon: "success",
-            title: "Logged succesfully",
-            width: 400,
-            padding: "3rem",
-            customClass: {
-                popup: "custom-swual-popup"
-            }
-        })
-        router.push("/home")
+    const handleModalClose = () => {
+        onCloseSignUp();
     };
 
-    useEffect(() => {
-        const error = validateRegister(userData);
-        setErrors(error);
-    }, [userData])     
+    return (
+        <section className={styles.LogSign}>
+            <button onClick={handleModalClose} className='border-[2px] border-solid border-black pr-[0.5rem] pl-[0.5rem]'> x </button>
+            <form action="" className="flex flex-col">
+                <h1 className={styles.Title}>Join Agro Dexports</h1>
+                <div className="w-[50%] m-auto mb-[2rem]">
+                    <input
+                        name="supplier"
+                        checked={userData?.role === "supplier"}
+                        onChange={handleCheckboxChange}
+                        className={styles.Supplier}
+                        type="checkbox"
+                    />{" "}
+                    I'm a supplier
+                    <input
+                        name="buyer"
+                        checked={userData?.role === "buyer"}
+                        onChange={handleCheckboxChange}
+                        className="ml-[8rem]"
+                        type="checkbox"
+                    />{" "}
+                    I'm a buyer
+                </div>
 
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (formRef.current && !formRef.current.contains(event.target as Node)) {
-                onClose();
-            }
-        };
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, []);
+                <button className={styles.ButtonGoogle} onClick={() => signIn("google")}>
+                    <FaGoogle />
+                    <p className="ml-[1rem]">Sign up with Google</p>
+                </button>
 
-    return(
-        <section ref={formRef} className="w-[60%] m-auto p-[2rem] bg-yellow-400">
-            <form action="" onSubmit={handleSubmit} className="flex flex-col" >
-                <input className="text-white m-[1rem] " value={userData.name} name="name" onChange={handleOnChange} type="text" placeholder="Name" />
-                <input className="text-white m-[1rem] " value={userData.lastName}  name="lastName" onChange={handleOnChange} type="text" placeholder="LastName" />
-                <input className="text-white m-[1rem] " value={userData.password}  name="" onChange={handleOnChange} type="password" placeholder="Password" />
-                <input className="text-white m-[1rem] " value={userData.email}  name="" onChange={handleOnChange} type="email" placeholder="Email" />
-                <input className="text-white m-[1rem] " value={userData.country}  name="" onChange={handleOnChange} type="text" placeholder="Country" />
-                <input className="text-white m-[1rem] " value={userData.phone}  name="" onChange={handleOnChange} type="number" placeholder="Phone"/>
-                <button className="text-white font-bold bg-black"> submit </button>
+                <button className={styles.ButtonApple} onClick={() => signIn("apple")}>
+                    <FaApple />
+                    <p className="ml-[1rem]">Sign up with Apple</p>
+                </button>
+
+                <button className={styles.ButtonEmail} onClick={() => signIn("email")}>
+                    <FaEnvelope />
+                    <p className="ml-[1rem]">Sign up with Email</p>
+                </button>
+
+                <div className="flex flex-row justify-center items-center mt-[2rem]">
+                    <p>Already have an account?</p>
+                    <button
+                        onClick={onSwitchToLogin}
+                        className="ml-[1rem] text-[0.9rem] font-bold text-[#5c8b1b] mt-1"
+                    >
+                        Log In
+                    </button>
+                </div>
             </form>
         </section>
-    )
+    );
 };
+
 export default SignUp;
