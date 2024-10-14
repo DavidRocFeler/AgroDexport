@@ -1,0 +1,61 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Definición del modelo User
+model User {
+  user_id       String   @id @default(uuid()) // Clave primaria con UUID
+  user_name     String   @db.VarChar(50)      // Campo varchar(50) en la base de datos
+  user_lastname String   @db.VarChar(50)      // Campo varchar(50) en la base de datos
+  email         String   @unique @db.VarChar(255) // Campo único y varchar(255)
+  password      String   @db.VarChar(255)    // Campo varchar(255) en la base de datos
+  nDni          Int      @unique @db.Integer          // Campo entero
+  birthday      DateTime                       // Campo de tipo fecha
+  phone         String?  // Campo opcional
+  country       String?  // Campo opcional
+  role_id       String   // Campo para la relación de muchos a uno con Role
+  role          Role     @relation(fields: [role_id], references: [role_id]) // Relación con Role
+
+  @@map("users") // Mapea este modelo a la tabla "users" en la base de datos
+}
+
+// Definición del modelo Role
+model Role {
+  role_id          String           @id @default(uuid()) // Clave primaria con UUID
+  role_name        String           @db.VarChar(50)      // Campo varchar(50) en la base de datos
+  role_description String           @db.VarChar(255)     // Campo varchar(255) en la base de datos
+  users            User[]                               // Relación de uno a muchos con User
+  permissions      RolePermission[]                     // Relación de muchos a muchos con Permission a través de RolePermission
+
+  @@map("roles") // Mapea este modelo a la tabla "roles" en la base de datos
+}
+
+// Definición del modelo Permission
+model Permission {
+  permission_id          String           @id @default(uuid()) // Clave primaria con UUID
+  permission_name        String           @db.VarChar(50)      // Campo varchar (50) en la base de datos
+  permission_description String           @db.VarChar(255)     // Campo varchar (255) en la base de datos
+  roles                  RolePermission[]                      // Relación de muchos a muchos con Role a través de RolePermission
+
+  @@map("permissions") // Mapea este modelo a la tabla "permissions" en la base de datos
+}
+
+// Definición del modelo RolePermission para la relación muchos a muchos
+model RolePermission {
+  role_id       String
+  permission_id String
+
+  role          Role       @relation(fields: [role_id], references: [role_id]) // Relación con Role
+  permission    Permission  @relation(fields: [permission_id], references: [permission_id]) // Relación con Permission
+
+  @@id([role_id, permission_id]) // Clave primaria compuesta
+  @@map("roles_permissions")       // Mapea este modelo a la tabla "role_permissions" en la base de datos
+}
