@@ -5,12 +5,11 @@ import ProductCard from '@/components/ProductCard';
 
 const MarketView: React.FC = () => {
   return (
-    <>
+    <div style={{background: "white"}}>
       <Image src="/ImgMarketView.png" alt="Market View" layout="responsive" width={500} height={300} />
-      <div>barra de busqueda</div>
       <ProductSearch />
       <ProductCard />
-    </>
+    </div>
   )
 }
 
