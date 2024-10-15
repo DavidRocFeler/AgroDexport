@@ -1,6 +1,6 @@
-import { Controller, Param, ParseFilePipe, ParseUUIDPipe, Post, UploadedFile, UseInterceptors, BadRequestException, MaxFileSizeValidator, FileTypeValidator } from "@nestjs/common";
+import { Controller, Param, ParseUUIDPipe, Post, UploadedFiles, UseInterceptors, MaxFileSizeValidator, FileTypeValidator } from "@nestjs/common";
 import { CloudinaryService } from "./cloudinary.service";
-import { FileInterceptor } from "@nestjs/platform-express";
+import { FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
 import { ApiTags, ApiParam, ApiConsumes, ApiBody } from "@nestjs/swagger";
 import { Express } from 'express';
 
@@ -30,48 +30,41 @@ export class CloudinaryController {
   async uploadImage(
     @Param('type') type: string,
     @Param('id', new ParseUUIDPipe()) id: string,
-    @UploadedFile(
-      new ParseFilePipe({
-        validators: [
-          new MaxFileSizeValidator({ maxSize: 200000 }),
-          new FileTypeValidator({ fileType: /(jpg|jpeg|png|webp)$/ }),
-        ],
-      })
-    ) file: Express.Multer.File,
+    @UploadedFiles() file: Express.Multer.File,
   ) {
     return this.cloudinaryService.uploadFile(id, file, type);
   }
 
-  @Post('/uploadDocument/:type/:id')
-  @UseInterceptors(FileInterceptor('document'))
-  @ApiParam({ name: 'type', description: 'Tipo de documento (farmerCertification)', type: 'string' })
-  @ApiParam({ name: 'id', description: 'ID del recurso al cual asociar el documento', type: 'string' })
+  @Post('/uploadDocuments/:id')
+  @UseInterceptors(FilesInterceptor('documents', 5)) // Para recibir múltiples archivos
+  @ApiParam({ name: 'id', description: 'ID del recurso al cual asociar los documentos', type: 'string' })
   @ApiConsumes('multipart/form-data')
   @ApiBody({
-    description: 'Archivo de documento (PDF, DOCX, o imágenes JPG, PNG) hasta 2MB',
+    description: 'Archivos de documentos (PDF, DOCX, o imágenes JPG, PNG) hasta 2MB cada uno',
     required: true,
     schema: {
       type: 'object',
       properties: {
-        document: { 
-            type: 'string', 
-            format: 'binary' 
-        },
+        phytosanitary_certificate: { type: 'string', format: 'binary' },
+        agricultural_producer_cert: { type: 'string', format: 'binary' },
+        organic_certification: { type: 'string', format: 'binary'},
+        quality_certificate: { type: 'string', format: 'binary' },
+        certificate_of_origin: { type: 'string', format: 'binary' },
       },
     },
   })
-  async uploadDocument(
-    @Param('type') type: string,
+  async uploadDocuments(
     @Param('id', new ParseUUIDPipe()) id: string,
-    @UploadedFile(
-      new ParseFilePipe({
-        validators: [
-          new MaxFileSizeValidator({ maxSize: 2000000 }), // 2MB para documentos
-          new FileTypeValidator({ fileType: /(pdf|docx|jpg|jpeg|png)$/ }),
-        ],
-      })
-    ) file: Express.Multer.File,
+    @UploadedFiles() files: Express.Multer.File[],
   ) {
-    return this.cloudinaryService.uploadFile(id, file, type);
+    const fileMap = {
+      phytosanitary_certificate: files.find(file => file.fieldname === 'phytosanitary_certificate'),
+      agricultural_producer_cert: files.find(file => file.fieldname === 'agricultural_producer_cert'),
+      organic_certification: files.find(file => file.fieldname === 'organic_certification'),
+      quality_certificate: files.find(file => file.fieldname === 'quality_certificate'),
+      certificate_of_origin: files.find(file => file.fieldname === 'certificate_of_origin'),
+    };
+
+    return this.cloudinaryService.uploadMultipleFiles(id, fileMap);
   }
 }

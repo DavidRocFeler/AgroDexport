@@ -21,7 +21,7 @@ export class CloudinaryService {
     const result = await new Promise<UploadApiResponse>((resolve, reject) => {
       const upload = Cloudinary.uploader.upload_stream(
         {
-          resource_type: "auto", // Permite el manejo automático de imágenes y documentos
+          resource_type: "auto", // Manejo automático de imágenes y documentos
           folder,
           public_id: id,
         },
@@ -39,6 +39,19 @@ export class CloudinaryService {
     return { secure_url };
   }
 
+  async uploadMultipleFiles(id: string, files: Record<string, Express.Multer.File | undefined>): Promise<{ [key: string]: string }> {
+    const uploadPromises = Object.entries(files).map(async ([docType, file]) => {
+      if (file) {
+        const result = await this.uploadFile(id, file, docType);
+        return { [docType]: result.secure_url };
+      }
+      return null;
+    });
+
+    const uploadedUrls = await Promise.all(uploadPromises);
+    return Object.assign({}, ...uploadedUrls.filter(url => url !== null));
+  }
+
   private getFolderByType(type: string): string {
     switch (type) {
       case 'user':
@@ -47,7 +60,11 @@ export class CloudinaryService {
         return 'companyLogos';
       case 'product':
         return 'products';
-      case 'farmerCertification':
+      case 'phytosanitary_certificate':
+      case 'agricultural_producer_cert':
+      case 'organic_certification':
+      case 'quality_certificate':
+      case 'certificate_of_origin':
         return 'farmerCertifications';
       default:
         throw new BadRequestException('Invalid type for file upload');
@@ -55,21 +72,35 @@ export class CloudinaryService {
   }
 
   private async updateFileUrl(id: string, url: string, type: string): Promise<void> {
+    let updateData: Record<string, string> = {}; // Objeto para pasar la actualización
+  
     switch (type) {
       case 'user':
-        // await this.usersRepository.updateUserFile(id, url);
+        updateData = { profile_picture: url };
+        // await this.usersRepository.updateUserFile(id, updateData);
         break;
+  
       case 'companyLogo':
-        // await this.companiesRepository.updateCompanyLogoFile(id, url);
+        updateData = { company_logo: url };
+        // await this.companiesRepository.updateCompanyLogoFile(id, updateData);
         break;
+  
       case 'product':
-        // await this.productsRepository.updateProductFile(id, url);
+        updateData = { company_product_img: url };
+        // await this.companyProductsRepository.updateProductFile(id, updateData);
         break;
-      case 'farmerCertification':
-        // await this.farmerCertificationsRepository.updateCertificationFile(id, url);
+  
+      case 'phytosanitary_certificate':
+      case 'agricultural_producer_cert':
+      case 'organic_certification':
+      case 'quality_certificate':
+      case 'certificate_of_origin':
+        updateData = { [type]: url }; // Asigna `type` dinámicamente como clave
+        // await this.farmerCertificationsRepository.updateCertificationFile(id, updateData);
         break;
+  
       default:
         throw new BadRequestException('Invalid type for file update');
     }
-  }
+  }  
 }

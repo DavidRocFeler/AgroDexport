@@ -5,7 +5,7 @@ export declare class CloudinaryController {
     uploadImage(type: string, id: string, file: Express.Multer.File): Promise<{
         secure_url: string;
     }>;
-    uploadDocument(type: string, id: string, file: Express.Multer.File): Promise<{
-        secure_url: string;
+    uploadDocuments(id: string, files: Express.Multer.File[]): Promise<{
+        [key: string]: string;
     }>;
 }
