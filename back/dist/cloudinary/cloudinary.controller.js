@@ -24,8 +24,15 @@ let CloudinaryController = class CloudinaryController {
     async uploadImage(type, id, file) {
         return this.cloudinaryService.uploadFile(id, file, type);
     }
-    async uploadDocument(type, id, file) {
-        return this.cloudinaryService.uploadFile(id, file, type);
+    async uploadDocuments(id, files) {
+        const fileMap = {
+            phytosanitary_certificate: files.find(file => file.fieldname === 'phytosanitary_certificate'),
+            agricultural_producer_cert: files.find(file => file.fieldname === 'agricultural_producer_cert'),
+            organic_certification: files.find(file => file.fieldname === 'organic_certification'),
+            quality_certificate: files.find(file => file.fieldname === 'quality_certificate'),
+            certificate_of_origin: files.find(file => file.fieldname === 'certificate_of_origin'),
+        };
+        return this.cloudinaryService.uploadMultipleFiles(id, fileMap);
     }
 };
 exports.CloudinaryController = CloudinaryController;
@@ -50,47 +57,36 @@ __decorate([
     }),
     __param(0, (0, common_1.Param)('type')),
     __param(1, (0, common_1.Param)('id', new common_1.ParseUUIDPipe())),
-    __param(2, (0, common_1.UploadedFile)(new common_1.ParseFilePipe({
-        validators: [
-            new common_1.MaxFileSizeValidator({ maxSize: 200000 }),
-            new common_1.FileTypeValidator({ fileType: /(jpg|jpeg|png|webp)$/ }),
-        ],
-    }))),
+    __param(2, (0, common_1.UploadedFiles)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, String, Object]),
     __metadata("design:returntype", Promise)
 ], CloudinaryController.prototype, "uploadImage", null);
 __decorate([
-    (0, common_1.Post)('/uploadDocument/:type/:id'),
-    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('document')),
-    (0, swagger_1.ApiParam)({ name: 'type', description: 'Tipo de documento (farmerCertification)', type: 'string' }),
-    (0, swagger_1.ApiParam)({ name: 'id', description: 'ID del recurso al cual asociar el documento', type: 'string' }),
+    (0, common_1.Post)('/uploadDocuments/:id'),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FilesInterceptor)('documents', 5)),
+    (0, swagger_1.ApiParam)({ name: 'id', description: 'ID del recurso al cual asociar los documentos', type: 'string' }),
     (0, swagger_1.ApiConsumes)('multipart/form-data'),
     (0, swagger_1.ApiBody)({
-        description: 'Archivo de documento (PDF, DOCX, o imágenes JPG, PNG) hasta 2MB',
+        description: 'Archivos de documentos (PDF, DOCX, o imágenes JPG, PNG) hasta 2MB cada uno',
         required: true,
         schema: {
             type: 'object',
             properties: {
-                document: {
-                    type: 'string',
-                    format: 'binary'
-                },
+                phytosanitary_certificate: { type: 'string', format: 'binary' },
+                agricultural_producer_cert: { type: 'string', format: 'binary' },
+                organic_certification: { type: 'string', format: 'binary' },
+                quality_certificate: { type: 'string', format: 'binary' },
+                certificate_of_origin: { type: 'string', format: 'binary' },
             },
         },
     }),
-    __param(0, (0, common_1.Param)('type')),
-    __param(1, (0, common_1.Param)('id', new common_1.ParseUUIDPipe())),
-    __param(2, (0, common_1.UploadedFile)(new common_1.ParseFilePipe({
-        validators: [
-            new common_1.MaxFileSizeValidator({ maxSize: 2000000 }),
-            new common_1.FileTypeValidator({ fileType: /(pdf|docx|jpg|jpeg|png)$/ }),
-        ],
-    }))),
+    __param(0, (0, common_1.Param)('id', new common_1.ParseUUIDPipe())),
+    __param(1, (0, common_1.UploadedFiles)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String, Object]),
+    __metadata("design:paramtypes", [String, Array]),
     __metadata("design:returntype", Promise)
-], CloudinaryController.prototype, "uploadDocument", null);
+], CloudinaryController.prototype, "uploadDocuments", null);
 exports.CloudinaryController = CloudinaryController = __decorate([
     (0, swagger_1.ApiTags)("Cloudinary"),
     (0, common_1.Controller)(),

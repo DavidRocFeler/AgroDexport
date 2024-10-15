@@ -34,6 +34,17 @@ let CloudinaryService = class CloudinaryService {
         await this.updateFileUrl(id, secure_url, type);
         return { secure_url };
     }
+    async uploadMultipleFiles(id, files) {
+        const uploadPromises = Object.entries(files).map(async ([docType, file]) => {
+            if (file) {
+                const result = await this.uploadFile(id, file, docType);
+                return { [docType]: result.secure_url };
+            }
+            return null;
+        });
+        const uploadedUrls = await Promise.all(uploadPromises);
+        return Object.assign({}, ...uploadedUrls.filter(url => url !== null));
+    }
     getFolderByType(type) {
         switch (type) {
             case 'user':
@@ -42,21 +53,34 @@ let CloudinaryService = class CloudinaryService {
                 return 'companyLogos';
             case 'product':
                 return 'products';
-            case 'farmerCertification':
+            case 'phytosanitary_certificate':
+            case 'agricultural_producer_cert':
+            case 'organic_certification':
+            case 'quality_certificate':
+            case 'certificate_of_origin':
                 return 'farmerCertifications';
             default:
                 throw new common_1.BadRequestException('Invalid type for file upload');
         }
     }
     async updateFileUrl(id, url, type) {
+        let updateData = {};
         switch (type) {
             case 'user':
+                updateData = { profile_picture: url };
                 break;
             case 'companyLogo':
+                updateData = { company_logo: url };
                 break;
             case 'product':
+                updateData = { company_product_img: url };
                 break;
-            case 'farmerCertification':
+            case 'phytosanitary_certificate':
+            case 'agricultural_producer_cert':
+            case 'organic_certification':
+            case 'quality_certificate':
+            case 'certificate_of_origin':
+                updateData = { [type]: url };
                 break;
             default:
                 throw new common_1.BadRequestException('Invalid type for file update');
