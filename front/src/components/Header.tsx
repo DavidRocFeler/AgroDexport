@@ -21,7 +21,7 @@ const Header = () => {
             <header className="flex flex-row p-[1.5rem] bg-[#d8fba7] ">
                 <img src="/LogoTypographic.png" alt="Logo" className={styles.LogoTypo} />
                 <nav className="ml-auto mr-[1rem] " >
-                    <Link href="http://localhost:3000/market" className="mr-[1rem] ml-[1rem] text-[0.9rem] "> User story </Link>
+                    <Link href="/story" className="mr-[1rem] ml-[1rem] text-[0.9rem] "> User story </Link>
                     <Link href="/membership" className="mr-[1rem] ml-[1rem] text-[0.9rem] "> Membership </Link>
                     <Link href="/p2p" className="mr-[1rem] ml-[1rem] text-[0.9rem] "> P2P </Link>
                     <Link href="/login" className="mr-[1rem] ml-[1rem] text-[0.9rem] "> Sign Up </Link>
