@@ -230,7 +230,7 @@ model ShippingAddress {
 // Definición del modelo Category
 model Category {
   category_id           String        @id @default(uuid()) 
-  name_category         String
+  name_category         String        @unique
 
   // Relación
   products              CompanyProduct[]   @relation("CategoryProducts") 
