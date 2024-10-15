@@ -23,6 +23,7 @@ export class CreateUserDto {
     @Length(1, 255)
     email: string;
 
+
     @IsNotEmpty()
     @IsString()
     @Length(8, 15)

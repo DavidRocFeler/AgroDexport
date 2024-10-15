@@ -21,25 +21,25 @@ let AuthService = class AuthService {
         const user = {
             user_name: userData.user_name,
             user_lastname: userData.user_lastname,
-            email: userData.email,
-            password: userData.password,
             nDni: userData.nDni,
             birthday: userData.birthday,
             phone: userData.phone,
             country: userData.country,
             role_id: userData.role_id,
         };
-        const newUser = await this.usersRepository.createUser(user);
+        const newUser = await this.usersRepository.createUser(user, userData.email, userData.password);
         return newUser;
     }
     async signInService(loginUserDto) {
         const { email, password } = loginUserDto;
-        const user = await this.usersRepository.findEmail(email);
-        (0, validation_helper_1.validateExists)(user, 'notExists', 'Incorrect credentials');
-        if (user.password !== password) {
+        const credential = await this.usersRepository.findCredentialByEmail(email);
+        (0, validation_helper_1.validateExists)(credential, 'notExists', 'Incorrect credentials');
+        if (credential.password !== password) {
             throw new common_1.UnauthorizedException('Incorrect credentials');
         }
-        return { message: 'Login successful' };
+        const user = await this.usersRepository.findUserByCredentialId(credential.credential_id);
+        (0, validation_helper_1.validateExists)(user, 'notExists', 'User not found');
+        return { message: 'Login successful', user };
     }
 };
 exports.AuthService = AuthService;

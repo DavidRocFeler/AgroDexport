@@ -17,25 +17,45 @@ let UsersRepository = class UsersRepository {
     constructor(prisma) {
         this.prisma = prisma;
     }
-    async createUser(user) {
-        const checkEmail = await this.findEmail(user.email);
+    async createUser(user, email, password) {
+        const checkEmail = await this.findCredentialByEmail(email);
         (0, validation_helper_1.validateExists)(checkEmail, 'exists', 'Email already exists');
-        const checkDni = await this.prisma.user.findUnique({
-            where: { nDni: user.nDni },
-        });
-        (0, validation_helper_1.validateExists)(checkDni, 'exists', 'DNI already exists');
-        const newUser = await this.prisma.user.create({
-            data: user,
-        });
-        const { password, ...result } = newUser;
-        return result;
-    }
-    async findEmail(email) {
-        return this.prisma.user.findUnique({
-            where: {
+        if (user.nDni) {
+            const checkDni = await this.prisma.user.findUnique({
+                where: { nDni: user.nDni },
+            });
+            (0, validation_helper_1.validateExists)(checkDni, 'exists', 'DNI already exists');
+        }
+        const newCredential = await this.prisma.credential.create({
+            data: {
                 email: email,
+                password: password,
             },
         });
+        const newUser = await this.prisma.user.create({
+            data: {
+                ...user,
+                credential_id: newCredential.credential_id,
+            },
+        });
+        return newUser;
+    }
+    async findCredentialByEmail(email) {
+        return this.prisma.credential.findUnique({
+            where: { email },
+        });
+    }
+    async findUserByCredentialId(credential_id) {
+        return this.prisma.user.findUnique({
+            where: { credential_id },
+        });
+    }
+    async findUserByEmail(email) {
+        const credential = await this.prisma.credential.findUnique({
+            where: { email },
+            include: { user: true },
+        });
+        return credential?.user || null;
     }
 };
 exports.UsersRepository = UsersRepository;
