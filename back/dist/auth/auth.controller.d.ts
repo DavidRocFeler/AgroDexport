@@ -7,16 +7,30 @@ export declare class AuthController {
     signup(user: CreateUserDto): Promise<Omit<{
         user_name: string;
         user_lastname: string;
-        email: string;
-        password: string;
-        nDni: number;
-        birthday: Date;
+        nDni: number | null;
+        birthday: Date | null;
         phone: string | null;
         country: string | null;
         role_id: string;
         user_id: string;
-    }, "password">>;
+        profile_picture: string | null;
+        isOlder: boolean;
+        credential_id: string | null;
+    }, "credential_id">>;
     signin(loginUser: LoginUserDto): Promise<{
         message: string;
+        user: {
+            user_name: string;
+            user_lastname: string;
+            nDni: number | null;
+            birthday: Date | null;
+            phone: string | null;
+            country: string | null;
+            role_id: string;
+            user_id: string;
+            profile_picture: string | null;
+            isOlder: boolean;
+            credential_id: string | null;
+        };
     }>;
 }
