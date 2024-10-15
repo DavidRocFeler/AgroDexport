@@ -10,13 +10,14 @@ exports.CloudinaryModule = void 0;
 const common_1 = require("@nestjs/common");
 const cloudinary_controller_1 = require("./cloudinary.controller");
 const cloudinary_service_1 = require("./cloudinary.service");
+const cloudinary_1 = require("../config/cloudinary");
 let CloudinaryModule = class CloudinaryModule {
 };
 exports.CloudinaryModule = CloudinaryModule;
 exports.CloudinaryModule = CloudinaryModule = __decorate([
     (0, common_1.Module)({
         controllers: [cloudinary_controller_1.CloudinaryController],
-        providers: [cloudinary_service_1.CloudinaryService]
+        providers: [cloudinary_service_1.CloudinaryService, cloudinary_1.CloudinaryConfig]
     })
 ], CloudinaryModule);
 //# sourceMappingURL=cloudinary.module.js.map
