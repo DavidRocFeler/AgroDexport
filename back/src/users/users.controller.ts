@@ -8,9 +8,9 @@ import { ApiExcludeEndpoint } from '@nestjs/swagger';
 export class UsersController {
     constructor(private readonly usersService: UsersService) {}
 
-    @Post("/comission/sedeer")
-    @ApiExcludeEndpoint()
-    async preloadCategories(@Body() categoryData: UpdateCommissionDto){
-        return this.usersService.preloadCommisionService();
-    }
+    // @Post("/comission/sedeer")
+    // @ApiExcludeEndpoint()
+    // async preloadCategories(@Body() categoryData: UpdateCommissionDto){
+    //     return this.usersService.preloadCommisionService();
+    // }
 }
