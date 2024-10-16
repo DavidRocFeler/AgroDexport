@@ -1,0 +1,43 @@
+[
+    {
+      "name": "Fruits",
+      "description": "Fresh and organic fruits"
+    },
+    {
+      "name": "Vegetables",
+      "description": "Locally grown vegetables"
+    },
+    {
+      "name": "Dairy",
+      "description": "Milk, cheese, and other dairy products"
+    },
+    {
+      "name": "Meat",
+      "description": "Fresh meat and poultry"
+    },
+    {
+      "name": "Bakery",
+      "description": "Breads, pastries, and baked goods"
+    },
+    {
+      "name": "Beverages",
+      "description": "Juices, sodas, and drinks"
+    },
+    {
+      "name": "Snacks",
+      "description": "Chips, crackers, and snack foods"
+    },
+    {
+      "name": "Grains",
+      "description": "Rice, wheat, and other grains"
+    },
+    {
+      "name": "Seafood",
+      "description": "Fresh and frozen seafood"
+    },
+    {
+      "name": "Frozen Foods",
+      "description": "Frozen meals and desserts"
+    }
+  ]
+  
