@@ -18,10 +18,11 @@ import { EmailsModule } from './emails/emails.module';
 import { FarmerCertificationsModule } from './farmer-certifications/farmer-certifications.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { SupplyChainModule } from './supply-chain/supply-chain.module';
+import { PreloadService } from './preloadService';
 
 @Module({
   imports: [AuthModule, RolesModule, UsersModule, CompaniesModule, AddressesModule, CompanyProductsModule, CategoriesModule, DiscountsModule, OrdersModule, PaymentsModule, CloudinaryModule, NotificationsModule, TasksModule, EmailsModule, FarmerCertificationsModule, PrismaModule, SupplyChainModule],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, PreloadService],
 })
 export class AppModule {}

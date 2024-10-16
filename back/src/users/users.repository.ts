@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { User, Credential } from '@prisma/client';
 import { validateExists } from '../helpers/validation.helper';
+import { UpdateCommissionDto } from './updateComission.dto';
 
 @Injectable()
 export class UsersRepository {
@@ -54,4 +55,18 @@ export class UsersRepository {
     });
     return credential?.user || null;
   }
+
+  async findCommission() {
+    // Busca si existe alguna comisión en la base de datos
+    return this.prisma.commission.findFirst();
+  }
+
+//   async createCommission(commissionData: UpdateCommissionDto) {
+//     return this.prisma.commission.create({
+//       data: {
+//         commision_percentage: commissionData.commision_percentage,
+//         commision_date: new Date()
+//       }
+//     });
+// }
 }

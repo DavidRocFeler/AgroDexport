@@ -13,16 +13,20 @@ export class CategoriesService {
     }
 
     async preloadCategoriesService(): Promise<{ category: string; status: string }[]> {
-        const results: { category: string; status: string }[] = [];
+      const results: { category: string; status: string }[] = [];
     
-        for (const categoryData of categoriesData) {
-          const existingCategory = await this.categoriesRepository.findCategoryByName(categoryData.name);
-          validateExists(existingCategory, 'exists', `Category ${categoryData.name} already exists`);
-      
-          await this.categoriesRepository.createCategory(categoryData.name);
-          results.push({ category: categoryData.name, status: 'Created' });
+      for (const categoryData of categoriesData) {
+        const existingCategory = await this.categoriesRepository.findCategoryByName(categoryData.name);
+    
+        if (existingCategory) {
+          results.push({ category: categoryData.name, status: 'Already Exists' });
+          continue; 
         }
-    
-        return results;
+
+        await this.categoriesRepository.createCategory(categoryData.name);
+        results.push({ category: categoryData.name, status: 'Created' });
       }
+    
+      return results;
+    }
 }
