@@ -17,13 +17,15 @@ let CompanyService = class CompanyService {
         this.prisma = prisma;
     }
     async getAllCompaniesServices() {
-        return await this.prisma.company.findMany();
+        return await this.prisma.company.findMany({
+            where: { isActive: true },
+        });
     }
     async getCompanyByIdServices(companyId) {
         const company = await this.prisma.company.findUnique({
             where: { company_id: companyId },
         });
-        if (!company) {
+        if (!company || !company.isActive) {
             throw new common_1.NotFoundException('Company not found');
         }
         return company;
@@ -39,6 +41,7 @@ let CompanyService = class CompanyService {
             where: {
                 tax_identification_number: companyData.tax_identification_number,
                 country: companyData.country,
+                isActive: true,
             },
         });
         if (existingCompany) {
@@ -59,6 +62,7 @@ let CompanyService = class CompanyService {
                 account_paypal: companyData.account_paypal,
                 company_description: companyData.company_description,
                 company_logo: companyData.company_logo,
+                isActive: true,
             },
         });
         return newCompany;
@@ -75,6 +79,19 @@ let CompanyService = class CompanyService {
             data: companyData,
         });
         return updatedCompany;
+    }
+    async softDeleteCompanyServices(companyId) {
+        const company = await this.prisma.company.findUnique({
+            where: { company_id: companyId },
+        });
+        if (!company) {
+            throw new common_1.NotFoundException('Company not found');
+        }
+        const deletedCompany = await this.prisma.company.update({
+            where: { company_id: companyId },
+            data: { isActive: false },
+        });
+        return deletedCompany;
     }
 };
 exports.CompanyService = CompanyService;

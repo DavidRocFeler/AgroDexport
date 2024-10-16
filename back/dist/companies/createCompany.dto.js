@@ -96,4 +96,10 @@ __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], CreateCompanyDto.prototype, "company_logo", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'Indicates whether the company is active or inactive', default: true }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsBoolean)(),
+    __metadata("design:type", Boolean)
+], CreateCompanyDto.prototype, "isActive", void 0);
 //# sourceMappingURL=createCompany.dto.js.map
