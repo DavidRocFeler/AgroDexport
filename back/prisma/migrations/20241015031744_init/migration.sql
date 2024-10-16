@@ -1,23 +1,19 @@
-/*
-  Warnings:
+-- CreateTable
+CREATE TABLE "users" (
+    "user_id" TEXT NOT NULL,
+    "user_name" VARCHAR(50) NOT NULL,
+    "user_lastname" VARCHAR(50) NOT NULL,
+    "nDni" INTEGER,
+    "birthday" TIMESTAMP(3),
+    "phone" TEXT,
+    "country" TEXT,
+    "profile_picture" TEXT,
+    "isOlder" BOOLEAN NOT NULL,
+    "role_id" TEXT NOT NULL,
+    "credential_id" TEXT,
 
-  - You are about to drop the column `email` on the `users` table. All the data in the column will be lost.
-  - You are about to drop the column `password` on the `users` table. All the data in the column will be lost.
-  - A unique constraint covering the columns `[credential_id]` on the table `users` will be added. If there are existing duplicate values, this will fail.
-  - Added the required column `isOlder` to the `users` table without a default value. This is not possible if the table is not empty.
-
-*/
--- DropIndex
-DROP INDEX "users_email_key";
-
--- AlterTable
-ALTER TABLE "users" DROP COLUMN "email",
-DROP COLUMN "password",
-ADD COLUMN     "credential_id" TEXT,
-ADD COLUMN     "isOlder" BOOLEAN NOT NULL,
-ADD COLUMN     "profile_picture" TEXT,
-ALTER COLUMN "nDni" DROP NOT NULL,
-ALTER COLUMN "birthday" DROP NOT NULL;
+    CONSTRAINT "users_pkey" PRIMARY KEY ("user_id")
+);
 
 -- CreateTable
 CREATE TABLE "credentials" (
@@ -26,6 +22,32 @@ CREATE TABLE "credentials" (
     "password" VARCHAR(255) NOT NULL,
 
     CONSTRAINT "credentials_pkey" PRIMARY KEY ("credential_id")
+);
+
+-- CreateTable
+CREATE TABLE "roles" (
+    "role_id" TEXT NOT NULL,
+    "role_name" VARCHAR(50) NOT NULL,
+    "role_description" VARCHAR(255) NOT NULL,
+
+    CONSTRAINT "roles_pkey" PRIMARY KEY ("role_id")
+);
+
+-- CreateTable
+CREATE TABLE "permissions" (
+    "permission_id" TEXT NOT NULL,
+    "permission_name" VARCHAR(50) NOT NULL,
+    "permission_description" VARCHAR(255) NOT NULL,
+
+    CONSTRAINT "permissions_pkey" PRIMARY KEY ("permission_id")
+);
+
+-- CreateTable
+CREATE TABLE "roles_permissions" (
+    "role_id" TEXT NOT NULL,
+    "permission_id" TEXT NOT NULL,
+
+    CONSTRAINT "roles_permissions_pkey" PRIMARY KEY ("role_id","permission_id")
 );
 
 -- CreateTable
@@ -225,6 +247,12 @@ CREATE TABLE "supply_chain" (
 );
 
 -- CreateIndex
+CREATE UNIQUE INDEX "users_nDni_key" ON "users"("nDni");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "users_credential_id_key" ON "users"("credential_id");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "credentials_email_key" ON "credentials"("email");
 
 -- CreateIndex
@@ -245,11 +273,17 @@ CREATE UNIQUE INDEX "supply_chain_order_id_key" ON "supply_chain"("order_id");
 -- CreateIndex
 CREATE UNIQUE INDEX "supply_chain_updateBy_company_id_key" ON "supply_chain"("updateBy_company_id");
 
--- CreateIndex
-CREATE UNIQUE INDEX "users_credential_id_key" ON "users"("credential_id");
+-- AddForeignKey
+ALTER TABLE "users" ADD CONSTRAINT "users_role_id_fkey" FOREIGN KEY ("role_id") REFERENCES "roles"("role_id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "users" ADD CONSTRAINT "users_credential_id_fkey" FOREIGN KEY ("credential_id") REFERENCES "credentials"("credential_id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "roles_permissions" ADD CONSTRAINT "roles_permissions_role_id_fkey" FOREIGN KEY ("role_id") REFERENCES "roles"("role_id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "roles_permissions" ADD CONSTRAINT "roles_permissions_permission_id_fkey" FOREIGN KEY ("permission_id") REFERENCES "permissions"("permission_id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "companies" ADD CONSTRAINT "companies_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("user_id") ON DELETE RESTRICT ON UPDATE CASCADE;
