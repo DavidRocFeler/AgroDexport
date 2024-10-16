@@ -115,8 +115,7 @@ model Company {
 // Definición del modelo Commission
 model Commission {
   commissions_id        String   @id @default(uuid()) 
-  user_id               String   @unique 
-  company_products_id   String   
+  user_id               String   @unique   
   commision_percentage  Float
   commision_date        DateTime
 
@@ -170,8 +169,7 @@ model Task {
 
 // Definición del modelo CompanyProduct
 model CompanyProduct {
-  company_product_id         String             @id @default(uuid()) 
-  commission_id              String?            
+  company_product_id         String             @id @default(uuid())            
   farmer_id                  String?            
   company_id                 String             
   category_id                String            
