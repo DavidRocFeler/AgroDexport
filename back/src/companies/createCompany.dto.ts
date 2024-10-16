@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNotEmpty, IsOptional, IsInt, IsUUID, Length,} from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, IsInt, IsUUID, Length, IsBoolean,} from 'class-validator';
 
 export class CreateCompanyDto {
 
@@ -71,4 +71,9 @@ export class CreateCompanyDto {
   @IsNotEmpty()
   @IsString()
   company_logo: string; 
+
+  @ApiProperty({ description: 'Indicates whether the company is active or inactive', default: true })
+  @IsOptional()
+  @IsBoolean()
+  isActive?: boolean;
 }

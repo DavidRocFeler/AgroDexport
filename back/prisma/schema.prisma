@@ -98,6 +98,8 @@ model Company {
   account_paypal             String?
   company_description        String?
   company_logo               String
+  isActive                   Boolean            @default(true) // Campo para indicar si la compañía está activa
+
 
   // Relaciones
   user                       User               @relation(fields: [user_id], references: [user_id])
