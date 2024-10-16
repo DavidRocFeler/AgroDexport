@@ -13,7 +13,6 @@ exports.CategoriesService = void 0;
 const common_1 = require("@nestjs/common");
 const categories_repository_1 = require("./categories.repository");
 const categoriesData = require("../assets/categories.json");
-const validation_helper_1 = require("../helpers/validation.helper");
 let CategoriesService = class CategoriesService {
     constructor(categoriesRepository) {
         this.categoriesRepository = categoriesRepository;
@@ -25,7 +24,10 @@ let CategoriesService = class CategoriesService {
         const results = [];
         for (const categoryData of categoriesData) {
             const existingCategory = await this.categoriesRepository.findCategoryByName(categoryData.name);
-            (0, validation_helper_1.validateExists)(existingCategory, 'exists', `Category ${categoryData.name} already exists`);
+            if (existingCategory) {
+                results.push({ category: categoryData.name, status: 'Already Exists' });
+                continue;
+            }
             await this.categoriesRepository.createCategory(categoryData.name);
             results.push({ category: categoryData.name, status: 'Created' });
         }
