@@ -1,23 +1,19 @@
-/*
-  Warnings:
+-- CreateTable
+CREATE TABLE "users" (
+    "user_id" TEXT NOT NULL,
+    "user_name" VARCHAR(50) NOT NULL,
+    "user_lastname" VARCHAR(50) NOT NULL,
+    "nDni" INTEGER,
+    "birthday" TIMESTAMP(3),
+    "phone" TEXT,
+    "country" TEXT,
+    "profile_picture" TEXT,
+    "isOlder" BOOLEAN NOT NULL,
+    "role_id" TEXT NOT NULL,
+    "credential_id" TEXT,
 
-  - You are about to drop the column `email` on the `users` table. All the data in the column will be lost.
-  - You are about to drop the column `password` on the `users` table. All the data in the column will be lost.
-  - A unique constraint covering the columns `[credential_id]` on the table `users` will be added. If there are existing duplicate values, this will fail.
-  - Added the required column `isOlder` to the `users` table without a default value. This is not possible if the table is not empty.
-
-*/
--- DropIndex
-DROP INDEX "users_email_key";
-
--- AlterTable
-ALTER TABLE "users" DROP COLUMN "email",
-DROP COLUMN "password",
-ADD COLUMN     "credential_id" TEXT,
-ADD COLUMN     "isOlder" BOOLEAN NOT NULL,
-ADD COLUMN     "profile_picture" TEXT,
-ALTER COLUMN "nDni" DROP NOT NULL,
-ALTER COLUMN "birthday" DROP NOT NULL;
+    CONSTRAINT "users_pkey" PRIMARY KEY ("user_id")
+);
 
 -- CreateTable
 CREATE TABLE "credentials" (
@@ -26,6 +22,33 @@ CREATE TABLE "credentials" (
     "password" VARCHAR(255) NOT NULL,
 
     CONSTRAINT "credentials_pkey" PRIMARY KEY ("credential_id")
+);
+
+-- CreateTable
+CREATE TABLE "roles" (
+    "role_id" TEXT NOT NULL,
+    "role_name" VARCHAR(50) NOT NULL,
+    "role_description" VARCHAR(255) NOT NULL,
+    "user_id" TEXT NOT NULL,
+
+    CONSTRAINT "roles_pkey" PRIMARY KEY ("role_id")
+);
+
+-- CreateTable
+CREATE TABLE "permissions" (
+    "permission_id" TEXT NOT NULL,
+    "permission_name" VARCHAR(50) NOT NULL,
+    "permission_description" VARCHAR(255) NOT NULL,
+
+    CONSTRAINT "permissions_pkey" PRIMARY KEY ("permission_id")
+);
+
+-- CreateTable
+CREATE TABLE "roles_permissions" (
+    "role_id" TEXT NOT NULL,
+    "permission_id" TEXT NOT NULL,
+
+    CONSTRAINT "roles_permissions_pkey" PRIMARY KEY ("role_id","permission_id")
 );
 
 -- CreateTable
@@ -43,6 +66,7 @@ CREATE TABLE "companies" (
     "website" TEXT,
     "account_paypal" TEXT,
     "company_description" TEXT,
+    "company_logo" TEXT,
 
     CONSTRAINT "companies_pkey" PRIMARY KEY ("company_id")
 );
@@ -50,7 +74,7 @@ CREATE TABLE "companies" (
 -- CreateTable
 CREATE TABLE "commissions" (
     "commissions_id" TEXT NOT NULL,
-    "user_id" TEXT NOT NULL,
+    "user_id" TEXT,
     "company_products_id" TEXT NOT NULL,
     "commision_percentage" DOUBLE PRECISION NOT NULL,
     "commision_date" TIMESTAMP(3) NOT NULL,
@@ -63,7 +87,7 @@ CREATE TABLE "notifications" (
     "notification_id" TEXT NOT NULL,
     "user_id" TEXT NOT NULL,
     "discount_id" TEXT,
-    "orders_id" TEXT,
+    "order_id" TEXT,
     "supply_chain_id" TEXT,
     "task_id" TEXT NOT NULL,
     "message" TEXT NOT NULL,
@@ -118,7 +142,6 @@ CREATE TABLE "company_products" (
 CREATE TABLE "shipping_addresses" (
     "shipping_address_id" TEXT NOT NULL,
     "company_id" TEXT NOT NULL,
-    "order_id" TEXT,
     "contact_name" TEXT NOT NULL,
     "contact_lastname" TEXT NOT NULL,
     "contact_phone" TEXT NOT NULL,
@@ -156,11 +179,11 @@ CREATE TABLE "discounts" (
 CREATE TABLE "farmer_certifications" (
     "farmer_id" TEXT NOT NULL,
     "company_id" TEXT NOT NULL,
-    "phytosanitary_certificate" BOOLEAN NOT NULL,
-    "agricultural_producer_cert" BOOLEAN NOT NULL,
-    "organic_certification" BOOLEAN,
-    "quality_certificate" BOOLEAN NOT NULL,
-    "certificate_of_origin" BOOLEAN NOT NULL,
+    "phytosanitary_certificate" TEXT NOT NULL,
+    "agricultural_producer_cert" TEXT NOT NULL,
+    "organic_certification" TEXT,
+    "quality_certificate" TEXT NOT NULL,
+    "certificate_of_origin" TEXT NOT NULL,
 
     CONSTRAINT "farmer_certifications_pkey" PRIMARY KEY ("farmer_id")
 );
@@ -186,11 +209,11 @@ CREATE TABLE "orders" (
     "order_id" TEXT NOT NULL,
     "id_company_sell" TEXT NOT NULL,
     "id_payments" TEXT,
-    "notifications_id" TEXT,
     "shipping_address_id" TEXT,
     "order_details_id" TEXT NOT NULL,
     "suppy_chain_id" TEXT,
     "order_date" TIMESTAMP(3) NOT NULL,
+    "payment_id" TEXT,
 
     CONSTRAINT "orders_pkey" PRIMARY KEY ("order_id")
 );
@@ -224,11 +247,42 @@ CREATE TABLE "supply_chain" (
     CONSTRAINT "supply_chain_pkey" PRIMARY KEY ("supply_chain_id")
 );
 
+-- CreateTable
+CREATE TABLE "payments" (
+    "payment_id" TEXT NOT NULL,
+    "company_id" TEXT NOT NULL,
+    "status" TEXT NOT NULL,
+    "amount_decimal" DOUBLE PRECISION NOT NULL,
+    "currency" TEXT NOT NULL,
+    "payment_provider" TEXT NOT NULL,
+    "transaction_id" TEXT NOT NULL,
+    "payer_id" TEXT NOT NULL,
+    "description" TEXT,
+    "payment_method" TEXT NOT NULL,
+    "is_verified" BOOLEAN NOT NULL DEFAULT false,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "payments_pkey" PRIMARY KEY ("payment_id")
+);
+
+-- CreateIndex
+CREATE UNIQUE INDEX "users_nDni_key" ON "users"("nDni");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "users_role_id_key" ON "users"("role_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "users_credential_id_key" ON "users"("credential_id");
+
 -- CreateIndex
 CREATE UNIQUE INDEX "credentials_email_key" ON "credentials"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "commissions_user_id_key" ON "commissions"("user_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "categories_name_category_key" ON "categories"("name_category");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "discounts_code_key" ON "discounts"("code");
@@ -240,22 +294,34 @@ CREATE UNIQUE INDEX "orders_shipping_address_id_key" ON "orders"("shipping_addre
 CREATE UNIQUE INDEX "orders_order_details_id_key" ON "orders"("order_details_id");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "orders_payment_id_key" ON "orders"("payment_id");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "supply_chain_order_id_key" ON "supply_chain"("order_id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "supply_chain_updateBy_company_id_key" ON "supply_chain"("updateBy_company_id");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "users_credential_id_key" ON "users"("credential_id");
+CREATE UNIQUE INDEX "payments_company_id_key" ON "payments"("company_id");
+
+-- AddForeignKey
+ALTER TABLE "users" ADD CONSTRAINT "users_role_id_fkey" FOREIGN KEY ("role_id") REFERENCES "roles"("role_id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "users" ADD CONSTRAINT "users_credential_id_fkey" FOREIGN KEY ("credential_id") REFERENCES "credentials"("credential_id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "roles_permissions" ADD CONSTRAINT "roles_permissions_role_id_fkey" FOREIGN KEY ("role_id") REFERENCES "roles"("role_id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "roles_permissions" ADD CONSTRAINT "roles_permissions_permission_id_fkey" FOREIGN KEY ("permission_id") REFERENCES "permissions"("permission_id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "companies" ADD CONSTRAINT "companies_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("user_id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "commissions" ADD CONSTRAINT "commissions_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("user_id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "commissions" ADD CONSTRAINT "commissions_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("user_id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "notifications" ADD CONSTRAINT "notifications_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("user_id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -268,6 +334,9 @@ ALTER TABLE "notifications" ADD CONSTRAINT "notifications_discount_id_fkey" FORE
 
 -- AddForeignKey
 ALTER TABLE "notifications" ADD CONSTRAINT "notifications_supply_chain_id_fkey" FOREIGN KEY ("supply_chain_id") REFERENCES "supply_chain"("supply_chain_id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "notifications" ADD CONSTRAINT "notifications_order_id_fkey" FOREIGN KEY ("order_id") REFERENCES "orders"("order_id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "company_products" ADD CONSTRAINT "company_products_company_id_fkey" FOREIGN KEY ("company_id") REFERENCES "companies"("company_id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -306,6 +375,9 @@ ALTER TABLE "orders" ADD CONSTRAINT "orders_order_details_id_fkey" FOREIGN KEY (
 ALTER TABLE "orders" ADD CONSTRAINT "orders_shipping_address_id_fkey" FOREIGN KEY ("shipping_address_id") REFERENCES "shipping_addresses"("shipping_address_id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "orders" ADD CONSTRAINT "orders_payment_id_fkey" FOREIGN KEY ("payment_id") REFERENCES "payments"("payment_id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "order_detail_products" ADD CONSTRAINT "order_detail_products_order_details_id_fkey" FOREIGN KEY ("order_details_id") REFERENCES "order_details"("order_details_id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -316,3 +388,6 @@ ALTER TABLE "supply_chain" ADD CONSTRAINT "supply_chain_order_id_fkey" FOREIGN K
 
 -- AddForeignKey
 ALTER TABLE "supply_chain" ADD CONSTRAINT "supply_chain_updateBy_company_id_fkey" FOREIGN KEY ("updateBy_company_id") REFERENCES "companies"("company_id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "payments" ADD CONSTRAINT "payments_company_id_fkey" FOREIGN KEY ("company_id") REFERENCES "companies"("company_id") ON DELETE RESTRICT ON UPDATE CASCADE;

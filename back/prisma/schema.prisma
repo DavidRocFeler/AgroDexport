@@ -97,7 +97,7 @@ model Company {
   website                    String?
   account_paypal             String?
   company_description        String?
-  company_logo               String
+  company_logo               String?
 
   // Relaciones
   user                       User               @relation(fields: [user_id], references: [user_id])
@@ -115,13 +115,13 @@ model Company {
 // Definición del modelo Commission
 model Commission {
   commissions_id        String   @id @default(uuid()) 
-  user_id               String   @unique 
+  user_id               String?   @unique 
   company_products_id   String   
   commision_percentage  Float
   commision_date        DateTime
 
   // Relación
-  user                  User     @relation(fields: [user_id], references: [user_id]) 
+  user                  User?     @relation(fields: [user_id], references: [user_id]) 
 
   @@map("commissions") 
 }
@@ -207,8 +207,6 @@ model CompanyProduct {
 model ShippingAddress {
   shipping_address_id       String    @id @default(uuid()) 
   company_id                String    
-  order_id                  String?   // Clave foránea opcional hacia Order (si tienes este modelo)
-  
   contact_name              String
   contact_lastname          String
   contact_phone             String
