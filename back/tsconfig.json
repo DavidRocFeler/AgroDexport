@@ -16,9 +16,6 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false,
-    "resolveJsonModule": true,
-    "types": ["multer", "jest"]
-  },
-  "include": ["src/**/*", "src/assets/**/*.json"]
+    "noFallthroughCasesInSwitch": false
+  }
 }
