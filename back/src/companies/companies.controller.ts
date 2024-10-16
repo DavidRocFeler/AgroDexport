@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Get, Param } from '@nestjs/common';
+import { Body, Controller, Post, Get, Param, Put, Delete, } from '@nestjs/common';
 import { CompanyService } from './companies.service';
 import { CreateCompanyDto } from './createCompany.dto';
 
@@ -28,13 +28,19 @@ export class CompanyController {
       };
     }
 
-    @Put(':id') // Este endpoint actualizará la compañía específica por ID
-    async updateCompany(
-    @Param('id') companyId: string,
-    @Body() companyData: CreateCompanyDto,
-    ) {
+    @Put(':id') 
+    async updateCompany(@Param('id') companyId: string, @Body()companyData: CreateCompanyDto) {
     const updatedCompany = await this.companyServices.updateCompanyServices(companyId, companyData);
     return updatedCompany;
     }
 
+    @Delete(':id')
+  async softDeleteCompany(@Param('id') companyId: string) {
+    const deletedCompany = await this.companyServices.softDeleteCompanyServices(companyId);
+    return {
+      message: 'Company deleted successfully (soft delete)',
+      data: deletedCompany,
+    };
+  }
 }
+
