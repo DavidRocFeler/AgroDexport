@@ -39,6 +39,13 @@ let CompanyController = class CompanyController {
         const updatedCompany = await this.companyServices.updateCompanyServices(companyId, companyData);
         return updatedCompany;
     }
+    async softDeleteCompany(companyId) {
+        const deletedCompany = await this.companyServices.softDeleteCompanyServices(companyId);
+        return {
+            message: 'Company deleted successfully (soft delete)',
+            data: deletedCompany,
+        };
+    }
 };
 exports.CompanyController = CompanyController;
 __decorate([
@@ -69,6 +76,13 @@ __decorate([
     __metadata("design:paramtypes", [String, createCompany_dto_1.CreateCompanyDto]),
     __metadata("design:returntype", Promise)
 ], CompanyController.prototype, "updateCompany", null);
+__decorate([
+    (0, common_1.Delete)(':id'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], CompanyController.prototype, "softDeleteCompany", null);
 exports.CompanyController = CompanyController = __decorate([
     (0, common_1.Controller)('companies'),
     __metadata("design:paramtypes", [companies_service_1.CompanyService])

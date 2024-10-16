@@ -17,6 +17,7 @@ export declare class CompanyService {
         account_paypal: string | null;
         company_description: string | null;
         company_logo: string;
+        isActive: boolean;
         company_id: string;
     }[]>;
     getCompanyByIdServices(companyId: string): Promise<{
@@ -33,6 +34,7 @@ export declare class CompanyService {
         account_paypal: string | null;
         company_description: string | null;
         company_logo: string;
+        isActive: boolean;
         company_id: string;
     }>;
     createCompanyServices(companyData: CreateCompanyDto): Promise<{
@@ -49,6 +51,7 @@ export declare class CompanyService {
         account_paypal: string | null;
         company_description: string | null;
         company_logo: string;
+        isActive: boolean;
         company_id: string;
     }>;
     updateCompanyServices(companyId: string, companyData: CreateCompanyDto): Promise<{
@@ -65,6 +68,24 @@ export declare class CompanyService {
         account_paypal: string | null;
         company_description: string | null;
         company_logo: string;
+        isActive: boolean;
+        company_id: string;
+    }>;
+    softDeleteCompanyServices(companyId: string): Promise<{
+        country: string;
+        user_id: string;
+        company_name: string;
+        tax_identification_number: number;
+        address: string;
+        postal_code: string;
+        city: string;
+        state: string;
+        industry: string;
+        website: string | null;
+        account_paypal: string | null;
+        company_description: string | null;
+        company_logo: string;
+        isActive: boolean;
         company_id: string;
     }>;
 }

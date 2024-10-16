@@ -12,4 +12,5 @@ export declare class CreateCompanyDto {
     account_paypal?: string;
     company_description?: string;
     company_logo: string;
+    isActive?: boolean;
 }
