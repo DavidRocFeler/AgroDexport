@@ -14,27 +14,29 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersController = void 0;
 const common_1 = require("@nestjs/common");
-const updateComission_dto_1 = require("./updateComission.dto");
 const users_service_1 = require("./users.service");
+const createUser_dto_1 = require("./dtos/createUser.dto");
 const swagger_1 = require("@nestjs/swagger");
 let UsersController = class UsersController {
-    constructor(usersService) {
-        this.usersService = usersService;
+    constructor(userServices) {
+        this.userServices = userServices;
     }
-    async preloadCategories(categoryData) {
-        return this.usersService.preloadCommisionService();
+    async updateUser(id, userData) {
+        return this.userServices.updateUser(id, userData);
     }
 };
 exports.UsersController = UsersController;
 __decorate([
-    (0, common_1.Post)("/comission/sedeer"),
-    (0, swagger_1.ApiExcludeEndpoint)(),
-    __param(0, (0, common_1.Body)()),
+    (0, common_1.HttpCode)(201),
+    (0, common_1.Post)(':id'),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [updateComission_dto_1.UpdateCommissionDto]),
+    __metadata("design:paramtypes", [String, createUser_dto_1.CreateUserDto]),
     __metadata("design:returntype", Promise)
-], UsersController.prototype, "preloadCategories", null);
+], UsersController.prototype, "updateUser", null);
 exports.UsersController = UsersController = __decorate([
+    (0, swagger_1.ApiTags)("users"),
     (0, common_1.Controller)('users'),
     __metadata("design:paramtypes", [users_service_1.UsersService])
 ], UsersController);

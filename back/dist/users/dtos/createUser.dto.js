@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateUserDto = void 0;
 const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
-const match_decorator_1 = require("../decorators/match.decorator");
+const match_decorator_1 = require("../../decorators/match.decorator");
 class CreateUserDto {
 }
 exports.CreateUserDto = CreateUserDto;
@@ -60,6 +60,10 @@ __decorate([
     __metadata("design:type", String)
 ], CreateUserDto.prototype, "confirmPassword", void 0);
 __decorate([
+    (0, class_validator_1.IsBoolean)(),
+    __metadata("design:type", Boolean)
+], CreateUserDto.prototype, "isOlder", void 0);
+__decorate([
     (0, swagger_1.ApiProperty)({ description: 'User DNI number', example: 12345678 }),
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsInt)(),
@@ -82,6 +86,11 @@ __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], CreateUserDto.prototype, "country", void 0);
+__decorate([
+    (0, class_validator_1.IsUrl)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", Object)
+], CreateUserDto.prototype, "profile_picture", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({ description: "Role ID associated with the user", example: "role-uuid-id" }),
     (0, class_validator_1.IsNotEmpty)(),

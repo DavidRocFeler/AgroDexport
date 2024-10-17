@@ -29,10 +29,7 @@ CREATE TABLE "roles" (
     "role_id" TEXT NOT NULL,
     "role_name" VARCHAR(50) NOT NULL,
     "role_description" VARCHAR(255) NOT NULL,
-<<<<<<<< HEAD:back/prisma/migrations/20241015031744_init/migration.sql
-========
     "user_id" TEXT NOT NULL,
->>>>>>>> 9b42dfe5818b33af0e0b28092c9d4d42cb144839:back/prisma/migrations/20241016040328_init/migration.sql
 
     CONSTRAINT "roles_pkey" PRIMARY KEY ("role_id")
 );
@@ -70,6 +67,7 @@ CREATE TABLE "companies" (
     "account_paypal" TEXT,
     "company_description" TEXT,
     "company_logo" TEXT,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
 
     CONSTRAINT "companies_pkey" PRIMARY KEY ("company_id")
 );
@@ -78,7 +76,6 @@ CREATE TABLE "companies" (
 CREATE TABLE "commissions" (
     "commissions_id" TEXT NOT NULL,
     "user_id" TEXT,
-    "company_products_id" TEXT NOT NULL,
     "commision_percentage" DOUBLE PRECISION NOT NULL,
     "commision_date" TIMESTAMP(3) NOT NULL,
 
@@ -118,7 +115,6 @@ CREATE TABLE "tasks" (
 -- CreateTable
 CREATE TABLE "company_products" (
     "company_product_id" TEXT NOT NULL,
-    "commission_id" TEXT,
     "farmer_id" TEXT,
     "company_id" TEXT NOT NULL,
     "category_id" TEXT NOT NULL,
@@ -279,12 +275,6 @@ CREATE UNIQUE INDEX "users_role_id_key" ON "users"("role_id");
 CREATE UNIQUE INDEX "users_credential_id_key" ON "users"("credential_id");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "users_nDni_key" ON "users"("nDni");
-
--- CreateIndex
-CREATE UNIQUE INDEX "users_credential_id_key" ON "users"("credential_id");
-
--- CreateIndex
 CREATE UNIQUE INDEX "credentials_email_key" ON "credentials"("email");
 
 -- CreateIndex
@@ -311,12 +301,9 @@ CREATE UNIQUE INDEX "supply_chain_order_id_key" ON "supply_chain"("order_id");
 -- CreateIndex
 CREATE UNIQUE INDEX "supply_chain_updateBy_company_id_key" ON "supply_chain"("updateBy_company_id");
 
-<<<<<<<< HEAD:back/prisma/migrations/20241015031744_init/migration.sql
-========
 -- CreateIndex
 CREATE UNIQUE INDEX "payments_company_id_key" ON "payments"("company_id");
 
->>>>>>>> 9b42dfe5818b33af0e0b28092c9d4d42cb144839:back/prisma/migrations/20241016040328_init/migration.sql
 -- AddForeignKey
 ALTER TABLE "users" ADD CONSTRAINT "users_role_id_fkey" FOREIGN KEY ("role_id") REFERENCES "roles"("role_id") ON DELETE RESTRICT ON UPDATE CASCADE;
 

@@ -11,35 +11,17 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthService = void 0;
 const common_1 = require("@nestjs/common");
-const validation_helper_1 = require("../helpers/validation.helper");
 const users_repository_1 = require("../users/users.repository");
 let AuthService = class AuthService {
     constructor(usersRepository) {
         this.usersRepository = usersRepository;
     }
     async signUpService(userData) {
-        const user = {
-            user_name: userData.user_name,
-            user_lastname: userData.user_lastname,
-            nDni: userData.nDni,
-            birthday: userData.birthday,
-            phone: userData.phone,
-            country: userData.country,
-            role_id: userData.role_id,
-        };
-        const newUser = await this.usersRepository.createUser(user, userData.email, userData.password);
+        const newUser = await this.usersRepository.createUser(userData);
         return newUser;
     }
-    async signInService(loginUserDto) {
-        const { email, password } = loginUserDto;
-        const credential = await this.usersRepository.findCredentialByEmail(email);
-        (0, validation_helper_1.validateExists)(credential, 'notExists', 'Incorrect credentials');
-        if (credential.password !== password) {
-            throw new common_1.UnauthorizedException('Incorrect credentials');
-        }
-        const user = await this.usersRepository.findUserByCredentialId(credential.credential_id);
-        (0, validation_helper_1.validateExists)(user, 'notExists', 'User not found');
-        return { message: 'Login successful', user };
+    async signInService(credentials) {
+        const token = await this.usersRepository.singIn(credentials);
     }
 };
 exports.AuthService = AuthService;

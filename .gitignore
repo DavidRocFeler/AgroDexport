@@ -4,3 +4,10 @@ index.css
 reciclado.txt
 node_modules
 .env 
+
+# Build output
+dist/
+build/
+
+# TypeScript build info
+*.tsbuildinfo

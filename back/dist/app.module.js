@@ -27,13 +27,37 @@ const emails_module_1 = require("./emails/emails.module");
 const farmer_certifications_module_1 = require("./farmer-certifications/farmer-certifications.module");
 const prisma_module_1 = require("./prisma/prisma.module");
 const supply_chain_module_1 = require("./supply-chain/supply-chain.module");
+const jwt_1 = require("@nestjs/jwt");
 const preloadService_1 = require("./preloadService");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
-        imports: [auth_module_1.AuthModule, roles_module_1.RolesModule, users_module_1.UsersModule, companies_module_1.CompaniesModule, addresses_module_1.AddressesModule, company_products_module_1.CompanyProductsModule, categories_module_1.CategoriesModule, discounts_module_1.DiscountsModule, orders_module_1.OrdersModule, payments_module_1.PaymentsModule, cloudinary_module_1.CloudinaryModule, notifications_module_1.NotificationsModule, tasks_module_1.TasksModule, emails_module_1.EmailsModule, farmer_certifications_module_1.FarmerCertificationsModule, prisma_module_1.PrismaModule, supply_chain_module_1.SupplyChainModule],
+        imports: [
+            auth_module_1.AuthModule,
+            roles_module_1.RolesModule,
+            users_module_1.UsersModule,
+            companies_module_1.CompaniesModule,
+            addresses_module_1.AddressesModule,
+            company_products_module_1.CompanyProductsModule,
+            categories_module_1.CategoriesModule,
+            discounts_module_1.DiscountsModule,
+            orders_module_1.OrdersModule,
+            payments_module_1.PaymentsModule,
+            cloudinary_module_1.CloudinaryModule,
+            notifications_module_1.NotificationsModule,
+            tasks_module_1.TasksModule,
+            emails_module_1.EmailsModule,
+            farmer_certifications_module_1.FarmerCertificationsModule,
+            prisma_module_1.PrismaModule,
+            supply_chain_module_1.SupplyChainModule,
+            jwt_1.JwtModule.register({
+                global: true,
+                signOptions: { expiresIn: "1h" },
+                secret: process.env.JWT_SECRET,
+            }),
+        ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService, preloadService_1.PreloadService],
     })
