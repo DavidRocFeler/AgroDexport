@@ -1,9 +1,10 @@
-import { Body, Controller, Get, HttpCode, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, ParseUUIDPipe, Post, Put } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dtos/createUser.dto';
 import { UsersRepository } from './users.repository';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { User } from '@prisma/client';
+import { UpdateUserDto } from './dtos/updateUser.dto';
 
 @ApiTags("user")
 @Controller('users')
@@ -24,9 +25,13 @@ export class UsersController {
         return this.usersRepository.getUserById(user_id); 
       }
 
-    // @HttpCode(201)
-    // @Post(':id')
-    // async updateUser( @Param('id') id: string, @Body() userData: CreateUserDto) {
-    //     return this.userServices.updateUser( id, userData)
-    // }
+      @ApiBearerAuth()      
+      @HttpCode(200)
+      @Put(':id')
+      async updateUser(
+        @Param('id', new ParseUUIDPipe()) id: string,
+        @Body() updateData: UpdateUserDto) {
+        return await this.userServices.updateUserService(id, updateData);
+      }
+  
 }

@@ -1,77 +1,45 @@
-// src/user/dto/create-user.dto.ts
-import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsNotEmpty, IsString, IsOptional, IsInt, Length, Matches, Validate, IsUUID, IsBoolean, IsUrl } from 'class-validator';
-import { MatchPassword } from 'src/decorators/match.decorator';
+import { ApiProperty, PartialType } from "@nestjs/swagger";
+import { IsInt, IsOptional, IsString } from "class-validator";
+import { CreateUserDto } from "./createUser.dto";
 
-export class CreateUserDto {
-    
-    @ApiProperty({ description: 'User first name', maxLength: 50 })
-    @IsNotEmpty()
-    @Matches(/^[a-zA-ZÀ-ÿÑñ]+$/, { message: 'The first name should only contain letters and no spaces' })
-    @Length(1, 50)
-    user_name: string;
-  
-    @ApiProperty({ description: 'User last name', maxLength: 50 })
-    @IsNotEmpty()
-    @Matches(/^[a-zA-ZÀ-ÿÑñ]+$/, { message: 'The last name should only contain letters and no spaces' })
-    @Length(1, 50)
-    user_lastname: string;
+export class UpdateUserDto extends PartialType(CreateUserDto) {
 
-    @ApiProperty({ description: 'User email', maxLength: 255 })
-    @IsNotEmpty()
-    @IsEmail()
-    @Length(1, 255)
-    email: string;
-
-    @IsNotEmpty()
-    @IsString()
-    @Length(8, 15)
-    @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]/, {
-        message: 'The password must contain at least one lowercase letter, one uppercase letter, one number, and one of the following special characters: !@#$%^&*',
-    })
     @ApiProperty({
-        description: "The user's password. Must contain at least one lowercase letter, one uppercase letter, one number, and one of the following special characters: !@#$%^&*",
-        example: "Test123!",
+      description: 'Número de documento de identidad (DNI) del usuario',
+      example: 12345678,
     })
-    password: string;
-
-    // Validation directly inside the DTO
-    @IsNotEmpty()
-    @Validate(MatchPassword, ['password']) // <- references the DTO password
-    @ApiProperty({
-        description: "Must match the password field",
-        example: "Test123!",
-    })
-    confirmPassword: string;
-
-    @IsBoolean()
-    isOlder: boolean
-
-    @ApiProperty({ description: 'User DNI number', example: 12345678 })
-    @IsNotEmpty()
+    @IsOptional()
     @IsInt()
-    nDni: number;
-
-    @ApiProperty({ description: "User's date of birth", example: '1990-01-01' })
-    @IsNotEmpty()
-    birthday: Date;
-
-    @ApiProperty({ description: 'User phone number', required: false })
+    nDni?: number; 
+  
+    @ApiProperty({
+      description: 'Fecha de nacimiento del usuario',
+      example: '1990-01-01T00:00:00.000Z',
+    })
+    @IsOptional()
+    birthday?: Date;
+  
+    @ApiProperty({
+      description: 'Número de teléfono del usuario',
+      example: '+1234567890',
+    })
     @IsOptional()
     @IsString()
     phone?: string;
-
-    @ApiProperty({ description: 'User country', required: false })
+  
+    @ApiProperty({
+      description: 'País del usuario',
+      example: 'USA',
+    })
     @IsOptional()
     @IsString()
     country?: string;
-
-    @IsUrl()
+  
+    @ApiProperty({
+      description: 'Imagen de perfil del usuario',
+      example: 'https://example.com/profile.jpg',
+    })
     @IsOptional()
-    profile_picture
-
-    @ApiProperty({ description: "Role ID associated with the user", example: "role-uuid-id" })
-    @IsNotEmpty()
-    @IsUUID() 
-    role_id: string;
-}
+    @IsString()
+    profile_picture?: string;
+}  
