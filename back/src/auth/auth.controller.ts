@@ -2,7 +2,7 @@ import { Body, Controller, HttpCode, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginUserDto } from 'src/users/dtos/loginUser.dto';
 import { CreateUserDto } from 'src/users/dtos/createUser.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiExcludeEndpoint, ApiTags } from '@nestjs/swagger';
 
 
 ApiTags("Auth")
@@ -21,5 +21,11 @@ export class AuthController {
     @Post('signin')
     async signin(@Body() loginUser: LoginUserDto) {
         return await this.authService.signInService(loginUser);
+    }
+
+    @Post("sedeer")
+    @ApiExcludeEndpoint()
+    async preloadUsers(@Body() usersData: CreateUserDto){
+        return this.authService.preloadUsersService();
     }
 }
