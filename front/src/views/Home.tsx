@@ -8,7 +8,7 @@ const HomeView: React.FC = () => {
             <div>
                 <h1 className={styles.CoverTitle}> Supervise the agro supply chain</h1>
                 <p className={styles.Paragraph}> Connect with suppliers and entrepreneurs in a B2B e-commerce service.</p>
-                <Link className={styles.SignUp} href="/providers"> See The Market </Link>
+                <Link className={styles.SignUp} href="/market"> See The Market </Link>
             </div>
         </main>
     )

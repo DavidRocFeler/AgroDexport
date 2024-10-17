@@ -18,8 +18,12 @@ import { EmailsModule } from './emails/emails.module';
 import { FarmerCertificationsModule } from './farmer-certifications/farmer-certifications.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { SupplyChainModule } from './supply-chain/supply-chain.module';
+<<<<<<< HEAD
 import { JwtModule } from "@nestjs/jwt"
 
+=======
+import { PreloadService } from './preloadService';
+>>>>>>> 9b42dfe5818b33af0e0b28092c9d4d42cb144839
 
 @Module({
   imports: [
@@ -47,6 +51,6 @@ import { JwtModule } from "@nestjs/jwt"
     }),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, PreloadService],
 })
 export class AppModule {}

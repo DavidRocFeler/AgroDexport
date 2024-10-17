@@ -1,10 +1,11 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { User, Credential } from '@prisma/client';
+import { validateExists } from '../helpers/validation.helper';
 import * as bcrypt from "bcrypt"
+import { JwtService } from "@nestjs/jwt";
 import { CreateUserDto } from './dtos/createUser.dto';
 import { LoginUserDto } from './dtos/loginUser.dto';
-import { JwtService } from "@nestjs/jwt";
 
 @Injectable()
 export class UsersRepository {
@@ -104,5 +105,4 @@ export class UsersRepository {
     });
     return credential?.user || null;
   }
-  
 }
