@@ -1,7 +1,5 @@
 "use client"
 import Image from 'next/image';
-import paypalLogo from '../../public/PayPal-logo.png';
-import paypalL from '../../public/paypalL.jpg';
 import { useState } from 'react';
 
 const PaypalView = () => {
@@ -38,7 +36,7 @@ const PaypalView = () => {
 
       <div className="bg-gray-100 rounded-lg p-6">
         <div className="flex justify-between items-center mb-6">
-          <Image src={paypalLogo} alt="PayPal Logo" width={100} height={50} />
+          <Image src={"paypalLogo"} alt="PayPal Logo" width={100} height={50} />
           <h2 className="text-xl font-semibold">Total a pagar: 95,00 EUR</h2>
         </div>
 
@@ -69,7 +67,7 @@ const PaypalView = () => {
                 No se recomienda en dispositivos compartidos.
               </span>
             </div>
-            <button className="w-full p-3 bg-blue-600 text-white rounded hover:bg-blue-700">
+            <button className="w-full p-3 bg-black text-white rounded hover:bg-blue-700">
               Iniciar sesión
             </button>
           </form>
