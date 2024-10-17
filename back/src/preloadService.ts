@@ -1,6 +1,7 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { CategoriesService } from './categories/categories.service';
 import { RolesService } from './roles/roles.service';
+import { AuthService } from './auth/auth.service';
 // import { UsersService } from './users/users.service';
 // import { CompaniesService } from './companies/companies.service';
 // import { AddressesService } from './addresses/addresses.service';
@@ -12,7 +13,7 @@ export class PreloadService implements OnModuleInit {
   constructor(
     private readonly categoryService: CategoriesService,
     private readonly rolesService: RolesService, 
-    // private readonly userService: UsersService,
+    private readonly authService: AuthService,
     // private readonly companyService: CompaniesService,
     // private readonly shippingAddressService: AddressesService,
     // private readonly companyProductsService: CompanyProductsService,
@@ -28,6 +29,9 @@ export class PreloadService implements OnModuleInit {
 
       const roleResults = await this.rolesService.seedRoles();
       console.log('Roles preload results:', roleResults);
+
+      const userResults = await this.authService.preloadUsersService();
+      console.log('Users preload results:', userResults);
       
     } catch (error) {
       console.error('Error during categories preload:', error.message);
