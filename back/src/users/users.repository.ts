@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { User, Credential } from '@prisma/client';
 import { validateExists } from '../helpers/validation.helper';
@@ -80,24 +80,6 @@ export class UsersRepository {
     return newUser; 
 }
 
-  // async updateUser(id: string, userData: CreateUserDto): Promise<void> {
-  //   const { user_name, user_lastname, nDni, birthday, phone, country, role_id, isOlder, profile_picture } = userData
-  //   const user = await this.prisma.user.findUnique({
-  //     where: {user_id: id}
-  //   })
-  //   if (user) {
-  //     user.user_name = user_name
-  //     user.birthday = birthday
-  //     user.country = country
-  //     user.isOlder = isOlder
-  //     user.nDni = nDni
-  //     user.phone = phone
-  //     user.user_lastname = user_lastname
-  //     user.role_id = role_id
-  //     user.profile_picture = profile_picture
-  //   }
-  // }
-
   async singIn(credentials: LoginUserDto): Promise<{token: string}> {
     const { email, password } = credentials
     const account = await this.findCredentialByEmail(email)
@@ -140,4 +122,32 @@ export class UsersRepository {
     });
     return credential?.user || null;
   }
+
+
+  async updateUser(id: string, updateData: Partial<User & { password?: string }>): Promise<User> {
+    try {
+      const user = await this.getUserById(id);
+  
+      if (updateData.password) {
+        const hashedPassword = await bcrypt.hash(updateData, 10);
+        await this.prisma.credential.update({
+          where: { credential_id: user.credential_id },
+          data: { password: hashedPassword },
+        });
+      }
+
+      const updatedUser = await this.prisma.user.update({
+        where: { user_id: id },
+        data: updateData,
+      });
+  
+      return updatedUser;
+
+    } catch (error) {
+      if (error.code === 'P2002') { // Prisma usa P2002 para violación de restricciones únicas
+        throw new ConflictException('El email ya está en uso');
+      }
+      throw error;
+    }
+}
 }
