@@ -7,4 +7,10 @@ export declare class UsersRepository {
     findCredentialByEmail(email: string): Promise<Credential | null>;
     findUserByCredentialId(credential_id: string): Promise<User | null>;
     findUserByEmail(email: string): Promise<User | null>;
+    findCommission(): Promise<{
+        commision_percentage: number;
+        user_id: string;
+        commissions_id: string;
+        commision_date: Date;
+    }>;
 }
