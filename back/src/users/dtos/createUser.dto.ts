@@ -1,6 +1,6 @@
 // src/user/dto/create-user.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsNotEmpty, IsString, IsOptional, IsInt, Length, Matches, Validate, IsUUID, IsBoolean } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, IsOptional, IsInt, Length, Matches, Validate, IsUUID, IsBoolean, IsUrl } from 'class-validator';
 import { MatchPassword } from 'src/decorators/match.decorator';
 
 export class CreateUserDto {
@@ -65,6 +65,10 @@ export class CreateUserDto {
     @IsOptional()
     @IsString()
     country?: string;
+
+    @IsUrl()
+    @IsOptional()
+    profile_picture
 
     @ApiProperty({ description: "Role ID associated with the user", example: "role-uuid-id" })
     @IsNotEmpty()
