@@ -116,7 +116,6 @@ model Company {
 model Commission {
   commissions_id        String   @id @default(uuid()) 
   user_id               String?   @unique 
-  company_products_id   String   
   commision_percentage  Float
   commision_date        DateTime
 
