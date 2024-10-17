@@ -1,7 +1,9 @@
 import { Body, Controller, Post, Get, Param, Put, Delete, } from '@nestjs/common';
 import { CompanyService } from './companies.service';
 import { CreateCompanyDto } from './createCompany.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags("companies")
 @Controller('companies')
 export class CompanyController {
 

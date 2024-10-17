@@ -4,9 +4,11 @@ export declare class CreateUserDto {
     email: string;
     password: string;
     confirmPassword: string;
+    isOlder: boolean;
     nDni: number;
     birthday: Date;
     phone?: string;
     country?: string;
+    profile_picture: any;
     role_id: string;
 }
