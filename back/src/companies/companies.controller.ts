@@ -3,7 +3,7 @@ import { CompanyService } from './companies.service';
 import { CreateCompanyDto } from './createCompany.dto';
 
 @Controller('companies')
-export class CompaniesController {
+export class CompanyController {
 
     constructor(private readonly companyServices:CompanyService){}
 
