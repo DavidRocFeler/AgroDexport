@@ -51,7 +51,6 @@ model Role {
   role_id          String           @id @default(uuid()) 
   role_name        String           @db.VarChar(50)      
   role_description String           @db.VarChar(255) 
-  user_id           String 
 
   // Relaciones    
   user            User?              @relation                              
