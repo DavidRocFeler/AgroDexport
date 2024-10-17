@@ -74,6 +74,9 @@ let CompanyService = class CompanyService {
         if (!company) {
             throw new common_1.NotFoundException('Company not found');
         }
+        if (!company.isActive) {
+            throw new common_1.NotFoundException('Company is inactive');
+        }
         const updatedCompany = await this.prisma.company.update({
             where: { company_id: companyId },
             data: companyData,
