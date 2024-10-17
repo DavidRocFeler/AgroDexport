@@ -78,6 +78,10 @@ export class CompanyService {
     if (!company) {
       throw new NotFoundException('Company not found');
     }
+
+    if (!company.isActive) {
+      throw new NotFoundException('Company is inactive');
+    }
   
     const updatedCompany = await this.prisma.company.update({
       where: { company_id: companyId },

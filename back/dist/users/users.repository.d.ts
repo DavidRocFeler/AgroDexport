@@ -9,7 +9,7 @@ export declare class UsersRepository {
     findUserByEmail(email: string): Promise<User | null>;
     findCommission(): Promise<{
         commision_percentage: number;
-        user_id: string;
+        user_id: string | null;
         commissions_id: string;
         company_products_id: string;
         commision_date: Date;
