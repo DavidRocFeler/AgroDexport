@@ -1,22 +1,23 @@
+// src/user/dto/create-user.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty, IsString, IsOptional, IsInt, Length, Matches, Validate, IsUUID, IsBoolean, IsUrl } from 'class-validator';
 import { MatchPassword } from 'src/decorators/match.decorator';
 
 export class CreateUserDto {
     
-    @ApiProperty({ description: 'User first name', example: "Juan", maxLength: 50 })
+    @ApiProperty({ description: 'User first name', maxLength: 50 })
     @IsNotEmpty()
     @Matches(/^[a-zA-ZÀ-ÿÑñ]+$/, { message: 'The first name should only contain letters and no spaces' })
     @Length(1, 50)
     user_name: string;
   
-    @ApiProperty({ description: 'User last name',  example: "Perez", maxLength: 50 })
+    @ApiProperty({ description: 'User last name', maxLength: 50 })
     @IsNotEmpty()
     @Matches(/^[a-zA-ZÀ-ÿÑñ]+$/, { message: 'The last name should only contain letters and no spaces' })
     @Length(1, 50)
     user_lastname: string;
 
-    @ApiProperty({ description: 'User email', example: "juanperez@example.com", maxLength: 255 })
+    @ApiProperty({ description: 'User email', maxLength: 255 })
     @IsNotEmpty()
     @IsEmail()
     @Length(1, 255)
@@ -43,14 +44,34 @@ export class CreateUserDto {
     })
     confirmPassword: string;
 
-    @ApiProperty({ description: 'Indicates whether the user is of legal age (true for older, false for younger)', example: true })
-    @IsNotEmpty()
     @IsBoolean()
     isOlder: boolean
 
-    @ApiProperty({ description: "Role ID associated with the user", example: "e5d2b729-bb43-4b95-97af-a136bcace016" })
+    @ApiProperty({ description: 'User DNI number', example: 12345678 })
+    @IsNotEmpty()
+    @IsInt()
+    nDni: number;
+
+    @ApiProperty({ description: "User's date of birth", example: '1990-01-01' })
+    @IsNotEmpty()
+    birthday: Date;
+
+    @ApiProperty({ description: 'User phone number', required: false })
+    @IsOptional()
+    @IsString()
+    phone?: string;
+
+    @ApiProperty({ description: 'User country', required: false })
+    @IsOptional()
+    @IsString()
+    country?: string;
+
+    @IsUrl()
+    @IsOptional()
+    profile_picture
+
+    @ApiProperty({ description: "Role ID associated with the user", example: "role-uuid-id" })
     @IsNotEmpty()
     @IsUUID() 
     role_id: string;
-  
 }

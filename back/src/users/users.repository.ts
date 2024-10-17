@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { User, Credential } from '@prisma/client';
 import { validateExists } from '../helpers/validation.helper';
@@ -14,54 +14,89 @@ export class UsersRepository {
     private readonly jwtService: JwtService
   ) {}
 
-  async createUser (userData: CreateUserDto ): Promise<User> {
-    const { user_name, user_lastname, nDni, birthday, phone, country, role_id, isOlder, email, password} = userData
-    const credentials = await this.findCredentialByEmail(email)
-    if (!credentials) {
-      const hashedPassword = await bcrypt.hash(password, 10)
-      const newAccount = await this.prisma.credential.create({
-        data: {
-          email: email,
-          password: hashedPassword
-        }
-      })
-      const newUser = await this.prisma.user.create({
-        data: {
-          user_name: user_name,
-          user_lastname: user_lastname, 
-          nDni: nDni, 
-          birthday: birthday, 
-          phone: phone, 
-          country: country,
-          isOlder: isOlder,
-          role_id: role_id,
-          credential_id: newAccount.credential_id
-        }
-      })
-      return newUser
-    }
-    else{
-      throw new BadRequestException("The email is already in use")
-    }
+  async getAllUsers(): Promise<User[]> {
+    return this.prisma.user.findMany(); 
   }
 
-  async updateUser(id: string, userData: CreateUserDto): Promise<void> {
-    const { user_name, user_lastname, nDni, birthday, phone, country, role_id, isOlder, profile_picture } = userData
+  async getUserById(user_id: string): Promise<User> {
     const user = await this.prisma.user.findUnique({
-      where: {user_id: id}
-    })
-    if (user) {
-      user.user_name = user_name
-      user.birthday = birthday
-      user.country = country
-      user.isOlder = isOlder
-      user.nDni = nDni
-      user.phone = phone
-      user.user_lastname = user_lastname
-      user.role_id = role_id
-      user.profile_picture = profile_picture
+      where: { user_id }, 
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found'); 
     }
+
+    return user;
   }
+
+
+  async createUser(userData: CreateUserDto): Promise<User> {
+    const { user_name, user_lastname, role_id, isOlder, email, password } = userData;
+
+    const roleExists = await this.prisma.role.findUnique({
+      where: { role_id: userData.role_id },
+    });
+
+    if (!roleExists) {
+      throw new NotFoundException('The role is not found'); 
+    }
+    
+    const existingUser = await this.prisma.credential.findUnique({
+        where: { email } 
+    });
+
+    
+    if (existingUser) {
+        throw new BadRequestException("The email is already in use");
+    }
+
+    
+    const newUser = await this.prisma.user.create({
+        data: {
+            user_name: user_name,
+            user_lastname: user_lastname,
+            isOlder: isOlder,
+            role_id: role_id,
+            
+        }
+    });
+
+    
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newAccount = await this.prisma.credential.create({
+        data: {
+            email: email,
+            password: hashedPassword
+        }
+    });
+
+   
+    await this.prisma.user.update({
+        where: { user_id: newUser.user_id },
+        data: { credential_id: newAccount.credential_id } 
+    });
+
+    return newUser; 
+}
+
+  // async updateUser(id: string, userData: CreateUserDto): Promise<void> {
+  //   const { user_name, user_lastname, nDni, birthday, phone, country, role_id, isOlder, profile_picture } = userData
+  //   const user = await this.prisma.user.findUnique({
+  //     where: {user_id: id}
+  //   })
+  //   if (user) {
+  //     user.user_name = user_name
+  //     user.birthday = birthday
+  //     user.country = country
+  //     user.isOlder = isOlder
+  //     user.nDni = nDni
+  //     user.phone = phone
+  //     user.user_lastname = user_lastname
+  //     user.role_id = role_id
+  //     user.profile_picture = profile_picture
+  //   }
+  // }
 
   async singIn(credentials: LoginUserDto): Promise<{token: string}> {
     const { email, password } = credentials
