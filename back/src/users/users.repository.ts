@@ -3,10 +3,15 @@ import { PrismaService } from '../prisma/prisma.service';
 import { User, Credential } from '@prisma/client';
 import * as bcrypt from "bcrypt"
 import { CreateUserDto } from './dtos/createUser.dto';
+import { LoginUserDto } from './dtos/loginUser.dto';
+import { JwtService } from "@nestjs/jwt";
 
 @Injectable()
 export class UsersRepository {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly jwtService: JwtService
+  ) {}
 
   async createUser (userData: CreateUserDto ): Promise<User> {
     const { user_name, user_lastname, nDni, birthday, phone, country, role_id, isOlder, email, password} = userData
@@ -39,6 +44,47 @@ export class UsersRepository {
     }
   }
 
+  async updateUser(id: string, userData: CreateUserDto): Promise<void> {
+    const { user_name, user_lastname, nDni, birthday, phone, country, role_id, isOlder, profile_picture } = userData
+    const user = await this.prisma.user.findUnique({
+      where: {user_id: id}
+    })
+    if (user) {
+      user.user_name = user_name
+      user.birthday = birthday
+      user.country = country
+      user.isOlder = isOlder
+      user.nDni = nDni
+      user.phone = phone
+      user.user_lastname = user_lastname
+      user.role_id = role_id
+      user.profile_picture = profile_picture
+    }
+  }
+
+  async singIn(credentials: LoginUserDto): Promise<{token: string}> {
+    const { email, password } = credentials
+    const account = await this.findCredentialByEmail(email)
+    if ( account ) {
+      const user = await this.findUserByCredentialId(account.credential_id)
+      const userId = user.user_id
+      const accountPassword = account.password
+      const isPasswordValid = await bcrypt.compare(password, accountPassword)
+      if ( isPasswordValid ) {
+        const userPayload = {
+          sub: userId,
+          id: userId,
+          userName: user.user_name
+        }
+        const token = this.jwtService.sign(userPayload)
+        return {token, }
+      }
+    }
+    else {
+      throw new BadRequestException("Your password or Email is incorrect")
+    }
+  }
+
   async findCredentialByEmail(email: string): Promise<Credential | null> {
     return this.prisma.credential.findUnique({
       where: { email },
@@ -58,4 +104,5 @@ export class UsersRepository {
     });
     return credential?.user || null;
   }
+  
 }
