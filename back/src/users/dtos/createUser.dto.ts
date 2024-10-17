@@ -1,6 +1,6 @@
 // src/user/dto/create-user.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsNotEmpty, IsString, IsOptional, IsInt, Length, Matches, Validate, IsUUID } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, IsOptional, IsInt, Length, Matches, Validate, IsUUID, IsBoolean } from 'class-validator';
 import { MatchPassword } from '../decorators/match.decorator';
 
 export class CreateUserDto {
@@ -43,6 +43,9 @@ export class CreateUserDto {
         example: "Test123!",
     })
     confirmPassword: string;
+
+    @IsBoolean()
+    isOlder: boolean
 
     @ApiProperty({ description: 'User DNI number', example: 12345678 })
     @IsNotEmpty()

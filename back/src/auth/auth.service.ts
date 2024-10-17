@@ -1,5 +1,5 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { LoginUserDto } from '../users/loginUser.dto';
+import { LoginUserDto } from '../users/dtos/loginUser.dto';
 import { validateExists } from '../helpers/validation.helper';
 import { UsersRepository } from '../users/users.repository';
 import { CreateUserDto } from '../users/createUser.dto';
