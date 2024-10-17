@@ -18,9 +18,34 @@ import { EmailsModule } from './emails/emails.module';
 import { FarmerCertificationsModule } from './farmer-certifications/farmer-certifications.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { SupplyChainModule } from './supply-chain/supply-chain.module';
+import { JwtModule } from "@nestjs/jwt"
+
 
 @Module({
-  imports: [AuthModule, RolesModule, UsersModule, CompaniesModule, AddressesModule, CompanyProductsModule, CategoriesModule, DiscountsModule, OrdersModule, PaymentsModule, CloudinaryModule, NotificationsModule, TasksModule, EmailsModule, FarmerCertificationsModule, PrismaModule, SupplyChainModule],
+  imports: [
+    AuthModule, 
+    RolesModule, 
+    UsersModule, 
+    CompaniesModule, 
+    AddressesModule, 
+    CompanyProductsModule, 
+    CategoriesModule, 
+    DiscountsModule, 
+    OrdersModule, 
+    PaymentsModule, 
+    CloudinaryModule, 
+    NotificationsModule, 
+    TasksModule, 
+    EmailsModule, 
+    FarmerCertificationsModule, 
+    PrismaModule, 
+    SupplyChainModule,
+    JwtModule.register({
+      global: true,
+      signOptions: { expiresIn: "1h" },
+      secret: process.env.JWT_SECRET,
+    }),
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
