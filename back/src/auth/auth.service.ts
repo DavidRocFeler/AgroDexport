@@ -2,8 +2,8 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { LoginUserDto } from '../users/dtos/loginUser.dto';
 import { validateExists } from '../helpers/validation.helper';
 import { UsersRepository } from '../users/users.repository';
-import { CreateUserDto } from '../users/createUser.dto';
 import { User } from '@prisma/client';
+import { CreateUserDto } from 'src/users/dtos/createUser.dto';
 
 @Injectable()
 export class AuthService {
