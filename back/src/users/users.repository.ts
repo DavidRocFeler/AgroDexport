@@ -8,7 +8,7 @@ import { CreateUserDto } from './dtos/createUser.dto';
 export class UsersRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async createAccount (userData: CreateUserDto ): Promise<User> {
+  async createUser (userData: CreateUserDto ): Promise<User> {
     const { user_name, user_lastname, nDni, birthday, phone, country, role_id, isOlder, email, password} = userData
     const credentials = await this.findCredentialByEmail(email)
     if (!credentials) {

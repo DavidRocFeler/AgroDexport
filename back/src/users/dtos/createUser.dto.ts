@@ -1,7 +1,7 @@
 // src/user/dto/create-user.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty, IsString, IsOptional, IsInt, Length, Matches, Validate, IsUUID, IsBoolean } from 'class-validator';
-import { MatchPassword } from '../decorators/match.decorator';
+import { MatchPassword } from 'src/decorators/match.decorator';
 
 export class CreateUserDto {
     
