@@ -21,11 +21,11 @@ model User {
   country         String?                         
   profile_picture String?                          
   isOlder         Boolean                          
-  role_id         String                           
+  role_id         String        @unique                  
   credential_id   String?       @unique            
   
   // Relaciones
-  role            Role          @relation(fields: [role_id], references: [role_id])   
+  role            Role?         @relation(fields: [role_id], references: [role_id])   
   credential      Credential?   @relation(fields: [credential_id], references: [credential_id]) 
   notifications   Notification[] 
   companies       Company[]      
@@ -38,7 +38,9 @@ model User {
 model Credential {
   credential_id String   @id @default(uuid()) 
   email         String   @unique @db.VarChar(255) 
-  password      String   @db.VarChar(255)        
+  password      String   @db.VarChar(255)  
+
+  // Relaciones      
   user          User?    @relation 
 
   @@map("credentials") 
@@ -48,8 +50,11 @@ model Credential {
 model Role {
   role_id          String           @id @default(uuid()) 
   role_name        String           @db.VarChar(50)      
-  role_description String           @db.VarChar(255)     
-  users            User[]                               
+  role_description String           @db.VarChar(255) 
+  user_id           String 
+
+  // Relaciones    
+  user            User?              @relation                              
   permissions      RolePermission[]                     // Relación de muchos a muchos con Permission a través de RolePermission
 
   @@map("roles") 
@@ -92,6 +97,7 @@ model Company {
   website                    String?
   account_paypal             String?
   company_description        String?
+  company_logo               String
 
   // Relaciones
   user                       User               @relation(fields: [user_id], references: [user_id])
@@ -100,7 +106,8 @@ model Company {
   orders                     Order[]            
   discounts                  Discount[]         
   farmer_certifications      FarmerCertification[] 
-  supply_chain        SupplyChain?       @relation()
+  supply_chain        SupplyChain[]
+  payment        Payment?       @relation()
 
   @@map("companies")
 }
@@ -125,7 +132,7 @@ model Notification {
   notification_id  String    @id @default(uuid())
   user_id          String
   discount_id      String?
-  orders_id        String?
+  order_id        String?
   supply_chain_id  String?
   task_id          String    
   message          String
@@ -138,6 +145,7 @@ model Notification {
   task             Task            @relation(fields: [task_id], references: [task_id]) 
   discount         Discount?       @relation(fields: [discount_id], references: [discount_id])
   supply_chain     SupplyChain?    @relation(fields: [supply_chain_id], references: [supply_chain_id])
+  order            Order?          @relation(fields: [order_id], references: [order_id])
 
   @@map("notifications")
 }
@@ -219,9 +227,10 @@ model ShippingAddress {
   @@map("shipping_addresses") 
 }
 
+// Definición del modelo Category
 model Category {
   category_id           String        @id @default(uuid()) 
-  name_category         String
+  name_category         String        @unique
 
   // Relación
   products              CompanyProduct[]   @relation("CategoryProducts") 
@@ -229,6 +238,7 @@ model Category {
   @@map("categories") 
 }
 
+// Definición del modelo Discount
 model Discount {
   discount_id           String             @id @default(uuid()) 
   company_id            String             
@@ -244,14 +254,15 @@ model Discount {
   @@map("discounts") 
 }
 
+// Definición del modelo FarmerCertification
 model FarmerCertification {
   farmer_id                  String             @id @default(uuid()) 
   company_id                 String             
-  phytosanitary_certificate  Boolean
-  agricultural_producer_cert Boolean
-  organic_certification      Boolean?
-  quality_certificate        Boolean
-  certificate_of_origin      Boolean
+  phytosanitary_certificate  String
+  agricultural_producer_cert String
+  organic_certification      String?
+  quality_certificate        String
+  certificate_of_origin      String
 
   // Relaciones
   company                    Company           @relation(fields: [company_id], references: [company_id])
@@ -286,25 +297,29 @@ model CompanyProductFarmerCertification {
   @@map("product_certifications") 
 }
 
+// Definición del modelo Order
 model Order {
   order_id            String           @id @default(uuid()) 
   id_company_sell     String           
-  id_payments         String?          
-  notifications_id    String?          
+  id_payments         String?                   
   shipping_address_id String?          @unique 
   order_details_id    String           @unique 
   suppy_chain_id      String?          
   order_date          DateTime
+   payment_id        String?           @unique 
 
   // Relaciones
   company             Company          @relation(fields: [id_company_sell], references: [company_id])
   orderDetail         OrderDetail?      @relation(fields: [order_details_id], references: [order_details_id])
   shipping_address    ShippingAddress?   @relation(fields: [shipping_address_id], references: [shipping_address_id]) 
   supply_chain        SupplyChain?       @relation() 
+  payment           Payment?   @relation(fields: [payment_id], references: [payment_id])
+  notifications   Notification[] 
 
   @@map("orders") 
 }
 
+// Definición del modelo OrderDetail
 model OrderDetail {
   order_details_id    String             @id @default(uuid()) 
   iva                 Float
@@ -333,6 +348,7 @@ model OrderDetailProduct {
   @@map("order_detail_products") 
 }
 
+// Definición del modelo SupplyChain
 model SupplyChain {
   supply_chain_id      String          @id @default(uuid()) 
   order_id             String          @unique
@@ -348,3 +364,25 @@ model SupplyChain {
   @@map("supply_chain") 
 }
 
+// Definición del modelo Payment
+model Payment {
+  payment_id         String     @id @default(uuid())
+  company_id         String     @unique// Clave foránea hacia Company
+  status             String
+  amount_decimal     Float
+  currency           String
+  payment_provider   String
+  transaction_id     String
+  payer_id           String
+  description        String?
+  payment_method     String
+  is_verified        Boolean    @default(false)
+  created_at         DateTime   @default(now())
+  updated_at         DateTime   @updatedAt
+
+  // Relaciones
+  company            Company    @relation(fields: [company_id], references: [company_id])
+  order        Order?       @relation() 
+
+  @@map("payments")
+}
