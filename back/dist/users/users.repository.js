@@ -57,6 +57,9 @@ let UsersRepository = class UsersRepository {
         });
         return credential?.user || null;
     }
+    async findCommission() {
+        return this.prisma.commission.findFirst();
+    }
 };
 exports.UsersRepository = UsersRepository;
 exports.UsersRepository = UsersRepository = __decorate([
