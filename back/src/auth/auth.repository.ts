@@ -46,7 +46,9 @@ export class AuthRepository {
     }
 
     thirdSingIn(userData: Partial<CreateUserDto>) {
-        throw new Error('Method not implemented.');
-      }
+        const {email, user_name, password } = userData
+        
+    }
 
+    
 }
