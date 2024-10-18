@@ -64,6 +64,7 @@ export class UsersRepository {
 
   async singIn(credentials: LoginUserDto): Promise<{token: string}> {
     const { email, password } = credentials
+    console.log(credentials)
     const account = await this.findCredentialByEmail(email)
     if ( account ) {
       const user = await this.findUserByCredentialId(account.credential_id)
@@ -77,7 +78,7 @@ export class UsersRepository {
           userName: user.user_name
         }
         const token = this.jwtService.sign(userPayload)
-        return {token, }
+        return {token}
       }
     }
     else {

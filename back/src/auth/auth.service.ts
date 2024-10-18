@@ -23,6 +23,7 @@ export class AuthService {
 
 
   async signInService(credentials: LoginUserDto) {
+    console.log(credentials)
     const token = await this.usersRepository.singIn(credentials)
     return token
   }
@@ -32,6 +33,7 @@ export class AuthService {
   }
 
   async thirdSingIn(userData: Partial<CreateUserDto>) {
+    console.log(userData)
     return await this.authRepository.thirdSingIn(userData)
   }
 
