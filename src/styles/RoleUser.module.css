@@ -1,0 +1,24 @@
+.modalContent {
+    padding: 2rem;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.buttonsContainer {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 1.5rem;
+}
+
+.roleButton {
+    padding: 0.5rem 1.5rem;
+    background-color: #5c8b1b;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.roleButton:hover {
+    background-color: #4b6c14;
+}
