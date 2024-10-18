@@ -1,6 +1,7 @@
 import { Injectable, BadRequestException } from "@nestjs/common";
 import { UploadApiResponse, v2 as Cloudinary } from "cloudinary";
 import * as toStream from "buffer-to-stream";
+import { UsersRepository } from "../users/users.repository";
 // import { UsersRepository } from "../users/users.repository";
 // import { CompaniesRepository } from "../companies/companies.repository";
 // import { ProductsRepository } from "../company-products/company-products.repository";
@@ -9,7 +10,7 @@ import * as toStream from "buffer-to-stream";
 @Injectable()
 export class CloudinaryService {
   constructor(
-    // private readonly usersRepository: UsersRepository,
+    private readonly usersRepository: UsersRepository,
     // private readonly companiesRepository: CompaniesRepository,
     // private readonly productsRepository: CompanyProductsRepository,
     // private readonly farmerCertificationsRepository: FarmerCertificationsRepository,
@@ -72,12 +73,12 @@ export class CloudinaryService {
   }
 
   private async updateFileUrl(id: string, url: string, type: string): Promise<void> {
-    let updateData: Record<string, string> = {}; // Objeto para pasar la actualización
+    let updateData: Record<string, string> = {}; 
   
     switch (type) {
       case 'user':
         updateData = { profile_picture: url };
-        // await this.usersRepository.updateUserFile(id, updateData);
+        await this.usersRepository.updateUser(id, updateData);
         break;
   
       case 'companyLogo':

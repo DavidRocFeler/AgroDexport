@@ -1,10 +1,14 @@
 import { Injectable, ConflictException, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateCompanyDto } from './createCompany.dto';
+import * as companiesData from '../assets/companies.json';
+import { UsersRepository } from '../users/users.repository';
 
 @Injectable()
 export class CompanyService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly usersRepository: UsersRepository,
+    private readonly prisma: PrismaService) {}
 
   async getAllCompaniesServices() {
     return await this.prisma.company.findMany({
@@ -107,10 +111,43 @@ export class CompanyService {
 
     return deletedCompany;
   }
-  
-  
 
-
+  async preloadCompaniesService(): Promise<{ company: string; status: string }[]> {
+    const results: { company: string; status: string }[] = [];
+  
+    for (const companyData of companiesData) {
+      const user = await this.usersRepository.findUserByEmail(companyData['email']);
+  
+      if (!user) {
+        results.push({ company: companyData.email, status: `Email ${companyData['email']} not found` });
+        continue;
+      }
+  
+      const existingCompany = await this.prisma.company.findFirst({
+        where: {
+          tax_identification_number: companyData.tax_identification_number,
+          country: companyData.country,
+          isActive: true,
+        },
+      });
+  
+      if (existingCompany) {
+        results.push({ company: companyData.company_name, status: 'Already Exists' });
+        continue;
+      }
+      const { email, ...companyWithoutEmail } = companyData;
+      const companyWithUserId = { ...companyWithoutEmail, user_id: user.user_id };
+  
+      await this.prisma.company.create({
+        data: companyWithUserId,
+      });
+  
+      results.push({ company: companyData.company_name, status: 'Created' });
+    }
+  
+    return results;
+  }
+  
 }
 
 
