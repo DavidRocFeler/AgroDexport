@@ -28,7 +28,11 @@ export class UsersController {
     return this.userServices.getAllUsers();
     }
 
+    @ApiBearerAuth()
+    @HttpCode(200)
     @Get(':user_id')
+    @UseGuards(AuthGuard, RolesGuard)
+    @Roles('admin', 'supplier', 'buyer')  
       async findOne(@Param('user_id') user_id: string): Promise<User> {
         return this.usersRepository.getUserById(user_id); 
       }
@@ -42,14 +46,15 @@ export class UsersController {
         // return await this.userServices.updateUserService(id, updateData);
       // }
 
-      @ApiBearerAuth()      
-      @HttpCode(200)
+
+    @ApiBearerAuth()
+    @HttpCode(200)
       @Put(':id')
+      @UseGuards(AuthGuard, RolesGuard)
+      @Roles('supplier', 'buyer')
       async updateUser(
         @Param('id', new ParseUUIDPipe()) id: string,
         @Body() updateData: UpdateUserDto) {
         return await this.userServices.updateUserService(id, updateData);
       }
-
-  
 }
