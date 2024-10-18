@@ -2,7 +2,7 @@ import { Injectable, BadRequestException } from "@nestjs/common";
 import { UploadApiResponse, v2 as Cloudinary } from "cloudinary";
 import * as toStream from "buffer-to-stream";
 import { UsersRepository } from "../users/users.repository";
-import { CompanyService } from "../companies/companies.service"
+import { CompanyRepository } from "../companies/companies.repository"
 // import { UsersRepository } from "../users/users.repository";
 // import { ProductsRepository } from "../company-products/company-products.repository";
 // import { FarmerCertificationsRepository } from "../farmer-certifications/farmer-certifications.repository";
@@ -11,7 +11,7 @@ import { CompanyService } from "../companies/companies.service"
 export class CloudinaryService {
   constructor(
     private readonly usersRepository: UsersRepository,
-    private readonly companyService: CompanyService,
+    private readonly companiesRepository: CompanyRepository
     // private readonly productsRepository: CompanyProductsRepository,
     // private readonly farmerCertificationsRepository: FarmerCertificationsRepository,
   ) {}
@@ -83,7 +83,7 @@ export class CloudinaryService {
   
       case 'companyLogo':
         updateData = { company_logo: url };
-        await this.companyService.updateCompanyServices(id, updateData);
+        await this.companiesRepository.update(id, updateData);
         break;
   
       case 'product':

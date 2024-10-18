@@ -25,17 +25,19 @@ export class PreloadService implements OnModuleInit {
 
     try {
       const categoryResults = await this.categoryService.preloadCategoriesService();
-      console.log('Categories preload results:', categoryResults);
+      // console.log('Categories preload results:', categoryResults);
 
       const roleResults = await this.rolesService.seedRoles();
-      console.log('Roles preload results:', roleResults);
+      // console.log('Roles preload results:', roleResults);
 
       const userResults = await this.authService.preloadUsersService();
-      console.log('Users preload results:', userResults);
+      // console.log('Users preload results:', userResults);
 
       const companiesResults = await this.companyService.preloadCompaniesService();
-      console.log('Companies preload results:', companiesResults);
+      // console.log('Companies preload results:', companiesResults);
       
+      console.log('Preload process completed...');
+
     } catch (error) {
       console.error('Error during categories preload:', error.message);
     }

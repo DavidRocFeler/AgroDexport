@@ -10,6 +10,6 @@ import { UsersModule } from 'src/users/users.module';
   controllers: [CompanyController],
   providers: [CompanyService, CompanyRepository, PrismaService],
   imports: [UsersModule],
-  exports: [CompanyService],
+  exports: [CompanyService, CompanyRepository],
 })
 export class CompaniesModule {}
