@@ -8,6 +8,9 @@ import { EmailService } from "src/nodemail/nodemail";
 
 @Injectable()
 export class AuthRepository {
+    thirdSingIn(userData: Partial<import("../users/dtos/createUser.dto").CreateUserDto>) {
+      throw new Error('Method not implemented.');
+    }
     constructor(
         private readonly prisma: PrismaService,
         private readonly userRepository: UsersRepository,
@@ -42,4 +45,6 @@ export class AuthRepository {
         }
         throw new NotFoundException('This Email was not found');
     }
+
+
 }

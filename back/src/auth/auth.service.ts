@@ -5,12 +5,15 @@ import { User } from '@prisma/client';
 import * as usersData from '../assets/users.json';
 import { CreateUserDto } from '../users/dtos/createUser.dto';
 import { RoleRepository } from '../roles/roles.repository';
+import { AuthRepository } from './auth.repository';
 
 @Injectable()
 export class AuthService {
+
   constructor(
     private readonly usersRepository: UsersRepository,
-    private readonly rolesRepository: RoleRepository
+    private readonly rolesRepository: RoleRepository,
+    private readonly authRepository: AuthRepository 
   ) {}
 
   async signUpService(userData: CreateUserDto): Promise<Omit<User, 'credential_id'>> {
@@ -25,6 +28,10 @@ export class AuthService {
 
   async passwordRecovery(email: Partial<LoginUserDto>) {
     return this.authRepository.resetPassword(email)
+  }
+
+  async thirdSingIn(userData: Partial<CreateUserDto>) {
+    return await this.authRepository.thirdSingIn(userData)
   }
 
   async preloadUsersService(): Promise<{ user: string; status: string }[]> {
