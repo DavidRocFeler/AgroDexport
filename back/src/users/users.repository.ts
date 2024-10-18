@@ -1,4 +1,5 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+
+import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { User, Credential } from '@prisma/client';
 import { validateExists } from '../helpers/validation.helper';
@@ -14,71 +15,78 @@ export class UsersRepository {
     private readonly jwtService: JwtService
   ) {}
 
-  async createUser (userData: CreateUserDto ): Promise<User> {
-    const { user_name, user_lastname, nDni, birthday, phone, country, role_id, isOlder, email, password} = userData
-    const credentials = await this.findCredentialByEmail(email)
-    if (!credentials) {
-      const hashedPassword = await bcrypt.hash(password, 10)
-      const newAccount = await this.prisma.credential.create({
-        data: {
-          email: email,
-          password: hashedPassword
-        }
-      })
-      const newUser = await this.prisma.user.create({
-        data: {
-          user_name: user_name,
-          user_lastname: user_lastname, 
-          nDni: nDni, 
-          birthday: birthday, 
-          phone: phone, 
-          country: country,
-          isOlder: isOlder,
-          role_id: role_id,
-          credential_id: newAccount.credential_id
-        }
-      })
-      return newUser
-    }
-    else{
-      throw new BadRequestException("The email is already in use")
-    }
+  async getAllUsers(): Promise<User[]> {
+    return this.prisma.user.findMany(); 
   }
 
-  async updateUser(id: string, userData: CreateUserDto): Promise<void> {
-    const { user_name, user_lastname, nDni, birthday, phone, country, role_id, isOlder, profile_picture } = userData
-    const user = await this.prisma.user.findUnique({
-      where: {user_id: id}
-    })
-    if (user) {
-      user.user_name = user_name
-      user.birthday = birthday
-      user.country = country
-      user.isOlder = isOlder
-      user.nDni = nDni
-      user.phone = phone
-      user.user_lastname = user_lastname
-      user.role_id = role_id
-      user.profile_picture = profile_picture
+  async getUserById(user_id: string): Promise<User> {
+    const user = await this.prisma.user.findUnique( { where: { user_id } });
+
+    if (!user) {
+      throw new NotFoundException('User not found'); 
     }
+    return user;
+  }
+
+  async createUser(userData: Partial<CreateUserDto>): Promise<User> {
+    const { user_name, user_lastname, role_id, isOlder, email, password } = userData;
+    const roleExists = await this.prisma.role.findUnique( {where: { role_id: role_id } });
+
+    if (roleExists) {
+      const existingUser = await this.prisma.credential.findUnique( {where: { email } } )
+
+      if (!existingUser) {
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        const newAccount = await this.prisma.credential.create({
+          data: {
+            email: email,
+            password: hashedPassword
+          }
+        })
+
+        const newUser = await this.prisma.user.create({
+          data: {
+              user_name: user_name,
+              user_lastname: user_lastname,
+              isOlder: isOlder,
+              role_id: role_id,
+              credential_id: newAccount.credential_id
+            }
+        })
+        return newUser; 
+      }
+      throw new BadRequestException("The email is already in use");
+    }
+    
+    throw new NotFoundException('The role is not found'); 
   }
 
   async singIn(credentials: LoginUserDto): Promise<{token: string}> {
     const { email, password } = credentials
+    console.log(credentials)
     const account = await this.findCredentialByEmail(email)
     if ( account ) {
-      const user = await this.findUserByCredentialId(account.credential_id)
+      const user = await this.prisma.user.findUnique({
+        where: { credential_id: account.credential_id },  // Usar la credencial para encontrar el usuario
+        include: { role: true },  // Incluir la relación con `role` para obtener `role_name`
+      });
+
       const userId = user.user_id
       const accountPassword = account.password
+
       const isPasswordValid = await bcrypt.compare(password, accountPassword)
+
       if ( isPasswordValid ) {
         const userPayload = {
           sub: userId,
-          id: userId,
-          userName: user.user_name
+          user_id: userId,
+          user_name: user.user_name,
+          role: user.role.role_name,
         }
+
         const token = this.jwtService.sign(userPayload)
-        return {token, }
+        return {token}
       }
     }
     else {
@@ -95,6 +103,7 @@ export class UsersRepository {
   async findUserByCredentialId(credential_id: string): Promise<User | null> {
     return this.prisma.user.findUnique({
       where: { credential_id },
+      include: { role: true },
     });
   }
 
@@ -104,5 +113,33 @@ export class UsersRepository {
       include: { user: true },
     });
     return credential?.user || null;
+  }
+
+
+  async updateUser(id: string, updateData: Partial<User & { password?: string }>): Promise<User> {
+    try {
+      const user = await this.getUserById(id);
+  
+      if (updateData.password) {
+        const hashedPassword = await bcrypt.hash(updateData, 10);
+        await this.prisma.credential.update({
+          where: { credential_id: user.credential_id },
+          data: { password: hashedPassword },
+        });
+      }
+
+      const updatedUser = await this.prisma.user.update({
+        where: { user_id: id },
+        data: updateData,
+      });
+  
+      return updatedUser;
+
+    } catch (error) {
+      if (error.code === 'P2002') { // Prisma usa P2002 para violación de restricciones únicas
+        throw new ConflictException('El email ya está en uso');
+      }
+      throw error;
+    }
   }
 }

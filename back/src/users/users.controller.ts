@@ -1,34 +1,55 @@
-<<<<<<< HEAD
-import { Body, Controller, HttpCode, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, ParseUUIDPipe, Post, Put, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dtos/createUser.dto';
+import { UsersRepository } from './users.repository';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { User } from '@prisma/client';
+import { UpdateUserDto } from './dtos/updateUser.dto';
+import { AuthGuard } from '../guards/auth.guard';
+import { RolesGuard } from '../guards/RolesGuard';
+import { Roles } from '../decorators/roles.decorator';
 
+@ApiTags("user")
 @Controller('users')
 export class UsersController {
+    
     constructor( 
-        private readonly userServices: UsersService
+        private readonly userServices: UsersService,
+        private readonly usersRepository: UsersRepository
     ) {}
 
-    @HttpCode(201)
-    @Post(':id')
-    async updateUser( @Param('id') id: string, @Body() userData: CreateUserDto) {
-        return this.userServices.updateUser( id, userData)
+
+    @ApiBearerAuth()
+    @HttpCode(200)
+    @Get() 
+    @UseGuards(AuthGuard, RolesGuard)
+    @Roles('admin')
+    async getAllUsers(): Promise<User[]> {
+    return this.userServices.getAllUsers();
     }
-=======
-import { Body, Controller, Post } from '@nestjs/common';
-import { UpdateCommissionDto } from './updateComission.dto';
-import { UsersService } from './users.service';
-import { ApiExcludeEndpoint } from '@nestjs/swagger';
 
+    @Get(':user_id')
+      async findOne(@Param('user_id') user_id: string): Promise<User> {
+        return this.usersRepository.getUserById(user_id); 
+      }
 
-@Controller('users')
-export class UsersController {
-    constructor(private readonly usersService: UsersService) {}
+      // @ApiBearerAuth()      
+      // @HttpCode(200)
+      // @Put(':id')
+      // async updateUser(
+        // @Param('id', new ParseUUIDPipe()) id: string,
+        // @Body() updateData: UpdateUserDto) {
+        // return await this.userServices.updateUserService(id, updateData);
+      // }
 
-    // @Post("/comission/sedeer")
-    // @ApiExcludeEndpoint()
-    // async preloadCategories(@Body() categoryData: UpdateCommissionDto){
-    //     return this.usersService.preloadCommisionService();
-    // }
->>>>>>> 9b42dfe5818b33af0e0b28092c9d4d42cb144839
+      @ApiBearerAuth()      
+      @HttpCode(200)
+      @Put(':id')
+      async updateUser(
+        @Param('id', new ParseUUIDPipe()) id: string,
+        @Body() updateData: UpdateUserDto) {
+        return await this.userServices.updateUserService(id, updateData);
+      }
+
+  
 }

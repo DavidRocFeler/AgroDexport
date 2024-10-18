@@ -1,4 +1,4 @@
-import { Controller, Param, ParseUUIDPipe, Post, UploadedFiles, UseInterceptors, MaxFileSizeValidator, FileTypeValidator } from "@nestjs/common";
+import { Controller, Param, ParseUUIDPipe, Post, UploadedFiles, UseInterceptors, MaxFileSizeValidator, FileTypeValidator, UploadedFile, ParseFilePipe } from "@nestjs/common";
 import { CloudinaryService } from "./cloudinary.service";
 import { FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
 import { ApiTags, ApiParam, ApiConsumes, ApiBody } from "@nestjs/swagger";
@@ -15,7 +15,7 @@ export class CloudinaryController {
   @ApiParam({ name: 'id', description: 'ID del recurso al cual asociar la imagen', type: 'string' })
   @ApiConsumes('multipart/form-data')
   @ApiBody({
-    description: 'Archivo de imagen (JPG, PNG, o WEBP y menor a 200KB)',
+    description: 'Archivo de imagen (JPG, PNG, o WEBP y menor a 300KB)',
     required: true,
     schema: {
       type: 'object',
@@ -30,7 +30,19 @@ export class CloudinaryController {
   async uploadImage(
     @Param('type') type: string,
     @Param('id', new ParseUUIDPipe()) id: string,
-    @UploadedFiles() file: Express.Multer.File,
+    @UploadedFile(
+        new ParseFilePipe({
+            validators: [
+              new MaxFileSizeValidator({
+                maxSize: 300000, // 300KB
+                message: 'El archivo debe ser menor a 300KB',
+              }),
+              new FileTypeValidator({
+                fileType: /(jpg|jpeg|png|webp)$/, // Solo imágenes JPG, PNG, o WEBP
+              }),
+            ],
+          }),
+    ) file: Express.Multer.File,
   ) {
     return this.cloudinaryService.uploadFile(id, file, type);
   }
