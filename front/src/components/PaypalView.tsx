@@ -36,7 +36,7 @@ const PaypalView = () => {
 
       <div className="bg-gray-100 rounded-lg p-6">
         <div className="flex justify-between items-center mb-6">
-          <Image src={"paypalLogo"} alt="PayPal Logo" width={100} height={50} />
+          <Image src={"/PayPal-logo.png"} alt="PayPal Logo" width={100} height={50} />
           <h2 className="text-xl font-semibold">Total a pagar: 95,00 EUR</h2>
         </div>
 
