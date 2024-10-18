@@ -32,8 +32,8 @@ export class AuthController {
     }
 
     @Post("thirdsingin") 
-    async thirdAuth() {
-        return this.authService.thirdSingIn()
+    async thirdAuth(userData: Partial<CreateUserDto>) {
+        return this.authService.thirdSingIn(userData)
     }
 
     @Post("passwordrecovery") 
