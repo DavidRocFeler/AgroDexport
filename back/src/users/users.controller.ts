@@ -25,13 +25,13 @@ export class UsersController {
         return this.usersRepository.getUserById(user_id); 
       }
 
-      @ApiBearerAuth()      
-      @HttpCode(200)
-      @Put(':id')
-      async updateUser(
-        @Param('id', new ParseUUIDPipe()) id: string,
-        @Body() updateData: UpdateUserDto) {
-        return await this.userServices.updateUserService(id, updateData);
-      }
+      // @ApiBearerAuth()      
+      // @HttpCode(200)
+      // @Put(':id')
+      // async updateUser(
+        // @Param('id', new ParseUUIDPipe()) id: string,
+        // @Body() updateData: UpdateUserDto) {
+        // return await this.userServices.updateUserService(id, updateData);
+      // }
   
 }

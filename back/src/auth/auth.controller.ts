@@ -8,7 +8,9 @@ import { ApiExcludeEndpoint, ApiTags } from '@nestjs/swagger';
 ApiTags("Auth")
 @Controller('auth')
 export class AuthController {
-    constructor (private readonly authService: AuthService){}
+    constructor (
+        private readonly authService: AuthService
+    ){}
 
     @HttpCode(201)
     @Post('signup')
@@ -27,5 +29,15 @@ export class AuthController {
     @ApiExcludeEndpoint()
     async preloadUsers(@Body() usersData: CreateUserDto){
         return this.authService.preloadUsersService();
+    }
+
+    @Post("thirdsingin") 
+    async thirdAuth() {
+        return this.authService.thirdSingIn()
+    }
+
+    @Post("passwordrecovery") 
+    async passwordRecovery(@Body() email: Partial<LoginUserDto>) {
+        return this.authService.passwordRecovery(email)
     }
 }

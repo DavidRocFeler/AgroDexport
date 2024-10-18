@@ -1,7 +1,6 @@
-import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { User, Credential } from '@prisma/client';
-import { validateExists } from '../helpers/validation.helper';
 import * as bcrypt from "bcrypt"
 import { JwtService } from "@nestjs/jwt";
 import { CreateUserDto } from './dtos/createUser.dto';
@@ -19,66 +18,47 @@ export class UsersRepository {
   }
 
   async getUserById(user_id: string): Promise<User> {
-    const user = await this.prisma.user.findUnique({
-      where: { user_id }, 
-    });
+    const user = await this.prisma.user.findUnique( { where: { user_id } });
 
     if (!user) {
       throw new NotFoundException('User not found'); 
     }
-
     return user;
   }
 
-
-  async createUser(userData: CreateUserDto): Promise<User> {
+  async createUser(userData: Partial<CreateUserDto>): Promise<User> {
     const { user_name, user_lastname, role_id, isOlder, email, password } = userData;
+    const roleExists = await this.prisma.role.findUnique( {where: { role_id: role_id } });
 
-    const roleExists = await this.prisma.role.findUnique({
-      where: { role_id: userData.role_id },
-    });
+    if (roleExists) {
+      const existingUser = await this.prisma.credential.findUnique( {where: { email } } )
 
-    if (!roleExists) {
-      throw new NotFoundException('The role is not found'); 
-    }
-    
-    const existingUser = await this.prisma.credential.findUnique({
-        where: { email } 
-    });
+      if (!existingUser) {
+        const hashedPassword = await bcrypt.hash(password, 10);
 
-    
-    if (existingUser) {
-        throw new BadRequestException("The email is already in use");
-    }
-
-    
-    const newUser = await this.prisma.user.create({
-        data: {
-            user_name: user_name,
-            user_lastname: user_lastname,
-            isOlder: isOlder,
-            role_id: role_id,
-            
-        }
-    });
-
-    
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const newAccount = await this.prisma.credential.create({
-        data: {
+        const newAccount = await this.prisma.credential.create({
+          data: {
             email: email,
             password: hashedPassword
-        }
-    });
+          }
+        })
 
-   
-    await this.prisma.user.update({
-        where: { user_id: newUser.user_id },
-        data: { credential_id: newAccount.credential_id } 
-    });
-
-    return newUser; 
-}
+        const newUser = await this.prisma.user.create({
+          data: {
+              user_name: user_name,
+              user_lastname: user_lastname,
+              isOlder: isOlder,
+              role_id: role_id,
+              credential_id: newAccount.credential_id
+            }
+        })
+        return newUser; 
+      }
+      throw new BadRequestException("The email is already in use");
+    }
+    
+    throw new NotFoundException('The role is not found'); 
+  }
 
   async singIn(credentials: LoginUserDto): Promise<{token: string}> {
     const { email, password } = credentials
@@ -123,31 +103,7 @@ export class UsersRepository {
     return credential?.user || null;
   }
 
-
-  async updateUser(id: string, updateData: Partial<User & { password?: string }>): Promise<User> {
-    try {
-      const user = await this.getUserById(id);
-  
-      if (updateData.password) {
-        const hashedPassword = await bcrypt.hash(updateData, 10);
-        await this.prisma.credential.update({
-          where: { credential_id: user.credential_id },
-          data: { password: hashedPassword },
-        });
-      }
-
-      const updatedUser = await this.prisma.user.update({
-        where: { user_id: id },
-        data: updateData,
-      });
-  
-      return updatedUser;
-
-    } catch (error) {
-      if (error.code === 'P2002') { // Prisma usa P2002 para violación de restricciones únicas
-        throw new ConflictException('El email ya está en uso');
-      }
-      throw error;
-    }
-}
+  async updateUser (id: string, update: {}) {
+    return "hi error here"
+  }
 }
