@@ -3,6 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateCompanyDto } from './createCompany.dto';
 import * as companiesData from '../assets/companies.json';
 import { UsersRepository } from '../users/users.repository';
+import { UpdateCompanyDto } from './updateCompany.dto';
 
 @Injectable()
 export class CompanyService {
@@ -74,7 +75,7 @@ export class CompanyService {
     return newCompany;
   }
 
-  async updateCompanyServices(companyId: string, companyData: CreateCompanyDto) {
+  async updateCompanyServices(companyId: string, companyData: UpdateCompanyDto) {
     const company = await this.prisma.company.findUnique({
       where: { company_id: companyId },
     });
