@@ -5,12 +5,11 @@ import { randomPassword } from "src/utilities/randomPassword"; // Asegúrate de 
 import * as bcrypt from "bcrypt";
 import { LoginUserDto } from "src/users/dtos/loginUser.dto";
 import { EmailService } from "src/nodemail/nodemail";
+import { CreateUserDto } from "src/users/dtos/createUser.dto";
 
 @Injectable()
 export class AuthRepository {
-    thirdSingIn(userData: Partial<import("../users/dtos/createUser.dto").CreateUserDto>) {
-      throw new Error('Method not implemented.');
-    }
+
     constructor(
         private readonly prisma: PrismaService,
         private readonly userRepository: UsersRepository,
@@ -46,5 +45,8 @@ export class AuthRepository {
         throw new NotFoundException('This Email was not found');
     }
 
+    thirdSingIn(userData: Partial<CreateUserDto>) {
+        throw new Error('Method not implemented.');
+      }
 
 }
