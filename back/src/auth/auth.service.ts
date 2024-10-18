@@ -24,6 +24,7 @@ export class AuthService {
 
   async signInService(credentials: LoginUserDto) {
     const token = await this.usersRepository.singIn(credentials)
+    return token
   }
 
   async passwordRecovery(email: Partial<LoginUserDto>) {
