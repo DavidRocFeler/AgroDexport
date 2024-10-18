@@ -23,6 +23,10 @@ export class AuthService {
     const token = await this.usersRepository.singIn(credentials)
   }
 
+  async passwordRecovery(email: Partial<LoginUserDto>) {
+    return this.authRepository.resetPassword(email)
+  }
+
   async preloadUsersService(): Promise<{ user: string; status: string }[]> {
     const results: { user: string; status: string }[] = [];
   
