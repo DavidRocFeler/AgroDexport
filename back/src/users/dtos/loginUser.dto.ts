@@ -7,7 +7,7 @@ export class LoginUserDto extends PickType(CreateUserDto, ['email']) {
     @IsString()
     @ApiProperty({
         description: "Password del usuario, no puede estar vacío",
-        example: "Prueba123!",
+        example: "Password123!",
     })
     password: string; 
 }
