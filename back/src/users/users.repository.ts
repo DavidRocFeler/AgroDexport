@@ -64,20 +64,29 @@ export class UsersRepository {
 
   async singIn(credentials: LoginUserDto): Promise<{token: string}> {
     const { email, password } = credentials
+    console.log(credentials)
     const account = await this.findCredentialByEmail(email)
     if ( account ) {
-      const user = await this.findUserByCredentialId(account.credential_id)
+      const user = await this.prisma.user.findUnique({
+        where: { credential_id: account.credential_id },  // Usar la credencial para encontrar el usuario
+        include: { role: true },  // Incluir la relación con `role` para obtener `role_name`
+      });
+
       const userId = user.user_id
       const accountPassword = account.password
+
       const isPasswordValid = await bcrypt.compare(password, accountPassword)
+
       if ( isPasswordValid ) {
         const userPayload = {
           sub: userId,
-          id: userId,
-          userName: user.user_name
+          user_id: userId,
+          user_name: user.user_name,
+          role: user.role.role_name,
         }
+
         const token = this.jwtService.sign(userPayload)
-        return {token, }
+        return {token}
       }
     }
     else {
@@ -94,6 +103,7 @@ export class UsersRepository {
   async findUserByCredentialId(credential_id: string): Promise<User | null> {
     return this.prisma.user.findUnique({
       where: { credential_id },
+      include: { role: true },
     });
   }
 
