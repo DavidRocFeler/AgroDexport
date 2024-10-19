@@ -3,6 +3,7 @@ import { AuthService } from './auth.service';
 import { LoginUserDto } from 'src/users/dtos/loginUser.dto';
 import { CreateUserDto } from 'src/users/dtos/createUser.dto';
 import { ApiExcludeEndpoint, ApiTags } from '@nestjs/swagger';
+import { thirdAuthDto } from './dtos/thirdauth.dto';
 
 
 @ApiTags("Auth")
@@ -32,7 +33,7 @@ export class AuthController {
     }
 
     @Post("thirdsingin") 
-    async thirdAuth(userData: Partial<CreateUserDto>) {
+    async thirdAuth(userData: thirdAuthDto) {
         return this.authService.thirdSingIn(userData)
     }
 
