@@ -3,8 +3,7 @@ import { CategoriesService } from './categories/categories.service';
 import { RolesService } from './roles/roles.service';
 import { AuthService } from './auth/auth.service';
 import { CompanyService } from './companies/companies.service';
-// import { UsersService } from './users/users.service';
-// import { AddressesService } from './addresses/addresses.service';
+import { AddressesService } from './addresses/addresses.service';
 // import { CompanyProductsService } from './company-products/company-products.service';
 // import { DiscountsService } from './discounts/discounts.service';
 
@@ -15,7 +14,7 @@ export class PreloadService implements OnModuleInit {
     private readonly rolesService: RolesService, 
     private readonly authService: AuthService,
     private readonly companyService: CompanyService,
-    // private readonly shippingAddressService: AddressesService,
+    private readonly AddressService: AddressesService,
     // private readonly companyProductsService: CompanyProductsService,
     // private readonly discount: DiscountsService
   ) {}
@@ -35,6 +34,9 @@ export class PreloadService implements OnModuleInit {
 
       const companiesResults = await this.companyService.preloadCompaniesService();
       // console.log('Companies preload results:', companiesResults);
+
+      const addressResults = await this.AddressService.preloadShippingAddressesService();
+      // console.log('ShippingAddress preload results:', addressResults);
       
       console.log('Preload process completed...');
 
