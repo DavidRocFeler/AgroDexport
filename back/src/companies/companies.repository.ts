@@ -25,6 +25,26 @@ export class CompanyRepository {
     return company;
   }
 
+  async findByName(companyName: string) {
+    const company = await this.prisma.company.findFirst({
+      where: { company_name: companyName },
+      include: {
+        user: {
+          include: {
+            role: true,
+          },
+        },
+      },
+    });
+  
+    if (!company || !company.isActive) {
+      throw new NotFoundException('Company not found');
+    }
+  
+    return company;
+  }
+  
+
   async create(companyData: CreateCompanyDto) {
     const existingCompany = await this.prisma.company.findFirst({
       where: {
