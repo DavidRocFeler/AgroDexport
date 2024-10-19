@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsInt, IsNumber, IsDate, Min, MaxLength, IsUUID, IsNotEmpty, IsUrl } from 'class-validator';
+import { IsString, IsOptional, IsInt, IsNumber, IsDate, Min, MaxLength, IsUUID, IsNotEmpty, IsUrl, IsDateString, IsISO8601, IsBoolean } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateCompanyProductDto {
@@ -10,7 +10,7 @@ export class CreateCompanyProductDto {
     @IsString()
     @IsOptional()
     @IsUUID('all', { message: 'farmer_id must be a valid UUID.' }) 
-    farmer_id?: string;
+    farmer_id?: string | null;
 
     @ApiProperty({
         description: 'ID of the company',
@@ -35,7 +35,7 @@ export class CreateCompanyProductDto {
     @IsString()
     @IsOptional()
     @IsUUID('all', { message: 'order_details_id must be a valid UUID.' }) 
-    order_details_id?: string;
+    order_details_id?: string | null;
 
     @ApiProperty({
         description: 'ID of the applied discount, if applicable',
@@ -44,7 +44,7 @@ export class CreateCompanyProductDto {
     @IsString()
     @IsOptional()
     @IsUUID('all', { message: 'discount_id must be a valid UUID.' }) 
-    discount_id?: string;
+    discount_id?: string | null;
 
     @ApiProperty({
         description: 'Name of the company product',
@@ -107,11 +107,11 @@ export class CreateCompanyProductDto {
 
     @ApiProperty({
         description: 'Harvest date of the product',
-        example: '2024-10-01',
+        example: '2024-10-19', // Asegúrate de que el ejemplo incluya 'Z' si es UTC
     })
-    @IsDate({ message: 'harvest_date must be a valid date.' }) 
-    @IsNotEmpty({ message: 'harvest_date cannot be empty.' }) 
-    harvest_date: Date;
+    @IsString({ message: 'harvest_date must be a string.' })
+    @IsNotEmpty({ message: 'harvest_date cannot be empty.' })
+    harvest_date: string;
 
     @ApiProperty({
         description: 'URL of the product image',
@@ -157,4 +157,9 @@ export class CreateCompanyProductDto {
     @IsOptional() 
     @Min(0, { message: 'carbs must be at least 0.' }) 
     carbs?: number;
+
+    @ApiProperty({ description: 'Indicates whether the product is active or inactive', default: true })
+    @IsOptional() 
+    @IsBoolean({ message: 'The isActive field must be a boolean value.' }) 
+    isActive: boolean; 
 }
