@@ -7,12 +7,14 @@ import * as bcrypt from "bcrypt"
 import { JwtService } from "@nestjs/jwt";
 import { CreateUserDto } from './dtos/createUser.dto';
 import { LoginUserDto } from './dtos/loginUser.dto';
+import { NotificationsService } from '../notifications/notifications.service';
 
 @Injectable()
 export class UsersRepository {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly jwtService: JwtService
+    private readonly jwtService: JwtService,
+    private readonly notificationService: NotificationsService
   ) {}
 
   async getAllUsers(): Promise<User[]> {
@@ -132,6 +134,11 @@ export class UsersRepository {
         where: { user_id: id },
         data: updateData,
       });
+
+      await this.notificationService.createAndNotifyUser(
+        id, 
+        'Tus datos han sido actualizados.'
+      );
   
       return updatedUser;
 
