@@ -6,6 +6,7 @@ import * as bcrypt from "bcrypt";
 import { LoginUserDto } from "src/users/dtos/loginUser.dto";
 import { EmailService } from "src/nodemail/nodemail";
 import { thirdAuthDto } from "./dtos/thirdauth.dto";
+import { JwtService } from "@nestjs/jwt";
 
 @Injectable()
 export class AuthRepository {
@@ -13,7 +14,8 @@ export class AuthRepository {
     constructor(
         private readonly prisma: PrismaService,
         private readonly userRepository: UsersRepository,
-        private readonly emailServices: EmailService
+        private readonly emailServices: EmailService,
+        private readonly jwtService: JwtService
 
     ) {}
 
@@ -45,7 +47,7 @@ export class AuthRepository {
         throw new NotFoundException('This Email was not found');
     }
 
-    async thirdSingIn(userData: thirdAuthDto) {
+    async thirdSingIn(userData: thirdAuthDto): Promise<{token: string}> {
         const {email, name, picture } = userData
         const credential = await this.userRepository.findCredentialByEmail(email)
         if ( credential ) {
@@ -58,10 +60,11 @@ export class AuthRepository {
                 user_name: user_name,
                 role: roll.role_name
             }
+            const token = this.jwtService.sign(userPayload)
+            return {token}
         }
         else {
-            const password = randomPassword()
-            const hashedPassword = await bcrypt.hash(password, 10);
+            const roll = await this.prisma.role.findFirst()
             const credentials = await this.prisma.credential.create({
                 data: {
                     email: email,
@@ -73,10 +76,18 @@ export class AuthRepository {
                     user_name: name,
                     user_lastname: null,
                     isOlder: null,
-                    role_id: null,
-                    credential_id: credential.credential_id
+                    role_id: roll.role_id,
+                    credential_id: credential.credential_id,
                 }
             })
+            const userPayload = {
+                sub: user.user_id,
+                user_id: user.user_id,
+                user_name: user.user_name,
+                roll: roll.role_name
+            }
+            const token = this.jwtService.sign(userPayload)
+            return {token}
         }
     }
 

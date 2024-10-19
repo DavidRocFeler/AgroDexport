@@ -64,7 +64,6 @@ export class UsersRepository {
 
   async singIn(credentials: LoginUserDto): Promise<{token: string}> {
     const { email, password } = credentials
-    console.log(credentials)
     const account = await this.findCredentialByEmail(email)
     if ( account ) {
       const user = await this.prisma.user.findUnique({
