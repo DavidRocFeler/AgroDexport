@@ -5,7 +5,7 @@ import { randomPassword } from "src/utilities/randomPassword"; // Asegúrate de 
 import * as bcrypt from "bcrypt";
 import { LoginUserDto } from "src/users/dtos/loginUser.dto";
 import { EmailService } from "src/nodemail/nodemail";
-import { CreateUserDto } from "src/users/dtos/createUser.dto";
+import { thirdAuthDto } from "./dtos/thirdauth.dto";
 
 @Injectable()
 export class AuthRepository {
@@ -45,9 +45,39 @@ export class AuthRepository {
         throw new NotFoundException('This Email was not found');
     }
 
-    thirdSingIn(userData: Partial<CreateUserDto>) {
-        const {email, user_name, password } = userData
-        
+    async thirdSingIn(userData: thirdAuthDto) {
+        const {email, name, picture } = userData
+        const credential = await this.userRepository.findCredentialByEmail(email)
+        if ( credential ) {
+            const user = await this.userRepository.findUserByCredentialId(credential.credential_id)
+            const { user_id, user_name, role_id} = user
+            const roll = await this.prisma.role.findUnique({ where: {role_id}})
+            const userPayload = {
+                sub: user_id,
+                user_id: user_id,
+                user_name: user_name,
+                role: roll.role_name
+            }
+        }
+        else {
+            const password = randomPassword()
+            const hashedPassword = await bcrypt.hash(password, 10);
+            const credentials = await this.prisma.credential.create({
+                data: {
+                    email: email,
+                    password: null
+                }
+            })
+            const user = await this.prisma.user.create({
+                data: {
+                    user_name: name,
+                    user_lastname: null,
+                    isOlder: null,
+                    role_id: null,
+                    credential_id: credential.credential_id
+                }
+            })
+        }
     }
 
     
