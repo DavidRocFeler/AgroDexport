@@ -6,6 +6,7 @@ import * as usersData from '../assets/users.json';
 import { CreateUserDto } from '../users/dtos/createUser.dto';
 import { RoleRepository } from '../roles/roles.repository';
 import { AuthRepository } from './auth.repository';
+import { thirdAuthDto } from './dtos/thirdauth.dto';
 
 @Injectable()
 export class AuthService {
@@ -23,8 +24,8 @@ export class AuthService {
 
 
   async signInService(credentials: LoginUserDto) {
-    console.log(credentials)
     const token = await this.usersRepository.singIn(credentials)
+    console.log(token)
     return token
   }
 
@@ -32,7 +33,7 @@ export class AuthService {
     return this.authRepository.resetPassword(email)
   }
 
-  async thirdSingIn(userData: Partial<CreateUserDto>) {
+  async thirdSingIn(userData: thirdAuthDto) {
     console.log(userData)
     return await this.authRepository.thirdSingIn(userData)
   }

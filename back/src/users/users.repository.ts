@@ -63,6 +63,7 @@ export class UsersRepository {
   }
 
   async singIn(credentials: LoginUserDto): Promise<{token: string}> {
+    console.log(credentials)
     const { email, password } = credentials
     const account = await this.findCredentialByEmail(email)
     if ( account ) {
