@@ -25,4 +25,10 @@ export class CategoryRepository {
           data: { name_category: name },
         });
       }
+      
+      async findByIdcategory (id: string): Promise<Category> {
+        return await this.prisma.category.findUnique({
+          where: { category_id: id },
+        });
+      }
 }
