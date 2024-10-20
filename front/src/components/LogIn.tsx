@@ -81,7 +81,7 @@ const LogIn: React.FC<ILoginComponentProps> = ({ onCloseLogin, onSwitchToSignUp 
             <div className="flex flex-col">
             <h1 className={styles.Title}>Log in Agro Dexports</h1>
                 <form action="" className='flex flex-col w-[40%] m-auto mb-[3rem]' onSubmit={handleOnSubmit}>
-                    <input className={styles.Email}
+                    <input className={styles.CommonInput}
                     onChange={handleChange}
                     name='email'
                     value={userData.email} 
