@@ -133,7 +133,7 @@ model Notification {
   discount_id      String?
   order_id        String?
   supply_chain_id  String?
-  task_id          String    
+  task_id          String?    
   message          String
   type             String
   isRead           Boolean   @default(false)
@@ -141,7 +141,7 @@ model Notification {
 
   // Relaciones
   user             User            @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
-  task             Task            @relation(fields: [task_id], references: [task_id]) 
+  task             Task?            @relation(fields: [task_id], references: [task_id]) 
   discount         Discount?       @relation(fields: [discount_id], references: [discount_id])
   supply_chain     SupplyChain?    @relation(fields: [supply_chain_id], references: [supply_chain_id])
   order            Order?          @relation(fields: [order_id], references: [order_id])
