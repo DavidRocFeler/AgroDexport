@@ -137,7 +137,7 @@ export class UsersRepository {
 
       await this.notificationService.createAndNotifyUser(
         id, 
-        'Tus datos han sido actualizados.'
+        'Your user data has been updated', 'UserUpdate'
       );
   
       return updatedUser;
