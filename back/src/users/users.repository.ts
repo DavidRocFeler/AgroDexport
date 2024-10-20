@@ -9,6 +9,7 @@ import { CreateUserDto } from './dtos/createUser.dto';
 import { LoginUserDto } from './dtos/loginUser.dto';
 import { NotificationsService } from '../notifications/notifications.service';
 import { RoleRepository } from 'src/roles/roles.repository';
+import { thirdAuthDto } from 'src/auth/dtos/thirdauth.dto';
 
 @Injectable()
 export class UsersRepository {
@@ -67,9 +68,46 @@ export class UsersRepository {
   
     throw new NotFoundException('The role is not found');
   }
+
   
 
-  async singIn(credentials: LoginUserDto): Promise<{token: string}> {
+  async createUserThird(userData: thirdAuthDto): Promise<User> {
+    let user = await this.findUserByEmail(userData.email);
+  
+    if (!user) {
+      const role = await this.rolesRepository.getRoleByName(userData.role_name);
+  
+      if (!role) {
+        throw new BadRequestException('El rol especificado no existe');
+      }
+  
+      const randomPassword = Math.random().toString(36).slice(-12);
+      const hashedPassword = await bcrypt.hash(randomPassword, 10);
+      const credential = await this.prisma.credential.create({
+        data: {
+          email: userData.email,
+          password: hashedPassword,
+        },
+      });
+  
+      user = await this.prisma.user.create({
+        data: {
+          user_name: userData.name,
+          user_lastname: ' ',
+          role_id: role.role_id,
+          isOlder: true,
+          credential_id: credential.credential_id,
+        },
+      });
+    }
+  
+    return user;
+  }
+  
+  
+  
+
+  async singIn(credentials: LoginUserDto) {
     console.log(credentials)
     const { email, password } = credentials
     const account = await this.findCredentialByEmail(email)
@@ -93,7 +131,11 @@ export class UsersRepository {
         }
 
         const token = this.jwtService.sign(userPayload)
-        return {token}
+        return {
+          token,
+          user_id: userId,
+          role_name: user.role.role_name,
+        };
       }
     }
     else {

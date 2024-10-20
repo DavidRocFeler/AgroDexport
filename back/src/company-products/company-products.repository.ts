@@ -47,7 +47,6 @@ export class CompanyProductsRepository {
                 company_id: createCompanyProductDto.company_id,
                 category_id: createCompanyProductDto.category_id,
                 order_details_id: createCompanyProductDto.order_details_id,
-                discount_id: createCompanyProductDto.discount_id,
                 company_product_name: createCompanyProductDto.company_product_name,
                 company_product_description: createCompanyProductDto.company_product_description,
                 stock: createCompanyProductDto.stock,

@@ -21,6 +21,13 @@ export class AuthController {
     }
 
     @HttpCode(201)
+    @Post('thirdsignup')
+    async thirdSignup(@Body() user:thirdAuthDto){
+        const newUser = await this.authService.thirdSignupService(user);
+        return newUser;
+    }
+
+    @HttpCode(201)
     @Post('signin')
     async signin(@Body() loginUser: LoginUserDto) {
         return await this.authService.signInService(loginUser);
