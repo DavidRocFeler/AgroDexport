@@ -17,7 +17,7 @@ const HomeView: React.FC = () => {
         const registerUserToBackend = async (sessionUser: Omit<IUser, 'id'>) => {
             try {
                 const registeredUser = await registerAuthProps(sessionUser);
-                addUser(registeredUser); // Añade el usuario con el ID generado por el backend
+                addUser(registeredUser); 
                 console.log("User registered successfully:", registeredUser);
             } catch (error) {
                 console.error("Error registering user:", error);

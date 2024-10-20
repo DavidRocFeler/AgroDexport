@@ -29,7 +29,7 @@ const PanelUserView: React.FC = () => {
       </div>
       <div className={styles.SupplyChain} >
       {supplyChain.map((item) => (
-          // Renderiza un SupplyChainComponent para cada item en el arreglo
+          // Render supplychain per each component
           <SupplyChainComponent key={item.id} {...item} />
         ))}
       </div>

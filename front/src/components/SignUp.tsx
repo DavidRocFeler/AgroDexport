@@ -36,55 +36,55 @@ const SignUp: React.FC<ISignUpComponentProps> = ({ onCloseSignUp, onSwitchToLogi
     }
 
     const handleChangeRegister = (event: React.ChangeEvent<HTMLInputElement>) => {
-                const { name, value, type, checked } = event.target;
+        const { name, value, type, checked } = event.target;
                 
-                setUserData((prevData) => {
-                    let updatedData = { ...prevData };
+        setUserData((prevData) => {
+            let updatedData = { ...prevData };
         
-                    if (type === "checkbox") {
-                        if (name === "supplier" || name === "buyer") {
-                            updatedData.role_name = checked ? name : null;
-                        } else if (name === "isOlder") {
-                            updatedData.isOlder = checked;
-                        }
-                    } else {
-                        (updatedData as any)[name] = value;
-                    }
-        
-                    const errors = validateForm(updatedData);
-                    setIsButtonDisabled(errors.length > 0);
-                    return updatedData;
-                });
-            };
-
-            const handleOnSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-                event.preventDefault();
-                const errors = validateForm(userData);
-                if (errors.length === 0) {
-                    try {
-                        // Omitimos el ID antes de enviar al backend
-                        const { id, ...userDataToSend } = userData;
-                        console.log("Sending to backend:", JSON.stringify(userDataToSend));
-                        
-                        await registerProps(userDataToSend);
-                        
-                        const newUser: IUser = {
-                            ...userData,
-                            id: Date.now().toString(), // Temporary ID generation
-                        };
-                        addUser(newUser);
-                        alert("New user added successfully!");
-                        console.log("User added:", newUser);
-                        setUserData(initialState); // Reset form after successful submission
-                        onCloseSignUp();
-                    } catch (error) {
-                        console.error("Error registering user:", error);
-                        alert("Failed to register user. Please try again.");
-                    }
-                } else {
-                    alert("Please correct the following errors:\n\n" + errors.join("\n"));
+            if (type === "checkbox") {
+                if (name === "supplier" || name === "buyer") {
+                    updatedData.role_name = checked ? name : null;
+                } else if (name === "isOlder") {
+                    updatedData.isOlder = checked;
                 }
-            };
+            } else {
+                (updatedData as any)[name] = value;
+            }
+        
+            const errors = validateForm(updatedData);
+            setIsButtonDisabled(errors.length > 0);
+            return updatedData;
+        });
+    };
+
+    const handleOnSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        const errors = validateForm(userData);
+        if (errors.length === 0) {
+            try {
+                // Skip ID to send to back
+                const { id, ...userDataToSend } = userData;
+                console.log("Sending to backend:", JSON.stringify(userDataToSend));
+                        
+                await registerProps(userDataToSend);
+                        
+                const newUser: IUser = {
+                    ...userData,
+                    id: Date.now().toString() // Temporary ID generation
+                };
+                addUser(newUser);
+                alert("New user added successfully!");
+                console.log("User added:", newUser);
+                setUserData(initialState); // Reset form after successful submission
+                onCloseSignUp();
+            } catch (error) {
+                console.error("Error registering user:", error);
+                alert("Failed to register user. Please try again.");
+            }
+        } else {
+            alert("Please correct the following errors:\n\n" + errors.join("\n"));
+        }
+    };
             
 
     const handleOnSubmitAuth = async (event: React.SyntheticEvent) => {
@@ -95,7 +95,7 @@ const SignUp: React.FC<ISignUpComponentProps> = ({ onCloseSignUp, onSwitchToLogi
             return;
         }
     
-        // Crear el objeto de usuario con los datos disponibles
+        // Create the objeth with the available data 
         const newUser: IUser = {
             id: Date.now().toString(),
             user_name: userData.user_name || "",
@@ -107,14 +107,14 @@ const SignUp: React.FC<ISignUpComponentProps> = ({ onCloseSignUp, onSwitchToLogi
             isOlder: userData.isOlder,
         };
     
-        // Actualiza el estado global
+        // Actualize the global status 
         addUser(newUser);
         console.log("User added to global state:", newUser);
     
-        // Guarda el rol en localStorage antes de la autenticación
+        // Save role in localStorage before of the auth
         localStorage.setItem('userRole', userData.role_name);
     
-        // Ahora iniciamos el proceso de autenticación
+        // Initial the auth process 
         await signIn("google");
     };
 

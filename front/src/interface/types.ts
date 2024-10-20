@@ -94,17 +94,6 @@ export interface IAgroProduct {
     clearUsers: () => void;
   }
 
-  // export interface IUser {
-  //   id: string;
-  //   name: string;
-  //   lastname: string;
-  //   email: string;
-  //   password?: string;
-  //   confirmPassword?: "";
-  //   role: "supplier" | "buyer" | "authenticated" | null;
-  //   legalAge: boolean;
-  // }
-
   export interface IUser {
     id: string;
     user_name: string;
@@ -116,14 +105,3 @@ export interface IAgroProduct {
     isOlder: boolean;
   }
 
-import "next-auth";
-
- declare module "next-auth" {
-  interface User {
-    role?: "buyer" | "supplier";
-  }
-
-  interface Session {
-    user: User; 
-  }
-}
