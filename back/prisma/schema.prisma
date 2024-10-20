@@ -149,9 +149,7 @@ model CompanyProduct {
   farmer_id                  String?            
   company_id                 String             
   category_id                String            
-  order_details_id           String?            
-  discount_id                String?            
-  
+  order_details_id           String?                     
   company_product_name       String
   company_product_description String?
   stock                      Int
@@ -215,6 +213,8 @@ model Discount {
   code             String                   @unique
   percentage       Float
   code_status      String
+
+    // Relación
   company          Company                  @relation(fields: [company_id], references: [company_id])
   notifications    Notification[]
   productDiscounts CompanyProductDiscount[]
