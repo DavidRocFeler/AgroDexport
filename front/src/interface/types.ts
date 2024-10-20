@@ -1,15 +1,18 @@
-export interface ISignUp {
-    name: string;
-    lastName: string;
-    password: string;
-    email: string;
-    country: string;
-    phone: number;
+export interface ISignUpForm {
+  name: string;
+  lastname: string;
+  email: string;
+  password: string;
+  confirmPassword?: string;
+  role: "supplier" | "buyer" | null;
+  legalAge: boolean;
 }
+
 export interface ISignUpErrors {
     name?: string;
     lastName?: string;
     password?: string;
+    confirmPassword?: string;
     email?: string;
     country?: string;
     phone?: number;
@@ -79,14 +82,27 @@ export interface IAgroProduct {
   }
 
   export interface IUserState {
-    userType: "buyer" | "supplier" | "admin" | null;
-    setUserType: (userType: "buyer" | "supplier" | "admin" | null) => void;
-    checkCookies: () => void;
+    users: IUser[];
+    token: string | null;
+    userType: "supplier" | "buyer" | "authenticated" | null;
+    addUser: (user: IUser) => void;
+    setToken: (token: string) => void;
+    checkToken: () => void;
+    setUserType: (userType: "supplier" | "buyer" | "authenticated" | null) => void;
+    removeUser: (userId: string) => void;
+    clearUsers: () => void;
   }
 
-  export interface IUserType {
-    role: "supplier" | "buyer"
-}
+  export interface IUser {
+    id: string;
+    name: string;
+    lastname: string;
+    email: string;
+    password?: string;
+    confirmPassword?: "";
+    role: "supplier" | "buyer" | "authenticated" | null;
+    legalAge: boolean;
+  }
 
 import "next-auth";
 
@@ -96,6 +112,6 @@ import "next-auth";
   }
 
   interface Session {
-    user: User;
+    user: User; 
   }
 }
