@@ -11,3 +11,8 @@ build/
 
 # TypeScript build info
 *.tsbuildinfo
+
+demo.js 
+testPractice.tsx
+package-lock.json
+package.json
