@@ -11,7 +11,7 @@ export class thirdAuthDto {
     @IsString()
     name: string
 
-    @IsOptional()
-    @IsUrl()
-    picture: string
+    @ApiProperty({ description: "Role name associated with the user", example: "buyer" })
+    @IsNotEmpty()
+    role_name: string;
 }

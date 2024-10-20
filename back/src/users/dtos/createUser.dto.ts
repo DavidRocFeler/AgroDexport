@@ -48,8 +48,7 @@ export class CreateUserDto {
     @IsBoolean()
     isOlder: boolean;
 
-    @ApiProperty({ description: "Role ID associated with the user", example: "e5d2b729-bb43-4b95-97af-a136bcace016" })
-    @IsNotEmpty() 
+    @ApiProperty({ description: "Role name associated with the user", example: "buyer" })
+    @IsNotEmpty()
     role_name: string;
-  
 }

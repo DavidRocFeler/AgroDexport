@@ -22,6 +22,11 @@ export class AuthService {
     return newUser;
   }
 
+  async thirdSignupService(userData: thirdAuthDto): Promise<User> {
+    const newUser = await this.usersRepository.createUserThird(userData)
+    return newUser;
+  }
+
 
   async signInService(credentials: LoginUserDto) {
     const token = await this.usersRepository.singIn(credentials)

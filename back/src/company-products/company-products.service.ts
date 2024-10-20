@@ -74,11 +74,6 @@ export class CompanyProductsService {
       throw new ConflictException("The method not created for OrderDetailsId") 
     }
 
-    if(!createCompanyProductDto.discount_id){
-      createCompanyProductDto.discount_id = null;      
-    }else{
-      throw new ConflictException("The method not created for discountId") 
-    }
 
     if (createCompanyProductDto.total_price != verifyTotalPrice) {
       throw new ConflictException('The total price is not equal to the minimum order price')
