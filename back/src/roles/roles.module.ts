@@ -4,7 +4,6 @@ import { RolesService } from './roles.service';
 import { RoleRepository } from './roles.repository';
 
 @Module({
-  imports:[],
   controllers: [RolesController],
   providers: [RolesService, RoleRepository],
   exports: [RolesService, RoleRepository]

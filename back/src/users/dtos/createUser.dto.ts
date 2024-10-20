@@ -51,6 +51,6 @@ export class CreateUserDto {
     @ApiProperty({ description: "Role ID associated with the user", example: "e5d2b729-bb43-4b95-97af-a136bcace016" })
     @IsNotEmpty()
     @IsUUID() 
-    role_id: string;
+    role_name: string;
   
 }
