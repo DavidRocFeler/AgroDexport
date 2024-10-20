@@ -1,5 +1,4 @@
 export interface ISignUpForm {
-  id: string;
   user_name: string;
   user_lastname: string;
   email: string;
@@ -95,7 +94,6 @@ export interface IAgroProduct {
   }
 
   export interface IUser {
-    id: string;
     user_name: string;
     user_lastname: string;
     email: string;

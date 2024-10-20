@@ -41,16 +41,15 @@ export class CreateUserDto {
         description: "Must match the password field",
         example: "Test123!",
     })
-    confirmPassword: string;
+    confirm_password: string;
 
     @ApiProperty({ description: 'Indicates whether the user is of legal age (true for older, false for younger)', example: true })
     @IsNotEmpty()
     @IsBoolean()
-    isOlder: boolean
+    isOlder: boolean;
 
     @ApiProperty({ description: "Role ID associated with the user", example: "e5d2b729-bb43-4b95-97af-a136bcace016" })
-    @IsNotEmpty()
-    @IsUUID() 
+    @IsNotEmpty() 
     role_name: string;
   
 }
