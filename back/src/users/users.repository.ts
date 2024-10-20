@@ -14,7 +14,7 @@ export class UsersRepository {
   constructor(
     private readonly prisma: PrismaService,
     private readonly jwtService: JwtService,
-    // private readonly notificationService: NotificationsService
+    private readonly notificationService: NotificationsService
   ) {}
 
   async getAllUsers(): Promise<User[]> {
@@ -135,10 +135,10 @@ export class UsersRepository {
         data: updateData,
       });
 
-      // await this.notificationService.createAndNotifyUser(
-      //   id, 
-      //   'Tus datos han sido actualizados.'
-      // );
+      await this.notificationService.createAndNotifyUser(
+        id, 
+        'Tus datos han sido actualizados.'
+      );
   
       return updatedUser;
 
