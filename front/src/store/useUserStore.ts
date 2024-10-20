@@ -16,7 +16,7 @@ export const useUserStore = create<IUserState>((set) => ({
     })),
     clearUsers: () => set({ users: [] }),
     setToken: (token: string) => set({ token }),
-    setUserType: (userType: "supplier" | "buyer" | "authenticated" | null) => set({ userType }),
+    setUserType: (userType: "supplier" | "buyer" |  null) => set({ userType }),
     checkToken: () => {
         const token = localStorage.getItem("jwt");
         if (token) {

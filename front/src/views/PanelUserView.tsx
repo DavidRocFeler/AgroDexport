@@ -5,22 +5,11 @@ import styles from "../styles/UserPanel.module.css"
 import SupplyChainComponent from '@/components/SupplyChainComponent';
 import { supplyChainArray } from '@/helpers/supplyChain.helpers';
 import { ISupplyChainProps } from '@/interface/types';
-import { useRouter } from 'next/navigation';
 import { useUserStore } from '@/store/useUserStore';
-import { useEffect } from 'react';
-
 
 const PanelUserView: React.FC = () => {
-  const router = useRouter();
   const supplyChain: ISupplyChainProps[] = supplyChainArray;
   const userType = useUserStore((state) => state.userType);
-
-  useEffect(() => {
-    // Si el userType es nulo, redirige a la página 404
-    if (!userType) {
-      router.push('/');
-    }
-  }, [userType, router]);
  
   return (
     <section>
