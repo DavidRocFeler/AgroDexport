@@ -7,12 +7,16 @@ import * as bcrypt from "bcrypt"
 import { JwtService } from "@nestjs/jwt";
 import { CreateUserDto } from './dtos/createUser.dto';
 import { LoginUserDto } from './dtos/loginUser.dto';
+import { NotificationsService } from '../notifications/notifications.service';
+import { RoleRepository } from 'src/roles/roles.repository';
 
 @Injectable()
 export class UsersRepository {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly jwtService: JwtService
+    private readonly jwtService: JwtService,
+    private readonly notificationService: NotificationsService,
+    private readonly rolesRepository: RoleRepository,
   ) {}
 
   async getAllUsers(): Promise<User[]> {
@@ -29,42 +33,45 @@ export class UsersRepository {
   }
 
   async createUser(userData: Partial<CreateUserDto>): Promise<User> {
-    const { user_name, user_lastname, role_id, isOlder, email, password } = userData;
-    const roleExists = await this.prisma.role.findUnique( {where: { role_id: role_id } });
-
-    if (roleExists) {
-      const existingUser = await this.prisma.credential.findUnique( {where: { email } } )
-
+    const { user_name, user_lastname, role_name, isOlder, email, password } = userData;
+    
+    const role = await this.rolesRepository.getRoleByName(role_name);
+  
+    if (role) {
+      const existingUser = await this.prisma.credential.findUnique({ where: { email } });
+  
       if (!existingUser) {
         const hashedPassword = await bcrypt.hash(password, 10);
-
+  
         const newAccount = await this.prisma.credential.create({
           data: {
             email: email,
-            password: hashedPassword
-          }
-        })
-
+            password: hashedPassword,
+          },
+        });
+  
         const newUser = await this.prisma.user.create({
           data: {
-              user_name: user_name,
-              user_lastname: user_lastname,
-              isOlder: isOlder,
-              role_id: role_id,
-              credential_id: newAccount.credential_id
-            }
-        })
-        return newUser; 
+            user_name: user_name,
+            user_lastname: user_lastname,
+            isOlder: isOlder,
+            role_id: role.role_id, 
+            credential_id: newAccount.credential_id,
+          },
+        });
+  
+        return newUser;
       }
-      throw new BadRequestException("The email is already in use");
+      throw new BadRequestException('The email is already in use');
     }
-    
-    throw new NotFoundException('The role is not found'); 
+  
+    throw new NotFoundException('The role is not found');
   }
+  
 
   async singIn(credentials: LoginUserDto): Promise<{token: string}> {
-    const { email, password } = credentials
     console.log(credentials)
+    const { email, password } = credentials
     const account = await this.findCredentialByEmail(email)
     if ( account ) {
       const user = await this.prisma.user.findUnique({
@@ -132,6 +139,11 @@ export class UsersRepository {
         where: { user_id: id },
         data: updateData,
       });
+
+      await this.notificationService.createAndNotifyUser(
+        id, 
+        'Your user data has been updated', 'UserUpdate'
+      );
   
       return updatedUser;
 

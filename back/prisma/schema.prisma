@@ -102,12 +102,12 @@ model Company {
   // Relaciones
   user                       User               @relation(fields: [user_id], references: [user_id])
   products                   CompanyProduct[]   
-  addresses                  ShippingAddress[]  
+  shippingAddresses          ShippingAddress[]  
   orders                     Order[]            
   discounts                  Discount[]         
   farmer_certifications      FarmerCertification[] 
-  supply_chain        SupplyChain[]
-  payment        Payment?       @relation()
+  supply_chain               SupplyChain[]
+  payment                    Payment?       @relation()
 
   @@map("companies")
 }
@@ -133,7 +133,7 @@ model Notification {
   discount_id      String?
   order_id        String?
   supply_chain_id  String?
-  task_id          String    
+  task_id          String?    
   message          String
   type             String
   isRead           Boolean   @default(false)
@@ -141,7 +141,7 @@ model Notification {
 
   // Relaciones
   user             User            @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
-  task             Task            @relation(fields: [task_id], references: [task_id]) 
+  task             Task?            @relation(fields: [task_id], references: [task_id]) 
   discount         Discount?       @relation(fields: [discount_id], references: [discount_id])
   supply_chain     SupplyChain?    @relation(fields: [supply_chain_id], references: [supply_chain_id])
   order            Order?          @relation(fields: [order_id], references: [order_id])
@@ -189,6 +189,7 @@ model CompanyProduct {
   fat                        Float?
   protein                    Float?
   carbs                      Float?
+  isActive                   Boolean            @default(true)
 
   // Relaciones
   company                    Company                    @relation(fields: [company_id], references: [company_id])
@@ -207,14 +208,15 @@ model ShippingAddress {
   company_id                String    
   contact_name              String
   contact_lastname          String
-  contact_phone             String
+  contact_phone             String?
   contact_email             String
-  delivery_hours            String
+  delivery_hours            String?
   address                   String    @db.VarChar(255)
   postal_code               String    @db.VarChar(20)
   city                      String
   state                     String
   country                   String
+  isActive                  Boolean            @default(true) 
 
   // Relación
   company                   Company   @relation(fields: [company_id], references: [company_id])
