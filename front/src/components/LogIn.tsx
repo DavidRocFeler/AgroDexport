@@ -14,7 +14,6 @@ import Swal from 'sweetalert2';
 
 const LogIn: React.FC<ILoginComponentProps> = ({ onCloseLogin, onSwitchToSignUp }) => {
     const setUserType = useUserStore((state) => state.setUserType);
-    const checkCookies = useUserStore((state) => state.checkCookies);
     // const { data: session } = useSession();
    
     const [userData, setUserData] = useState<{ email: string; password: string }>({ 

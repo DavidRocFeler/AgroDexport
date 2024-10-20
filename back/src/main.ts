@@ -34,15 +34,18 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
+import { loggerGlobal } from './middlewares/logger.middleware';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.use(loggerGlobal);
 
   // Habilitar CORS para permitir solicitudes desde http://localhost:3001
   app.enableCors({
     origin: 'http://localhost:3000',  // Permitir solicitudes desde este origen
     methods: 'GET,POST,PUT,DELETE',    // Métodos HTTP permitidos
     credentials: true,                 // Permitir cookies o autenticación
+    allowedHeaders: ['Content-Type', 'Authorization]
   });
 
   // Habilitar validaciones globales

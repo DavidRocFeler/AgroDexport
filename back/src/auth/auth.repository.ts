@@ -48,7 +48,7 @@ export class AuthRepository {
     }
 
     async thirdSingIn(userData: thirdAuthDto): Promise<{token: string}> {
-        const {email, name, picture } = userData
+        const {email, name } = userData
         const credential = await this.userRepository.findCredentialByEmail(email)
         if ( credential ) {
             const user = await this.userRepository.findUserByCredentialId(credential.credential_id)

@@ -67,33 +67,32 @@ model RolePermission {
 }
 
 model Company {
-<<<<<<< HEAD
-  company_id                 String             @id @default(uuid())
-  user_id                    String   
-  company_name               String             @db.VarChar(50)
-  tax_identification_number  Int
-  address                    String             @db.VarChar(255)
-  postal_code                String             @db.VarChar(20)
-  city                       String
-  state                      String
-  country                    String
-  industry                   String   
-  website                    String?
-  account_paypal             String?
-  company_description        String?
-  company_logo               String?
-  isActive                   Boolean            @default(true) 
+  // company_id                 String             @id @default(uuid())
+  // user_id                    String   
+  // company_name               String             @db.VarChar(50)
+  // tax_identification_number  Int
+  // address                    String             @db.VarChar(255)
+  // postal_code                String             @db.VarChar(20)
+  // city                       String
+  // state                      String
+  // country                    String
+  // industry                   String   
+  // website                    String?
+  // account_paypal             String?
+  // company_description        String?
+  // company_logo               String?
+  // isActive                   Boolean            @default(true) 
 
-  // Relaciones
-  user                       User               @relation(fields: [user_id], references: [user_id])
-  products                   CompanyProduct[]   
-  shippingAddresses          ShippingAddress[]  
-  orders                     Order[]            
-  discounts                  Discount[]         
-  farmer_certifications      FarmerCertification[] 
-  supply_chain               SupplyChain[]
-  payment                    Payment?       @relation()
-=======
+  Relaciones
+  // user                       User               @relation(fields: [user_id], references: [user_id])
+  // products                   CompanyProduct[]   
+  // shippingAddresses          ShippingAddress[]  
+  // orders                     Order[]            
+  // discounts                  Discount[]         
+  // farmer_certifications      FarmerCertification[] 
+  // supply_chain               SupplyChain[]
+  // payment                    Payment?       @relation()
+
   company_id                String                @id @default(uuid())
   user_id                   String
   company_name              String                @db.VarChar(50)
@@ -117,7 +116,7 @@ model Company {
   payment                   Payment?
   addresses                 ShippingAddress[]
   supply_chain              SupplyChain?
->>>>>>> 17f30f536b6442113aa7863293c56b853bec62ac
+
 
   @@map("companies")
 }
@@ -132,25 +131,29 @@ model Commission {
   @@map("commissions")
 }
 
+// Definición del modelo Notification
 model Notification {
-  notification_id   String       @id @default(uuid())
-  user_id           String
-  discount_id       String?
-  order_id          String?
-  supply_chain_id   String?
-  task_id           String
-  message           String
-  type              String
-  isRead            Boolean      @default(false)
+  notification_id  String    @id @default(uuid())
+  user_id          String
+  discount_id      String?
+  order_id        String?
+  supply_chain_id  String?
+  task_id          String?    
+  message          String
+  type             String
+  isRead           Boolean   @default(false)
   notification_date DateTime
-  discount          Discount?    @relation(fields: [discount_id], references: [discount_id])
-  order             Order?       @relation(fields: [order_id], references: [order_id])
-  supply_chain      SupplyChain? @relation(fields: [supply_chain_id], references: [supply_chain_id])
-  task              Task         @relation(fields: [task_id], references: [task_id])
-  user              User         @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+
+  // Relaciones
+  user             User            @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  task             Task?            @relation(fields: [task_id], references: [task_id]) 
+  discount         Discount?       @relation(fields: [discount_id], references: [discount_id])
+  supply_chain     SupplyChain?    @relation(fields: [supply_chain_id], references: [supply_chain_id])
+  order            Order?          @relation(fields: [order_id], references: [order_id])
 
   @@map("notifications")
 }
+
 
 model Task {
   task_id       String         @id @default(uuid())
@@ -165,30 +168,29 @@ model Task {
 
   @@map("tasks")
 }
-
+// Definición del modelo CompanyProduct
 model CompanyProduct {
-  company_product_id          String                              @id @default(uuid())
-  farmer_id                   String?
-  company_id                  String
-  category_id                 String
-  order_details_id            String?
-  discount_id                 String?
-  company_product_name        String
+  company_product_id         String             @id @default(uuid())            
+  farmer_id                  String?            
+  company_id                 String             
+  category_id                String            
+  order_details_id           String?                     
+  company_product_name       String
   company_product_description String?
-<<<<<<< HEAD
-  stock                      Int
-  minimum_order              Int                @default(5)
-  origin                     String
-  company_price_x_kg         Float
-  total_price                Float
-  harvest_date               DateTime
-  company_product_img        String
-  calories                   Float?
-  fat                        Float?
-  protein                    Float?
-  carbs                      Float?
-  isActive                   Boolean            @default(true)
-=======
+// <<<<<<<<< Temporary merge branch 1
+  // stock                      Int
+  // minimum_order              Int                @default(5)
+  // origin                     String
+  // company_price_x_kg         Float
+  // total_price                Float
+  // harvest_date               DateTime
+  // company_product_img        String
+  // calories                   Float?
+  // fat                        Float?
+  // protein                    Float?
+  // carbs                      Float?
+  // isActive                   Boolean            @default(true)
+// =========
   stock                       Int
   minimum_order               Int                                 @default(5)
   origin                      String
@@ -205,27 +207,29 @@ model CompanyProduct {
   orderDetails                OrderDetailProduct[]
   productCertifications       CompanyProductFarmerCertification[]
   productDiscounts            CompanyProductDiscount[]
->>>>>>> 17f30f536b6442113aa7863293c56b853bec62ac
+// >>>>>>>>> Temporary merge branch 2
 
-  @@map("company_products")
+  @@map("company_products") 
 }
 
+
+// Definición del modelo ShippingAddress
 model ShippingAddress {
-<<<<<<< HEAD
-  shipping_address_id       String    @id @default(uuid()) 
-  company_id                String    
-  contact_name              String
-  contact_lastname          String
-  contact_phone             String?
-  contact_email             String
-  delivery_hours            String?
-  address                   String    @db.VarChar(255)
-  postal_code               String    @db.VarChar(20)
-  city                      String
-  state                     String
-  country                   String
-  isActive                  Boolean            @default(true) 
-=======
+// <<<<<<<<< Temporary merge branch 1
+  // shipping_address_id       String    @id @default(uuid()) 
+  // company_id                String    
+  // contact_name              String
+  // contact_lastname          String
+  // contact_phone             String?
+  // contact_email             String
+  // delivery_hours            String?
+  // address                   String    @db.VarChar(255)
+  // postal_code               String    @db.VarChar(20)
+  // city                      String
+  // state                     String
+  // country                   String
+  // isActive                  Boolean            @default(true) 
+// =========
   shipping_address_id String  @id @default(uuid())
   company_id          String
   contact_name        String
@@ -240,9 +244,9 @@ model ShippingAddress {
   country             String
   order               Order?
   company             Company @relation(fields: [company_id], references: [company_id])
->>>>>>> 17f30f536b6442113aa7863293c56b853bec62ac
+// >>>>>>>>> Temporary merge branch 2
 
-  @@map("shipping_addresses")
+  @@map("shipping_addresses") 
 }
 
 model Category {
@@ -259,6 +263,8 @@ model Discount {
   code             String                   @unique
   percentage       Float
   code_status      String
+
+    // Relación
   company          Company                  @relation(fields: [company_id], references: [company_id])
   notifications    Notification[]
   productDiscounts CompanyProductDiscount[]
