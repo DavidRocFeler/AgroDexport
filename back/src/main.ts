@@ -45,7 +45,7 @@ async function bootstrap() {
     origin: 'http://localhost:3000',  // Permitir solicitudes desde este origen
     methods: 'GET,POST,PUT,DELETE',    // Métodos HTTP permitidos
     credentials: true,                 // Permitir cookies o autenticación
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    allowedHeaders: ['Content-Type', 'Authorization]
   });
 
   // Habilitar validaciones globales

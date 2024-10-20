@@ -14,7 +14,7 @@ const HomeView: React.FC = () => {
     const addUser = useUserStore((state) => state.addUser);
 
     useEffect(() => {
-        const registerUserToBackend = async (sessionUser: Omit<IUser, 'id'>) => {
+        const registerUserToBackend = async (sessionUser:IUser) => {
             try {
                 const registeredUser = await registerAuthProps(sessionUser);
                 addUser(registeredUser); 
@@ -25,7 +25,7 @@ const HomeView: React.FC = () => {
         };
 
         if (session?.user) {
-            const sessionUser: Omit<IUser, 'id'> = {
+            const sessionUser:IUser = {
                 user_name: session.user.name || "",
                 email: session.user.email || "",
                 role_name: localStorage.getItem('userRole') as "supplier" | "buyer",

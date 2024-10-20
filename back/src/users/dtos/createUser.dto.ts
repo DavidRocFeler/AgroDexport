@@ -46,7 +46,7 @@ export class CreateUserDto {
     @ApiProperty({ description: 'Indicates whether the user is of legal age (true for older, false for younger)', example: true })
     @IsNotEmpty()
     @IsBoolean()
-    isOlder: boolean
+    isOlder: boolean;
 
     @ApiProperty({ description: "Role name associated with the user", example: "buyer" })
     @IsNotEmpty()

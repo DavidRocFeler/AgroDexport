@@ -8,7 +8,6 @@ import { registerProps } from "@/helpers/signUpHelpers";
 
 const SignUp: React.FC<ISignUpComponentProps> = ({ onCloseSignUp, onSwitchToLogin }) => {
     const initialState: ISignUpForm = {
-        id: "",
         user_name: "",
         user_lastname: "",
         email: "",
@@ -62,15 +61,12 @@ const SignUp: React.FC<ISignUpComponentProps> = ({ onCloseSignUp, onSwitchToLogi
         const errors = validateForm(userData);
         if (errors.length === 0) {
             try {
-                // Skip ID to send to back
-                const { id, ...userDataToSend } = userData;
-                console.log("Sending to backend:", JSON.stringify(userDataToSend));
-                        
-                await registerProps(userDataToSend);
-                        
+                console.log("Sending to backend:", JSON.stringify(userData));
+                
+                const registeredUser = await registerProps(userData);
+                
                 const newUser: IUser = {
-                    ...userData,
-                    id: Date.now().toString() // Temporary ID generation
+                    ...registeredUser,
                 };
                 addUser(newUser);
                 alert("New user added successfully!");
@@ -78,15 +74,14 @@ const SignUp: React.FC<ISignUpComponentProps> = ({ onCloseSignUp, onSwitchToLogi
                 setUserData(initialState); // Reset form after successful submission
                 onCloseSignUp();
             } catch (error) {
-                console.error("Error registering user:", error);
-                alert("Failed to register user. Please try again.");
+                console.error("Registration error:", error);
+                alert("Registration failed. Please try again.");
             }
         } else {
             alert("Please correct the following errors:\n\n" + errors.join("\n"));
         }
     };
-            
-
+    
     const handleOnSubmitAuth = async (event: React.SyntheticEvent) => {
         event.preventDefault();
         console.log("UserData before submission:", userData);
@@ -97,7 +92,7 @@ const SignUp: React.FC<ISignUpComponentProps> = ({ onCloseSignUp, onSwitchToLogi
     
         // Create the objeth with the available data 
         const newUser: IUser = {
-            id: Date.now().toString(),
+            // id: Date.now().toString(),
             user_name: userData.user_name || "",
             user_lastname: userData.user_lastname || "",
             email: userData.email || "",
