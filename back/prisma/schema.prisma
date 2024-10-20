@@ -106,8 +106,8 @@ model Commission {
   @@map("commissions")
 }
 
+// Definición del modelo Notification
 model Notification {
-<<<<<<< HEAD
   notification_id  String    @id @default(uuid())
   user_id          String
   discount_id      String?
@@ -125,26 +125,10 @@ model Notification {
   discount         Discount?       @relation(fields: [discount_id], references: [discount_id])
   supply_chain     SupplyChain?    @relation(fields: [supply_chain_id], references: [supply_chain_id])
   order            Order?          @relation(fields: [order_id], references: [order_id])
-=======
-  notification_id   String       @id @default(uuid())
-  user_id           String
-  discount_id       String?
-  order_id          String?
-  supply_chain_id   String?
-  task_id           String
-  message           String
-  type              String
-  isRead            Boolean      @default(false)
-  notification_date DateTime
-  discount          Discount?    @relation(fields: [discount_id], references: [discount_id])
-  order             Order?       @relation(fields: [order_id], references: [order_id])
-  supply_chain      SupplyChain? @relation(fields: [supply_chain_id], references: [supply_chain_id])
-  task              Task         @relation(fields: [task_id], references: [task_id])
-  user              User         @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
->>>>>>> origin/debbuguinAuth
 
   @@map("notifications")
 }
+
 
 model Task {
   task_id       String         @id @default(uuid())
@@ -159,17 +143,17 @@ model Task {
 
   @@map("tasks")
 }
-
+// Definición del modelo CompanyProduct
 model CompanyProduct {
-  company_product_id          String                              @id @default(uuid())
-  farmer_id                   String?
-  company_id                  String
-  category_id                 String
-  order_details_id            String?
-  discount_id                 String?
-  company_product_name        String
+  company_product_id         String             @id @default(uuid())            
+  farmer_id                  String?            
+  company_id                 String             
+  category_id                String            
+  order_details_id           String?            
+  discount_id                String?            
+  
+  company_product_name       String
   company_product_description String?
-<<<<<<< HEAD
   stock                      Int
   minimum_order              Int                @default(5)
   origin                     String
@@ -182,30 +166,20 @@ model CompanyProduct {
   protein                    Float?
   carbs                      Float?
   isActive                   Boolean            @default(true)
-=======
-  stock                       Int
-  minimum_order               Int                                 @default(5)
-  origin                      String
-  company_price_x_kg          Float
-  total_price                 Float
-  harvest_date                DateTime
-  company_product_img         String
-  calories                    Float?
-  fat                         Float?
-  protein                     Float?
-  carbs                       Float?
-  category                    Category                            @relation("CategoryProducts", fields: [category_id], references: [category_id])
-  company                     Company                             @relation(fields: [company_id], references: [company_id])
-  orderDetails                OrderDetailProduct[]
-  productCertifications       CompanyProductFarmerCertification[]
-  productDiscounts            CompanyProductDiscount[]
->>>>>>> origin/debbuguinAuth
 
-  @@map("company_products")
+  // Relaciones
+  company                    Company                    @relation(fields: [company_id], references: [company_id])
+  category                   Category                   @relation(fields: [category_id], references: [category_id], name: "CategoryProducts")
+  productDiscounts           CompanyProductDiscount[]   // Relación muchos a muchos con Discount a través de ProductDiscount
+  productCertifications      CompanyProductFarmerCertification[] // Relación muchos a muchos con FarmerCertification a través de ProductCertification
+  orderDetails               OrderDetailProduct[]       // Relación muchos a muchos con OrderDetail a través de OrderDetailProduct
+
+  @@map("company_products") 
 }
 
+
+// Definición del modelo ShippingAddress
 model ShippingAddress {
-<<<<<<< HEAD
   shipping_address_id       String    @id @default(uuid()) 
   company_id                String    
   contact_name              String
@@ -219,24 +193,12 @@ model ShippingAddress {
   state                     String
   country                   String
   isActive                  Boolean            @default(true) 
-=======
-  shipping_address_id String  @id @default(uuid())
-  company_id          String
-  contact_name        String
-  contact_lastname    String
-  contact_phone       String
-  contact_email       String
-  delivery_hours      String
-  address             String  @db.VarChar(255)
-  postal_code         String  @db.VarChar(20)
-  city                String
-  state               String
-  country             String
-  order               Order?
-  company             Company @relation(fields: [company_id], references: [company_id])
->>>>>>> origin/debbuguinAuth
 
-  @@map("shipping_addresses")
+  // Relación
+  company                   Company   @relation(fields: [company_id], references: [company_id])
+  order          Order?    @relation 
+
+  @@map("shipping_addresses") 
 }
 
 model Category {
