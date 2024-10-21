@@ -13,11 +13,37 @@ export class AddressesRepository {
         private readonly notificationService: NotificationsService
     ) {}
 
-    async findAllActive() {
+    async getAll(): Promise<ShippingAddress[]> {
         return this.prisma.shippingAddress.findMany({
-          where: { isActive: true },
+          include: {
+            company: true, 
+          },
         });
       }
+    
+      async getWithFilters(filters: any[]): Promise<ShippingAddress[]> {
+        return this.prisma.shippingAddress.findMany({
+          where: {
+            AND: filters,
+          },
+          include: {
+            company: {
+              include: {
+                user: {
+                  include: {
+                    credential: {
+                      select: {
+                        email: true, 
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        });
+      }
+      
     
       async findById(addressId: string) {
         const address = await this.prisma.shippingAddress.findUnique({

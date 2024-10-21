@@ -3,6 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateCompanyDto } from './createCompany.dto';
 import { UpdateCompanyDto } from './updateCompany.dto';
 import { NotificationsService } from '../notifications/notifications.service';
+import { Company } from '@prisma/client';
 
 @Injectable()
 export class CompanyRepository {
@@ -10,11 +11,22 @@ export class CompanyRepository {
     private readonly notificationsService: NotificationsService,
     private readonly prisma: PrismaService) {}
 
-  async findAllActive() {
-    return this.prisma.company.findMany({
-      where: { isActive: true },
-    });
-  }
+    async getAll(): Promise<Company[]> {
+      return this.prisma.company.findMany();
+    }
+  
+    async getWithFilters(filters: any[]): Promise<Company[]> {
+      return this.prisma.company.findMany({
+        where: {
+          OR: [
+            { isActive: true },
+            { isActive: false },
+          ],
+          AND: filters,
+        },
+      });
+    }
+    
 
   async findById(companyId: string) {
     const company = await this.prisma.company.findUnique({

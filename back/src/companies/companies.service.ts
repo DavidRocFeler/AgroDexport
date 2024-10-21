@@ -5,6 +5,7 @@ import * as companiesData from '../assets/companies.json';
 import { UsersRepository } from '../users/users.repository';
 import { UpdateCompanyDto } from './updateCompany.dto';
 import { CompanyRepository } from './companies.repository';
+import { Company } from '@prisma/client';
 
 @Injectable()
 export class CompanyService {
@@ -13,8 +14,12 @@ export class CompanyService {
     private readonly companyRepository: CompanyRepository,
     private readonly prisma: PrismaService) {}
 
-    async getAllCompaniesServices() {
-      return this.companyRepository.findAllActive();
+    async getAllCompaniesService(): Promise<Company[]> {
+      return this.companyRepository.getAll();
+    }
+  
+    async getCompaniesWithFilters(filters: any[]): Promise<Company[]> {
+      return this.companyRepository.getWithFilters(filters);
     }
   
     async getCompanyByIdServices(companyId: string) {

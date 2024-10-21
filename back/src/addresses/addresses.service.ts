@@ -15,8 +15,12 @@ export class AddressesService {
     private readonly companyRepository: CompanyRepository,
     ) {}
 
-    async getAllAddressesService() {
-        return this.addressRepository.findAllActive();
+    async getAllAddressesService(): Promise<ShippingAddress[]> {
+        return this.addressRepository.getAll();
+      }
+    
+      async getAddressesWithFilters(filters: any[]): Promise<ShippingAddress[]> {
+        return this.addressRepository.getWithFilters(filters);
       }
 
       async getAddressByIdService(addressId: string) {
