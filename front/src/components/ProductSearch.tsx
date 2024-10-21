@@ -4,6 +4,29 @@ import React, { useState } from 'react';
 
 const ProductSearch = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [category, setCategory] = useState('');
+  const [country, setCountry] = useState('');
+  const [cropType, setCropType] = useState(''); 
+
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setCategory(e.target.value);
+  };
+  const handleCountryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setCountry(e.target.value);
+  };
+  const handleCropTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setCropType(e.target.value);
+  };
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log({
+      searchTerm,
+      category,
+      country,
+      cropType,
+    });
+        // realiza una búsqueda o filtrado con los valores seleccionados
+  };
 
   return (
     <div className="flex items-center ms-8 px-4 py-3">
@@ -32,7 +55,7 @@ const ProductSearch = () => {
           </div>
         </label>
       </div>
-      <form action=""  className="flex flex-row mx-8 space-x-4  w-full "> 
+      <form onSubmit={handleSubmit}  className="flex flex-row mx-8 space-x-4  w-full "> 
         <div className="flex w-full">
           <select className="rounded-xl px-3 py-2 h-12 text-black border border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500">
             <option value="">All Categories</option>
@@ -67,3 +90,4 @@ const ProductSearch = () => {
 };
 
 export default ProductSearch;
+
