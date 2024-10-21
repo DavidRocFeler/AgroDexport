@@ -35,10 +35,10 @@ export class UsersRepository {
 
   async createUser(userData: Partial<CreateUserDto>): Promise<User> {
     const { user_name, user_lastname, role_name, isOlder, email, password } = userData;
-    
     const role = await this.rolesRepository.getRoleByName(role_name);
   
     if (role) {
+
       const existingUser = await this.prisma.credential.findUnique({ where: { email } });
   
       if (!existingUser) {
@@ -60,12 +60,12 @@ export class UsersRepository {
             credential_id: newAccount.credential_id,
           },
         });
-  
+        console.log(`Usuario creado con role_id: ${role.role_id}`);
         return newUser;
       }
       throw new BadRequestException('The email is already in use');
     }
-  
+
     throw new NotFoundException('The role is not found');
   }
 

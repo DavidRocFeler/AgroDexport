@@ -19,6 +19,13 @@ export class CompanyRepository {
   async findById(companyId: string) {
     const company = await this.prisma.company.findUnique({
       where: { company_id: companyId },
+      include: {
+        user: {
+          include: {
+            role: true, 
+          },
+        },
+      },
     });
 
     if (!company || !company.isActive) {
