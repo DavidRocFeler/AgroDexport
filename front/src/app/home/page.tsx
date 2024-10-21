@@ -2,10 +2,10 @@ import React from "react";
 import HomeView from "@/views/Home";
 
 const Home: React.FC = () => {
-    return(
-        <>  
-            <HomeView/>
-        </>
-    )
+  return (
+    <>
+      <HomeView />
+    </>
+  );
 };
 export default Home;

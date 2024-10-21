@@ -15,8 +15,8 @@ export class CategoriesController {
         return this.categoriesService.getCategoriesService();
     }
 
-    @Post("sedeer")
     @ApiExcludeEndpoint()
+    @Post("sedeer")
     async preloadCategories(@Body() categoryData: CreateCategoryDto){
         return this.categoriesService.preloadCategoriesService();
     }

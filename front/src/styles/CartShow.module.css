@@ -1,0 +1,246 @@
+
+
+.maincontainer {
+  overflow: hidden;
+}
+
+.maincontainer,
+.maincontainer * {
+  box-sizing: border-box;
+}
+
+/* input,
+select,
+textarea,
+button {
+  outline: 0;
+} */
+
+.maincontainer {
+  position: relative;
+  width: 1152px;
+  height: 934px;
+  margin: 0 auto;
+  font-size: 0px;
+}
+.cartshop {
+  display: block;
+  position: relative;
+  height: 60px;
+  margin: 7px 0 0 472px;
+  color: #21243d;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 60px;
+  text-align: left;
+  white-space: nowrap;
+  z-index: 9;
+}
+.selectproduct {
+  display: block;
+  position: relative;
+  height: 60px;
+  margin: -1px 0 0 132px;
+  color: #21243d;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 60px;
+  text-align: left;
+  white-space: nowrap;
+  z-index: 8;
+}
+.contenedor {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: #edf7fa;
+}
+.rectangle {
+  position: absolute;
+  width: 36.28%;
+  height: 31.58%;
+  top: 14.35%;
+  left: 50.95%;
+  background: #ffffff;
+  z-index: 1;
+  border-radius: 4px;
+}
+.producta {
+  position: absolute;
+  width: 34.46%;
+  height: 23.88%;
+  top: 14.35%;
+  left: 10.94%;
+  z-index: 2;
+}
+.rectangle1 {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: #ffffff;
+  z-index: 3;
+  border-radius: 4px;
+}
+.producta2 {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  position: absolute;
+  height: 18.83%;
+  top: 15.25%;
+  left: 56.17%;
+  color: #21243d;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 38.188px;
+  text-align: left;
+  white-space: nowrap;
+  z-index: 4;
+}
+.producta3 {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  position: absolute;
+  height: 18.83%;
+  top: 15.25%;
+  left: 56.17%;
+  color: #21243d;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 38.188px;
+  text-align: left;
+  white-space: nowrap;
+  z-index: 5;
+}
+.rectangle4 {
+  position: absolute;
+  width: 177px;
+  height: 147px;
+  top: 40px;
+  left: 32px;
+  /* background: url(./assets/images/44dc77996f359e2db24fc4e08bfd61cf50427139.png)
+    no-repeat center; */
+  background-size: cover;
+  z-index: 7;
+  border-radius: 6px;
+}
+.description {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  position: absolute;
+  height: 15.7%;
+  top: 35.43%;
+  left: 57.43%;
+  color: #21243d;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 26.438px;
+  text-align: left;
+  white-space: nowrap;
+  z-index: 6;
+}
+.productb {
+  position: absolute;
+  width: 34.46%;
+  height: 23.88%;
+  top: 43.68%;
+  left: 10.94%;
+  z-index: 10;
+}
+.rectangle5 {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: #ffffff;
+  z-index: 11;
+  border-radius: 4px;
+}
+.rectangle6 {
+  position: absolute;
+  width: 44.58%;
+  height: 65.92%;
+  top: 17.04%;
+  left: 8.06%;
+  /* background: url(./assets/images/44dc77996f359e2db24fc4e08bfd61cf50427139.png)
+    no-repeat center; */
+  background-size: cover;
+  z-index: 14;
+  border-radius: 6px;
+}
+.productb7 {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  position: absolute;
+  height: 22.42%;
+  top: 19.73%;
+  left: 56.17%;
+  color: #21243d;
+  font-family:'Times New Roman';
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 38.188px;
+  text-align: left;
+  white-space: nowrap;
+  z-index: 13;
+}
+.description8 {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  position: absolute;
+  height: 16.59%;
+  top: 42.15%;
+  left: 57.93%;
+  color: #21243d;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 26.438px;
+  text-align: left;
+  white-space: nowrap;
+  z-index: 12;
+}
+.button {
+  position: absolute;
+  width: 15.36%;
+  height: 3.43%;
+  top: 50%;
+  left: 61.37%;
+  cursor: pointer;
+  background: #ff004f;
+  border: none;
+  z-index: 15;
+  overflow: hidden;
+  border-radius: 2px;
+}
+.add {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  position: absolute;
+  height: 17px;
+  top: 7.5px;
+  left: calc(50% - 15.5px);
+  color: #ffffff;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 16.943px;
+  text-align: left;
+  white-space: nowrap;
+  z-index: 16;
+}

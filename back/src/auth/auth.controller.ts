@@ -1,11 +1,16 @@
 import { Body, Controller, HttpCode, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { CreateUserDto } from '../users/createUser.dto';
-import { LoginUserDto } from 'src/users/loginUser.dto';
+import { LoginUserDto } from 'src/users/dtos/loginUser.dto';
+import { CreateUserDto } from 'src/users/dtos/createUser.dto';
+import { ApiExcludeEndpoint, ApiTags } from '@nestjs/swagger';
 
+
+@ApiTags("Auth")
 @Controller('auth')
 export class AuthController {
-    constructor (private readonly authService: AuthService){}
+    constructor (
+        private readonly authService: AuthService
+    ){}
 
     @HttpCode(201)
     @Post('signup')
@@ -18,5 +23,21 @@ export class AuthController {
     @Post('signin')
     async signin(@Body() loginUser: LoginUserDto) {
         return await this.authService.signInService(loginUser);
+    }
+
+    @Post("sedeer")
+    @ApiExcludeEndpoint()
+    async preloadUsers(@Body() usersData: CreateUserDto){
+        return this.authService.preloadUsersService();
+    }
+
+    @Post("thirdsingin") 
+    async thirdAuth(userData: Partial<CreateUserDto>) {
+        return this.authService.thirdSingIn(userData)
+    }
+
+    @Post("passwordrecovery") 
+    async passwordRecovery(@Body() email: Partial<LoginUserDto>) {
+        return this.authService.passwordRecovery(email)
     }
 }
