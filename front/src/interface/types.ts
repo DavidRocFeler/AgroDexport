@@ -35,10 +35,6 @@ export interface ILoginComponentProps {
     onSwitchToSignUp: () => void;  
 }
 
-export interface IUserType {
-    role: "supplier" | "buyer"
-}
-
 export interface IAgroProduct {
     id: number;                // ID único del producto
     name: string;              // Nombre del producto
@@ -81,3 +77,25 @@ export interface IAgroProduct {
     documentD: string | null;
     documentE: string | null;
   }
+
+  export interface IUserState {
+    userType: "buyer" | "supplier" | "admin" | null;
+    setUserType: (userType: "buyer" | "supplier" | "admin" | null) => void;
+    checkCookies: () => void;
+  }
+
+  export interface IUserType {
+    role: "supplier" | "buyer"
+}
+
+import "next-auth";
+
+ declare module "next-auth" {
+  interface User {
+    role?: "buyer" | "supplier";
+  }
+
+  interface Session {
+    user: User;
+  }
+}

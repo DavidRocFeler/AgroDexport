@@ -1,7 +1,10 @@
 import { Body, Controller, Post, Get, Param, Put, Delete, } from '@nestjs/common';
 import { CompanyService } from './companies.service';
 import { CreateCompanyDto } from './createCompany.dto';
+import { ApiExcludeEndpoint, ApiTags } from '@nestjs/swagger';
+import { UpdateCompanyDto } from './updateCompany.dto';
 
+@ApiTags("companies")
 @Controller('companies')
 export class CompanyController {
 
@@ -29,7 +32,7 @@ export class CompanyController {
     }
 
     @Put(':id') 
-    async updateCompany(@Param('id') companyId: string, @Body()companyData: CreateCompanyDto) {
+    async updateCompany(@Param('id') companyId: string, @Body()companyData: UpdateCompanyDto) {
     const updatedCompany = await this.companyServices.updateCompanyServices(companyId, companyData);
     return updatedCompany;
     }
@@ -41,6 +44,12 @@ export class CompanyController {
       message: 'Company deleted successfully (soft delete)',
       data: deletedCompany,
     };
+  }
+
+  @Post("sedeer")
+  @ApiExcludeEndpoint()
+  async preloadUsers(@Body() companyData: CreateCompanyDto){
+      return this.companyServices.preloadCompaniesService();
   }
 }
 
