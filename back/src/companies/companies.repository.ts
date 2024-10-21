@@ -106,7 +106,7 @@ export class CompanyRepository {
       throw new NotFoundException('Company is inactive');
     }
 
-    return this.prisma.company.update({
+    return await this.prisma.company.update({
       where: { company_id: companyId },
       data: companyData,
     });

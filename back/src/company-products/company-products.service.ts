@@ -69,7 +69,7 @@ export class CompanyProductsService {
     return this.companyProductsRepository.createProductRepository(createCompanyProductDto);
   }
 
-  async updateProductServices(productId: string, updateCompanyProductDto: UpdateCompanyProductDto) {
+  async updateProductServices(productId: string, productData: UpdateCompanyProductDto) {
     
     const existingProduct = await this.companyProductsRepository.findProductById(productId);  
 
@@ -81,7 +81,7 @@ export class CompanyProductsService {
       throw new ConflictException('Product is not active')
     }
 
-    return this.companyProductsRepository.updateProductRepository(updateCompanyProductDto, productId);
+    return this.companyProductsRepository.updateProductRepository(productId, productData);
   }
 
   softDeleteProductServices(productId: string) {
