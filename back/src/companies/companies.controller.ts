@@ -1,7 +1,7 @@
-import { Body, Controller, Post, Get, Param, Put, Delete, HttpCode, UseGuards, } from '@nestjs/common';
+import { Body, Controller, Post, Get, Param, Put, Delete, HttpCode, UseGuards, Query, } from '@nestjs/common';
 import { CompanyService } from './companies.service';
 import { CreateCompanyDto } from './createCompany.dto';
-import { ApiBearerAuth, ApiExcludeEndpoint, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiExcludeEndpoint, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { UpdateCompanyDto } from './updateCompany.dto';
 import { Roles } from 'src/decorators/roles.decorator';
 import { AuthGuard } from 'src/guards/auth.guard';
@@ -13,15 +13,57 @@ export class CompanyController {
 
     constructor(private readonly companyServices:CompanyService){}
 
-    
     @ApiBearerAuth()
     @HttpCode(200)
     @Get()
     @UseGuards(AuthGuard, RolesGuard)
-    @Roles('admin') 
-    async getAllCompanies() {
-    const companies = await this.companyServices.getAllCompaniesServices();
-    return companies;
+    @Roles('admin')
+    @ApiQuery({ name: 'name', required: false, description: 'Company name' })
+    @ApiQuery({ name: 'country', required: false, description: 'Country' })
+    @ApiQuery({ name: 'isActive', required: false, enum: ['true', 'false'], description: 'Is active (true/false)' })
+    @ApiQuery({ name: 'industry', required: false, description: 'Industry' })
+    @ApiQuery({ name: 'city', required: false, description: 'City' })
+    @ApiQuery({ name: 'state', required: false, description: 'State' })
+    async getAllCompanies(
+      @Query('name') company_name?: string,
+      @Query('country') country?: string,
+      @Query('isActive') isActive?: string,
+      @Query('industry') industry?: string,
+      @Query('city') city?: string,
+      @Query('state') state?: string,
+    ) {
+      const filters = [];
+  
+      if (company_name) {
+        filters.push({ company_name: { contains: company_name, mode: 'insensitive' } });
+      }
+  
+      if (country) {
+        filters.push({ country: { contains: country, mode: 'insensitive' } });
+      }
+  
+      if (isActive !== undefined) {
+        const isActiveBoolean = isActive === 'true'; 
+        filters.push({ isActive: isActiveBoolean });
+      }
+  
+      if (industry) {
+        filters.push({ industry: { contains: industry, mode: 'insensitive' } });
+      }
+  
+      if (city) {
+        filters.push({ city: { contains: city, mode: 'insensitive' } });
+      }
+  
+      if (state) {
+        filters.push({ state: { contains: state, mode: 'insensitive' } });
+      }
+  
+      if (filters.length === 0) {
+        return this.companyServices.getAllCompaniesService();
+      }
+  
+      return this.companyServices.getCompaniesWithFilters(filters);
     }
 
     @ApiBearerAuth()

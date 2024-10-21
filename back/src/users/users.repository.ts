@@ -21,7 +21,22 @@ export class UsersRepository {
   ) {}
 
   async getAllUsers(): Promise<User[]> {
-    return this.prisma.user.findMany(); 
+    return this.prisma.user.findMany({
+      include: {
+        role: true,
+      },
+    });
+  }
+
+  async getAllWithFilters(filters: any[]): Promise<User[]> {
+    return this.prisma.user.findMany({
+      where: {
+        AND: filters,
+      },
+      include: {
+        role: true,
+      },
+    });
   }
 
   async getUserById(user_id: string): Promise<User> {
@@ -60,7 +75,7 @@ export class UsersRepository {
             credential_id: newAccount.credential_id,
           },
         });
-        console.log(`Usuario creado con role_id: ${role.role_id}`);
+
         return newUser;
       }
       throw new BadRequestException('The email is already in use');
