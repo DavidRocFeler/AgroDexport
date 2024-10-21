@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { CompanyProductsRepository } from './company-products.repository';
 import { CompanyProduct } from '@prisma/client'; 
 import { CompanyRepository } from 'src/companies/companies.repository';
@@ -12,7 +12,7 @@ export class CompanyProductsService {
   constructor(
     private readonly companyProductsRepository: CompanyProductsRepository, 
     private readonly companyRepository: CompanyRepository,
-    private readonly categoryRepositorio: CategoryRepository,
+    private readonly categoryRepository: CategoryRepository,
   ) {}
   
   async findAllServices(): Promise<CompanyProduct[]> {
@@ -45,35 +45,22 @@ export class CompanyProductsService {
  
 
   async createProductServices(createCompanyProductDto: CreateCompanyProductDto): Promise<CompanyProduct> {
-    const existingConpany = await this.companyRepository.findById(createCompanyProductDto.company_id);
+    const existingCompany = await this.companyRepository.findById(createCompanyProductDto.company_id);
     const existingProduct = await this.companyProductsRepository.findByProductName(createCompanyProductDto.company_product_name);
-    const existingCategory = await this. categoryRepositorio.findByIdcategory(createCompanyProductDto.category_id)
+    const existingCategory = await this. categoryRepository.findByIdcategory(createCompanyProductDto.category_id)
     const verifyTotalPrice = (createCompanyProductDto.minimum_order * 1000 ) * createCompanyProductDto.company_price_x_kg; 
-    
-    if(!createCompanyProductDto.farmer_id){
-      createCompanyProductDto.farmer_id = null;      
-    }else{
-      throw new ConflictException("The method not created for farmerId") 
+
+    if (existingCompany.user?.role?.role_name !== 'supplier') {
+      throw new ForbiddenException('Only suppliers can create products.');
     }
 
-    if (!existingConpany){
-      throw new NotFoundException("The company not found")
-    }
-
-    if (existingProduct) {
-      throw new ConflictException('Product with this name already exists.');
+    if (existingProduct && existingProduct.company_id === createCompanyProductDto.company_id) {
+      throw new ConflictException('Product with this name already exists for this company.');
     }
 
     if (!existingCategory) {
       throw new NotFoundException('The category not found')
     }
-
-    if(!createCompanyProductDto.order_details_id){
-      createCompanyProductDto.order_details_id = null;      
-    }else{
-      throw new ConflictException("The method not created for OrderDetailsId") 
-    }
-
 
     if (createCompanyProductDto.total_price != verifyTotalPrice) {
       throw new ConflictException('The total price is not equal to the minimum order price')

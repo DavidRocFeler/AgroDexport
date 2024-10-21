@@ -47,12 +47,6 @@ export class AuthService {
     const results: { user: string; status: string }[] = [];
   
     for (const userData of usersData) {
-      const role = await this.rolesRepository.getRoleByName(userData['role']);
-  
-      if (!role) {
-        results.push({ user: userData.email, status: `Role ${userData['role']} not found` });
-        continue;
-      }
       
       const existingUser = await this.usersRepository.findUserByEmail(userData.email);
   
@@ -60,8 +54,7 @@ export class AuthService {
         results.push({ user: userData.email, status: 'Already Exists' });
         continue;
       }
-      const userWithRoleId = { ...userData, role_id: role.role_id };
-      await this.usersRepository.createUser(userWithRoleId);
+      await this.usersRepository.createUser(userData);
       results.push({ user: userData.email, status: 'Created' });
     }
   
