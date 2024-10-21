@@ -45,8 +45,10 @@ const LogIn: React.FC<ILoginComponentProps> = ({ onCloseLogin, onSwitchToSignUp 
        const user = credentials.find(cred => cred.email === userData.email && cred.password === userData.password);
 
         if (user) {
-            setUserType(user.userType as "buyer" | "supplier" | "admin"); // Actualiza el estado global
-            // Guardar cookies
+            setUserType(user.userType as "buyer" | "supplier" ); // Actualiza el estado
+
+            // setUserType(user.userType as "buyer" | "supplier" | "admin"); // Actualiza el estado global ajuste javier
+            // // Guardar cookies
             console.log('Setting cookie:', `email=${userData.email}; userType=${user.userType}; path=/;`);
             document.cookie = `email=${userData.email}; path=/;`;
             document.cookie = `userType=${user.userType}; path=/;`;
@@ -125,3 +127,9 @@ const LogIn: React.FC<ILoginComponentProps> = ({ onCloseLogin, onSwitchToSignUp 
 };
 
 export default LogIn;
+function checkCookies() {
+    throw new Error('Function not implemented.');
+}
+
+
+
