@@ -83,7 +83,7 @@ model Company {
   // company_logo               String?
   // isActive                   Boolean            @default(true) 
 
-  Relaciones
+  // Relaciones
   // user                       User               @relation(fields: [user_id], references: [user_id])
   // products                   CompanyProduct[]   
   // shippingAddresses          ShippingAddress[]  
