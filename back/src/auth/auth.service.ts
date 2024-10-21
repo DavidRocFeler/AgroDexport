@@ -6,6 +6,7 @@ import * as usersData from '../assets/users.json';
 import { CreateUserDto } from '../users/dtos/createUser.dto';
 import { RoleRepository } from '../roles/roles.repository';
 import { AuthRepository } from './auth.repository';
+import { thirdAuthDto } from './dtos/thirdauth.dto';
 
 @Injectable()
 export class AuthService {
@@ -21,10 +22,15 @@ export class AuthService {
     return newUser;
   }
 
+  async thirdSignupService(userData: thirdAuthDto): Promise<User> {
+    const newUser = await this.usersRepository.createUserThird(userData)
+    return newUser;
+  }
+
 
   async signInService(credentials: LoginUserDto) {
-    console.log(credentials)
     const token = await this.usersRepository.singIn(credentials)
+    console.log(token)
     return token
   }
 
@@ -32,7 +38,7 @@ export class AuthService {
     return this.authRepository.resetPassword(email)
   }
 
-  async thirdSingIn(userData: Partial<CreateUserDto>) {
+  async thirdSingIn(userData: thirdAuthDto) {
     console.log(userData)
     return await this.authRepository.thirdSingIn(userData)
   }
@@ -41,12 +47,6 @@ export class AuthService {
     const results: { user: string; status: string }[] = [];
   
     for (const userData of usersData) {
-      const role = await this.rolesRepository.getRoleByName(userData['role']);
-  
-      if (!role) {
-        results.push({ user: userData.email, status: `Role ${userData['role']} not found` });
-        continue;
-      }
       
       const existingUser = await this.usersRepository.findUserByEmail(userData.email);
   
@@ -54,8 +54,7 @@ export class AuthService {
         results.push({ user: userData.email, status: 'Already Exists' });
         continue;
       }
-      const userWithRoleId = { ...userData, role_id: role.role_id };
-      await this.usersRepository.createUser(userWithRoleId);
+      await this.usersRepository.createUser(userData);
       results.push({ user: userData.email, status: 'Created' });
     }
   

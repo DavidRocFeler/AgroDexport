@@ -1,128 +1,101 @@
 import React from "react";
-import styles from "@/styles/Profile.module.css";
+import styles from "../styles/Profile.module.css";
 
 const ProfileView: React.FC = () => {
   return (
-    <div className={styles.maincontainer}>
-      <div className={styles.flexrowba}>
-        <button className={styles.rectangle}>
-          <span className={styles.downloadresume}>USER COME BACK</span>
-        </button>
-      </div>
-      {/* <div className={styles.flexrowcf}>
-        <div className={styles.ellipse}></div>
-        <div className={styles.ellipse1}></div>
-        <span className={styles.johncreativetechnologist}>
-          Hi, I am John,
-          <br />
-          Creative Technologist
-        </span>
-      </div> */}
-      <div className={styles.profile}>
-        <img
-          className={styles.profileInner}
-          alt=""
-          src="../Ellipse2_profile.png"
-        />
-        {/* <div className={styles.profileChild2} /> */}
-        {/* Contenedor companias */}
-        <div className={styles.suggestedAccounts}>
-          <b className={styles.myCompanies}>My companies</b>
-
-          <div className={styles.frameParent}>
-            {/* DIV 1 */}
-
-            <div className={styles.frameContainer}>
-              <div className={styles.ellipseGroup}>
-                <div className={styles.frameChild} />
-                <div className={styles.userParent}>
-                  <div className={styles.user1}>User</div>
-                  <b className={styles.derekSteam}>Derek Steam</b>
+    <div className={styles.profile}>
+      <div className={styles.div}>
+        <div className={styles.div2}>
+          <div className={styles.overlap}>
+            <div className={styles.div2}>
+              <button className={styles.button}>
+                <div className={styles.textbutton}>ADD COMPANY</div>
+              </button>
+              <div className={styles.containermy}>
+                <div className={styles.rectangle}></div>
+                <div className={styles.overlapgroup}>
+                  <div className={styles.mycomp}>
+                    <div className={styles.item}>
+                      <div className={styles.div3}>
+                        <div className={styles.img}></div>
+                        <div className={styles.name}>
+                          <div className={styles.text}>Marie Clark</div>
+                          <div className={styles.textwrapper}>User</div>
+                        </div>
+                      </div>
+                      <button className={styles.buttonedit}>
+                        <div className={styles.textwrapper2}>Edit</div>
+                      </button>
+                    </div>
+                    <div className={styles.item2}>
+                      <div className={styles.div3}>
+                        <div className={styles.img}></div>
+                        <div className={styles.name}>
+                          <div className={styles.text}>Marie Clark</div>
+                          <div className={styles.textwrapper}>User</div>
+                        </div>
+                      </div>
+                      <button className={styles.buttonedit}>
+                        <div className={styles.textwrapper2}>Edit</div>
+                      </button>
+                    </div>
+                    <div className={styles.item2}>
+                      <div className={styles.div3}>
+                        <div className={styles.img}></div>
+                        <div className={styles.name}>
+                          <div className={styles.text}>Marie Clark</div>
+                          <div className={styles.textwrapper}>User</div>
+                        </div>
+                      </div>
+                      <button className={styles.buttonedit}>
+                        <div className={styles.textwrapper2}>Edit</div>
+                      </button>
+                    </div>
+                  </div>
+                  <div className={styles.textwrapper3}>My companies</div>
+                  <div className={styles.containemycomp}></div>
                 </div>
+                <button className={styles.textbuttonwrapper}>
+                  <div className={styles.textbutton2}>ADD COMPANY</div>
+                </button>
               </div>
-              <div className={styles.editWrapper}>
-                <b className={styles.edit}>Edit</b>
+              <div className={styles.overlap2}>
+                <div className={styles.rectangle2}></div>
+                <img className={styles.image} src="../image_profile.png" />
               </div>
             </div>
-            {/* DIV 2 */}
-            <div className={styles.frameContainer}>
-              <div className={styles.ellipseGroup}>
-                <div className={styles.frameChild} />
-                <div className={styles.userParent}>
-                  <div className={styles.user1}>User</div>
-                  <b className={styles.derekSteam}>Derek Steam</b>
-                </div>
-              </div>
-              <div className={styles.editWrapper}>
-                <b className={styles.edit}>Edit</b>
-              </div>
-            </div>
-
-            {/* DIV 3 */}
-
-            <div className={styles.frameContainer}>
-              <div className={styles.ellipseGroup}>
-                <div className={styles.frameChild} />
-                <div className={styles.userParent}>
-                  <div className={styles.user1}>User</div>
-                  <b className={styles.derekSteam}>Derek Steam</b>
-                </div>
-              </div>
-              <div className={styles.editWrapper}>
-                <b className={styles.edit}>Edit</b>
-              </div>
+            <div className={styles.contenedornombre}>
+              <input
+                className={styles.input}
+                placeholder="YourName"
+                type="styles.text"
+              />
+              <div className={styles.textwrapper4}>Username</div>
+              <button className={styles.divwrapper}>
+                <button className={styles.textbutton3}>Edit</button>
+              </button>
             </div>
           </div>
-
-          {/* container companies*/}
-
-          <div className={styles.suggestedAccountsItem} />
         </div>
-
-        {/* Fin Contenedor companias */}
-        <div className={styles.addCompanyWrapper1}>
-          <div className={styles.userCameBack}>ADD COMPANY</div>
-        </div>
-        {/* Div Name */}
-        <div className={styles.yourNameParent}>
-          <b className={styles.yourName}>Your Name</b>
-          <div className={styles.username}>Username</div>
-          <div className={styles.editWrapper1}>
-            <div className={styles.edit3}>Edit</div>
-          </div>
-        </div>
-        {/* Fin Div Name */}
-      </div>
-      {/* <button className={styles.rectangle}>
-        <span className={styles.downloadresume}>ADD Companies</span>
-      </button> */}
-      <div className={styles.rectangle2}>
-        <div className={styles.flexrowceeb}></div>
-        <div className={styles.flexrowedc}>
-          {/* div botones */}
-          <div className={styles.rectangle3}>
-            <button className={styles.rectangle21}>
-              <span className={styles.downloadresume}>Information contact</span>
+        <div className={styles.container}>
+          <div className={styles.contenedorsection}></div>
+          <div className={styles.containerbuttons}>
+            <button className={styles.button2}>
+              <div className={styles.textbutton}>ADD COMPANY</div>
             </button>
-            <button className={styles.rectangle22}>
-              <span className={styles.downloadresume}>Information contact</span>
+            <button className={styles.button3}>
+              <div className={styles.textbutton}>ADD COMPANY</div>
             </button>
-            <button className={styles.rectangle23}>
-              <span className={styles.downloadresume}>Information contact</span>
+            <button className={styles.button4}>
+              <div className={styles.textbutton}>ADD COMPANY</div>
             </button>
-            <button className={styles.rectangle24}>
-              <span className={styles.downloadresume}>Information contact</span>
+            <button className={styles.button5}>
+              <div className={styles.textbutton}>ADD COMPANY</div>
             </button>
           </div>
-          <div className={styles.rectangle8}></div>
+          <img className={styles.vector} src="./vector1_profile.png" />
         </div>
       </div>
-
-      <div className={styles.vectorb}></div>
-
-      <div className={styles.vectorf}></div>
-
-      <div className={styles.vector13}></div>
     </div>
   );
 };

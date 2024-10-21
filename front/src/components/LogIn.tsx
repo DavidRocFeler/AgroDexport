@@ -14,7 +14,6 @@ import Swal from 'sweetalert2';
 
 const LogIn: React.FC<ILoginComponentProps> = ({ onCloseLogin, onSwitchToSignUp }) => {
     const setUserType = useUserStore((state) => state.setUserType);
-    const checkCookies = useUserStore((state) => state.checkCookies);
     // const { data: session } = useSession();
    
     const [userData, setUserData] = useState<{ email: string; password: string }>({ 
@@ -46,8 +45,10 @@ const LogIn: React.FC<ILoginComponentProps> = ({ onCloseLogin, onSwitchToSignUp 
        const user = credentials.find(cred => cred.email === userData.email && cred.password === userData.password);
 
         if (user) {
-            setUserType(user.userType as "buyer" | "supplier" | "admin"); // Actualiza el estado global
-            // Guardar cookies
+            setUserType(user.userType as "buyer" | "supplier" ); // Actualiza el estado
+
+            // setUserType(user.userType as "buyer" | "supplier" | "admin"); // Actualiza el estado global ajuste javier
+            // // Guardar cookies
             console.log('Setting cookie:', `email=${userData.email}; userType=${user.userType}; path=/;`);
             document.cookie = `email=${userData.email}; path=/;`;
             document.cookie = `userType=${user.userType}; path=/;`;
@@ -81,7 +82,7 @@ const LogIn: React.FC<ILoginComponentProps> = ({ onCloseLogin, onSwitchToSignUp 
             <div className="flex flex-col">
             <h1 className={styles.Title}>Log in Agro Dexports</h1>
                 <form action="" className='flex flex-col w-[40%] m-auto mb-[3rem]' onSubmit={handleOnSubmit}>
-                    <input className={styles.Email}
+                    <input className={styles.CommonInput}
                     onChange={handleChange}
                     name='email'
                     value={userData.email} 
@@ -126,3 +127,9 @@ const LogIn: React.FC<ILoginComponentProps> = ({ onCloseLogin, onSwitchToSignUp 
 };
 
 export default LogIn;
+function checkCookies() {
+    throw new Error('Function not implemented.');
+}
+
+
+

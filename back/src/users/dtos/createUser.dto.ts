@@ -16,7 +16,7 @@ export class CreateUserDto {
     @Length(1, 50)
     user_lastname: string;
 
-    @ApiProperty({ description: 'User email', example: "luis@example.com", maxLength: 255 })
+    @ApiProperty({ description: 'User email', example: "javier@example.com", maxLength: 255 })
     @IsNotEmpty()
     @IsEmail()
     @Length(1, 255)
@@ -41,16 +41,14 @@ export class CreateUserDto {
         description: "Must match the password field",
         example: "Test123!",
     })
-    confirmPassword: string;
+    confirm_password: string;
 
     @ApiProperty({ description: 'Indicates whether the user is of legal age (true for older, false for younger)', example: true })
     @IsNotEmpty()
     @IsBoolean()
-    isOlder: boolean
+    isOlder: boolean;
 
-    @ApiProperty({ description: "Role ID associated with the user", example: "e5d2b729-bb43-4b95-97af-a136bcace016" })
+    @ApiProperty({ description: "Role name associated with the user", example: "buyer" })
     @IsNotEmpty()
-    @IsUUID() 
-    role_id: string;
-  
+    role_name: string;
 }

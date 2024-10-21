@@ -1,9 +1,4 @@
-.env
-index.html
-index.css
-reciclado.txt
-node_modules
-<<<<<<< HEAD
+
 
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
@@ -43,7 +38,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-=======
+
 .env 
 
 # Build output
@@ -52,4 +47,9 @@ build/
 
 # TypeScript build info
 *.tsbuildinfo
->>>>>>> develop
+
+demo.js 
+testPractice.tsx
+package-lock.json
+package.json
+

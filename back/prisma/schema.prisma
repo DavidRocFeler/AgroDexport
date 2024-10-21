@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,78 +7,65 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Definición del modelo User
 model User {
-  user_id         String        @id @default(uuid()) 
-  user_name       String        @db.VarChar(50)      
-  user_lastname   String        @db.VarChar(50)      
-  nDni            Int?          @unique @db.Integer  
-  birthday        DateTime?                        
-  phone           String?                          
-  country         String?                         
-  profile_picture String?                          
-  isOlder         Boolean                          
-  role_id         String                          
-  credential_id   String?       @unique            
-  
-  // Relaciones
-  role            Role         @relation(fields: [role_id], references: [role_id])   
-  credential      Credential?   @relation(fields: [credential_id], references: [credential_id]) 
-  notifications   Notification[] 
-  companies       Company[]      
-  commission      Commission?    
+  user_id         String         @id @default(uuid())
+  user_name       String         @db.VarChar(50)
+  user_lastname   String         @db.VarChar(50)
+  nDni            Int?           @unique
+  birthday        DateTime?
+  phone           String?
+  country         String?
+  profile_picture String?
+  isOlder         Boolean
+  role_id         String
+  credential_id   String?        @unique
+  commission      Commission?
+  companies       Company[]
+  notifications   Notification[]
+  credential      Credential?    @relation(fields: [credential_id], references: [credential_id])
+  role            Role           @relation(fields: [role_id], references: [role_id])
 
-  @@map("users") 
+  @@map("users")
 }
 
-// Definición del modelo Credential
 model Credential {
-  credential_id String   @id @default(uuid()) 
-  email         String   @unique @db.VarChar(255) 
-  password      String   @db.VarChar(255)  
+  credential_id String @id @default(uuid())
+  email         String @unique @db.VarChar(255)
+  password      String @db.VarChar(255)
+  user          User?
 
-  // Relaciones      
-  user          User?    @relation 
-
-  @@map("credentials") 
+  @@map("credentials")
 }
 
-// Definición del modelo Role
 model Role {
-  role_id          String           @id @default(uuid()) 
-  role_name        String           @db.VarChar(50)      
-  role_description String           @db.VarChar(255) 
+  role_id          String           @id @default(uuid())
+  role_name        String           @db.VarChar(50)
+  role_description String           @db.VarChar(255)
+  permissions      RolePermission[]
+  users            User[]
 
-  // Relaciones    
-  users            User[]                                             // Relación de uno a muchos con usuarios
-  permissions      RolePermission[]                     // Relación de muchos a muchos con Permission a través de RolePermission
-
-  @@map("roles") 
+  @@map("roles")
 }
 
-// Definición del modelo Permission
 model Permission {
-  permission_id          String           @id @default(uuid()) 
-  permission_name        String           @db.VarChar(50)      
-  permission_description String           @db.VarChar(255)     
-  roles                  RolePermission[]                      // Relación de muchos a muchos con Role a través de RolePermission
+  permission_id          String           @id @default(uuid())
+  permission_name        String           @db.VarChar(50)
+  permission_description String           @db.VarChar(255)
+  roles                  RolePermission[]
 
-  @@map("permissions") 
+  @@map("permissions")
 }
 
-// TABLA INTERMEDIA Definición del modelo RolePermission para la relación muchos a muchos
 model RolePermission {
   role_id       String
   permission_id String
+  permission    Permission @relation(fields: [permission_id], references: [permission_id])
+  role          Role       @relation(fields: [role_id], references: [role_id])
 
-  role          Role       @relation(fields: [role_id], references: [role_id]) 
-  permission    Permission  @relation(fields: [permission_id], references: [permission_id]) 
-
-  @@id([role_id, permission_id]) 
-  @@map("roles_permissions")       
+  @@id([role_id, permission_id])
+  @@map("roles_permissions")
 }
 
-// Definición del modelo Company
 model Company {
   company_id                 String             @id @default(uuid())
   user_id                    String   
@@ -102,29 +86,25 @@ model Company {
   // Relaciones
   user                       User               @relation(fields: [user_id], references: [user_id])
   products                   CompanyProduct[]   
-  addresses                  ShippingAddress[]  
+  shippingAddresses          ShippingAddress[]  
   orders                     Order[]            
   discounts                  Discount[]         
   farmer_certifications      FarmerCertification[] 
-  supply_chain        SupplyChain[]
-  payment        Payment?       @relation()
+  supply_chain               SupplyChain[]
+  payment                    Payment?       @relation()
 
   @@map("companies")
 }
 
-// Definición del modelo Commission
 model Commission {
-  commissions_id        String   @id @default(uuid()) 
-  user_id               String?   @unique 
-  commision_percentage  Float
-  commision_date        DateTime
+  commissions_id       String   @id @default(uuid())
+  user_id              String?  @unique
+  commision_percentage Float
+  commision_date       DateTime
+  user                 User?    @relation(fields: [user_id], references: [user_id])
 
-  // Relación
-  user                  User?     @relation(fields: [user_id], references: [user_id]) 
-
-  @@map("commissions") 
+  @@map("commissions")
 }
-
 
 // Definición del modelo Notification
 model Notification {
@@ -133,7 +113,7 @@ model Notification {
   discount_id      String?
   order_id        String?
   supply_chain_id  String?
-  task_id          String    
+  task_id          String?    
   message          String
   type             String
   isRead           Boolean   @default(false)
@@ -141,7 +121,7 @@ model Notification {
 
   // Relaciones
   user             User            @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
-  task             Task            @relation(fields: [task_id], references: [task_id]) 
+  task             Task?            @relation(fields: [task_id], references: [task_id]) 
   discount         Discount?       @relation(fields: [discount_id], references: [discount_id])
   supply_chain     SupplyChain?    @relation(fields: [supply_chain_id], references: [supply_chain_id])
   order            Order?          @relation(fields: [order_id], references: [order_id])
@@ -150,32 +130,25 @@ model Notification {
 }
 
 
-// Definición del modelo Task
 model Task {
-  task_id         String         @id @default(uuid())  
-  task_name       String
-  task_status     String
-  task_message    String
-  executed_date   DateTime?
-  nextRun_date    DateTime?
-  create_date     DateTime       @default(now())
-  update_date     DateTime       @updatedAt
-  
-  // Relación
-  notifications   Notification[] 
+  task_id       String         @id @default(uuid())
+  task_name     String
+  task_status   String
+  task_message  String
+  executed_date DateTime?
+  nextRun_date  DateTime?
+  create_date   DateTime       @default(now())
+  update_date   DateTime       @updatedAt
+  notifications Notification[]
 
   @@map("tasks")
 }
-
 // Definición del modelo CompanyProduct
 model CompanyProduct {
-  company_product_id         String             @id @default(uuid())            
-  farmer_id                  String?            
+  company_product_id         String             @id @default(uuid())                       
   company_id                 String             
   category_id                String            
-  order_details_id           String?            
-  discount_id                String?            
-  
+  order_details_id           String?                     
   company_product_name       String
   company_product_description String?
   stock                      Int
@@ -189,6 +162,7 @@ model CompanyProduct {
   fat                        Float?
   protein                    Float?
   carbs                      Float?
+  isActive                   Boolean            @default(true)
 
   // Relaciones
   company                    Company                    @relation(fields: [company_id], references: [company_id])
@@ -207,14 +181,15 @@ model ShippingAddress {
   company_id                String    
   contact_name              String
   contact_lastname          String
-  contact_phone             String
+  contact_phone             String?
   contact_email             String
-  delivery_hours            String
+  delivery_hours            String?
   address                   String    @db.VarChar(255)
   postal_code               String    @db.VarChar(20)
   city                      String
   state                     String
   country                   String
+  isActive                  Boolean            @default(true) 
 
   // Relación
   company                   Company   @relation(fields: [company_id], references: [company_id])
@@ -223,162 +198,134 @@ model ShippingAddress {
   @@map("shipping_addresses") 
 }
 
-// Definición del modelo Category
 model Category {
-  category_id           String        @id @default(uuid()) 
-  name_category         String        @unique
+  category_id   String           @id @default(uuid())
+  name_category String           @unique
+  products      CompanyProduct[] @relation("CategoryProducts")
 
-  // Relación
-  products              CompanyProduct[]   @relation("CategoryProducts") 
-
-  @@map("categories") 
+  @@map("categories")
 }
 
-// Definición del modelo Discount
 model Discount {
-  discount_id           String             @id @default(uuid()) 
-  company_id            String             
-  code                  String             @unique
-  percentage            Float
-  code_status           String
+  discount_id      String                   @id @default(uuid())
+  company_id       String
+  code             String                   @unique
+  percentage       Float
+  code_status      String
 
-  // Relaciones
-  company               Company            @relation(fields: [company_id], references: [company_id])
-  notifications         Notification[]     
-  productDiscounts      CompanyProductDiscount[]  // Relación muchos a muchos con CompanyProduct a través de ProductDiscount
+    // Relación
+  company          Company                  @relation(fields: [company_id], references: [company_id])
+  notifications    Notification[]
+  productDiscounts CompanyProductDiscount[]
 
-  @@map("discounts") 
+  @@map("discounts")
 }
 
-// Definición del modelo FarmerCertification
 model FarmerCertification {
-  farmer_id                  String             @id @default(uuid()) 
-  company_id                 String             
+  farmer_id                  String                              @id @default(uuid())
+  company_id                 String
   phytosanitary_certificate  String
   agricultural_producer_cert String
   organic_certification      String?
   quality_certificate        String
   certificate_of_origin      String
 
-  // Relaciones
-  company                    Company           @relation(fields: [company_id], references: [company_id])
-  productCertifications      CompanyProductFarmerCertification[] // Relación muchos a muchos con CompanyProduct a través de ProductCertification
+  //Relaciones
+  company                    Company                             @relation(fields: [company_id], references: [company_id])
+  productCertifications      CompanyProductFarmerCertification[]
 
-  @@map("farmer_certifications") 
+  @@map("farmer_certifications")
 }
 
-// TABLA INTERMEDIA Definición del modelo CompanyProductDiscount para la relación muchos a muchos
 model CompanyProductDiscount {
-  discount_id         String
-  company_product_id  String
+  discount_id        String
+  company_product_id String
+  companyProduct     CompanyProduct @relation(fields: [company_product_id], references: [company_product_id])
+  discount           Discount       @relation(fields: [discount_id], references: [discount_id])
 
-  // Relaciones
-  discount            Discount         @relation(fields: [discount_id], references: [discount_id])
-  companyProduct      CompanyProduct   @relation(fields: [company_product_id], references: [company_product_id])
-
-  @@id([discount_id, company_product_id]) 
-  @@map("product_discounts") 
+  @@id([discount_id, company_product_id])
+  @@map("product_discounts")
 }
 
-// TABLA INTERMEDIA Definición del modelo ProductFarmerCertification para la relación muchos a muchos
 model CompanyProductFarmerCertification {
-  farmer_id            String
-  company_product_id   String
+  farmer_id           String
+  company_product_id  String
+  companyProduct      CompanyProduct      @relation(fields: [company_product_id], references: [company_product_id])
+  farmerCertification FarmerCertification @relation(fields: [farmer_id], references: [farmer_id])
 
-  // Relaciones
-  farmerCertification  FarmerCertification @relation(fields: [farmer_id], references: [farmer_id])
-  companyProduct       CompanyProduct      @relation(fields: [company_product_id], references: [company_product_id])
-
-  @@id([farmer_id, company_product_id]) 
-  @@map("product_certifications") 
+  @@id([farmer_id, company_product_id])
+  @@map("product_certifications")
 }
 
-// Definición del modelo Order
 model Order {
-  order_id            String           @id @default(uuid()) 
-  id_company_sell     String           
-  id_payments         String?                   
-  shipping_address_id String?          @unique 
-  order_details_id    String           @unique 
-  suppy_chain_id      String?          
+  order_id            String           @id @default(uuid())
+  id_company_sell     String
+  id_payments         String?
+  shipping_address_id String?          @unique
+  order_details_id    String           @unique
+  suppy_chain_id      String?
   order_date          DateTime
-   payment_id        String?           @unique 
-
-  // Relaciones
+  payment_id          String?          @unique
+  notifications       Notification[]
   company             Company          @relation(fields: [id_company_sell], references: [company_id])
-  orderDetail         OrderDetail?      @relation(fields: [order_details_id], references: [order_details_id])
-  shipping_address    ShippingAddress?   @relation(fields: [shipping_address_id], references: [shipping_address_id]) 
-  supply_chain        SupplyChain?       @relation() 
-  payment           Payment?   @relation(fields: [payment_id], references: [payment_id])
-  notifications   Notification[] 
+  orderDetail         OrderDetail      @relation(fields: [order_details_id], references: [order_details_id])
+  payment             Payment?         @relation(fields: [payment_id], references: [payment_id])
+  shipping_address    ShippingAddress? @relation(fields: [shipping_address_id], references: [shipping_address_id])
+  supply_chain        SupplyChain?
 
-  @@map("orders") 
+  @@map("orders")
 }
 
-// Definición del modelo OrderDetail
 model OrderDetail {
-  order_details_id    String             @id @default(uuid()) 
-  iva                 Float
-  total               Float
-  order_status        String
-  
-  // Relaciones
-  companyProducts     OrderDetailProduct[] // Relación muchos a muchos con CompanyProduct a través de OrderDetailProduct
-  order               Order?               @relation() 
+  order_details_id String               @id @default(uuid())
+  iva              Float
+  total            Float
+  order_status     String
+  companyProducts  OrderDetailProduct[]
+  order            Order?
 
-  @@map("order_details") 
+  @@map("order_details")
 }
 
-
-
-// TABLA INTERMEDIA Definición del modelo OrderDetailsProduct para la relación muchos a muchos
 model OrderDetailProduct {
-  order_details_id     String           
-  company_product_id   String           
+  order_details_id   String
+  company_product_id String
+  companyProduct     CompanyProduct @relation(fields: [company_product_id], references: [company_product_id])
+  orderDetail        OrderDetail    @relation(fields: [order_details_id], references: [order_details_id])
 
-  // Relaciones
-  orderDetail          OrderDetail      @relation(fields: [order_details_id], references: [order_details_id])
-  companyProduct       CompanyProduct   @relation(fields: [company_product_id], references: [company_product_id])
-
-  @@id([order_details_id, company_product_id]) 
-  @@map("order_detail_products") 
+  @@id([order_details_id, company_product_id])
+  @@map("order_detail_products")
 }
 
-// Definición del modelo SupplyChain
 model SupplyChain {
-  supply_chain_id      String          @id @default(uuid()) 
-  order_id             String          @unique
-  updateBy_company_id  String          @unique
-  update_date          DateTime
-  shipping_status      String
+  supply_chain_id     String         @id @default(uuid())
+  order_id            String         @unique
+  updateBy_company_id String         @unique
+  update_date         DateTime
+  shipping_status     String
+  notifications       Notification[]
+  order               Order          @relation(fields: [order_id], references: [order_id])
+  updatedByCompany    Company        @relation(fields: [updateBy_company_id], references: [company_id])
 
-  // Relaciones
-  order                Order           @relation(fields: [order_id], references: [order_id])
-  updatedByCompany     Company         @relation(fields: [updateBy_company_id], references: [company_id])
-  notifications        Notification[]  
-
-  @@map("supply_chain") 
+  @@map("supply_chain")
 }
 
-// Definición del modelo Payment
 model Payment {
-  payment_id         String     @id @default(uuid())
-  company_id         String     @unique// Clave foránea hacia Company
-  status             String
-  amount_decimal     Float
-  currency           String
-  payment_provider   String
-  transaction_id     String
-  payer_id           String
-  description        String?
-  payment_method     String
-  is_verified        Boolean    @default(false)
-  created_at         DateTime   @default(now())
-  updated_at         DateTime   @updatedAt
-
-  // Relaciones
-  company            Company    @relation(fields: [company_id], references: [company_id])
-  order        Order?       @relation() 
+  payment_id       String   @id @default(uuid())
+  company_id       String   @unique
+  status           String
+  amount_decimal   Float
+  currency         String
+  payment_provider String
+  transaction_id   String
+  payer_id         String
+  description      String?
+  payment_method   String
+  is_verified      Boolean  @default(false)
+  created_at       DateTime @default(now())
+  updated_at       DateTime @updatedAt
+  order            Order?
+  company          Company  @relation(fields: [company_id], references: [company_id])
 
   @@map("payments")
 }

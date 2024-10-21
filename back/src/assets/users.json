@@ -1,111 +1,227 @@
 [
-    {
-      "user_name": "Javier",
-      "user_lastname": "Peralta",
-      "role": "admin",
-      "isOlder": true,
-      "email": "javier@example.com",
-      "password": "Password123!",
-      "confirmPassword": "Password123!"
-    },
-    {
-      "user_name": "Carla",
-      "user_lastname": "Gomez",
-      "role": "buyer",
-      "isOlder": true,
-      "email": "carla@example.com",
-      "password": "Password123!",
-      "confirmPassword": "Password123!"
-    },
-    {
-      "user_name": "Luis",
-      "user_lastname": "Fernandez",
-      "role": "supplier",
-      "isOlder": true,
-      "email": "luis@example.com",
-      "password": "Password123!",
-      "confirmPassword": "Password123!"
-    },
-    {
-      "user_name": "Ana",
-      "user_lastname": "Martinez",
-      "role": "buyer",
-      "isOlder": true,
-      "email": "ana@example.com",
-      "password": "Password123!",
-      "confirmPassword": "Password123!"
-    },
-    {
-      "user_name": "Pedro",
-      "user_lastname": "Lopez",
-      "role": "supplier",
-      "isOlder": true,
-      "email": "pedro@example.com",
-      "password": "Password123!",
-      "confirmPassword": "Password123!"
-    },
-    {
-      "user_name": "Maria",
-      "user_lastname": "Rodriguez",
-      "role": "buyer",
-      "isOlder": true,
-      "email": "maria@example.com",
-      "password": "Password123!",
-      "confirmPassword": "Password123!"
-    },
-    {
-      "user_name": "Carlos",
-      "user_lastname": "Perez",
-      "role": "supplier",
-      "isOlder": true,
-      "email": "carlos@example.com",
-      "password": "Password123!",
-      "confirmPassword": "Password123!"
-    },
-    {
-      "user_name": "Lucia",
-      "user_lastname": "Alvarez",
-      "role": "buyer",
-      "isOlder": true,
-      "email": "lucia@example.com",
-      "password": "Password123!",
-      "confirmPassword": "Password123!"
-    },
-    {
-      "user_name": "Miguel",
-      "user_lastname": "Garcia",
-      "role": "supplier",
-      "isOlder": true,
-      "email": "miguel@example.com",
-      "password": "Password123!",
-      "confirmPassword": "Password123!"
-    },
-    {
-      "user_name": "Laura",
-      "user_lastname": "Hernandez",
-      "role": "buyer",
-      "isOlder": true,
-      "email": "laura@example.com",
-      "password": "Password123!",
-      "confirmPassword": "Password123!"
-    },
-    {
-      "user_name": "Raul",
-      "user_lastname": "Castro",
-      "role": "supplier",
-      "isOlder": true,
-      "email": "raul@example.com",
-      "password": "Password123!",
-      "confirmPassword": "Password123!"
-    },
-    {
-      "user_name": "Sara",
-      "user_lastname": "Diaz",
-      "role": "buyer",
-      "isOlder": true,
-      "email": "sara@example.com",
-      "password": "Password123!",
-      "confirmPassword": "Password123!"
-    }
-  ]
-  
+  {
+    "user_name": "Javier",
+    "user_lastname": "Peralta",
+    "role_name": "admin",
+    "isOlder": true,
+    "email": "javier@example.com",
+    "password": "Password123!",
+    "confirmPassword": "Password123!"
+  },
+  {
+    "user_name": "Carla",
+    "user_lastname": "Gomez",
+    "role_name": "buyer",
+    "isOlder": true,
+    "email": "carla@example.com",
+    "password": "Password123!",
+    "confirmPassword": "Password123!"
+  },
+  {
+    "user_name": "Luis",
+    "user_lastname": "Fernandez",
+    "role_name": "supplier",
+    "isOlder": true,
+    "email": "luis@example.com",
+    "password": "Password123!",
+    "confirmPassword": "Password123!"
+  },
+  {
+    "user_name": "Ana",
+    "user_lastname": "Martinez",
+    "role_name": "buyer",
+    "isOlder": true,
+    "email": "ana@example.com",
+    "password": "Password123!",
+    "confirmPassword": "Password123!"
+  },
+  {
+    "user_name": "Pedro",
+    "user_lastname": "Lopez",
+    "role_name": "supplier",
+    "isOlder": true,
+    "email": "pedro@example.com",
+    "password": "Password123!",
+    "confirmPassword": "Password123!"
+  },
+  {
+    "user_name": "Maria",
+    "user_lastname": "Rodriguez",
+    "role_name": "buyer",
+    "isOlder": true,
+    "email": "maria@example.com",
+    "password": "Password123!",
+    "confirmPassword": "Password123!"
+  },
+  {
+    "user_name": "Carlos",
+    "user_lastname": "Perez",
+    "role_name": "supplier",
+    "isOlder": true,
+    "email": "carlos@example.com",
+    "password": "Password123!",
+    "confirmPassword": "Password123!"
+  },
+  {
+    "user_name": "Lucia",
+    "user_lastname": "Alvarez",
+    "role_name": "buyer",
+    "isOlder": true,
+    "email": "lucia@example.com",
+    "password": "Password123!",
+    "confirmPassword": "Password123!"
+  },
+  {
+    "user_name": "Miguel",
+    "user_lastname": "Garcia",
+    "role_name": "supplier",
+    "isOlder": true,
+    "email": "miguel@example.com",
+    "password": "Password123!",
+    "confirmPassword": "Password123!"
+  },
+  {
+    "user_name": "Laura",
+    "user_lastname": "Hernandez",
+    "role_name": "buyer",
+    "isOlder": true,
+    "email": "laura@example.com",
+    "password": "Password123!",
+    "confirmPassword": "Password123!"
+  },
+  {
+    "user_name": "Raul",
+    "user_lastname": "Castro",
+    "role_name": "supplier",
+    "isOlder": true,
+    "email": "raul@example.com",
+    "password": "Password123!",
+    "confirmPassword": "Password123!"
+  },
+  {
+    "user_name": "Sara",
+    "user_lastname": "Diaz",
+    "role_name": "buyer",
+    "isOlder": true,
+    "email": "sara@example.com",
+    "password": "Password123!",
+    "confirmPassword": "Password123!"
+  },
+  {
+    "user_name": "Alejandro",
+    "user_lastname": "Ramos",
+    "role_name": "buyer",
+    "isOlder": true,
+    "email": "alejandro@example.com",
+    "password": "Password123!",
+    "confirmPassword": "Password123!"
+  },
+  {
+    "user_name": "Paula",
+    "user_lastname": "Ortiz",
+    "role_name": "buyer",
+    "isOlder": true,
+    "email": "paula@example.com",
+    "password": "Password123!",
+    "confirmPassword": "Password123!"
+  },
+  {
+    "user_name": "Fernando",
+    "user_lastname": "Mora",
+    "role_name": "supplier",
+    "isOlder": true,
+    "email": "fernando@example.com",
+    "password": "Password123!",
+    "confirmPassword": "Password123!"
+  },
+  {
+    "user_name": "Beatriz",
+    "user_lastname": "Lopez",
+    "role_name": "supplier",
+    "isOlder": true,
+    "email": "beatriz@example.com",
+    "password": "Password123!",
+    "confirmPassword": "Password123!"
+  },
+  {
+    "user_name": "Ignacio",
+    "user_lastname": "Vega",
+    "role_name": "buyer",
+    "isOlder": true,
+    "email": "ignacio@example.com",
+    "password": "Password123!",
+    "confirmPassword": "Password123!"
+  },
+  {
+    "user_name": "Sofia",
+    "user_lastname": "Silva",
+    "role_name": "buyer",
+    "isOlder": true,
+    "email": "sofia@example.com",
+    "password": "Password123!",
+    "confirmPassword": "Password123!"
+  },
+  {
+    "user_name": "Andres",
+    "user_lastname": "Paredes",
+    "role_name": "supplier",
+    "isOlder": true,
+    "email": "andres@example.com",
+    "password": "Password123!",
+    "confirmPassword": "Password123!"
+  },
+  {
+    "user_name": "Elena",
+    "user_lastname": "Jimenez",
+    "role_name": "buyer",
+    "isOlder": true,
+    "email": "elena@example.com",
+    "password": "Password123!",
+    "confirmPassword": "Password123!"
+  },
+  {
+    "user_name": "Diego",
+    "user_lastname": "Gutierrez",
+    "role_name": "supplier",
+    "isOlder": true,
+    "email": "diego@example.com",
+    "password": "Password123!",
+    "confirmPassword": "Password123!"
+  },
+  {
+    "user_name": "Patricia",
+    "user_lastname": "Gonzalez",
+    "role_name": "buyer",
+    "isOlder": true,
+    "email": "patricia@example.com",
+    "password": "Password123!",
+    "confirmPassword": "Password123!"
+  },
+  {
+    "user_name": "Juan",
+    "user_lastname": "Almeida",
+    "role_name": "supplier",
+    "isOlder": true,
+    "email": "juan@example.com",
+    "password": "Password123!",
+    "confirmPassword": "Password123!"
+  },
+  {
+    "user_name": "Marta",
+    "user_lastname": "Lopez",
+    "role_name": "buyer",
+    "isOlder": true,
+    "email": "marta@example.com",
+    "password": "Password123!",
+    "confirmPassword": "Password123!"
+  },
+  {
+    "user_name": "Camila",
+    "user_lastname": "Reyes",
+    "role_name": "supplier",
+    "isOlder": true,
+    "email": "camila@example.com",
+    "password": "Password123!",
+    "confirmPassword": "Password123!"
+  }
+]

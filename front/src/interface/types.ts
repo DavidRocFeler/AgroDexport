@@ -1,15 +1,18 @@
-export interface ISignUp {
-    name: string;
-    lastName: string;
-    password: string;
-    email: string;
-    country: string;
-    phone: number;
+export interface ISignUpForm {
+  user_name: string;
+  user_lastname: string;
+  email: string;
+  password: string;
+  confirm_password?: string;
+  role_name: "supplier" | "buyer" | null;
+  isOlder: boolean;
 }
+
 export interface ISignUpErrors {
     name?: string;
     lastName?: string;
     password?: string;
+    confirmPassword?: string;
     email?: string;
     country?: string;
     phone?: number;
@@ -79,23 +82,24 @@ export interface IAgroProduct {
   }
 
   export interface IUserState {
-    userType: "buyer" | "supplier" | "admin" | null;
-    setUserType: (userType: "buyer" | "supplier" | "admin" | null) => void;
-    checkCookies: () => void;
+    users: IUser[];
+    token: string | null;
+    userType: "supplier" | "buyer" | null;
+    addUser: (user: IUser) => void;
+    setToken: (token: string) => void;
+    checkToken: () => void;
+    setUserType: (userType: "supplier" | "buyer" | null) => void;
+    removeUser: (userId: string) => void;
+    clearUsers: () => void;
   }
 
-  export interface IUserType {
-    role: "supplier" | "buyer"
-}
-
-import "next-auth";
-
- declare module "next-auth" {
-  interface User {
-    role?: "buyer" | "supplier";
+  export interface IUser {
+    user_name: string;
+    user_lastname: string;
+    email: string;
+    password?: string;
+    confirm_password?: string;
+    role_name: "supplier" | "buyer" | null;
+    isOlder: boolean;
   }
 
-  interface Session {
-    user: User;
-  }
-}

@@ -1,8 +1,48 @@
+"use client"
 import React from "react";
 import Link from "next/link";
 import styles from "../styles/Home.module.css"
+import { useEffect } from "react";
+import { useSession } from "next-auth/react";
+import { useUserStore } from "@/store/useUserStore";
+import { IUser } from "@/interface/types";
+import { registerAuthProps } from "@/helpers/signUpHelpers";
 
 const HomeView: React.FC = () => {
+    const { data: session } = useSession();
+    const users = useUserStore((state) => state.users);
+    const addUser = useUserStore((state) => state.addUser);
+
+    useEffect(() => {
+        const registerUserToBackend = async (sessionUser:IUser) => {
+            try {
+                const registeredUser = await registerAuthProps(sessionUser);
+                addUser(registeredUser); 
+                console.log("User registered successfully:", registeredUser);
+            } catch (error) {
+                console.error("Error registering user:", error);
+            }
+        };
+
+        if (session?.user) {
+            const sessionUser:IUser = {
+                user_name: session.user.name || "",
+                email: session.user.email || "",
+                role_name: localStorage.getItem('userRole') as "supplier" | "buyer",
+                user_lastname: "",
+                password: "",
+                confirm_password: "",
+                isOlder: true,
+            };
+            
+            registerUserToBackend(sessionUser);
+        }
+    }, [session, addUser]);
+
+    useEffect(() => {
+        console.log("Users in global state:", users);
+    }, [users]);
+
     return(
         <main style={{background: "#d8fba7", paddingTop: "5rem", paddingLeft: "5rem", paddingBottom: "8rem"}}>
             <div>

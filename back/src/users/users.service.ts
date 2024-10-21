@@ -11,9 +11,13 @@ export class UsersService {
         private readonly userRepository: UsersRepository
     ) {}
 
-    async getAllUsers(): Promise<User[]> {
-        return this.userRepository.getAllUsers();
-      }
+    async getAllUsersService(): Promise<User[]> {
+      return this.userRepository.getAllUsers();
+    }
+
+    async getAllWithFiltersService(filters: any[]): Promise<User[]> {
+      return this.userRepository.getAllWithFilters(filters);
+    }
 
     async getUserById(user_id: string): Promise<User> {
         return this.userRepository.getUserById(user_id); 

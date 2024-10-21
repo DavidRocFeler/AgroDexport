@@ -2,20 +2,42 @@ import { Injectable, NotFoundException, ConflictException } from '@nestjs/common
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateCompanyDto } from './createCompany.dto';
 import { UpdateCompanyDto } from './updateCompany.dto';
+import { NotificationsService } from '../notifications/notifications.service';
+import { Company } from '@prisma/client';
 
 @Injectable()
 export class CompanyRepository {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly notificationsService: NotificationsService,
+    private readonly prisma: PrismaService) {}
 
-  async findAllActive() {
-    return this.prisma.company.findMany({
-      where: { isActive: true },
-    });
-  }
+    async getAll(): Promise<Company[]> {
+      return this.prisma.company.findMany();
+    }
+  
+    async getWithFilters(filters: any[]): Promise<Company[]> {
+      return this.prisma.company.findMany({
+        where: {
+          OR: [
+            { isActive: true },
+            { isActive: false },
+          ],
+          AND: filters,
+        },
+      });
+    }
+    
 
   async findById(companyId: string) {
     const company = await this.prisma.company.findUnique({
       where: { company_id: companyId },
+      include: {
+        user: {
+          include: {
+            role: true, 
+          },
+        },
+      },
     });
 
     if (!company || !company.isActive) {
@@ -24,6 +46,26 @@ export class CompanyRepository {
 
     return company;
   }
+
+  async findByName(companyName: string) {
+    const company = await this.prisma.company.findFirst({
+      where: { company_name: companyName },
+      include: {
+        user: {
+          include: {
+            role: true,
+          },
+        },
+      },
+    });
+  
+    if (!company || !company.isActive) {
+      throw new NotFoundException('Company not found');
+    }
+  
+    return company;
+  }
+  
 
   async create(companyData: CreateCompanyDto) {
     const existingCompany = await this.prisma.company.findFirst({
@@ -38,9 +80,17 @@ export class CompanyRepository {
       throw new ConflictException('A company with this tax identification number already exists in the same country.');
     }
 
-    return this.prisma.company.create({
-      data: { ...companyData, isActive: true },
+    
+    const company = await this.prisma.company.create({
+      data: { ...companyData, isActive: true }
     });
+
+    await this.notificationsService.createAndNotifyAdmins(
+      `Nueva compañía creada: ${company.company_name}`,
+      'company_created'
+    );
+
+    return company;
   }
 
   async update(companyId: string, companyData: UpdateCompanyDto) {
