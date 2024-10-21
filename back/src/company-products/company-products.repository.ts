@@ -49,16 +49,12 @@ export class CompanyProductsRepository {
     });
   }
   
-    async updateProductRepository(updateCompanyProductDto: UpdateCompanyProductDto, productId: string) {
-      const product = await this.prisma.companyProduct.update({
+    async updateProductRepository(productId: string, productData: UpdateCompanyProductDto) {
+      return await this.prisma.companyProduct.update({
         where: { company_product_id : productId },
-        data: {...updateCompanyProductDto},
+        data: productData,
       })
-
-      return product;
     }
-
-
 
   async findByProductName(productName: string): Promise<CompanyProduct | null> {
     const product = await this.prisma.companyProduct.findFirst({
