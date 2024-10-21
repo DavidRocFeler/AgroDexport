@@ -13,7 +13,7 @@ const Payment = () => {
 
         <h2 className="text-xl font-bold mb-4">Review and confirm your order</h2>
 
-        {/* Product Summary */}
+        {/* Resumen del producto */}
         <div className="flex items-center mb-4">
           <Image 
             src="/[col.jpg]" 
@@ -29,7 +29,7 @@ const Payment = () => {
           </div>
         </div>
 
-        {/* Order Details */}
+        {/* Detalles del pedido */}
         <div className="mb-6">
           <div className="flex justify-between text-sm text-gray-700">
             <p>Subtotal</p>
@@ -49,7 +49,7 @@ const Payment = () => {
           </div>
         </div>
 
-        {/* Payment Method */}
+        {/* Forma de pago */}
         <h2 className="text-xl font-bold mb-4">Payment Method</h2>
 
         <div className="flex items-center mb-6">
@@ -64,7 +64,7 @@ const Payment = () => {
           <p className="ml-4">PayPal</p>
         </div>
 
-        {/* PayPal Button */}
+        {/* Botón de PayPal */}
         <button 
           className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg w-full"
           onClick={() => alert('Redirecting to PayPal...')}
