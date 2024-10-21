@@ -2,16 +2,7 @@ import { IsString, IsOptional, IsInt, IsNumber, IsDate, Min, MaxLength, IsUUID, 
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateCompanyProductDto {
- 
-    @ApiProperty({
-        description: 'ID of the associated farmer, if applicable',
-        example: '123e4567-e89b-12d3-a456-426614174000',
-    })
-    @IsString()
-    @IsOptional()
-    @IsUUID('all', { message: 'farmer_id must be a valid UUID.' }) 
-    farmer_id?: string | null;
-
+    
     @ApiProperty({
         description: 'ID of the company',
         example: '550e8400-e29b-41d4-a716-446655440000',
@@ -27,24 +18,6 @@ export class CreateCompanyProductDto {
     @IsString()
     @IsUUID('all', { message: 'category_id must be a valid UUID.' }) 
     category_id: string;
-
-    @ApiProperty({
-        description: 'Associated order details, if applicable',
-        example: '3d6f4c77-fb73-49f2-b5bc-49b6bc6b7725',
-    })
-    @IsString()
-    @IsOptional()
-    @IsUUID('all', { message: 'order_details_id must be a valid UUID.' }) 
-    order_details_id?: string | null;
-
-    @ApiProperty({
-        description: 'ID of the applied discount, if applicable',
-        example: 'c9ebef93-aba7-4c7f-b2a3-13ccba2d95ed',
-    })
-    @IsString()
-    @IsOptional()
-    @IsUUID('all', { message: 'discount_id must be a valid UUID.' }) 
-    discount_id?: string | null;
 
     @ApiProperty({
         description: 'Name of the company product',

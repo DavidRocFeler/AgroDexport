@@ -170,8 +170,7 @@ model Task {
 }
 // Definición del modelo CompanyProduct
 model CompanyProduct {
-  company_product_id         String             @id @default(uuid())            
-  farmer_id                  String?            
+  company_product_id         String             @id @default(uuid())                       
   company_id                 String             
   category_id                String            
   order_details_id           String?                     
@@ -280,6 +279,8 @@ model FarmerCertification {
   organic_certification      String?
   quality_certificate        String
   certificate_of_origin      String
+
+  //Relaciones
   company                    Company                             @relation(fields: [company_id], references: [company_id])
   productCertifications      CompanyProductFarmerCertification[]
 
