@@ -79,14 +79,14 @@ export class CreateCompanyProductDto {
     @Min(0, { message: 'company_price_x_kg must be at least 0.' }) 
     company_price_x_kg: number;
 
-    @ApiProperty({
-        description: 'Total price of the product',
-        example: 25.0,
-    })
-    @IsNumber({}, { message: 'total_price must be a number.' }) 
-    @IsNotEmpty({ message: 'total_price cannot be empty.' }) 
-    @Min(0, { message: 'total_price must be at least 0.' }) 
-    total_price: number;
+    // @ApiProperty({
+    //     description: 'Total price of the product',
+    //     example: 25.0,
+    // })
+    // @IsNumber({}, { message: 'total_price must be a number.' }) 
+    // @IsNotEmpty({ message: 'total_price cannot be empty.' }) 
+    // @Min(0, { message: 'total_price must be at least 0.' }) 
+    // total_price: number;
 
     @ApiProperty({
         description: 'Harvest date of the product',
