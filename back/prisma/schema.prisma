@@ -87,8 +87,7 @@ model Company {
   user                       User               @relation(fields: [user_id], references: [user_id])
   products                   CompanyProduct[]   
   shippingAddresses          ShippingAddress[]  
-  orders                     Order[]            
-  discounts                  Discount[]         
+  orders                     Order[]                   
   farmer_certifications      FarmerCertification[] 
   supply_chain               SupplyChain[]
   payment                    Payment?       @relation()
@@ -110,7 +109,6 @@ model Commission {
 model Notification {
   notification_id  String    @id @default(uuid())
   user_id          String
-  discount_id      String?
   order_id        String?
   supply_chain_id  String?
   task_id          String?    
@@ -122,7 +120,6 @@ model Notification {
   // Relaciones
   user             User            @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
   task             Task?            @relation(fields: [task_id], references: [task_id]) 
-  discount         Discount?       @relation(fields: [discount_id], references: [discount_id])
   supply_chain     SupplyChain?    @relation(fields: [supply_chain_id], references: [supply_chain_id])
   order            Order?          @relation(fields: [order_id], references: [order_id])
 
@@ -153,6 +150,7 @@ model CompanyProduct {
   company_product_description String?
   stock                      Int
   minimum_order              Int                @default(5)
+  discount                   Int                @default(0)
   origin                     String
   company_price_x_kg         Float
   total_price                Float
@@ -167,7 +165,6 @@ model CompanyProduct {
   // Relaciones
   company                    Company                    @relation(fields: [company_id], references: [company_id])
   category                   Category                   @relation(fields: [category_id], references: [category_id], name: "CategoryProducts")
-  productDiscounts           CompanyProductDiscount[]   // Relación muchos a muchos con Discount a través de ProductDiscount
   productCertifications      CompanyProductFarmerCertification[] // Relación muchos a muchos con FarmerCertification a través de ProductCertification
   orderDetails               OrderDetailProduct[]       // Relación muchos a muchos con OrderDetail a través de OrderDetailProduct
 
@@ -189,7 +186,7 @@ model ShippingAddress {
   city                      String
   state                     String
   country                   String
-  isActive                  Boolean            @default(true) 
+  isActive                  Boolean   @default(true) 
 
   // Relación
   company                   Company   @relation(fields: [company_id], references: [company_id])
@@ -206,20 +203,6 @@ model Category {
   @@map("categories")
 }
 
-model Discount {
-  discount_id      String                   @id @default(uuid())
-  company_id       String
-  code             String                   @unique
-  percentage       Float
-  code_status      String
-
-    // Relación
-  company          Company                  @relation(fields: [company_id], references: [company_id])
-  notifications    Notification[]
-  productDiscounts CompanyProductDiscount[]
-
-  @@map("discounts")
-}
 
 model FarmerCertification {
   farmer_id                  String                              @id @default(uuid())
@@ -237,15 +220,6 @@ model FarmerCertification {
   @@map("farmer_certifications")
 }
 
-model CompanyProductDiscount {
-  discount_id        String
-  company_product_id String
-  companyProduct     CompanyProduct @relation(fields: [company_product_id], references: [company_product_id])
-  discount           Discount       @relation(fields: [discount_id], references: [discount_id])
-
-  @@id([discount_id, company_product_id])
-  @@map("product_discounts")
-}
 
 model CompanyProductFarmerCertification {
   farmer_id           String

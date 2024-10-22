@@ -179,10 +179,10 @@ export class UsersRepository {
       include: {
         user: {
           select: {
-            user_id: true,  // Asegura que se incluya el user_id
+            user_id: true,  
             role: {
               select: {
-                role_name: true,  // Incluye el role_name
+                role_name: true,
               },
             },
           },
