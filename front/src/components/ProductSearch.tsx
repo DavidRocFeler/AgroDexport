@@ -29,7 +29,7 @@ const ProductSearch = () => {
   };
 
   return (
-    <div className="flex items-center ms-8 px-4 py-3">
+    <div className="flex items-center ms-8 mr-8 px-4 py-3">
       <div className="flex w-1/2"> 
         <label className="flex flex-col min-w-40 h-12 w-full">
           <div className="flex w-full flex-1 items-stretch rounded-xl h-full">
@@ -55,9 +55,11 @@ const ProductSearch = () => {
           </div>
         </label>
       </div>
-      <form onSubmit={handleSubmit}  className="flex flex-row mx-8 space-x-4  w-full "> 
+      <form onSubmit={handleSubmit}  className="flex flex-row w-full items-center ms space-x-4  "> 
         <div className="flex w-full">
-          <select className="rounded-xl px-3 py-2 h-12 text-black border border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500">
+          <select className="rounded-xl px-3 py-2 h-12 text-black border border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          value={category}
+          onChange={handleCategoryChange}>
             <option value="">All Categories</option>
             <option value="fruits">Fruits</option>
             <option value="vegetables">Vegetables</option>
@@ -70,7 +72,9 @@ const ProductSearch = () => {
           </select>
         </div>
         <div className="flex w-full">
-          <select className="rounded-xl px-3 py-2 h-12 text-black border border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500">
+          <select className="rounded-xl px-3 py-2 h-12 text-black border border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          value={country}
+          onChange={handleCountryChange}>
             <option value="">All Countries</option>
             <option value="argentina">Argentina</option>
             <option value="colombia">Colombia</option>
@@ -78,12 +82,17 @@ const ProductSearch = () => {
           </select>
         </div>
         <div className="flex w-full">
-          <select className="rounded-xl px-3 py-2 h-12 text-black border border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500">
+          <select className="rounded-xl px-3 py-2 h-12 text-black border border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          value={cropType}
+          onChange={handleCropTypeChange}>
             <option value="">Crop Type</option>
             <option value="Conventional">Conventional</option>
             <option value="Organic">Organic</option>
           </select>
         </div>
+        <button type="submit" className="rounded-xl px-4 py-2 bg-black text-white">
+          Search
+        </button>
       </form>
     </div>
   );

@@ -1,7 +1,7 @@
 import { Body, Controller, HttpCode, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { LoginUserDto } from 'src/users/dtos/loginUser.dto';
-import { CreateUserDto } from 'src/users/dtos/createUser.dto';
+import { LoginUserDto } from '../users/dtos/loginUser.dto';
+import { CreateUserDto } from '../users/dtos/createUser.dto';
 import { ApiBody, ApiExcludeEndpoint, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { thirdAuthDto } from './dtos/thirdauth.dto';
 

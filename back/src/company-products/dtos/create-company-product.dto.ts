@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsInt, IsNumber, IsDate, Min, MaxLength, IsUUID, IsNotEmpty, IsUrl, IsDateString, IsISO8601, IsBoolean } from 'class-validator';
+import { IsString, IsOptional, IsInt, IsNumber, IsDate, Min, MaxLength, IsUUID, IsNotEmpty, IsUrl, IsDateString, IsISO8601, IsBoolean, Max } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateCompanyProductDto {
@@ -61,6 +61,16 @@ export class CreateCompanyProductDto {
     origin: string;
 
     @ApiProperty({
+        description: 'Discount percentage, must be between 0 and 99.',
+        example: 10,
+    })
+    @IsNumber({}, { message: 'discount must be a number.' })
+    @IsNotEmpty({ message: 'discount cannot be empty.' })
+    @Min(0, { message: 'discount must be at least 0.' })
+    @Max(99, { message: 'discount must be at most 99.' })
+    discount: number;
+    
+    @ApiProperty({
         description: 'Price per kilogram of the company',
         example: 2.5,
     })
@@ -69,14 +79,14 @@ export class CreateCompanyProductDto {
     @Min(0, { message: 'company_price_x_kg must be at least 0.' }) 
     company_price_x_kg: number;
 
-    @ApiProperty({
-        description: 'Total price of the product',
-        example: 25.0,
-    })
-    @IsNumber({}, { message: 'total_price must be a number.' }) 
-    @IsNotEmpty({ message: 'total_price cannot be empty.' }) 
-    @Min(0, { message: 'total_price must be at least 0.' }) 
-    total_price: number;
+    // @ApiProperty({
+    //     description: 'Total price of the product',
+    //     example: 25.0,
+    // })
+    // @IsNumber({}, { message: 'total_price must be a number.' }) 
+    // @IsNotEmpty({ message: 'total_price cannot be empty.' }) 
+    // @Min(0, { message: 'total_price must be at least 0.' }) 
+    // total_price: number;
 
     @ApiProperty({
         description: 'Harvest date of the product',
