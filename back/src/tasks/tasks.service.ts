@@ -11,7 +11,7 @@ export class TasksService {
     ) {}
 
 
-  @Cron(CronExpression.EVERY_WEEK)
+  @Cron(CronExpression.EVERY_HOUR)
   async remindIncompleteProfiles() {
     const incompleteUsers = await this.usersRepository.findUsersWithIncompleteProfiles();
 

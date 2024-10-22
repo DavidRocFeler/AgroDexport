@@ -87,7 +87,7 @@ model Company {
   user                       User               @relation(fields: [user_id], references: [user_id])
   products                   CompanyProduct[]   
   shippingAddresses          ShippingAddress[]  
-  orders                     Order[]            
+  orders                     Order[]                   
   farmer_certifications      FarmerCertification[] 
   supply_chain               SupplyChain[]
   payment                    Payment?       @relation()
@@ -150,6 +150,7 @@ model CompanyProduct {
   company_product_description String?
   stock                      Int
   minimum_order              Int                @default(5)
+  discount                   Int                @default(0)
   origin                     String
   discount                   Int             @default(0)
   company_price_x_kg         Float
@@ -203,18 +204,6 @@ model Category {
   @@map("categories")
 }
 
-model Discount {
-  discount_id      String                   @id @default(uuid())
-  company_id       String
-  code             String                   @unique
-  percentage       Float
-  code_status      String
-
-    // Relación
-
-
-  @@map("discounts")
-}
 
 model FarmerCertification {
   farmer_id                  String                              @id @default(uuid())
@@ -232,15 +221,6 @@ model FarmerCertification {
   @@map("farmer_certifications")
 }
 
-model CompanyProductDiscount {
-  discount_id        String
-  company_product_id String
-
-
-
-  @@id([discount_id, company_product_id])
-  @@map("product_discounts")
-}
 
 model CompanyProductFarmerCertification {
   farmer_id           String
