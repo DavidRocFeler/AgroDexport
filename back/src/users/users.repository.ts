@@ -39,6 +39,21 @@ export class UsersRepository {
     });
   }
 
+  async findUsersWithIncompleteProfiles(): Promise<User[]> {
+    return this.prisma.user.findMany({
+      where: {
+        OR: [
+          { nDni: null },
+          { birthday: null },
+          { phone: null },
+          { country: null },
+          { profile_picture: null },
+        ],
+      },
+    });
+  }
+  
+
   async getUserById(user_id: string): Promise<User> {
     const user = await this.prisma.user.findUnique( { where: { user_id } });
 
