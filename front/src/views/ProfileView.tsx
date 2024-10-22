@@ -151,6 +151,50 @@ const ProfileView: React.FC = () => {
       </section>
 
       {/* fin div desplegable */}
+
+      {/* section 2 */}
+      <section className="text-gray-600 body-font">
+        <div className="container px-5 py-24 mx-auto">
+          <div className="flex flex-wrap -m-4">
+            <div className="p-4 w-1/2">
+              <div className="h-full bg-gray-100 p-8 rounded">
+                <div className="flex w-screen h-screen dark:bg-gray-900 justify-center items-center">
+                  {/*  */}
+                  <div className="w-[150px] text-gray-900 dark:text-gray-100">
+                    <div className="relative w-full group">
+                      <label className="text-xs text-gray-400">
+                        Select Company
+                      </label>
+                      <button className="py-2.5 px-3 w-full md:text-sm text-site bg-transparent border border-dimmed  focus:border-brand focus:outline-none focus:ring-0 peer flex items-center justify-between rounded font-semibold">
+                        Company1
+                      </button>
+                      <div className="absolute z-[99] top-[100%] left-[50%] translate-x-[-50%] rounded-md overflow-hidden shadow-lg min-w-[200px] w-max peer-focus:visible peer-focus:opacity-100 opacity-0 invisible duration-200 p-1 bg-gray-100 dark:bg-gray-800  border border-dimmed text-xs md:text-sm">
+                        <div className=" w-full block cursor-pointer hover:bg-white dark:hover:bg-gray-900 dark:bg-gray-800 hover:text-link px-3 py-2 rounded-md">
+                          Company1
+                        </div>
+                        <div className=" w-full block cursor-pointer hover:bg-white dark:hover:bg-gray-900 dark:bg-gray-800 hover:text-link px-3 py-2 rounded-md">
+                          Company2
+                        </div>
+                        <div className=" w-full block cursor-pointer hover:bg-white dark:hover:bg-gray-900 dark:bg-gray-800 hover:text-link px-3 py-2 rounded-md">
+                          Company3
+                        </div>
+
+                        <div className=" w-full block cursor-pointer hover:bg-white dark:hover:bg-gray-900 dark:bg-gray-800 hover:text-link px-3 py-2 rounded-md">
+                          Company4
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="p-4 w-1/2">
+              <div className="h-full bg-gray-100 p-8 rounded"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+      {/* fin section 2 */}
     </div>
   );
 };
