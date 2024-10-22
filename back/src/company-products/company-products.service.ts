@@ -48,7 +48,10 @@ export class CompanyProductsService {
     const existingCompany = await this.companyRepository.findById(createCompanyProductDto.company_id);
     const existingProduct = await this.companyProductsRepository.findByProductName(createCompanyProductDto.company_product_name);
     const existingCategory = await this. categoryRepository.findByIdcategory(createCompanyProductDto.category_id)
-    const verifyTotalPrice = (createCompanyProductDto.minimum_order * 1000 ) * createCompanyProductDto.company_price_x_kg; 
+    const totalPrice = (createCompanyProductDto.minimum_order * 1000 ) * createCompanyProductDto.company_price_x_kg;
+    const discountPrice = totalPrice * ((100-createCompanyProductDto.discount)/100);
+    const verifyTotalPrice = totalPrice - discountPrice;
+
 
     if (existingCompany.user?.role?.role_name !== 'supplier') {
       throw new ForbiddenException('Only suppliers can create products.');

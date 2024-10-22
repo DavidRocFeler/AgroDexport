@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsInt, IsNumber, IsDate, Min, MaxLength, IsUUID, IsNotEmpty, IsUrl, IsDateString, IsISO8601, IsBoolean } from 'class-validator';
+import { IsString, IsOptional, IsInt, IsNumber, IsDate, Min, MaxLength, IsUUID, IsNotEmpty, IsUrl, IsDateString, IsISO8601, IsBoolean, Max } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateCompanyProductDto {
@@ -60,6 +60,16 @@ export class CreateCompanyProductDto {
     @IsNotEmpty({ message: 'origin cannot be empty.' }) 
     origin: string;
 
+    @ApiProperty({
+        description: 'Discount percentage, must be between 0 and 99.',
+        example: 10,
+    })
+    @IsNumber({}, { message: 'discount must be a number.' })
+    @IsNotEmpty({ message: 'discount cannot be empty.' })
+    @Min(0, { message: 'discount must be at least 0.' })
+    @Max(99, { message: 'discount must be at most 99.' })
+    discount: number;
+    
     @ApiProperty({
         description: 'Price per kilogram of the company',
         example: 2.5,
