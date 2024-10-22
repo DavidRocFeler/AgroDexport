@@ -3,16 +3,15 @@ import { UploadApiResponse, v2 as Cloudinary } from "cloudinary";
 import * as toStream from "buffer-to-stream";
 import { UsersRepository } from "../users/users.repository";
 import { CompanyRepository } from "../companies/companies.repository"
-// import { UsersRepository } from "../users/users.repository";
-// import { ProductsRepository } from "../company-products/company-products.repository";
+import { CompanyProductsRepository } from "../company-products/company-products.repository";
 // import { FarmerCertificationsRepository } from "../farmer-certifications/farmer-certifications.repository";
 
 @Injectable()
 export class CloudinaryService {
   constructor(
     private readonly usersRepository: UsersRepository,
-    private readonly companiesRepository: CompanyRepository
-    // private readonly productsRepository: CompanyProductsRepository,
+    private readonly companiesRepository: CompanyRepository,
+    private readonly productsRepository: CompanyProductsRepository,
     // private readonly farmerCertificationsRepository: FarmerCertificationsRepository,
   ) {}
 
@@ -88,7 +87,7 @@ export class CloudinaryService {
   
       case 'product':
         updateData = { company_product_img: url };
-        // await this.companyProductsRepository.updateProductFile(id, updateData);
+        await this.productsRepository.updateProductRepository(id, updateData);
         break;
   
       case 'phytosanitary_certificate':

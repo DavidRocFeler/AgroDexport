@@ -48,7 +48,8 @@ export class CreateUserDto {
     @IsBoolean()
     isOlder: boolean;
 
-    @ApiProperty({ description: "Role name associated with the user", example: "buyer" })
-    @IsNotEmpty()
+    @ApiProperty({ description: "Role asociado al usuario", example: "buyer" })
+    @IsNotEmpty({ message: 'El campo role_name no debe estar vacío' })
+    @IsString({ message: 'El campo role_name debe ser un string' })
     role_name: string;
 }

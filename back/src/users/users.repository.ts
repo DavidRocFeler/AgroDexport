@@ -39,6 +39,21 @@ export class UsersRepository {
     });
   }
 
+  async findUsersWithIncompleteProfiles(): Promise<User[]> {
+    return this.prisma.user.findMany({
+      where: {
+        OR: [
+          { nDni: null },
+          { birthday: null },
+          { phone: null },
+          { country: null },
+          { profile_picture: null },
+        ],
+      },
+    });
+  }
+  
+
   async getUserById(user_id: string): Promise<User> {
     const user = await this.prisma.user.findUnique( { where: { user_id } });
 
@@ -158,11 +173,24 @@ export class UsersRepository {
     }
   }
 
-  async findCredentialByEmail(email: string): Promise<Credential | null> {
+  async findCredentialByEmail(email: string) {
     return this.prisma.credential.findUnique({
       where: { email },
+      include: {
+        user: {
+          select: {
+            user_id: true,  // Asegura que se incluya el user_id
+            role: {
+              select: {
+                role_name: true,  // Incluye el role_name
+              },
+            },
+          },
+        },
+      },
     });
   }
+  
 
   async findUserByCredentialId(credential_id: string): Promise<User | null> {
     return this.prisma.user.findUnique({
