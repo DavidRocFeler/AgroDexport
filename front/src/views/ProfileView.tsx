@@ -12,7 +12,7 @@ const ProfileView: React.FC = () => {
                 <div className={styles.textbutton}>ADD COMPANY</div>
               </button>
               <div className={styles.containermy}>
-                <div className={styles.rectangle}></div>
+                {/* <div className={styles.rectangle}></div> */}
                 <div className={styles.overlapgroup}>
                   <div className={styles.mycomp}>
                     <div className={styles.item}>
