@@ -32,7 +32,7 @@ model Credential {
   credential_id String @id @default(uuid())
   email         String @unique @db.VarChar(255)
   password      String @db.VarChar(255)
-  user          User?
+  user          User? @relation
 
   @@map("credentials")
 }
