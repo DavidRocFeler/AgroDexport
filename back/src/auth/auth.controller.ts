@@ -24,6 +24,7 @@ export class AuthController {
     @HttpCode(201)
     @Post('thirdsignup')
     async thirdSignup(@Body() user:thirdAuthDto){
+        console.log(user)
         const newUser = await this.authService.thirdSignupService(user);
         return newUser;
     }
@@ -31,6 +32,7 @@ export class AuthController {
     @HttpCode(201)
     @Post('signin')
     async signin(@Body() loginUser: LoginUserDto) {
+        console.log(loginUser)
         return await this.authService.signInService(loginUser);
     }
 
@@ -41,9 +43,10 @@ export class AuthController {
     }
 
     @Post("thirdsingin") 
-    async thirdAuth(userData: thirdAuthDto) {
-        console.log("datos recividos", userData)
-        return this.authService.thirdSingIn(userData)
+    async thirdAuth(userData: any) {
+        console.log(JSON.stringify(userData))
+        return userData
+        // return this.authService.thirdSingIn(userData)
     }
 
     @Post("passwordrecovery") 

@@ -1,5 +1,6 @@
 import { ISignUpForm, IUser } from "@/interface/types";
 import Swal from "sweetalert2";
+import axios from 'axios';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -48,7 +49,7 @@ export const registerProps = async (userData: ISignUpForm) => {
 // export const registerAuthProps = async (userData:IUser) => {
     // try {
         // console.log("Sending to backend:", JSON.stringify(userData));
-        // const res = await fetch(`http://localhost:3002/auth/thirdsingin`, {
+        // const res = await fetch(`${API_URL}/auth/thirdsingin`, {
             // method: "POST",
             // headers: {
                 // "Content-type": "application/json"
@@ -77,44 +78,72 @@ export const registerProps = async (userData: ISignUpForm) => {
 // }
 
 
+// export const registerAuthProps = async (userData: IUser) => {
+    // try {
+        // console.log("Sending to backend:", JSON.stringify(userData));
+        // const res = await fetch(`http://localhost:3002/auth/thirdsingin`, {
+            // method: "POST",
+            // headers: {
+                // "Content-Type": "application/json",
+            // },
+            // body: JSON.stringify(userData),
+        // });
+// 
+        // if (res.ok) {
+            // Si la respuesta es exitosa, devuelves los datos
+            // return await res.json();
+        // } else {
+            // Manejamos el error en caso de que no sea ok (4xx o 5xx)
+            // const errorMessage = await res.text(); // Leemos el cuerpo de la respuesta para obtener detalles
+            // Swal.fire({
+                // icon: "error",
+                // title: "Error",
+                // text: errorMessage || "An error occurred during registration.",
+                // width: 400,
+                // padding: "3rem",
+                // customClass: {
+                    // popup: "custom-swal-popup",
+                // },
+            // });
+            // throw new Error(`Failed to register: ${errorMessage}`);
+        // }
+    // } catch (error: any) {
+        // En caso de error en la petición o en el procesamiento
+        // console.error("Error sending data:", error.message);
+        // console.log("Data that failed to send:", JSON.stringify(userData));
+        // 
+        // Swal.fire({
+            // icon: "error",
+            // title: "Request Error",
+            // text: error.message || "Something went wrong.",
+            // width: 400,
+            // padding: "3rem",
+            // customClass: {
+                // popup: "custom-swal-popup",
+            // },
+        // });
+// 
+        // throw new Error(error.message || "Unknown error occurred");
+    // }
+// };
+// 
+
 export const registerAuthProps = async (userData: IUser) => {
     try {
         console.log("Sending to backend:", JSON.stringify(userData));
-        const res = await fetch(`http://localhost:3002/auth/thirdsingin`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(userData),
-        });
+        const res = await axios.post(`http://localhost:3002/auth/thirdsingin`, userData);
+        console.log(userData)
 
-        if (res.ok) {
-            // Si la respuesta es exitosa, devuelves los datos
-            return await res.json();
-        } else {
-            // Manejamos el error en caso de que no sea ok (4xx o 5xx)
-            const errorMessage = await res.text(); // Leemos el cuerpo de la respuesta para obtener detalles
-            Swal.fire({
-                icon: "error",
-                title: "Error",
-                text: errorMessage || "An error occurred during registration.",
-                width: 400,
-                padding: "3rem",
-                customClass: {
-                    popup: "custom-swal-popup",
-                },
-            });
-            throw new Error(`Failed to register: ${errorMessage}`);
-        }
+        // Si la respuesta es exitosa, devuelves los datos
+        return res.data;
     } catch (error: any) {
-        // En caso de error en la petición o en el procesamiento
-        console.error("Error sending data:", error.message);
-        console.log("Data that failed to send:", JSON.stringify(userData));
+        // Manejamos el error en caso de que no sea ok
+        const errorMessage = error.response?.data?.message || error.message || "An error occurred during registration.";
         
         Swal.fire({
             icon: "error",
-            title: "Request Error",
-            text: error.message || "Something went wrong.",
+            title: "Error",
+            text: errorMessage,
             width: 400,
             padding: "3rem",
             customClass: {
@@ -122,6 +151,9 @@ export const registerAuthProps = async (userData: IUser) => {
             },
         });
 
-        throw new Error(error.message || "Unknown error occurred");
+        console.error("Error sending data:", errorMessage);
+        console.log("Data that failed to send:", JSON.stringify(userData));
+
+        throw new Error(errorMessage);
     }
 };
