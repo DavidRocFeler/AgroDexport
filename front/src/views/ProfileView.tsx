@@ -8,14 +8,37 @@ const ProfileView: React.FC = () => {
         <div className={styles.div2}>
           <div className={styles.overlap}>
             <div className={styles.div2}>
-              <button className={styles.button}>
+              {/* <button className={styles.button}>
                 <div className={styles.textbutton}>ADD COMPANY</div>
+              </button> */}
+              <button className="bg-black hover:bg-black text-white font-bold py-2 px-4 rounded">
+                User come back
               </button>
+
+              {/* comienza container */}
               <div className={styles.containermy}>
-                <div className={styles.rectangle}></div>
+                <div className="relative inline-block text-left">
+                  <div className="group">
+                    {/* <!-- Dropdown menu --> */}
+                    <div className="flex lg:flex-row md:flex-col sm:flex-col xs:flex-col gap-2 justify-center w-full">
+                      <div className="w-full">
+                        <h3 className="dark:text-gray-300 mb-2">Companies</h3>
+                        <select className="w-full text-grey border-2 rounded-lg p-4 pl-2 pr-2 dark:text-gray-200 dark:border-gray-600 dark:bg-gray-800">
+                          <option disabled value="">
+                            Select Company
+                          </option>
+                          <option value="company1"> Company1</option>
+                          <option value="company2">Company2</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {/* <div className={styles.rectangle}></div>
                 <div className={styles.overlapgroup}>
                   <div className={styles.mycomp}>
                     <div className={styles.item}>
+
                       <div className={styles.div3}>
                         <div className={styles.img}></div>
                         <div className={styles.name}>
@@ -57,8 +80,9 @@ const ProfileView: React.FC = () => {
                 </div>
                 <button className={styles.textbuttonwrapper}>
                   <div className={styles.textbutton2}>ADD COMPANY</div>
-                </button>
+                </button>*/}
               </div>
+              {/* fin container */}
               <div className={styles.overlap2}>
                 <div className={styles.rectangle2}></div>
                 <img className={styles.image} src="../image_profile.png" />
@@ -79,8 +103,13 @@ const ProfileView: React.FC = () => {
         </div>
         <div className={styles.container}>
           <div className={styles.contenedorsection}></div>
+          {/* contenedor de botones */}
           <div className={styles.containerbuttons}>
-            <button className={styles.button2}>
+            {/* <div className="max-w-2xl mx-auto my-8 bg-black rounded-lg shadow-md overflow-hidden"> */}
+            <p>Information</p>
+            {/* </div> */}
+          </div>
+          {/* <button className={styles.button2}>
               <div className={styles.textbutton}>ADD COMPANY</div>
             </button>
             <button className={styles.button3}>
@@ -91,10 +120,9 @@ const ProfileView: React.FC = () => {
             </button>
             <button className={styles.button5}>
               <div className={styles.textbutton}>ADD COMPANY</div>
-            </button>
-          </div>
-          <img className={styles.vector} src="./vector1_profile.png" />
+            </button> */}
         </div>
+        <img className={styles.vector} src="./vector1_profile.png" />
       </div>
     </div>
   );
