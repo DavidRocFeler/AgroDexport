@@ -1,14 +1,14 @@
 import React from "react";
-import ProfileView from "@/views/ProfileView";
+import ProfileView2 from "@/views/ProfileView";
 
-const Profile: React.FC = () => {
+const Profile2: React.FC = () => {
   return (
     <>
       <div>
-        <ProfileView />
+        <ProfileView2 />
       </div>
     </>
   );
 };
 
-export default Profile;
+export default Profile2;

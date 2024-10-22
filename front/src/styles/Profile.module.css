@@ -1,240 +1,35 @@
-.profile {
-    background-color: #ffffff;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    width: 100%;
+/* .UserPanel {
+    font-size: 1rem;
+    font-family: 'Times New Roman', Times, serif;
+    text-align: center;
+    margin-bottom: 2rem;
+} */
+/* .ButtonEdit {
+    background-color: white;
+    color: black;
+    /* margin-right: 0.5rem; 
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    padding: 0.75rem 3rem 0.75rem 3rem;
+    font-weight: bold;
+    border-radius: 20px 20px 20px 20px;
 }
 
-.profile .div {
-    background-color: #ffffff;
-    width: 1440px;
-    height: 1300px;
-    position: relative;
+.textname{
+     margin-left: 2rem;
+}
+.textprofesion{
+     margin-left: 3rem;
 }
 
-.profile .div2 {
-    position: absolute;
-    width: 1440px;
-    height: 469px;
-    top: 0;
-    left: 0;
+.rectangle{
+     margin-top: 3rem;
+     padding-top: 3rem;
 }
 
-.profile .overlap {
-    position: relative;
-    height: 469px;
-}
 
-.profile .button {
-    all: unset;
-    box-sizing: border-box;
-    top: 165px;
-    left: 1026px;
-    background-color: #000000;
-    position: absolute;
-    width: 200px;
-    height: 32px;
-    border-radius: 2px;
-    overflow: hidden;
-}
-
-.profile .textbutton {
-    left: 46px;
-    position: absolute;
-    top: 6px;
-    font-family: "Inter-SemiBold", Helvetica;
-    font-weight: 600;
-    color: var(--white);
-    font-size: 14px;
-    letter-spacing: 0;
-    line-height: normal;
-}
-
-.profile .containermy {
-    position: absolute;
-    width: 327px;
-    height: 304px;
-    top: 165px;
-    left: 112px;
-    overflow: hidden;
-}
-
-.profile .rectangle {
-    position: absolute;
-    width: 102px;
-    height: 34px;
-    top: 399px;
-    left: 248px;
-    border: 2px solid;
-    border-color: #8c8d97;
-}
-
-.profile .overlapgroup {
-    position: absolute;
-    width: 317px;
-    height: 234px;
-    top: 62px;
-    left: 5px;
-    border-radius: 8px;
-}
-
-.profile .mycomp {
-    display: flex;
-    flex-direction: column;
-    width: 287px;
-    height: 165px;
-    align-items: flex-start;
-    gap: 16px;
-    position: absolute;
-    top: 68px;
-    left: 14px;
-}
-
-.profile .item {
-    display: flex;
-    width: 287px;
-    align-items: center;
-    gap: 35px;
-    position: relative;
-    flex: 0 0 auto;
-}
-
-.profile .div3 {
-    display: flex;
-    width: 182px;
-    align-items: center;
-    gap: 9px;
-    position: relative;
-}
-
-.profile .img {
-    position: relative;
-    width: 42px;
-    height: 42px;
-    background-color: #c4c4c4;
-    border-radius: 21px;
-}
-
-.profile .name {
-    position: relative;
-    width: 99px;
-    height: 35px;
-}
-
-.profile .text {
-    position: absolute;
-    top: 0;
-    left: 0;
-    font-family: "Roboto-Bold", Helvetica;
-    font-weight: 700;
-    color: #161722;
-    font-size: 16px;
-    letter-spacing: 1.20px;
-    line-height: normal;
-    white-space: nowrap;
-}
-
-.profile .textwrapper {
-    position: absolute;
-    top: 21px;
-    left: 0;
-    font-family: "Roboto-Regular", Helvetica;
-    font-weight: 400;
-    color: #3e5054;
-    font-size: 12px;
-    letter-spacing: 1.20px;
-    line-height: normal;
-    white-space: nowrap;
-}
-
-.profile .buttonedit {
-    all: unset;
-    box-sizing: border-box;
-    display: inline-flex;
-    align-items: flex-start;
-    gap: 10px;
-    padding: 5px 18px;
-    position: relative;
-    flex: 0 0 auto;
-    border-radius: 1px;
-    border: 1px solid;
-    border-color: #000000;
-}
-
-.profile .textwrapper2 {
-    position: relative;
-    width: fit-content;
-    margin-top: -0.50px;
-    font-family: "Roboto-Bold", Helvetica;
-    font-weight: 700;
-    color: #000000;
-    font-size: 11px;
-    letter-spacing: 1.20px;
-    line-height: normal;
-    white-space: nowrap;
-}
-
-.profile .item2 {
-    display: flex;
-    align-items: center;
-    gap: 35px;
-    position: relative;
-    align-self: stretch;
-    width: 100%;
-    flex: 0 0 auto;
-}
-
-.profile .textwrapper3 {
-    position: absolute;
-    top: 17px;
-    left: 65px;
-    font-family: "Roboto-Bold", Helvetica;
-    font-weight: 700;
-    color: #161722;
-    font-size: 22px;
-    letter-spacing: 1.20px;
-    line-height: normal;
-    white-space: nowrap;
-}
-
-.profile .containemycomp {
-    position: absolute;
-    width: 317px;
-    height: 234px;
-    top: 0;
-    left: 0;
-    border-radius: 8px;
-    border: 1px solid;
-    border-color: #00000066;
-}
-
-.profile .textbuttonwrapper {
-    all: unset;
-    box-sizing: border-box;
-    width: 177px;
-    top: 7px;
-    left: 75px;
-    position: absolute;
-    height: 32px;
-    background-color: #000000;
-    border-radius: 2px;
-    overflow: hidden;
-}
-
-.profile .textbutton2 {
-    left: 35px;
-    position: absolute;
-    top: 6px;
-    font-family: "Inter-SemiBold", Helvetica;
-    font-weight: 600;
-    color: var(--white);
-    font-size: 14px;
-    letter-spacing: 0;
-    line-height: normal;
-}
-
-.profile .overlap2 {
+.overlap2 {
     position: absolute;
     width: 1440px;
     height: 265px;
@@ -242,7 +37,7 @@
     left: 0;
 }
 
-.profile .rectangle2 {
+.rectangle2 {
     position: absolute;
     width: 1440px;
     height: 130px;
@@ -251,169 +46,29 @@
     background-color: #000000;
 }
 
-.profile .image {
+.image {
     position: absolute;
     width: 200px;
     height: 200px;
     top: 65px;
     left: 620px;
     object-fit: cover;
-}
+} */
 
-.profile .contenedornombre {
-    display: flex;
-    flex-direction: column;
-    width: 195px;
-    height: 120px;
-    align-items: flex-start;
-    gap: 8px;
-    position: absolute;
-    top: 284px;
-    left: 622px;
-}
 
-.profile .input {
-    position: relative;
-    width: 177px;
-    margin-top: -1.00px;
-    font-family: "Roboto-Bold", Helvetica;
-    font-weight: 700;
-    color: #161722;
-    font-size: 26px;
-    text-align: center;
-    letter-spacing: 0;
-    line-height: normal;
-    background: transparent;
-    border: none;
-    padding: 0;
-}
+/* .RedirectPanel {
+    font-size: 0.9rem;
+    margin: 1rem;
+    text-decoration: underline;
+} */
+/* .SupplyChain {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    column-gap: 2rem;
+    grid-template-rows: repeat(2, 1fr);
+    row-gap: 2rem;
+    padding: 2rem;
+} */
+ /* -------------------------------------------------------------------------------------- */
 
-.profile .textwrapper4 {
-    position: relative;
-    width: 177px;
-    height: 19px;
-    font-family: "Roboto-Regular", Helvetica;
-    font-weight: 400;
-    color: #161722;
-    font-size: 14px;
-    text-align: center;
-    letter-spacing: 0;
-    line-height: normal;
-}
-
-.profile .divwrapper {
-    all: unset;
-    box-sizing: border-box;
-    width: 106px;
-    top: 65px;
-    left: 44px;
-    position: absolute;
-    height: 32px;
-    background-color: #000000;
-    border-radius: 2px;
-    overflow: hidden;
-}
-
-.profile .textbutton3 {
-    all: unset;
-    box-sizing: border-box;
-    left: 40px;
-    position: absolute;
-    top: 6px;
-    font-family: "Inter-SemiBold", Helvetica;
-    font-weight: 600;
-    color: var(--white);
-    font-size: 14px;
-    letter-spacing: 0;
-    line-height: normal;
-}
-
-.profile .container {
-    position: absolute;
-    width: 1440px;
-    height: 830px;
-    top: 470px;
-    left: 0;
-}
-
-.profile .contenedorsection {
-    position: absolute;
-    width: 665px;
-    height: 476px;
-    top: 64px;
-    left: 643px;
-    background-color: #ffffff;
-    border-radius: 4px;
-    border: 1px solid;
-    border-color: #000000;
-}
-
-.profile .containerbuttons {
-    position: absolute;
-    width: 217px;
-    height: 472px;
-    top: 64px;
-    left: 163px;
-    border: 1px solid;
-    border-color: #000000;
-}
-
-.profile .button2 {
-    all: unset;
-    box-sizing: border-box;
-    position: absolute;
-    width: 200px;
-    height: 32px;
-    top: 263px;
-    left: 9px;
-    background-color: #000000;
-    border-radius: 2px;
-    overflow: hidden;
-}
-
-.profile .button3 {
-    all: unset;
-    box-sizing: border-box;
-    position: absolute;
-    width: 200px;
-    height: 32px;
-    top: 197px;
-    left: 10px;
-    background-color: #000000;
-    border-radius: 2px;
-    overflow: hidden;
-}
-
-.profile .button4 {
-    all: unset;
-    box-sizing: border-box;
-    top: 131px;
-    left: 9px;
-    background-color: #000000;
-    position: absolute;
-    width: 200px;
-    height: 32px;
-    border-radius: 2px;
-    overflow: hidden;
-}
-
-.profile .button5 {
-    all: unset;
-    box-sizing: border-box;
-    position: absolute;
-    width: 200px;
-    height: 32px;
-    top: 65px;
-    left: 10px;
-    background-color: #000000;
-    border-radius: 2px;
-    overflow: hidden;
-}
-
-.profile .vector {
-    position: absolute;
-    width: 1px;
-    height: 467px;
-    top: 73px;
-    left: 496px;
-}
+ 
