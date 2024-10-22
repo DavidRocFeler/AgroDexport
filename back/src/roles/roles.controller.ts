@@ -1,11 +1,10 @@
-// src/roles/roles.controller.ts
 import { Controller, Get, HttpCode, Post, UseGuards } from '@nestjs/common';
 import { RolesService } from './roles.service';
 import { Role } from '@prisma/client';
 import { ApiBearerAuth, ApiExcludeEndpoint, ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from 'src/guards/auth.guard';
-import { RolesGuard } from 'src/guards/RolesGuard';
-import { Roles } from 'src/decorators/roles.decorator';
+import { AuthGuard } from '../guards/auth.guard';
+import { RolesGuard } from '../guards/RolesGuard';
+import { Roles } from '../decorators/roles.decorator';
 
 @ApiTags("Roles")
 @Controller('roles')
