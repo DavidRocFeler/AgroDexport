@@ -25,6 +25,7 @@ const ProductSearch = () => {
       country,
       cropType,
     });
+        // realiza una búsqueda o filtrado con los valores seleccionados
   };
 
   return (
