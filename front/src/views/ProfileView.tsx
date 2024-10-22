@@ -65,7 +65,7 @@ import styles from "../styles/Profile2.module.css";
 // // import { ISupplyChainProps } from "@/interface/types";
 // // import { useUserStore } from "@/store/useUserStore";
 
-const ProfileView2: React.FC = () => {
+const ProfileView: React.FC = () => {
   //   //const supplyChain: ISupplyChainProps[] = supplyChainArray;
   //   // const userType = useUserStore((state) => state.userType);
 
@@ -77,74 +77,82 @@ const ProfileView2: React.FC = () => {
         paddingBottom: "0rem",
       }}
     >
-      <div className="flex h-screen items-center justify-center px-10">
-        <div className="w-full sm:w-1/2  bg-white shadow-xl rounded-3xl">
-          <div className="mt-10 flex justify-center mb-5 ">
-            <img
-              src="../image_profile.png"
-              style={{ width: "150px", height: "150px" }}
-              className="rounded-full mt-5"
-              alt="profile"
-            />
-          </div>
-          <div className="flex justify-center px-5 ">
-            <div className="border-b-2 border-gray-500 w-full"></div>
-          </div>
-          <div className="flex justify-center text-center p-5">
-            <p>John Doe</p>
-          </div>
-          <div className="flex justify-center gap-4 p-5">
-            <button className="py-2 px-3 bg-black font-semibold text-white w-1/4 rounded-sm hover:bg-black">
-              Edit
-            </button>
-          </div>
-        </div>
-      </div>
-      {/* section 2 */}
-      <section className="text-gray-600 body-font">
-        <div className="container px-5 py-24 mx-auto">
-          <div className="flex flex-wrap -m-4">
-            <div className="p-4 w-1/2">
-              <div className="h-full bg-gray-100 p-8 rounded">
-                <div className="flex w-screen h-screen dark:bg-gray-900 justify-center items-center">
-                  {/*  */}
-                  <div className="w-[150px] text-gray-900 dark:text-gray-100">
-                    <div className="relative w-full group">
-                      <label className="text-xs text-gray-400">
-                        Select Company
-                      </label>
-                      <button className="py-2.5 px-3 w-full md:text-sm text-site bg-transparent border border-dimmed  focus:border-brand focus:outline-none focus:ring-0 peer flex items-center justify-between rounded font-semibold">
-                        Company1
-                      </button>
-                      <div className="absolute z-[99] top-[100%] left-[50%] translate-x-[-50%] rounded-md overflow-hidden shadow-lg min-w-[200px] w-max peer-focus:visible peer-focus:opacity-100 opacity-0 invisible duration-200 p-1 bg-gray-100 dark:bg-gray-800  border border-dimmed text-xs md:text-sm">
-                        <div className=" w-full block cursor-pointer hover:bg-white dark:hover:bg-gray-900 dark:bg-gray-800 hover:text-link px-3 py-2 rounded-md">
-                          Company1
-                        </div>
-                        <div className=" w-full block cursor-pointer hover:bg-white dark:hover:bg-gray-900 dark:bg-gray-800 hover:text-link px-3 py-2 rounded-md">
-                          Company2
-                        </div>
-                        <div className=" w-full block cursor-pointer hover:bg-white dark:hover:bg-gray-900 dark:bg-gray-800 hover:text-link px-3 py-2 rounded-md">
-                          Company3
-                        </div>
+      {/* div imagen */}
+      <section className="mt-0 p-4">
+        <div className="w-full md:w-1/2 md:mx-auto flex flex-col md:flex-row items-center justify-center text-center">
+          <img
+            className="inline-flex object-cover border-4 border-black rounded-full shadow-[5px_5px_0_0_rgba(0,0,0,1)] shadow-black bg-indigo-50 h-24 w-24 !h-32 !w-32 mb-4 md:mb-0 ml-0 md:mr-5"
+            src="../image_profile.png"
+            alt=""
+          />
+          <div className="flex flex-col">
+            <div className="md:text-justify mb-3">
+              <div className="flex flex-col mb-5">
+                <p className="text-black font-bold text-xl">John Doe</p>
 
-                        <div className=" w-full block cursor-pointer hover:bg-white dark:hover:bg-gray-900 dark:bg-gray-800 hover:text-link px-3 py-2 rounded-md">
-                          Company4
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                {/*  */}
               </div>
-            </div>
-            <div className="p-4 w-1/2">
-              <div className="h-full bg-gray-100 p-8 rounded"></div>
+
+              <button className="bg-black text-white py-2 px-5">Edit</button>
             </div>
           </div>
         </div>
       </section>
-      {/* fin section 2 */}
+      {/* fin div imagen */}
+
+      {/* div desplegable y boton user come back */}
+      <section className="bg-gray-100 py-8">
+        <div className="max-w-screen-xl mx-auto flex flex-col sm:flex-row justify-around items-center gap-6">
+          {/* Primer div */}
+          <div className="bg-white p-6 rounded-lg flex flex-col items-center">
+            {/* dropdown */}
+            <div className="w-[150px] text-gray-900 dark:text-gray-300 items-center">
+              <div className="relative w-full group bg-white ">
+                <label className="text-lg text-black-400">
+                  <h3>My Companies</h3>
+                </label>
+
+                <button className="py-2.5 px-3 my-5  w-full md:text-sm text-site bg-gray-300 border border-dimmed  focus:border-brand focus:outline-none focus:ring-0 peer flex items-center justify-between rounded ">
+                  Selected company
+                </button>
+                <div className="absolute z-[99] top-[100%] left-[50%] translate-x-[-50%] rounded-md overflow-hidden shadow-lg min-w-[200px] w-max peer-focus:visible peer-focus:opacity-100 opacity-0 invisible duration-200 p-1 bg-gray-300 dark:bg-gray-800  border border-dimmed text-xs md:text-sm">
+                  <div className=" w-full block cursor-pointer hover:bg-white dark:hover:bg-gray-900 dark:bg-gray-800 hover:text-link px-3 py-2 rounded-md">
+                    Company1
+                  </div>
+                  <div className=" w-full block cursor-pointer hover:bg-white dark:hover:bg-gray-900 dark:bg-gray-800 hover:text-link px-3 py-2 rounded-md">
+                    Company2
+                  </div>
+                  <div className=" w-full block cursor-pointer hover:bg-white dark:hover:bg-gray-900 dark:bg-gray-800 hover:text-link px-3 py-2 rounded-md">
+                    Company3
+                  </div>
+
+                  <div className=" w-full block cursor-pointer hover:bg-white dark:hover:bg-gray-900 dark:bg-gray-800 hover:text-link px-3 py-2 rounded-md">
+                    Company4
+                  </div>
+                </div>
+              </div>
+            </div>
+            {/* fin del dropdown */}
+            {/* <p className="text-gray-600 mb-4">
+              Este es el primer div con fondo gris.
+            </p> */}
+            <button className="bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800">
+              Add company
+            </button>
+          </div>
+
+          {/* Segundo div */}
+          <div className="bg-gray-200 p-0 m-1 rounded-lg flex flex-col items-center">
+            <button className="bg-black text-white px-6 py-2 rounded-sm hover:bg-gray-800">
+              USER COME BACK
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* fin div desplegable */}
     </div>
   );
 };
 
-export default ProfileView2;
+export default ProfileView;
