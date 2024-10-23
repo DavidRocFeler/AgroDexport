@@ -116,3 +116,8 @@ export interface IAgroProduct {
   export interface IProvidersProps {
     children: React.ReactNode;
   }
+
+  export interface INotificationsProps {
+    isVisible: boolean;
+    onClose: () => void;
+  }
