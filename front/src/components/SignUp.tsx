@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { ISignUpComponentProps, ISignUpForm, IUser } from "@/interface/types";
+import { IGoogleSession, ISignUpComponentProps, ISignUpForm } from "@/interface/types";
 import styles from "../styles/LogSign.module.css";
 import { FaGoogle, FaApple, FaEnvelope } from "react-icons/fa";
-import { signIn, useSession } from "next-auth/react";
-import { useUserStore } from "@/store/useUserStore";
+import { signIn } from "next-auth/react";
 import { registerProps } from "@/helpers/signUpHelpers";
+import Swal from "sweetalert2";
 
 const SignUp: React.FC<ISignUpComponentProps> = ({ onCloseSignUp, onSwitchToLogin }) => {
     const initialState: ISignUpForm = {
@@ -19,8 +19,6 @@ const SignUp: React.FC<ISignUpComponentProps> = ({ onCloseSignUp, onSwitchToLogi
     const [userData, setUserData] = useState<ISignUpForm>(initialState);
     const [isButtonDisabled, setIsButtonDisabled] = useState(true);
     const [isAuthButtonDisabled, setIsAuthButtonDisabled] = useState(true);
-    const { data: session} = useSession();
-    const addUser = useUserStore((state) => state.addUser);
     
     const validateForm = (data: ISignUpForm): string[] => {
         const errors: string[] = [];
@@ -63,14 +61,14 @@ const SignUp: React.FC<ISignUpComponentProps> = ({ onCloseSignUp, onSwitchToLogi
             try {
                 console.log("Sending to backend:", JSON.stringify(userData));
                 
-                const registeredUser = await registerProps(userData);
-                
-                const newUser: IUser = {
-                    ...registeredUser,
-                };
-                addUser(newUser);
-                alert("New user added successfully!");
-                console.log("User added:", newUser);
+                await registerProps(userData);
+                await Swal.fire({
+                    title: `Welcome!`,
+                    text: `You have successfully logged in.`,
+                    icon: 'success',
+                    confirmButtonText: 'OK',
+                    allowOutsideClick: false
+                });
                 setUserData(initialState); // Reset form after successful submission
                 onCloseSignUp();
             } catch (error) {
@@ -91,25 +89,14 @@ const SignUp: React.FC<ISignUpComponentProps> = ({ onCloseSignUp, onSwitchToLogi
         }
     
         // Create the objeth with the available data 
-        const newUser: IUser = {
-            // id: Date.now().toString(),
-            user_name: userData.user_name || "",
-            user_lastname: userData.user_lastname || "",
+        const newUser: IGoogleSession = {
+            name: userData.user_name || "",
             email: userData.email || "",
             role_name: userData.role_name,
-            password: "",
-            confirm_password: "",
-            isOlder: userData.isOlder,
         };
     
-        // Actualize the global status 
-        addUser(newUser);
-        console.log("User added to global state:", newUser);
-    
-        // Save role in localStorage before of the auth
         localStorage.setItem('userRole', userData.role_name);
-    
-        // Initial the auth process 
+
         await signIn("google");
     };
 

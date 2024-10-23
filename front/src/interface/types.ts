@@ -23,6 +23,11 @@ export interface ILogin {
     password: string;
 }
 
+export interface ILoginAuth {
+  email: string;
+  name: string;
+}
+
 export interface ILoginError {
     email?: string;
     password?: string;
@@ -82,24 +87,37 @@ export interface IAgroProduct {
   }
 
   export interface IUserState {
-    users: IUser[];
+    user_id: string | null;
     token: string | null;
-    userType: "supplier" | "buyer" | null;
-    addUser: (user: IUser) => void;
-    setToken: (token: string) => void;
-    checkToken: () => void;
-    setUserType: (userType: "supplier" | "buyer" | null) => void;
-    removeUser: (userId: string) => void;
-    clearUsers: () => void;
+    role_name: string | null;
+    isAuthenticated: boolean;
+    setUserData: (id: string, token: string, role_name: string) => void;
+    clearUser: () => void;
+    // addUser: () => void;
+    // removeUser: (email: string) => void;
   }
 
-  export interface IUser {
-    user_name: string;
-    user_lastname: string;
-    email: string;
-    password?: string;
-    confirm_password?: string;
-    role_name: "supplier" | "buyer" | null;
-    isOlder: boolean;
+ export interface IAuthThirdState {
+  googleSession: IGoogleSession | null;
+  createGoogleSession: (session: any) => void;
+  clearAllSessions: () => Promise<void>;
+  isSessionSent: boolean;
+  hasInitialized: boolean;
+  setSessionSent: (value: boolean) => void;
+  resetInitialization: () => void;
+}
+
+  export interface IGoogleSession {
+      name: string | null;
+      email: string | null;
+      role_name: string | null;
   }
 
+  export interface IProvidersProps {
+    children: React.ReactNode;
+  }
+
+  export interface INotificationsProps {
+    isVisible: boolean;
+    onClose: () => void;
+  }

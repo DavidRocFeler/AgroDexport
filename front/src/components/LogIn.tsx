@@ -1,22 +1,22 @@
 "use client"
 import React from 'react';
+import { useState } from 'react';
 import { ILoginComponentProps } from '@/interface/types';
 import styles from "../styles/LogSign.module.css";
 import { FaGoogle, FaApple, FaEnvelope } from 'react-icons/fa';
 import { signIn } from "next-auth/react";
 import Link from 'next/link';
-import { useState } from 'react';
 import { useUserStore } from '@/store/useUserStore';
-import userAdmin from '@/helpers/userAdmin.helpers';
-import userBuyer from '@/helpers/userBuyer.herlpers';
-import userSupplier from '@/helpers/userSupplier.herlpers';
+import { logginProps } from '@/helpers/loginHelpers';
 import Swal from 'sweetalert2';
 
 const LogIn: React.FC<ILoginComponentProps> = ({ onCloseLogin, onSwitchToSignUp }) => {
-    const setUserType = useUserStore((state) => state.setUserType);
-    // const { data: session } = useSession();
+    const setUserData = useUserStore((state) => state.setUserData);
    
-    const [userData, setUserData] = useState<{ email: string; password: string }>({ 
+    const [userData, setUserFormData] = useState<{ 
+        email: string; 
+        password: string 
+    }>({ 
         email: "", 
         password: "" 
     });
@@ -27,54 +27,44 @@ const LogIn: React.FC<ILoginComponentProps> = ({ onCloseLogin, onSwitchToSignUp 
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
-        setUserData({
+        setUserFormData({
             ...userData,
             [name]: value
         })
     }
 
-    const handleOnSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleOnSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        const credentials = [
-            { userType: 'admin', email: userAdmin.email, password: userAdmin.password },
-            { userType: 'buyer', email: userBuyer.email, password: userBuyer.password },
-            { userType: 'supplier', email: userSupplier.email, password: userSupplier.password }
-        ];
-
-       // Accede a userData para obtener email y password
-       const user = credentials.find(cred => cred.email === userData.email && cred.password === userData.password);
-
-        if (user) {
-            setUserType(user.userType as "buyer" | "supplier" ); // Actualiza el estado
-
-            // setUserType(user.userType as "buyer" | "supplier" | "admin"); // Actualiza el estado global ajuste javier
-            // // Guardar cookies
-            console.log('Setting cookie:', `email=${userData.email}; userType=${user.userType}; path=/;`);
-            document.cookie = `email=${userData.email}; path=/;`;
-            document.cookie = `userType=${user.userType}; path=/;`;
-
-            checkCookies()
-
-            Swal.fire({
-                title: `Welcome ${user.userType}!`,
-                text: `You are logged in as a ${user.userType}.`,
+        
+        try {
+            const response = await logginProps(userData);
+            
+            // backend response
+            const { user_id, token, role_name } = response;
+            
+            // Actualize the global status 
+            setUserData(user_id, token, role_name);
+            
+            await Swal.fire({
+                title: `Welcome!`,
+                text: `You have successfully logged in.`,
                 icon: 'success',
                 confirmButtonText: 'OK',
                 allowOutsideClick: false
             });
+            
             onCloseLogin();
-        } else {
-            // Muestra una alerta de error si las credenciales son incorrectas
-            Swal.fire({
-                title: 'Invalid credentials',
-                text: 'Please check your email and password.',
+            
+        } catch (error: any) {
+            await Swal.fire({
+                title: 'Login Error',
+                text: error.message || 'An error occurred during login.',
                 icon: 'error',
                 confirmButtonText: 'OK',
                 allowOutsideClick: false
             });
         }
     };
-
 
     return (
         <section className={styles.LogSign}>
@@ -100,7 +90,7 @@ const LogIn: React.FC<ILoginComponentProps> = ({ onCloseLogin, onSwitchToSignUp 
                     <button className={styles.ButtonLogin}> Continue </button>
                 </form>
                 <p className={styles.OR}> ------------------- OR -------------------</p>
-                <button className={styles.ButtonGoogle}  onClick={() => signIn()}>
+                <button className={styles.ButtonGoogle}  onClick={() => signIn("google")}>
                     <FaGoogle />
                     <p className="ml-[1rem]">Log in with Google</p>
                 </button>
@@ -127,9 +117,6 @@ const LogIn: React.FC<ILoginComponentProps> = ({ onCloseLogin, onSwitchToSignUp 
 };
 
 export default LogIn;
-function checkCookies() {
-    throw new Error('Function not implemented.');
-}
 
 
 

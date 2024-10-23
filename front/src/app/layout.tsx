@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import ClientWrapers from "./ClientWrapers";
 import Header from "@/components/Header";
-import Providers from "./Providers";
+import GoogleProviders from "./GoogleProviders";
+import UserProviders from "./UserProoviders";
 
 export const metadata: Metadata = {
   title: "Agro-Dexports",
@@ -14,11 +15,14 @@ export default function RootLayout({children}: Readonly<{children: React.ReactNo
   return(
     <html lang="en">
       <body>
-        <Providers>
-        <Header/>
-        <hr className="border-black border-1 "/> 
-        {children}
-        </Providers>
+        <UserProviders>
+          <GoogleProviders>
+            <Header/>
+            <hr className="border-black border-1 "/> 
+            {children}
+            <ClientWrapers/>
+          </GoogleProviders>
+        </UserProviders>
       </body>
     </html>
   )
