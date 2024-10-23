@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { CompanyProductsService } from './company-products.service';
 import { CompanyProduct } from '@prisma/client'; 
-import { ApiTags } from '@nestjs/swagger';
+import { ApiExcludeEndpoint, ApiTags } from '@nestjs/swagger';
 import { CreateCompanyProductDto } from './dtos/create-company-product.dto';
 import { UpdateCompanyProductDto } from './dtos/update-company-product.dto';
 
@@ -38,6 +38,12 @@ export class CompanyProductsController {
   @Delete(":id")
   async softDeleteProduct(@Param("id") productId: string){
     return this.companyProductsService.softDeleteProductServices(productId)
+  }
+
+  @ApiExcludeEndpoint()
+  @Post("sedeer")
+  async preloadCategories(@Body() companyProductData: CreateCompanyProductDto){
+      return this.companyProductsService.preloadCompanyProductsService();
   }
 
 }

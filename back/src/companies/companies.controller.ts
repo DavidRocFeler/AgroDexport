@@ -3,9 +3,9 @@ import { CompanyService } from './companies.service';
 import { CreateCompanyDto } from './createCompany.dto';
 import { ApiBearerAuth, ApiExcludeEndpoint, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { UpdateCompanyDto } from './updateCompany.dto';
-import { Roles } from 'src/decorators/roles.decorator';
-import { AuthGuard } from 'src/guards/auth.guard';
-import { RolesGuard } from 'src/guards/RolesGuard';
+import { Roles } from '../decorators/roles.decorator';
+import { AuthGuard } from '../guards/auth.guard';
+import { RolesGuard } from '../guards/RolesGuard';
 
 @ApiTags("companies")
 @Controller('companies')

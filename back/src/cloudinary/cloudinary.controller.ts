@@ -1,15 +1,23 @@
-import { Controller, Param, ParseUUIDPipe, Post, UploadedFiles, UseInterceptors, MaxFileSizeValidator, FileTypeValidator, UploadedFile, ParseFilePipe } from "@nestjs/common";
+import { Controller, Param, ParseUUIDPipe, Post, UploadedFiles, UseInterceptors, MaxFileSizeValidator, FileTypeValidator, UploadedFile, ParseFilePipe, HttpCode, UseGuards } from "@nestjs/common";
 import { CloudinaryService } from "./cloudinary.service";
 import { FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
-import { ApiTags, ApiParam, ApiConsumes, ApiBody } from "@nestjs/swagger";
+import { ApiTags, ApiParam, ApiConsumes, ApiBody, ApiBearerAuth } from "@nestjs/swagger";
 import { Express } from 'express';
+import { Roles } from '../decorators/roles.decorator';
+import { AuthGuard } from '../guards/auth.guard';
+import { RolesGuard } from '../guards/RolesGuard';
 
 @ApiTags("Cloudinary")
 @Controller()
 export class CloudinaryController {
   constructor(private readonly cloudinaryService: CloudinaryService) {}
 
+
+  @ApiBearerAuth()
+  @HttpCode(200)
   @Post('/uploadImage/:type/:id')
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('supplier', 'buyer')
   @UseInterceptors(FileInterceptor('image'))
   @ApiParam({ name: 'type', description: 'Tipo de imagen (user, companyLogo, companyProduct)', type: 'string' })
   @ApiParam({ name: 'id', description: 'ID del recurso al cual asociar la imagen', type: 'string' })
@@ -47,7 +55,11 @@ export class CloudinaryController {
     return this.cloudinaryService.uploadFile(id, file, type);
   }
 
+  @ApiBearerAuth()
+  @HttpCode(200)
   @Post('/uploadDocuments/:id')
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('supplier')
   @UseInterceptors(FilesInterceptor('documents', 5)) // Para recibir múltiples archivos
   @ApiParam({ name: 'id', description: 'ID del recurso al cual asociar los documentos', type: 'string' })
   @ApiConsumes('multipart/form-data')
@@ -78,5 +90,50 @@ export class CloudinaryController {
     };
 
     return this.cloudinaryService.uploadMultipleFiles(id, fileMap);
+  }
+
+  @ApiBearerAuth()
+  @HttpCode(200)
+  @Post('/uploadImageFront')
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('admin') 
+  @UseInterceptors(FileInterceptor('image'))
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+      description: 'Image file (any type, validated to ensure it is an image)',
+      required: true,
+      schema: {
+          type: 'object',
+          properties: {
+              image: { 
+                  type: 'string', 
+                  format: 'binary' 
+              },
+          },
+      },
+  })
+  async uploadImageFront(
+      @UploadedFile(
+          new ParseFilePipe({
+              validators: [
+                  new MaxFileSizeValidator({
+                      maxSize: 5000000, 
+                      message: 'File must be smaller than 5MB',
+                  }),
+                  new FileTypeValidator({
+                      fileType: /(jpg|jpeg|png|webp|gif|bmp|tiff|svg)$/, 
+                  }),
+              ],
+          }),
+      ) file: Express.Multer.File,
+  ) {
+      const secureUrl = await this.cloudinaryService.uploadFileToFolder(file); 
+      
+
+      return {
+          success: true,
+          message: 'Image uploaded successfully.',
+          secureUrl, 
+      };
   }
 }

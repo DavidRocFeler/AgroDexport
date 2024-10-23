@@ -69,7 +69,7 @@ model RolePermission {
 model Company {
   company_id                 String             @id @default(uuid())
   user_id                    String   
-  company_name               String             @db.VarChar(50)
+  company_name               String             @unique @db.VarChar(50)
   tax_identification_number  Int
   address                    String             @db.VarChar(255)
   postal_code                String             @db.VarChar(20)
@@ -146,7 +146,7 @@ model CompanyProduct {
   company_id                 String             
   category_id                String            
   order_details_id           String?                     
-  company_product_name       String
+  company_product_name       String          
   company_product_description String?
   stock                      Int
   minimum_order              Int                @default(5)
