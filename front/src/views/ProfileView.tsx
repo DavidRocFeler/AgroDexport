@@ -130,7 +130,7 @@ const ProfileView: React.FC = () => {
             <div className="p-4 w-1/2">
               <div className="h-full bg-gray-100 p-8 rounded flex flex-col items-center justify-center">
                 <div className="h-2/3 bg-gray-100 p-8 my-2 rounded flex items-center justify-center">
-                  chau
+                  va componente
                 </div>
 
                 <button className="bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800">
