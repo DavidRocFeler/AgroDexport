@@ -1,149 +1,142 @@
 "use client";
 
 import React from "react";
-import styles from "../styles/Profile2.module.css";
 
 const ProfileView: React.FC = () => {
+  const sampleCompanies = [
+    {
+      id: 1,
+      name: "Company One",
+      role: "Admin",
+      status: "Active",
+    },
+    {
+      id: 2,
+      name: "Company Two",
+      role: "User",
+      status: "Active",
+    },
+  ];
+
   return (
-    <div
-      style={{
-        backgroundColor: "#C4E2FF",
-        paddingTop: "0rem",
-        paddingBottom: "0rem",
-      }}
-    >
-      {/* div desplegable y boton user come back */}
-      <section className=" max-w-full ">
-        <div className="max-w-screen-xl mx-auto flex flex-col sm:flex-row justify-around items-start gap-6 py-10">
-          {/* Primer div */}
-          <div className="bg-white p-6 rounded-lg flex flex-col items-start">
-            {/* dropdown */}
-            <div className="w-[150px] text-gray-900 dark:text-gray-300 items-center">
-              <div className="relative w-full group bg-white flex flex-col items-center">
-                <label className="text-lg text-black-400">
-                  <h3>My Companies</h3>
-                </label>
+    <div className="min-h-screen bg-gradient-to-b from-blue-100 to-blue-200">
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        {/* Header Section with Profile and Companies */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+          {/* Companies List Section */}
+          <div className="bg-white rounded-2xl shadow-lg p-6">
+            <div className="space-y-4">
+              <h3 className="text-xl font-semibold text-gray-800">
+                My Companies
+              </h3>
 
-                <button className="py-2.5 px-3 my-5 w-full md:text-sm text-site bg-gray-300 border border-dimmed focus:border-brand focus:outline-none focus:ring-0 peer flex items-center justify-between rounded">
-                  Selected company
-                </button>
-
-                <div className="absolute z-[99] top-[100%] left-[50%] translate-x-[-50%] rounded-md overflow-hidden shadow-lg min-w-[200px] w-max peer-focus:visible peer-focus:opacity-100 opacity-0 invisible duration-200 p-1 bg-gray-300 dark:bg-gray-800 border border-dimmed text-xs md:text-sm">
-                  <div className="w-full block cursor-pointer hover:bg-white dark:hover:bg-gray-900 dark:bg-gray-800 hover:text-link px-3 py-2 rounded-md">
-                    Company1
+              {/* Companies Grid */}
+              <div className="space-y-3">
+                {sampleCompanies.map((company) => (
+                  <div
+                    key={company.id}
+                    className="bg-gray-50 rounded-lg p-4 border border-gray-200 hover:border-gray-300 transition-colors"
+                  >
+                    <div className="flex justify-between items-start">
+                      <div className="space-y-1">
+                        <h5 className="font-medium text-gray-900">
+                          {company.name}
+                        </h5>
+                        <p className="text-sm text-gray-600">
+                          Role: {company.role}
+                        </p>
+                      </div>
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                        {company.status}
+                      </span>
+                    </div>
+                    <div className="mt-3 flex gap-2">
+                      <button className="text-sm text-blue-600 hover:text-blue-800 font-medium">
+                        Edit
+                      </button>
+                      <span className="text-gray-300">|</span>
+                      <button className="text-sm text-red-600 hover:text-red-800 font-medium">
+                        Remove
+                      </button>
+                    </div>
                   </div>
-                  <div className="w-full block cursor-pointer hover:bg-white dark:hover:bg-gray-900 dark:bg-gray-800 hover:text-link px-3 py-2 rounded-md">
-                    Company2
-                  </div>
-                  <div className="w-full block cursor-pointer hover:bg-white dark:hover:bg-gray-900 dark:bg-gray-800 hover:text-link px-3 py-2 rounded-md">
-                    Company3
-                  </div>
-                  <div className="w-full block cursor-pointer hover:bg-white dark:hover:bg-gray-900 dark:bg-gray-800 hover:text-link px-3 py-2 rounded-md">
-                    Company4
-                  </div>
-                </div>
+                ))}
               </div>
-            </div>
-            {/* fin del dropdown */}
-            {/* <p className="text-gray-600 mb-4">
-              Este es el primer div con fondo gris.
-            </p> */}
-            <button className="bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800">
-              ADD COMPANY
-            </button>
-          </div>
-          {/* section imagen */}
-          <div className="items-center text-center py-0">
-            <img
-              className="inline-flex object-cover border-4 border-black rounded-full shadow-[5px_5px_0_0_rgba(0,0,0,1)] shadow-black bg-indigo-50 h-48 w-48 !h-44 !w-44 mb-4 md:mb-0 ml-0 md:mr-5"
-              src="../image_profile.png"
-              alt=""
-            />
-            <div className="flex flex-col items-center">
-              <div className="md:text-justify mb-3 ">
-                <div className="flex flex-col mb-5 ">
-                  <p className="text-black font-bold text-xl ">John Doe</p>
 
-                  {/*  */}
-                </div>
-
-                <button className="bg-black text-white py-2 px-5">Edit</button>
-              </div>
+              {/* Add Company Button */}
+              <button className="w-full bg-black hover:bg-gray-800 text-white font-medium py-2 px-4 rounded-lg transition-colors mt-4">
+                ADD COMPANY
+              </button>
             </div>
           </div>
-          {/* fin section imagen */}
-          {/* Segundo div */}
-          <div className="bg-gray-200 p-0 m-0 rounded-lg flex flex-col items-start">
-            <button className="bg-black text-white px-6 py-2   rounded-lg hover:bg-gray-800">
+
+          {/* Profile Section */}
+          <div className="flex flex-col items-center space-y-4">
+            <div className="relative">
+              <img
+                className="w-48 h-48 rounded-full object-cover border-4 border-black shadow-[5px_5px_0_0_rgba(0,0,0,1)]"
+                src="../image_profile.png"
+                alt="Profile"
+              />
+            </div>
+            <div className="text-center">
+              <h2 className="text-2xl font-bold text-gray-800 mb-2">
+                John Doe
+              </h2>
+              <button className="bg-black hover:bg-gray-800 text-white font-medium py-2 px-8 rounded-lg transition-colors">
+                Edit Profile
+              </button>
+            </div>
+          </div>
+
+          {/* User Come Back Button */}
+          <div className="flex items-start justify-end">
+            <button className="bg-black hover:bg-gray-800 text-white font-medium py-2 px-6 rounded-lg transition-colors whitespace-nowrap">
               USER COME BACK
             </button>
           </div>
         </div>
-      </section>
 
-      {/* fin div desplegable */}
-
-      {/* section 3 */}
-      <section className="text-gray-600 body-font">
-        <div className="container px-5 py-5 mx-auto">
-          <div className="flex flex-wrap -m-4">
-            {/* div 1 section 3 */}
-            <div className="p-4 w-1/2">
-              <div className="h-full  p-8 rounded flex flex-col items-center justify-center">
-                {/* <div className="h-2/3 bg-gray-100 p-8 my-2 rounded flex items-center justify-center"> */}
-
-                {/* botonera */}
-                <div className="w-full md:w-1/2">
-                  <div className="bg-white rounded-lg shadow-lg p-6">
-                    <div className="space-y-4">
-                      <a
-                        href="#"
-                        className="block text-center bg-black text-white font-semibold px-6 py-3 rounded-lg hover:bg-blue-700 transition duration-300"
-                      >
-                        Inforrmation Contact
-                      </a>
-                      <a
-                        href="#"
-                        className="block text-center bg-black text-white font-semibold px-6 py-3 rounded-lg hover:bg-blue-700 transition duration-300"
-                      >
-                        Inforrmation Contact
-                      </a>
-                      <a
-                        href="#"
-                        className="block text-center bg-black text-white font-semibold px-6 py-3 rounded-lg hover:bg-blue-700 transition duration-300"
-                      >
-                        Inforrmation Contact
-                      </a>
-                      <a
-                        href="#"
-                        className="block text-center bg-black text-white font-semibold px-6 py-3 rounded-lg hover:bg-blue-700 transition duration-300"
-                      >
-                        Inforrmation Contact
-                      </a>
-                    </div>
-                  </div>
-                </div>
-                {/* </div> */}
+        {/* Main Content Section - Ajustado */}
+        <div className="grid grid-cols-12 gap-8">
+          {/* Navigation Menu - Más estrecho */}
+          <div className="col-span-3">
+            <div className="bg-white rounded-2xl shadow-lg p-4 h-[500px]">
+              <div className="space-y-3 w-full">
+                {[
+                  "Personal Information",
+                  "Contact Details",
+                  "Security Settings",
+                  "Preferences",
+                ].map((item, index) => (
+                  <button
+                    key={index}
+                    className="w-full bg-black hover:bg-gray-800 text-white font-medium py-3 px-4 rounded-lg transition-colors text-center text-sm"
+                  >
+                    {item}
+                  </button>
+                ))}
               </div>
             </div>
-            {/* div 2 section 3 */}
-            <div className="p-4 w-1/2">
-              <div className="h-full bg-gray-100 p-8 rounded flex flex-col items-center justify-center">
-                <div className="h-2/3 bg-gray-100 p-8 my-2 rounded flex items-center justify-center">
-                  va componente
-                </div>
+          </div>
 
-                <button className="bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800">
-                  CONTINUE SHOPPING
-                </button>
+          {/* Content Area - Más ancho */}
+          <div className="col-span-9">
+            <div className="bg-white rounded-2xl shadow-lg p-8 h-[500px]">
+              <div className="h-full flex flex-col justify-between">
+                <div className="flex-1 flex items-center justify-center text-gray-500">
+                  Select an option to view details
+                </div>
+                <div className="flex justify-end w-full">
+                  <button className="bg-black hover:bg-gray-800 text-white font-medium py-2.5 px-8 rounded-lg transition-colors">
+                    CONTINUE SHOPPING
+                  </button>
+                </div>
               </div>
             </div>
-
-            {/*fin div 2 section 3 */}
           </div>
         </div>
-      </section>
-      {/* fin section 3 */}
+      </div>
     </div>
   );
 };
