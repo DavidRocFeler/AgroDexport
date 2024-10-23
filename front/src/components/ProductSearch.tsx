@@ -55,19 +55,23 @@ const ProductSearch = () => {
           </div>
         </label>
       </div>
+      <div className='flex ml-8 w-full'>
       <form onSubmit={handleSubmit}  className="flex flex-row w-full items-center ms space-x-4  "> 
         <div className="flex w-full">
           <select className="rounded-xl px-3 py-2 h-12 text-black border border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
           value={category}
           onChange={handleCategoryChange}>
             <option value="">All Categories</option>
+            <option value="Cereals">Cereals</option> 
             <option value="fruits">Fruits</option>
-            <option value="vegetables">Vegetables</option>
-            <option value="grains-and-cereals">Grains and Cereals</option>
-            <option value="dried-legumes">Dried Legumes</option>
-            <option value="herbs-and-spices">Herbs and Spices</option>
-            <option value="nuts-and-seeds">Nuts and Seeds</option>
-            <option value="edible-flowers">Edible Flowers</option>
+            <option value="Herbs">Herbs</option>
+            <option value="Leafy Greens">Leafy Greens</option>
+            <option value="legumes">Legumes</option>
+            <option value="Nuts">Nuts</option>
+            <option value="Root Vegetables">Root Vegetables</option>
+            <option value="Spices">Spices</option>
+            <option value="Tubers">Tubers</option>
+            <option value="Pulses">Pulses</option>
             <option value="other">Other</option>
           </select>
         </div>
@@ -94,9 +98,9 @@ const ProductSearch = () => {
           Search
         </button>
       </form>
+      </div>
     </div>
   );
 };
 
 export default ProductSearch;
-
