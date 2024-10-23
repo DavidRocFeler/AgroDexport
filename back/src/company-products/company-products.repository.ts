@@ -3,12 +3,13 @@ import { PrismaService } from '../prisma/prisma.service';
 import { Company, CompanyProduct, Prisma } from '@prisma/client'; 
 import { CreateCompanyProductDto } from './dtos/create-company-product.dto';
 import { UpdateCompanyProductDto } from './dtos/update-company-product.dto';
+import { NotificationsService } from '../notifications/notifications.service';
 
 @Injectable()
 export class CompanyProductsRepository {
-  
-  
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService,
+    private readonly notificationsService: NotificationsService
+  ) {}
 
   async findAll(): Promise<CompanyProduct[]> {
     return this.prisma.companyProduct.findMany();
@@ -34,8 +35,6 @@ export class CompanyProductsRepository {
 
 
   async createProductRepository(createCompanyProductDto: CreateCompanyProductDto): Promise<CompanyProduct> {
-
-    // const {...rest } = createCompanyProductDto;
     const { harvest_date, ...rest } = createCompanyProductDto;
     const parsedHarvestDate = new Date(harvest_date);
 
@@ -48,13 +47,23 @@ export class CompanyProductsRepository {
       throw new Error('Invalid harvest date format. Please provide a valid ISO-8601 date string.');
     }
   
-    return await this.prisma.companyProduct.create({
+    const product = await this.prisma.companyProduct.create({
       data: {
         ...rest,
         harvest_date: parsedHarvestDate,
         total_price: roundedDiscountPrice,
       },
     });
+
+    const company = await this.findByProductNameAndCompanyId(product.company_product_name, product.company_id);
+
+    await this.notificationsService.createAndNotifyUsers(
+      'buyer',
+      `Company ${company.company.company_name} added the followind Product: ${product.company_product_name}`,
+      'product_created'
+    );
+
+    return product;
   }
   
     async updateProductRepository(productId: string, productData: UpdateCompanyProductDto) {
@@ -64,18 +73,20 @@ export class CompanyProductsRepository {
       })
     }
 
-    async findByProductName(productName: string): Promise<(CompanyProduct & { company: Company }) | null> {
+    async findByProductNameAndCompanyId(productName: string, companyId: string): Promise<(CompanyProduct & { company: Company }) | null> {
       const product = await this.prisma.companyProduct.findFirst({
         where: {
           company_product_name: productName,
+          company_id: companyId,
         },
         include: {
           company: true,
         },
       });
-  
-      return product
+    
+      return product;
     }
+    
 
   async findProductById(productId: string) {
     return this.prisma.companyProduct.findUnique({

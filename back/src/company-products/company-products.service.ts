@@ -47,7 +47,7 @@ export class CompanyProductsService {
 
   async createProductServices(createCompanyProductDto: CreateCompanyProductDto): Promise<CompanyProduct> {
     const existingCompany = await this.companyRepository.findById(createCompanyProductDto.company_id);
-    const existingProduct = await this.companyProductsRepository.findByProductName(createCompanyProductDto.company_product_name);
+    const existingProduct = await this.companyProductsRepository.findByProductNameAndCompanyId(createCompanyProductDto.company_product_name, createCompanyProductDto.company_id);
     const existingCategory = await this. categoryRepository.findByIdcategory(createCompanyProductDto.category_id)
     
     
@@ -87,39 +87,46 @@ export class CompanyProductsService {
 
   async preloadCompanyProductsService(): Promise<{ companyProduct: string; status: string }[]> {
     const results: { companyProduct: string; status: string }[] = [];
-
+  
     for (const companyProductData of companyProductsData) {
+      // console.log('Processing product:', companyProductData['company_product_name']); 
+  
       const company = await this.companyRepository.findByName(companyProductData['company_name']);
       if (!company) {
-          results.push({ companyProduct: companyProductData['company_name'], status: 'Company not found' });
-          continue;
+        results.push({ companyProduct: companyProductData['company_name'], status: 'Company not found' });
+        continue;
       }
+  
       if (company.user.role.role_name !== 'supplier') {
-          results.push({ companyProduct: companyProductData['company_product_name'], status: 'User is not a supplier' });
-          continue;
+        results.push({ companyProduct: companyProductData['company_product_name'], status: 'User is not a supplier' });
+        continue;
       }
-       
+  
       const category = await this.categoryRepository.findCategoryByName(companyProductData['category_name']);
-
       if (!category) {
         results.push({ companyProduct: companyProductData['company_product_name'], status: 'Category not found' });
         continue;
       }
-
-    const existingProduct = await this.companyProductsRepository.findByProductName(companyProductData['company_product_name']);
-
-      if (existingProduct && existingProduct.company.company_name === companyProductData['company_name']) {
-        results.push({ companyProduct: companyProductData['company_product_name'], status: 'Product already exists for this company' });
-        continue;
+  
+      const existingProduct = await this.companyProductsRepository.findByProductNameAndCompanyId(companyProductData['company_product_name'], company.company_id);
+      if (existingProduct) {
+        results.push({ 
+          companyProduct: companyProductData['company_product_name'], 
+          status: 'Product already exists for this company' 
+        });
+        continue; 
       }
-
+  
       const { company_name, category_name, ...companyProductWithoutExtra } = companyProductData;
       const companyProductFinal = { ...companyProductWithoutExtra, company_id: company.company_id, category_id: category.category_id, isActive: true, company_product_img: companyProductData['company_product_img'] };
-      
+  
+      // console.log(`Creating product: ${companyProductData['company_product_name']} for company: ${companyProductData['company_name']}`);
       results.push({ companyProduct: companyProductData.company_product_name, status: 'Created' });
-
+  
       await this.companyProductsRepository.createProductRepository(companyProductFinal);
     }
-  return results;
-}
+  
+    return results;
+  }
+  
 }

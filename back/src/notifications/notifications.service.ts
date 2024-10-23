@@ -11,26 +11,50 @@ export class NotificationsService {
   ) {}
 
 
-  async createAndNotifyUser(userId: string, message: string, type: string) {
+  async createAndNotifyUser(userId: string, message: string, type: string, taskId?: string) {
     const prisma = new PrismaClient();
 
-    const notificationData: Prisma.NotificationUncheckedCreateInput = {
-      user_id: userId,
-      message,
-      type,
-      notification_date: new Date(),
-      isRead: false,
-    };
-  
-    const notification = await prisma.notification.create({
-      data: notificationData,
+    const existingNotification = await prisma.notification.findFirst({
+        where: {
+            user_id: userId,
+            message: message,
+            isRead: false,
+        },
     });
-  
-    this.notificationsGateway.sendNotification(userId, notification);
-  
-    return notification;
-  }
 
+    if (existingNotification) {
+        console.log(`Notification not sent to ${userId}: an unread notification with the same message already exists.`);
+        return {
+            success: false,
+            message: 'No new notification was sent: an unread notification with the same message already exists.',
+            existingNotification, 
+        };
+    }
+
+    const notificationData: Prisma.NotificationUncheckedCreateInput = {
+        user_id: userId,
+        message,
+        type,
+        notification_date: new Date(),
+        isRead: false,
+        task_id: taskId,
+    };
+
+    const notification = await prisma.notification.create({
+        data: notificationData,
+    });
+
+    this.notificationsGateway.sendNotification(userId, notification);
+
+    return {
+        success: true,
+        message: 'Notification sent successfully.',
+        notification, 
+    };
+}
+
+
+ 
   async createAndNotifyUsers(roleName: string, message: string, type: string) {
     const users = await this.prisma.user.findMany({
       where: { role: { role_name: roleName } },
