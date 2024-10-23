@@ -4,12 +4,12 @@ import React from "react";
 
 const ProfileView: React.FC = () => {
   const sampleCompanies = [
-    {
-      id: 1,
-      name: "Company One",
-      role: "Admin",
-      status: "Active",
-    },
+    // {
+    //   id: 1,
+    //   name: "Company One",
+    //   role: "Admin",
+    //   status: "Active",
+    // },
     {
       id: 2,
       name: "Company Two",
@@ -125,7 +125,7 @@ const ProfileView: React.FC = () => {
             <div className="bg-white rounded-2xl shadow-lg p-8 h-[500px]">
               <div className="h-full flex flex-col justify-between">
                 <div className="flex-1 flex items-center justify-center text-gray-500">
-                  Select an option to view details
+                  hola
                 </div>
                 <div className="flex justify-end w-full">
                   <button className="bg-black hover:bg-gray-800 text-white font-medium py-2.5 px-8 rounded-lg transition-colors">
