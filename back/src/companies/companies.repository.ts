@@ -85,8 +85,9 @@ export class CompanyRepository {
       data: { ...companyData, isActive: true }
     });
 
-    await this.notificationsService.createAndNotifyAdmins(
-      `Nueva compañía creada: ${company.company_name}`,
+    await this.notificationsService.createAndNotifyUsers(
+      'admin',
+      `New company created: ${company.company_name}`,
       'company_created'
     );
 
