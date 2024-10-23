@@ -103,4 +103,22 @@ export class CloudinaryService {
         throw new BadRequestException('Invalid type for file update');
     }
   }  
+
+  async uploadFileToFolder(file: Express.Multer.File) {
+    const folder = 'Front'; 
+
+    return new Promise<string>((resolve, reject) => {
+        Cloudinary.uploader.upload_stream(
+            {
+                folder, 
+            },
+            (error, result) => {
+                if (error) {
+                    return reject(error);
+                }
+                resolve(result.secure_url);
+            },
+        ).end(file.buffer); 
+    });
+}
 }
