@@ -31,15 +31,15 @@ export class NotificationsService {
     return notification;
   }
 
-  async createAndNotifyAdmins(message: string, type: string) {
-    const adminUsers = await this.prisma.user.findMany({
-      where: { role: { role_name: 'admin' } },
+  async createAndNotifyUsers(roleName: string, message: string, type: string) {
+    const users = await this.prisma.user.findMany({
+      where: { role: { role_name: roleName } },
     });
   
     const notifications = await Promise.all(
-      adminUsers.map(async (admin) => {
+      users.map(async (user) => {
         const notificationData: Prisma.NotificationUncheckedCreateInput = {
-          user_id: admin.user_id,
+          user_id: user.user_id,
           message,
           type,
           notification_date: new Date(),
@@ -49,12 +49,39 @@ export class NotificationsService {
         const notification = await this.prisma.notification.create({
           data: notificationData,
         });
-        this.notificationsGateway.sendNotification(admin.user_id, notification);
+        this.notificationsGateway.sendNotification(user.user_id, notification);
   
         return notification;
       })
     );
   
+    return notifications;
+  }
+  
+
+  async createAndNotifyBuyers(message: string, type: string) {
+    const buyerUsers = await this.prisma.user.findMany({
+      where: { role: { role_name: 'buyer' } },
+    });
+  
+    const notifications = await Promise.all(
+      buyerUsers.map(async (buyer) => {
+        const notificationData: Prisma.NotificationUncheckedCreateInput = {
+          user_id: buyer.user_id,
+          message,
+          type,
+          notification_date: new Date(),
+          isRead: false,
+        };
+  
+        const notification = await this.prisma.notification.create({
+          data: notificationData,
+        });
+        this.notificationsGateway.sendNotification(buyer.user_id, notification);
+  
+        return notification;
+      })
+    );
     return notifications;
   }  
   
