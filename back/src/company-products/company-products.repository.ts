@@ -1,6 +1,6 @@
 import { BadRequestException, ConflictException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { CompanyProduct, Prisma } from '@prisma/client'; 
+import { Company, CompanyProduct, Prisma } from '@prisma/client'; 
 import { CreateCompanyProductDto } from './dtos/create-company-product.dto';
 import { UpdateCompanyProductDto } from './dtos/update-company-product.dto';
 
@@ -34,11 +34,15 @@ export class CompanyProductsRepository {
 
 
   async createProductRepository(createCompanyProductDto: CreateCompanyProductDto): Promise<CompanyProduct> {
+
+    // const {...rest } = createCompanyProductDto;
     const { harvest_date, ...rest } = createCompanyProductDto;
     const parsedHarvestDate = new Date(harvest_date);
 
     const totalPrice = (createCompanyProductDto.minimum_order * 1000 ) * createCompanyProductDto.company_price_x_kg;
     const discountPrice = totalPrice * ((100-createCompanyProductDto.discount)/100);
+
+    const roundedDiscountPrice = parseFloat(discountPrice.toFixed(2));
   
     if (isNaN(parsedHarvestDate.getTime())) {
       throw new Error('Invalid harvest date format. Please provide a valid ISO-8601 date string.');
@@ -48,7 +52,7 @@ export class CompanyProductsRepository {
       data: {
         ...rest,
         harvest_date: parsedHarvestDate,
-        total_price: discountPrice,
+        total_price: roundedDiscountPrice,
       },
     });
   }
@@ -60,18 +64,18 @@ export class CompanyProductsRepository {
       })
     }
 
-  async findByProductName(productName: string): Promise<CompanyProduct | null> {
-    const product = await this.prisma.companyProduct.findFirst({
-      where: {
-        company_product_name: productName,
-      },
-      include: {
-        company: true,
-      },
-    });
-
-    return product
-  }
+    async findByProductName(productName: string): Promise<(CompanyProduct & { company: Company }) | null> {
+      const product = await this.prisma.companyProduct.findFirst({
+        where: {
+          company_product_name: productName,
+        },
+        include: {
+          company: true,
+        },
+      });
+  
+      return product
+    }
 
   async findProductById(productId: string) {
     return this.prisma.companyProduct.findUnique({
