@@ -1,0 +1,37 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 50px;
+}
+
+.custom-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 25px 0;
+    font-size: 18px;
+    text-align: left;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.row {
+    border-bottom: 1px solid #dddddd;
+}
+
+.row:nth-of-type(even) {
+    background-color: #f3f3f3;
+}
+
+.col-left {
+    width: 30%;
+    padding: 12px 15px;
+    border-right: 1px solid #dddddd;
+}
+
+.col-right {
+    width: 70%;
+    padding: 12px 15px;
+}
+
+/* Eliminar la línea verde al final */
+.row:last-child {
+    border-bottom: none;
+}

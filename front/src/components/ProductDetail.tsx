@@ -1,5 +1,5 @@
 "use client"
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "../styles/ProductDetail.module.css"
 import { IAgroProduct } from "@/interface/types";
 
@@ -9,7 +9,15 @@ const ProductDetail: React.FC<IAgroProduct> = ({
     
     const { calories, protein, fat, carbs } = nutritionalInfo;
     const { method, deliveryTime, seaFreight } = shippingOptions
- 
+
+    const handleProductStorage = ( ) => {
+        localStorage.getItem("selectPoduct")
+    }
+
+    useEffect(() => {
+        handleProductStorage()
+    }, [])
+  
     return(
         <div className="md:flex flex-col pt-[2rem] pb-[2rem] ">
             <div className="flex flex-row justify-evenly">

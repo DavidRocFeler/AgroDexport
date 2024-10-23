@@ -2,18 +2,18 @@ import Image from 'next/image';
 
 const FooterSecond = () => {
   return (
-    <footer className="bg-gray-900 text-white py-4">
-      <div className="container mx-auto flex justify-between items-center">
-        <div className="flex space-x-4">
-          <a href="#" className="hover:underline">Help</a>
-          <a href="#" className="hover:underline">About</a>
-          <a href="#" className="hover:underline">Blog</a>
-          <a href="#" className="hover:underline">Privacy</a>
-          <a href="#" className="hover:underline">Terms</a>
-          <a href="#" className="hover:underline">Support</a>
+    <footer className="bg-[#242424] pt-4 pb-4">
+      <div className="w-[95%] m-auto flex flex-row items-center">
+        <div className="flex space-x-10">
+          <a href="#" className="hover:underline text-[#E9E9E9] text-[0.9rem] ">Help</a>
+          <a href="#" className="hover:underline text-[#E9E9E9] text-[0.9rem] ">About</a>
+          <a href="#" className="hover:underline text-[#E9E9E9] text-[0.9rem] ">Blog</a>
+          <a href="#" className="hover:underline text-[#E9E9E9] text-[0.9rem] ">Privacy</a>
+          <a href="#" className="hover:underline text-[#E9E9E9] text-[0.9rem] ">Terms</a>
+          <a href="#" className="hover:underline text-[#E9E9E9] text-[0.9rem] ">Support</a>
         </div>
 
-        <div className="flex space-x-4">
+        <div className="flex flex-row justify-evenly w-[15%] ml-auto">
           <div className="w-9 h-9 rounded-full border border-gray-700 flex justify-center items-center hover:border-green-600">
             <Image 
               src="/logoFacebook.png" 

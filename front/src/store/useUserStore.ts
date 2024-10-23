@@ -1,32 +1,86 @@
+import { IUserState } from "@/interface/types";
 import { create } from "zustand";
-import { IUser, IUserState } from "@/interface/types";
+import Cookies from 'js-cookie';
+import CryptoJS from 'crypto-js'; 
+
+// Clave secreta para encriptación (guárdala en variables de entorno)
+
+const ENCRYPTION_KEY = process.env.NEXT_PUBLIC_ENCRYPTION_KEY || 'tu-clave-secreta';
+
+const encryptData = (data: any) => {
+  return CryptoJS.AES.encrypt(JSON.stringify(data), ENCRYPTION_KEY).toString();
+};
+
+const decryptData = (encryptedData: string) => {
+  try {
+    const bytes = CryptoJS.AES.decrypt(encryptedData, ENCRYPTION_KEY);
+    return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+  } catch {
+    return null;
+  }
+};
+
+// Función para obtener el estado inicial
+const getInitialState = () => {
+  if (typeof window === 'undefined') {
+    return {
+      user_id: null,
+      token: null,
+      role_name: null,
+      isAuthenticated: false
+    };
+  }
+
+  const encryptedData = Cookies.get('userState');
+  if (!encryptedData) {
+    return {
+      user_id: null,
+      token: null,
+      role_name: null,
+      isAuthenticated: false
+    };
+  }
+
+  const decryptedData = decryptData(encryptedData);
+  return decryptedData || {
+    user_id: null,
+    token: null,
+    role_name: null,
+    isAuthenticated: false
+  };
+};
 
 export const useUserStore = create<IUserState>((set) => ({
-    users: [],
-    token: null,
-    userType: null,
-    addUser: (user: IUser) => set((state) => {
-        if (state.users.some(u => u.id === user.id)) {
-            return state; 
-        }
-        return { users: [...state.users, user] };
-    }),
-    removeUser: (userId: string) => set((state) => ({
-        users: state.users.filter(user => user.id !== userId)
-    })),
-    clearUsers: () => set({ users: [] }),
-    setToken: (token: string) => set({ token }),
-    setUserType: (userType: "supplier" | "buyer" |  null) => set({ userType }),
-    checkToken: () => {
-        const token = localStorage.getItem("jwt");
-        if (token) {
-            const payload = JSON.parse(atob(token.split('.')[1]));
-            const userType = payload.userType;
-            set({ token, userType });
-        }
-    },
+  ...getInitialState(),
+  
+  setUserData: (user_id: string, token: string, role_name: string) => {
+    const userData = { 
+      user_id, 
+      token, 
+      role_name, 
+      isAuthenticated: true 
+    };
+    
+    if (typeof window !== 'undefined') {
+      Cookies.set('userState', encryptData(userData), {
+        expires: 1,
+        secure: true,
+        sameSite: 'strict'
+      });
+    }
+    
+    set(userData);
+  },
+  
+  clearUser: () => {
+    if (typeof window !== 'undefined') {
+      Cookies.remove('userState');
+    }
+    set({ 
+      user_id: null, 
+      token: null, 
+      role_name: null, 
+      isAuthenticated: false 
+    });
+  }
 }));
-
-export const saveToken = (token: string) => {
-    localStorage.setItem("jwt", token);
-};

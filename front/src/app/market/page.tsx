@@ -6,7 +6,6 @@ const Market: React.FC = () => {
   return (
     <>
       <div><MarketView /></div>
-      <FooterSecond />
     </>
   )
 };
