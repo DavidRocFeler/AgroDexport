@@ -19,7 +19,7 @@ export class NotificationsGateway {
   }
 
   sendNotification(userId: string, notification: any) {
-    console.log(`Enviando notificación a usuario ${userId}:`, notification);
+    // console.log(`Enviando notificación a usuario ${userId}:`, notification);
     this.server.to(userId).emit('newNotification', notification);
   }
 
