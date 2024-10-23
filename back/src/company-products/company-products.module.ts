@@ -14,6 +14,6 @@ import { CategoryRepository } from '../categories/categories.repository';
   imports: [CompaniesModule, UsersModule, CategoriesModule],
   controllers: [CompanyProductsController],
   providers: [CompanyProductsService, CompanyProductsRepository, CompanyService, CategoryRepository],
-  exports: [CompanyProductsRepository]
+  exports: [CompanyProductsRepository, CompanyProductsService]
 })
 export class CompanyProductsModule {}

@@ -11,9 +11,23 @@ export class CompanyRepository {
     private readonly notificationsService: NotificationsService,
     private readonly prisma: PrismaService) {}
 
-    async getAll(): Promise<Company[]> {
-      return this.prisma.company.findMany();
+    async getAll(): Promise<any[]> {
+      return this.prisma.company.findMany({
+        include: {
+          user: {
+            select: {
+              role: {
+                select: {
+                  role_name: true, // Selecciona solo el campo role_name
+                },
+              },
+            },
+          },
+        },
+      });
     }
+    
+    
   
     async getWithFilters(filters: any[]): Promise<Company[]> {
       return this.prisma.company.findMany({
@@ -48,23 +62,26 @@ export class CompanyRepository {
   }
 
   async findByName(companyName: string) {
-    const company = await this.prisma.company.findFirst({
-      where: { company_name: companyName },
+    if (!companyName) {
+      throw new Error("El nombre de la compañía no puede ser vacío");
+    }
+    
+    const company = await this.prisma.company.findUnique({
+      where: {
+        company_name: companyName,
+      },
       include: {
         user: {
           include: {
-            role: true,
-          },
-        },
-      },
+            role: true
+          }
+        }
+      }
     });
-  
-    if (!company || !company.isActive) {
-      throw new NotFoundException('Company not found');
-    }
-  
+    
     return company;
   }
+  
   
 
   async create(companyData: CreateCompanyDto) {

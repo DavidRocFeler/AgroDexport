@@ -20,5 +20,5 @@
     "resolveJsonModule": true,
     "types": ["multer", "jest"]
   },
-  "include": ["src/**/*.ts", "src/assets/**/*.json"]
+  "include": ["src/**/*.ts", "src/assets/*/.json"]
 }
