@@ -48,8 +48,8 @@ export class CompanyProductsService {
     const existingCompany = await this.companyRepository.findById(createCompanyProductDto.company_id);
     const existingProduct = await this.companyProductsRepository.findByProductName(createCompanyProductDto.company_product_name);
     const existingCategory = await this. categoryRepository.findByIdcategory(createCompanyProductDto.category_id)
-    const verifyTotalPrice = (createCompanyProductDto.minimum_order * 1000 ) * createCompanyProductDto.company_price_x_kg; 
-
+    
+    
     if (existingCompany.user?.role?.role_name !== 'supplier') {
       throw new ForbiddenException('Only suppliers can create products.');
     }
@@ -62,14 +62,10 @@ export class CompanyProductsService {
       throw new NotFoundException('The category not found')
     }
 
-    if (createCompanyProductDto.total_price != verifyTotalPrice) {
-      throw new ConflictException('The total price is not equal to the minimum order price')
-    }
-
     return this.companyProductsRepository.createProductRepository(createCompanyProductDto);
   }
 
-  async updateProductServices(productId: string, updateCompanyProductDto: UpdateCompanyProductDto) {
+  async updateProductServices(productId: string, productData: UpdateCompanyProductDto) {
     
     const existingProduct = await this.companyProductsRepository.findProductById(productId);  
 
@@ -81,7 +77,7 @@ export class CompanyProductsService {
       throw new ConflictException('Product is not active')
     }
 
-    return this.companyProductsRepository.updateProductRepository(updateCompanyProductDto, productId);
+    return this.companyProductsRepository.updateProductRepository(productId, productData);
   }
 
   softDeleteProductServices(productId: string) {

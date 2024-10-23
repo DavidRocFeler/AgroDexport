@@ -2,7 +2,9 @@ import React from 'react'
 import ProductSearch from "@/components/ProductSearch"
 import Image from 'next/image'
 import ProductCard from '@/components/ProductCard';
-import PaypalView from '@/components/PaypalView';
+import PaypalView from '@/views/PaypalView';
+import Payment from '@/components/Payment';
+
 
 const MarketView: React.FC = () => {
   return (

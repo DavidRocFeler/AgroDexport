@@ -35,27 +35,31 @@ import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 import { loggerGlobal } from './middlewares/logger.middleware';
+import * as express from 'express';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
   app.use(loggerGlobal);
 
-  // Habilitar CORS para permitir solicitudes desde http://localhost:3001
+ 
   app.enableCors({
-    origin: 'http://localhost:3000',  // Permitir solicitudes desde este origen
-    methods: 'GET,POST,PUT,DELETE',    // Métodos HTTP permitidos
+    origin: 'http://localhost:3000',  
+    methods: 'GET,POST,PUT,DELETE',    
     credentials: true,                 // Permitir cookies o autenticación
     allowedHeaders: ['Content-Type', 'Authorization']
   });
 
-  // Habilitar validaciones globales
+
   app.useGlobalPipes(new ValidationPipe({
     transform: true,
     whitelist: true,
     forbidNonWhitelisted: true,
   }));
 
-  // Configuración de Swagger
+
   const swaggerConfig = new DocumentBuilder()
     .setTitle("Agro D Exports")
     .setDescription("Doumentacion api Agro d Exports")

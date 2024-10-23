@@ -31,8 +31,8 @@ export class CompanyProductsController {
   }
   
   @Put(":id")
-  async updateProduct(@Param("id", ) productId: string, @Body() updateCompanyProductDto: UpdateCompanyProductDto){
-    return this.companyProductsService.updateProductServices(productId, updateCompanyProductDto) 
+  async updateProduct(@Param("id") productId: string, @Body() productData: UpdateCompanyProductDto){
+    return this.companyProductsService.updateProductServices(productId, productData) 
   }
 
   @Delete(":id")

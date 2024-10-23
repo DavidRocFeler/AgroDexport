@@ -36,6 +36,9 @@ export class CompanyProductsRepository {
   async createProductRepository(createCompanyProductDto: CreateCompanyProductDto): Promise<CompanyProduct> {
     const { harvest_date, ...rest } = createCompanyProductDto;
     const parsedHarvestDate = new Date(harvest_date);
+
+    const totalPrice = (createCompanyProductDto.minimum_order * 1000 ) * createCompanyProductDto.company_price_x_kg;
+    const discountPrice = totalPrice * ((100-createCompanyProductDto.discount)/100);
   
     if (isNaN(parsedHarvestDate.getTime())) {
       throw new Error('Invalid harvest date format. Please provide a valid ISO-8601 date string.');
@@ -45,20 +48,17 @@ export class CompanyProductsRepository {
       data: {
         ...rest,
         harvest_date: parsedHarvestDate,
+        total_price: discountPrice,
       },
     });
   }
   
-    async updateProductRepository(updateCompanyProductDto: UpdateCompanyProductDto, productId: string) {
-      const product = await this.prisma.companyProduct.update({
+    async updateProductRepository(productId: string, productData: UpdateCompanyProductDto) {
+      return await this.prisma.companyProduct.update({
         where: { company_product_id : productId },
-        data: {...updateCompanyProductDto},
+        data: productData,
       })
-
-      return product;
     }
-
-
 
   async findByProductName(productName: string): Promise<CompanyProduct | null> {
     const product = await this.prisma.companyProduct.findFirst({
