@@ -1,22 +1,11 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
+import { companiesData } from "../helpers/companiesData";
+import UserProfileForm from "../components/UserProfileForm"; // Importa el componente
 
 const ProfileView: React.FC = () => {
-  const sampleCompanies = [
-    // {
-    //   id: 1,
-    //   name: "Company One",
-    //   role: "Admin",
-    //   status: "Active",
-    // },
-    {
-      id: 2,
-      name: "Company Two",
-      role: "User",
-      status: "Active",
-    },
-  ];
+  const [activeSection, setActiveSection] = useState<string>(""); // Estado para controlar la sección activa
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-100 to-blue-200">
@@ -32,7 +21,7 @@ const ProfileView: React.FC = () => {
 
               {/* Companies Grid */}
               <div className="space-y-3">
-                {sampleCompanies.map((company) => (
+                {companiesData.map((company) => (
                   <div
                     key={company.id}
                     className="bg-gray-50 rounded-lg p-4 border border-gray-200 hover:border-gray-300 transition-colors"
@@ -46,7 +35,13 @@ const ProfileView: React.FC = () => {
                           Role: {company.role}
                         </p>
                       </div>
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                      <span
+                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                          company.status === "Active"
+                            ? "bg-green-100 text-green-800"
+                            : "bg-red-100 text-red-800"
+                        }`}
+                      >
                         {company.status}
                       </span>
                     </div>
@@ -104,13 +99,14 @@ const ProfileView: React.FC = () => {
             <div className="bg-white rounded-2xl shadow-lg p-4 h-[500px]">
               <div className="space-y-3 w-full">
                 {[
-                  "Personal Information",
-                  "Contact Details",
-                  "Security Settings",
-                  "Preferences",
+                  "Information contact",
+                  "Secutrity settings",
+                  "Methood payments",
+                  "Warehouse address",
                 ].map((item, index) => (
                   <button
                     key={index}
+                    onClick={() => setActiveSection(item)} // Al hacer clic, cambia la sección activa
                     className="w-full bg-black hover:bg-gray-800 text-white font-medium py-3 px-4 rounded-lg transition-colors text-center text-sm"
                   >
                     {item}
@@ -125,7 +121,12 @@ const ProfileView: React.FC = () => {
             <div className="bg-white rounded-2xl shadow-lg p-8 h-[500px]">
               <div className="h-full flex flex-col justify-between">
                 <div className="flex-1 flex items-center justify-center text-gray-500">
-                  hola
+                  {/* Renderiza contenido basado en el botón clicado */}
+                  {activeSection === "Information contact" ? (
+                    <UserProfileForm /> // Muestra el formulario si se clicó en "Information contact"
+                  ) : (
+                    <span>{activeSection}</span> // Muestra el nombre de la sección seleccionada
+                  )}
                 </div>
                 <div className="flex justify-end w-full">
                   <button className="bg-black hover:bg-gray-800 text-white font-medium py-2.5 px-8 rounded-lg transition-colors">
