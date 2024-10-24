@@ -94,9 +94,10 @@ export class UsersRepository {
         });
 
         await this.emailService.sendRegistrationEmail(
-          newAccount.email, 
-          'Bienvenido a nuestra plataforma', 
-          'Gracias por registrarte'
+          userData.email, 
+          'Welcome to AgroDexports', 
+          userData.user_name,
+          userData.role_name
         );
 
         return newUser;
@@ -141,8 +142,9 @@ export class UsersRepository {
 
     await this.emailService.sendRegistrationEmail(
       userData.email, 
-      'Bienvenido a nuestra plataforma', 
-      'Gracias por registrarte'
+      'Welcome to AgroDexports', 
+      userData.name,
+      userData.role_name,
     );
   
     return user;

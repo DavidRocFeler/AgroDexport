@@ -12,7 +12,7 @@ model User {
   user_name       String         @db.VarChar(50)
   user_lastname   String         @db.VarChar(50)
   nDni            Int?           @unique
-  birthday        DateTime?
+  birthday        String?
   phone           String?
   country         String?
   profile_picture String?
