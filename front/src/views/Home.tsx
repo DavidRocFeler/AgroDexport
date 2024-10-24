@@ -3,7 +3,7 @@ import React from "react";
 import Link from "next/link";
 import styles from "../styles/Home.module.css"
 import { useEffect, useCallback } from "react";
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import { registerAuthProps } from "@/helpers/signUpHelpers";
 import { useAuthThirdStore } from "@/store/useAuthThirdStore";
 import Swal from "sweetalert2";
@@ -55,7 +55,7 @@ const HomeView: React.FC = () => {
                     await Swal.fire({
                         icon: "error",
                         title: "Error",
-                        text: "Failed to login with Google",
+                        text: "You need to register first",
                         width: 400,
                         padding: "3rem",
                     });

@@ -134,7 +134,7 @@ const SignUp: React.FC<ISignUpComponentProps> = ({ onCloseSignUp, onSwitchToLogi
                         onChange={handleChangeRegister}
                         name='user_name'
                         type="text" 
-                        
+                        required
                         placeholder='Name' />
 
                     <input className={styles.CommonInput}
@@ -142,7 +142,7 @@ const SignUp: React.FC<ISignUpComponentProps> = ({ onCloseSignUp, onSwitchToLogi
                         onChange={handleChangeRegister}
                         name='user_lastname'
                         type="text" 
-                       
+                        required
                         placeholder='Last name' />
 
                     <input className={styles.CommonInput}
@@ -150,15 +150,15 @@ const SignUp: React.FC<ISignUpComponentProps> = ({ onCloseSignUp, onSwitchToLogi
                         onChange={handleChangeRegister}
                         name='email'
                         type="email" 
-                        
+                        required
                         placeholder='Email address' />
 
-                    <input className={styles.Password}
+                    <input className={styles.CommonInput}
                         value={userData.password}
                         onChange={handleChangeRegister}
                         name='password'
                         type="password" 
-                      
+                        required
                         placeholder='Password' />
 
                     <input className={styles.Password}
@@ -166,7 +166,7 @@ const SignUp: React.FC<ISignUpComponentProps> = ({ onCloseSignUp, onSwitchToLogi
                         onChange={handleChangeRegister}
                         name='confirm_password'
                         type="password" 
-                    
+                        required
                         placeholder='Repeat password' />
 
                     <div className="mb-[2rem]">
@@ -175,6 +175,7 @@ const SignUp: React.FC<ISignUpComponentProps> = ({ onCloseSignUp, onSwitchToLogi
                             type="checkbox"
                             checked={userData.isOlder}
                             onChange={handleChangeRegister}
+                            required
                         />{" "} I am of legal age.
                     </div>
 
