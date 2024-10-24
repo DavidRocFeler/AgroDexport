@@ -5,7 +5,7 @@ import { UsersModule } from '../users/users.module';
 import { RoleRepository } from '../roles/roles.repository';
 import { RolesModule } from 'src/roles/roles.module';
 import { AuthRepository } from './auth.repository';
-import { EmailService } from 'src/nodemail/nodemail';
+import { EmailService } from 'src/nodemail/nodemail.service';
 
 @Module({
   imports: [UsersModule, RolesModule ],

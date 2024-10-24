@@ -25,15 +25,22 @@ export class CompanyProductsRepository {
 
   async findProductByIdRepository(companyId: string, productId: string) {
     const product = await this.prisma.companyProduct.findUnique({
-      where: { company_id: companyId, company_product_id: productId },
-    })
+        where: { 
+            company_id: companyId, 
+            company_product_id: productId 
+        },
+        include: { 
+            farmerCertification: true, 
+        },
+    });
 
     if (!product) {
-      throw new NotFoundException(`Product with ID ${productId} not found for company ${companyId}`);
+        throw new NotFoundException(`Product with ID ${productId} not found for company ${companyId}`);
     }
   
     return product;
-  }
+}
+
 
 
   async createProductRepository(createCompanyProductDto: CreateCompanyProductDto): Promise<CompanyProduct> {
@@ -94,6 +101,16 @@ export class CompanyProductsRepository {
     return this.prisma.companyProduct.findUnique({
       where: { company_product_id: productId},
       select: { isActive: true },
+    });
+  }
+
+  async findProductsByIds(companyproductsIds: string[]): Promise<CompanyProduct[]> {
+    return this.prisma.companyProduct.findMany({
+        where: {
+            company_product_id: {
+                in: companyproductsIds, 
+            },
+        },
     });
   }
 

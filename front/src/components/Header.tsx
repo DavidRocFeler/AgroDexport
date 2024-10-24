@@ -6,13 +6,14 @@ import styles from "../styles/Header.module.css";
 import SignUp from "./SignUp";
 import LogIn from "./LogIn";
 import { useRouter } from "next/navigation";
-import { useSession, signOut } from "next-auth/react";
+import { useUserStore } from "@/store/useUserStore";
 
 const Header: React.FC = () => {
     const pathname = usePathname();
     const isHomePage = pathname === "/";
     const router = useRouter();
-    const { data: session, status } = useSession();
+    const [isHydrated, setIsHydrated] = React.useState(false);
+    const { clearUser, role_name, isAuthenticated } = useUserStore();
 
     const backgroundColor = isHomePage ? "#D8FBA7" : "#242424";
     const textColor = isHomePage ? "#000000" : "#D6D6D6";
@@ -26,11 +27,33 @@ const Header: React.FC = () => {
     const handleShowSignUp = () => setModalType("signup");
     const handleCloseModal = () => setModalType(null);
     const handleSwitchModal = (type: "login" | "signup") => setModalType(type);
-
+    
     const handleLogout = async () => {
-        await signOut({ redirect: false });
-        router.push('/');
+        clearUser(); 
+        router.push('/'); 
     };
+
+    const handleUserPanelClick = () => {
+        if (!isAuthenticated) {
+            handleShowLogIn(); 
+        } else {
+            router.push("/userpanel"); 
+        }
+    };
+
+    React.useEffect(() => {
+        setIsHydrated(true);
+    }, []);
+
+    if (!isHydrated) {
+        return (
+            <header className="flex flex-row pl-[1.5rem] pt-[2.7rem] pb-[2.7rem] " style={{ backgroundColor }}>
+                <Link href="/">
+                    <img src={logoSrc} alt="Logo" className={styles.LogoTypo} style={{}} />
+                </Link>
+            </header>
+        );
+    }
 
     return (
         <>
@@ -39,19 +62,19 @@ const Header: React.FC = () => {
                     <img src={logoSrc} alt="Logo" className={styles.LogoTypo} />
                 </Link>
                 <nav className="ml-auto mr-[1rem] ">
-                    <Link href="/userpanel" className="mr-[1rem] ml-[1rem] text-[0.9rem]" style={{ color: textColor }}>
+                    <button onClick={handleUserPanelClick} className="mr-[1rem] ml-[1rem] text-[0.9rem]" style={{ color: textColor }}>
                         User panel
-                    </Link>
+                    </button>
                     <Link href="/tradecontract" className="mr-[1rem] ml-[1rem] text-[0.9rem]" style={{ color: textColor }}>
                         Trade contract
                     </Link>
                     <Link href="/p2p" className="mr-[1rem] ml-[1rem] text-[0.9rem]" style={{ color: textColor }}>
                         B2B
                     </Link>
-                    {status === "authenticated" && session?.user ? (
+                    { isAuthenticated ? (
                         <>
                             <span className="mr-[1rem] ml-[1rem] text-[0.9rem]" style={{ color: textColor }}>
-                                {session.user.name}
+                                { role_name }
                             </span>
                             <button
                                 onClick={handleLogout}

@@ -1,7 +1,8 @@
+//front/src/app/GoogleProoviders.tsx
 "use client"
 import { SessionProvider } from 'next-auth/react'
 
-const Providers = ({children}: {children: React.ReactNode}) => {
+const GoogleProviders = ({children}: {children: React.ReactNode}) => {
   return (
     <SessionProvider>
         {children}
@@ -9,4 +10,4 @@ const Providers = ({children}: {children: React.ReactNode}) => {
   )
 }
 
-export default Providers;
+export default GoogleProviders;

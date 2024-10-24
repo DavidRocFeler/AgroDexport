@@ -1,4 +1,4 @@
-import { ISignUpForm, IUser } from "@/interface/types";
+import { ISignUpForm, IGoogleSession } from "@/interface/types";
 import Swal from "sweetalert2";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -76,11 +76,11 @@ export const registerProps = async (userData: ISignUpForm) => {
     // }
 // }
 
-
-export const registerAuthProps = async (userData: IUser) => {
+// front/src/helpers/signUpHelpers.ts
+export const registerAuthProps = async (userData: IGoogleSession) => {
     try {
         console.log("Sending to backend:", JSON.stringify(userData));
-        const res = await fetch(`http://localhost:3002/auth/thirdsingin`, {
+        const res = await fetch(`${API_URL}/auth/thirdsignup`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -92,8 +92,7 @@ export const registerAuthProps = async (userData: IUser) => {
             // Si la respuesta es exitosa, devuelves los datos
             return await res.json();
         } else {
-            // Manejamos el error en caso de que no sea ok (4xx o 5xx)
-            const errorMessage = await res.text(); // Leemos el cuerpo de la respuesta para obtener detalles
+            const errorMessage = await res.text(); 
             Swal.fire({
                 icon: "error",
                 title: "Error",
