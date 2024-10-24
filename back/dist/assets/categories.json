@@ -1,0 +1,13 @@
+[
+    { "name": "Cereals", "description": "Wheat, rice, oats, and other grains" },
+    { "name": "Legumes", "description": "Beans, lentils, peas, and other legumes" },
+    { "name": "Root Vegetables", "description": "Potatoes, carrots, beets, and other root crops" },
+    { "name": "Leafy Greens", "description": "Lettuce, spinach, kale, and other leafy vegetables" },
+    { "name": "Fruits", "description": "Apples, oranges, bananas, and other farm-grown fruits" },
+    { "name": "Nuts", "description": "Almonds, walnuts, hazelnuts, and other edible nuts" },
+    { "name": "Herbs", "description": "Basil, rosemary, parsley, and other fresh herbs" },
+    { "name": "Tubers", "description": "Sweet potatoes, yams, and similar crops" },
+    { "name": "Pulses", "description": "Chickpeas, black-eyed peas, and various dried pulses" },
+    { "name": "Spices", "description": "Ginger, turmeric, black pepper, and other spices" },
+    { "name": "Others", "description": "Other agricultural products not listed" }
+]
