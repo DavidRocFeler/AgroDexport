@@ -142,7 +142,8 @@ model Task {
 }
 // Definición del modelo CompanyProduct
 model CompanyProduct {
-  company_product_id         String             @id @default(uuid())                       
+  company_product_id         String             @id @default(uuid())   
+  farmer_id                  String?                    
   company_id                 String             
   category_id                String            
   order_details_id           String?                     
@@ -165,7 +166,7 @@ model CompanyProduct {
   // Relaciones
   company                    Company                    @relation(fields: [company_id], references: [company_id])
   category                   Category                   @relation(fields: [category_id], references: [category_id], name: "CategoryProducts")
-  productCertifications      CompanyProductFarmerCertification[] // Relación muchos a muchos con FarmerCertification a través de ProductCertification
+  farmerCertification        FarmerCertification?        @relation(fields: [farmer_id], references: [farmer_id])
   orderDetails               OrderDetailProduct[]       // Relación muchos a muchos con OrderDetail a través de OrderDetailProduct
 
   @@map("company_products") 
@@ -215,21 +216,11 @@ model FarmerCertification {
 
   //Relaciones
   company                    Company                             @relation(fields: [company_id], references: [company_id])
-  productCertifications      CompanyProductFarmerCertification[]
+  products                   CompanyProduct[]
 
   @@map("farmer_certifications")
 }
 
-
-model CompanyProductFarmerCertification {
-  farmer_id           String
-  company_product_id  String
-  companyProduct      CompanyProduct      @relation(fields: [company_product_id], references: [company_product_id])
-  farmerCertification FarmerCertification @relation(fields: [farmer_id], references: [farmer_id])
-
-  @@id([farmer_id, company_product_id])
-  @@map("product_certifications")
-}
 
 model Order {
   order_id            String           @id @default(uuid())

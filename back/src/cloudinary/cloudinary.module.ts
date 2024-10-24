@@ -5,9 +5,10 @@ import { CloudinaryConfig } from '../config/cloudinary';
 import { UsersModule } from '../users/users.module';
 import { CompaniesModule } from '../companies/companies.module';
 import { CompanyProductsModule } from '../company-products/company-products.module';
+import { FarmerCertificationsModule } from '../farmer-certifications/farmer-certifications.module';
 
 @Module({
-  imports:[UsersModule, CompaniesModule, CompanyProductsModule],
+  imports:[UsersModule, CompaniesModule, CompanyProductsModule, FarmerCertificationsModule],
   controllers: [CloudinaryController],
   providers: [CloudinaryService, CloudinaryConfig]
 })
