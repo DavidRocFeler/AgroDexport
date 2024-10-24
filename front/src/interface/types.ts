@@ -1,3 +1,5 @@
+import React from "react";
+
 export interface ISignUpForm {
   user_name: string;
   user_lastname: string;
@@ -117,7 +119,16 @@ export interface IProvidersProps {
   children: React.ReactNode;
 }
 
-export interface INotificationsProps {
-  isVisible: boolean;
-  onClose: () => void;
+  export interface INotificationsProps {
+    isVisible: boolean;
+    onClose: () => void;
+  }
+
+  export interface IAuthWrapperProps {
+      children: React.ReactNode; // Define la prop 'children' como ReactNode
+  }
+  
+export interface iProtectedRouteProps {
+  children: React.ReactNode
+  allowedRoles?: string[]
 }

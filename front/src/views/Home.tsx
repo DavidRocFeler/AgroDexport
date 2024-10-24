@@ -3,7 +3,7 @@ import React from "react";
 import Link from "next/link";
 import styles from "../styles/Home.module.css"
 import { useEffect, useCallback } from "react";
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import { registerAuthProps } from "@/helpers/signUpHelpers";
 import { useAuthThirdStore } from "@/store/useAuthThirdStore";
 import Swal from "sweetalert2";
@@ -20,54 +20,54 @@ const HomeView: React.FC = () => {
         resetInitialization, 
         setSessionSent 
     } = useAuthThirdStore();
-    const { setUserData } = useUserStore();
+    // const { setUserData } = useUserStore();
     const { data: session, status: sessionStatus } = useSession();
     
-    useEffect(() => {
-        const handleGoogleLogin = async () => {
-            if (sessionStatus === 'authenticated' && session?.user?.email && session?.user?.name) {
-                try {
-                    // Preparar datos para enviar al backend
-                    const googleData = {
-                        email: session.user.email,
-                        name: session.user.name
-                    };
+    // useEffect(() => {
+    //     const handleGoogleLogin = async () => {
+    //         if (sessionStatus === 'authenticated' && session?.user?.email && session?.user?.name) {
+    //             try {
+    //                 // Preparar datos para enviar al backendnew 
+    //                 const googleData = {
+    //                     email: session.user.email,
+    //                     name: session.user.name
+    //                 };
 
-                    // Enviar datos al backend a través de loginProps
-                    const response = await logginAuthProps(googleData);
+    //                 // Enviar datos al backend a través de loginProps
+    //                 const response = await logginAuthProps(googleData);
                     
-                    // Extraer datos de la respuesta
-                    const { user_id, token, role_name } = response;
+    //                 // Extraer datos de la respuesta
+    //                 const { user_id, token, role_name } = response;
                     
-                    // Actualizar el estado global del usuario
-                    setUserData(user_id, token, role_name);
+    //                 // Actualizar el estado global del usuario
+    //                 setUserData(user_id, token, role_name);
                     
-                    await Swal.fire({
-                        icon: "success",
-                        title: "Success",
-                        text: "Google login successful",
-                        width: 400,
-                        padding: "3rem",
-                    });
+    //                 await Swal.fire({
+    //                     icon: "success",
+    //                     title: "Success",
+    //                     text: "Google login successful",
+    //                     width: 400,
+    //                     padding: "3rem",
+    //                 });
                     
-                } catch (error) {
-                    console.error("Error in back login:", error);
-                    await Swal.fire({
-                        icon: "error",
-                        title: "Error",
-                        text: "Failed to login with Google",
-                        width: 400,
-                        padding: "3rem",
-                    });
-                } finally {
-                    await clearAllSessions();
-                    resetInitialization();
-                }
-            }
-        };
+    //             } catch (error) {
+    //                 console.error("Error in back login:", error);
+    //                 await Swal.fire({
+    //                     icon: "error",
+    //                     title: "Error",
+    //                     text: "You need to register first",
+    //                     width: 400,
+    //                     padding: "3rem",
+    //                 });
+    //             } finally {
+    //                 await clearAllSessions();
+    //                 resetInitialization();
+    //             }
+    //         }
+    //     };
 
-        handleGoogleLogin();
-    }, [session, sessionStatus, setUserData, resetInitialization, clearAllSessions]);
+    //     handleGoogleLogin();
+    // }, [session, sessionStatus, setUserData, resetInitialization, clearAllSessions]);
 
     const handleBackendRegistration = useCallback(async () => {
         if (googleSession && !isSessionSent && hasInitialized) {
@@ -103,7 +103,7 @@ const HomeView: React.FC = () => {
             if (role_name) {
                 createGoogleSession(session);
             } else {
-                console.warn("No se encontró userRole en localStorage - esperando rol");
+                console.warn("Not found userRole in local storage");
             }
         }
     }, [session, sessionStatus, createGoogleSession, hasInitialized, isSessionSent]);
@@ -115,7 +115,7 @@ const HomeView: React.FC = () => {
     }, [googleSession, handleBackendRegistration, isSessionSent, hasInitialized]);
 
     useEffect(() => {
-        console.log("Estado actual:", {
+        console.log("State currently", {
             sessionStatus,
             hasGoogleSession: !!googleSession,
             isSessionSent,

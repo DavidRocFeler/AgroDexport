@@ -4,6 +4,7 @@ import ClientWrapers from "./ClientWrapers";
 import Header from "@/components/Header";
 import GoogleProviders from "./GoogleProviders";
 import UserProviders from "./UserProoviders";
+import AuthWrapper from "./AuthWrapers";
 
 export const metadata: Metadata = {
   title: "Agro-Dexports",
@@ -18,8 +19,10 @@ export default function RootLayout({children}: Readonly<{children: React.ReactNo
         <UserProviders>
           <GoogleProviders>
             <Header/>
-            <hr className="border-black border-1 "/> 
-            {children}
+            <hr className="border-black border-1 "/>
+            <AuthWrapper>
+              {children}
+            </AuthWrapper>
             <ClientWrapers/>
           </GoogleProviders>
         </UserProviders>

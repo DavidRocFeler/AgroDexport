@@ -7,6 +7,7 @@ import SignUp from "./SignUp";
 import LogIn from "./LogIn";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/store/useUserStore";
+import { signOut } from "next-auth/react";
 
 const Header: React.FC = () => {
     const pathname = usePathname();
@@ -24,7 +25,10 @@ const Header: React.FC = () => {
     const [modalType, setModalType] = React.useState<"login" | "signup" | null>(null);
 
     const handleShowLogIn = () => setModalType("login");
-    const handleShowSignUp = () => setModalType("signup");
+    const handleShowSignUp = () => {
+        signOut({redirect: false});
+        setModalType("signup");
+    }
     const handleCloseModal = () => setModalType(null);
     const handleSwitchModal = (type: "login" | "signup") => setModalType(type);
     

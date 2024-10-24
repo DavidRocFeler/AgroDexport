@@ -9,9 +9,11 @@ import Link from 'next/link';
 import { useUserStore } from '@/store/useUserStore';
 import { logginProps } from '@/helpers/loginHelpers';
 import Swal from 'sweetalert2';
+import { useRouter } from 'next/navigation';
 
 const LogIn: React.FC<ILoginComponentProps> = ({ onCloseLogin, onSwitchToSignUp }) => {
     const setUserData = useUserStore((state) => state.setUserData);
+    const router = useRouter();
    
     const [userData, setUserFormData] = useState<{ 
         email: string; 
@@ -47,18 +49,19 @@ const LogIn: React.FC<ILoginComponentProps> = ({ onCloseLogin, onSwitchToSignUp 
             
             await Swal.fire({
                 title: `Welcome!`,
-                text: `You have successfully logged in.`,
+                text: `Logged in succesfully`,
                 icon: 'success',
                 confirmButtonText: 'OK',
                 allowOutsideClick: false
             });
             
+            router.push("/")
             onCloseLogin();
             
-        } catch (error: any) {
+        } catch (error) {
             await Swal.fire({
                 title: 'Login Error',
-                text: error.message || 'An error occurred during login.',
+                text: 'User not found wrong password',
                 icon: 'error',
                 confirmButtonText: 'OK',
                 allowOutsideClick: false
