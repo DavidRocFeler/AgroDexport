@@ -1,0 +1,172 @@
+.containercomp {
+  	width: 43rem;
+  	border: 1px solid #b6b5b5;
+  	box-sizing: border-box;
+  	height: 50rem;
+    background-color: white;
+}
+.explore {
+  	position: relative;
+  	font-weight: 500;
+}
+.explorewrapper {
+  	background-color: #000;
+  	display: flex;
+  	flex-direction: row;
+  	align-items: center;
+  	justify-content: flex-start;
+  	padding: 1rem 2rem;
+}
+.container1 {
+  	position: absolute;
+  	top: 13rem;
+  	left: 35rem;
+  	border: 1px solid #000;
+  	box-sizing: border-box;
+  	width: 44rem;
+  	height: 58rem;
+  	display: flex;
+  	flex-direction: column;
+  	align-items: center;
+  	justify-content: flex-start;
+  	gap: 1.5rem;
+  	text-align: center;
+  	color: #fff;
+}
+.imgbicon {
+  	width: 18.5rem;
+  	position: relative;
+  	border-radius: 12px;
+  	height: 22.688rem;
+  	overflow: hidden;
+  	flex-shrink: 0;
+  	object-fit: cover;
+}
+.div {
+  	position: relative;
+  	font-weight: 500;
+  	color: rgba(30, 30, 30, 0.5);
+}
+.artificialplantsparent {
+  	display: flex;
+  	flex-direction: column;
+  	align-items: flex-start;
+  	justify-content: flex-start;
+  	gap: 0.437rem;
+}
+
+.button {
+  	display: flex;
+  	flex-direction: column;
+  	align-items: flex-start;
+  	justify-content: flex-start;
+  	gap: 0.437rem;
+}
+.productb {
+  	position: absolute;
+  	top: 43.438rem;
+  	left: 9.75rem;
+  	border: 3px solid #b6b5b5;
+  	box-sizing: border-box;
+  	width: 18.75rem;
+  	display: flex;
+  	flex-direction: column;
+  	align-items: flex-start;
+  	justify-content: flex-start;
+  	gap: 0.75rem;
+}
+.imgicon {
+  	width: 18.625rem;
+  	position: relative;
+  	border-radius: 12px;
+  	height: 22.688rem;
+  	overflow: hidden;
+  	flex-shrink: 0;
+  	object-fit: cover;
+}
+.producta {
+  	position: absolute;
+  	top: 12.75rem;
+  	left: 9.75rem;
+  	border: 3px solid #b6b5b5;
+  	display: flex;
+  	flex-direction: column;
+  	align-items: flex-start;
+  	justify-content: flex-start;
+  	gap: 0.75rem;
+}
+.dropdownchild {
+  	position: absolute;
+  	height: 102.38%;
+  	width: 100.32%;
+  	top: -1.19%;
+  	right: -0.16%;
+  	bottom: -1.19%;
+  	left: -0.16%;
+  	border-radius: 1px;
+  	border: 1px solid #dcdcde;
+  	box-sizing: border-box;
+}
+.dropdownicon {
+  	position: absolute;
+  	height: 41.57%;
+  	width: 5.94%;
+  	top: 35.63%;
+  	right: 3.76%;
+  	bottom: 22.8%;
+  	left: 90.3%;
+  	max-width: 100%;
+  	overflow: hidden;
+  	max-height: 100%;
+  	object-fit: contain;
+}
+.selectcompanie {
+  	position: absolute;
+  	height: 85.51%;
+  	width: 84.51%;
+  	top: 14.25%;
+  	left: 3.53%;
+  	font-weight: 500;
+  	display: inline-block;
+}
+.dropdown {
+  	position: absolute;
+  	top: 6rem;
+  	left: 9.75rem;
+  	width: 19.45rem;
+  	height: 2.631rem;
+  	color: #b6b5b5;
+}
+.cartshop {
+  	position: relative;
+}
+.ordernowand {
+  	position: relative;
+  	font-size: 1.125rem;
+  	font-weight: 500;
+  	color: rgba(30, 30, 30, 0.5);
+}
+.title {
+  	position: absolute;
+  	top: 1.875rem;
+  	left: 30.313rem;
+  	display: flex;
+  	flex-direction: column;
+  	align-items: center;
+  	justify-content: flex-start;
+  	gap: 0.75rem;
+  	font-size: 2rem;
+}
+.container {
+  	width: 100%;
+  	position: relative;
+  	background-color: #fff;
+  	height: 80rem;
+  	overflow: hidden;
+  	text-align: left;
+  	font-size: 1.125rem;
+  	color: #1e1e1e;
+  	font-family: Poppins;
+}
+
+

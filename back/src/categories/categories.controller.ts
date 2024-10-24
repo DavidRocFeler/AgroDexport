@@ -1,12 +1,13 @@
 import { Body, Controller, Get, HttpCode, Post } from "@nestjs/common";
 import { CategoriesService } from "./categories.service";
 import { CreateCategoryDto } from "./createCategory.dto";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiExcludeEndpoint, ApiTags } from "@nestjs/swagger";
 
 @ApiTags("Categories")
 @Controller("categories")
 export class CategoriesController {
     constructor(private readonly categoriesService: CategoriesService) {}
+
 
     @HttpCode(200)
     @Get()
@@ -14,6 +15,7 @@ export class CategoriesController {
         return this.categoriesService.getCategoriesService();
     }
 
+    @ApiExcludeEndpoint()
     @Post("sedeer")
     async preloadCategories(@Body() categoryData: CreateCategoryDto){
         return this.categoriesService.preloadCategoriesService();

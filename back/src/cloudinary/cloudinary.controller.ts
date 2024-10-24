@@ -1,21 +1,29 @@
-import { Controller, Param, ParseUUIDPipe, Post, UploadedFiles, UseInterceptors, MaxFileSizeValidator, FileTypeValidator } from "@nestjs/common";
+import { Controller, Param, ParseUUIDPipe, Post, UploadedFiles, UseInterceptors, MaxFileSizeValidator, FileTypeValidator, UploadedFile, ParseFilePipe, HttpCode, UseGuards, BadRequestException } from "@nestjs/common";
 import { CloudinaryService } from "./cloudinary.service";
-import { FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
-import { ApiTags, ApiParam, ApiConsumes, ApiBody } from "@nestjs/swagger";
+import { FileFieldsInterceptor, FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
+import { ApiTags, ApiParam, ApiConsumes, ApiBody, ApiBearerAuth } from "@nestjs/swagger";
 import { Express } from 'express';
+import { Roles } from '../decorators/roles.decorator';
+import { AuthGuard } from '../guards/auth.guard';
+import { RolesGuard } from '../guards/RolesGuard';
 
 @ApiTags("Cloudinary")
 @Controller()
 export class CloudinaryController {
   constructor(private readonly cloudinaryService: CloudinaryService) {}
 
+
+  @ApiBearerAuth()
+  @HttpCode(200)
   @Post('/uploadImage/:type/:id')
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('admin', 'supplier', 'buyer')
   @UseInterceptors(FileInterceptor('image'))
   @ApiParam({ name: 'type', description: 'Tipo de imagen (user, companyLogo, companyProduct)', type: 'string' })
   @ApiParam({ name: 'id', description: 'ID del recurso al cual asociar la imagen', type: 'string' })
   @ApiConsumes('multipart/form-data')
   @ApiBody({
-    description: 'Archivo de imagen (JPG, PNG, o WEBP y menor a 200KB)',
+    description: 'Archivo de imagen (JPG, PNG, o WEBP y menor a 300KB)',
     required: true,
     schema: {
       type: 'object',
@@ -30,41 +38,155 @@ export class CloudinaryController {
   async uploadImage(
     @Param('type') type: string,
     @Param('id', new ParseUUIDPipe()) id: string,
-    @UploadedFiles() file: Express.Multer.File,
+    @UploadedFile(
+        new ParseFilePipe({
+            validators: [
+              new MaxFileSizeValidator({
+                maxSize: 300000, // 300KB
+                message: 'El archivo debe ser menor a 300KB',
+              }),
+              new FileTypeValidator({
+                fileType: /(jpg|jpeg|png|webp)$/, // Solo imágenes JPG, PNG, o WEBP
+              }),
+            ],
+          }),
+    ) file: Express.Multer.File,
   ) {
     return this.cloudinaryService.uploadFile(id, file, type);
   }
 
-  @Post('/uploadDocuments/:id')
-  @UseInterceptors(FilesInterceptor('documents', 5)) // Para recibir múltiples archivos
-  @ApiParam({ name: 'id', description: 'ID del recurso al cual asociar los documentos', type: 'string' })
+
+
+
+
+  @ApiBearerAuth()
+  @HttpCode(200)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('admin', 'supplier')
+@Post(':companyId/:companyProductId')
+@UseInterceptors(FileFieldsInterceptor([
+  { name: 'phytosanitary_certificate', maxCount: 1 },
+  { name: 'agricultural_producer_cert', maxCount: 1 },
+  { name: 'organic_certification', maxCount: 1 },
+  { name: 'quality_certificate', maxCount: 1 },
+  { name: 'certificate_of_origin', maxCount: 1 },
+]))
+@ApiParam({ name: 'companyId', description: 'ID of the company', type: 'string' })
+@ApiParam({ name: 'companyProductId', description: 'ID of the product', type: 'string' })
+@ApiConsumes('multipart/form-data')
+@ApiBody({
+  description: 'Upload specific documents (PDF, DOCX, images) to Cloudinary',
+  required: true,
+  schema: {
+    type: 'object',
+    properties: {
+      phytosanitary_certificate: { type: 'string', format: 'binary' },
+      agricultural_producer_cert: { type: 'string', format: 'binary' },
+      organic_certification: { type: 'string', format: 'binary' },
+      quality_certificate: { type: 'string', format: 'binary' },
+      certificate_of_origin: { type: 'string', format: 'binary' },
+    },
+  },
+})
+async uploadDocuments(
+  @Param('companyId') companyId: string,
+  @Param('companyProductId') companyProductId: string,
+  @UploadedFiles() files: {
+    phytosanitary_certificate?: Express.Multer.File[],
+    agricultural_producer_cert?: Express.Multer.File[],
+    organic_certification?: Express.Multer.File[],
+    quality_certificate?: Express.Multer.File[],
+    certificate_of_origin?: Express.Multer.File[],
+  },
+) {
+  // Verificar si se ha subido al menos un archivo
+  const uploadedFiles = Object.values(files).flat().filter(file => file);
+  if (uploadedFiles.length === 0) {
+    throw new BadRequestException('No files were uploaded.');
+  }
+
+  // Crear un fileMap usando los nombres de archivo especificados
+  const fileMap: Record<string, Express.Multer.File> = {};
+  if (files.phytosanitary_certificate?.[0]) {
+    fileMap['phytosanitary_certificate'] = files.phytosanitary_certificate[0];
+  }
+  if (files.agricultural_producer_cert?.[0]) {
+    fileMap['agricultural_producer_cert'] = files.agricultural_producer_cert[0];
+  }
+  if (files.organic_certification?.[0]) {
+    fileMap['organic_certification'] = files.organic_certification[0];
+  }
+  if (files.quality_certificate?.[0]) {
+    fileMap['quality_certificate'] = files.quality_certificate[0];
+  }
+  if (files.certificate_of_origin?.[0]) {
+    fileMap['certificate_of_origin'] = files.certificate_of_origin[0];
+  }
+
+  console.log("Archivos recibidos:", fileMap);
+
+  const fileUrls = await this.cloudinaryService.uploadMultipleFiles(companyId, companyProductId, fileMap);
+
+  const savedCertification = await this.cloudinaryService.saveUrlsToDatabase(
+    companyId,
+    companyProductId,
+    fileUrls,
+  );
+
+  return {
+    message: 'Files uploaded and certification saved successfully!',
+    data: savedCertification,
+  };
+}
+
+
+  
+  
+  
+  
+
+  @ApiBearerAuth()
+  @HttpCode(200)
+  @Post('/uploadImageFront')
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('admin') 
+  @UseInterceptors(FileInterceptor('image'))
   @ApiConsumes('multipart/form-data')
   @ApiBody({
-    description: 'Archivos de documentos (PDF, DOCX, o imágenes JPG, PNG) hasta 2MB cada uno',
-    required: true,
-    schema: {
-      type: 'object',
-      properties: {
-        phytosanitary_certificate: { type: 'string', format: 'binary' },
-        agricultural_producer_cert: { type: 'string', format: 'binary' },
-        organic_certification: { type: 'string', format: 'binary'},
-        quality_certificate: { type: 'string', format: 'binary' },
-        certificate_of_origin: { type: 'string', format: 'binary' },
+      description: 'Image file (any type, validated to ensure it is an image)',
+      required: true,
+      schema: {
+          type: 'object',
+          properties: {
+              image: { 
+                  type: 'string', 
+                  format: 'binary' 
+              },
+          },
       },
-    },
   })
-  async uploadDocuments(
-    @Param('id', new ParseUUIDPipe()) id: string,
-    @UploadedFiles() files: Express.Multer.File[],
+  async uploadImageFront(
+      @UploadedFile(
+          new ParseFilePipe({
+              validators: [
+                  new MaxFileSizeValidator({
+                      maxSize: 5000000, 
+                      message: 'File must be smaller than 5MB',
+                  }),
+                  new FileTypeValidator({
+                      fileType: /(jpg|jpeg|png|webp|gif|bmp|tiff|svg)$/, 
+                  }),
+              ],
+          }),
+      ) file: Express.Multer.File,
   ) {
-    const fileMap = {
-      phytosanitary_certificate: files.find(file => file.fieldname === 'phytosanitary_certificate'),
-      agricultural_producer_cert: files.find(file => file.fieldname === 'agricultural_producer_cert'),
-      organic_certification: files.find(file => file.fieldname === 'organic_certification'),
-      quality_certificate: files.find(file => file.fieldname === 'quality_certificate'),
-      certificate_of_origin: files.find(file => file.fieldname === 'certificate_of_origin'),
-    };
+      const secureUrl = await this.cloudinaryService.uploadFileToFolder(file); 
+      
 
-    return this.cloudinaryService.uploadMultipleFiles(id, fileMap);
+      return {
+          success: true,
+          message: 'Image uploaded successfully.',
+          secureUrl, 
+      };
   }
 }

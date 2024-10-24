@@ -1,0 +1,396 @@
+ .header1 {
+  	align-self: stretch;
+  	position: relative;
+  	box-shadow: 0px 24px 34px rgba(174, 10, 10, 0.45);
+  	border-radius: 20px 20px 0px 0px;
+  	background-color: #4361ee;
+  	height: 88px;
+  	overflow: hidden;
+  	flex-shrink: 0;
+  	z-index: 0;
+}
+.logoIcon {
+  	width: 48px;
+  	position: relative;
+  	border-radius: 53.33px;
+  	height: 48px;
+}
+.starklyai {
+  	position: absolute;
+  	top: 0%;
+  	left: 0%;
+}
+.brandName {
+  	width: 118px;
+  	position: relative;
+  	height: 29px;
+}
+.online {
+  	position: absolute;
+  	top: 0%;
+  	left: 21.74%;
+}
+.statusChild {
+  	position: absolute;
+  	height: 53.33%;
+  	width: 17.39%;
+  	top: 33.33%;
+  	right: 82.61%;
+  	bottom: 13.33%;
+  	left: 0%;
+  	border-radius: 50%;
+  	background-color: #43ee7d;
+}
+.status {
+  	width: 46px;
+  	position: relative;
+  	height: 15px;
+  	font-size: 12px;
+  	color: #43ee7d;
+}
+.leftSide {
+  	display: flex;
+  	flex-direction: column;
+  	align-items: flex-start;
+  	justify-content: center;
+}
+.logoParent {
+  	display: flex;
+  	flex-direction: row;
+  	align-items: center;
+  	justify-content: flex-start;
+  	gap: 9px;
+}
+.icons {
+  	width: 24px;
+  	position: relative;
+  	height: 24px;
+}
+.editHeaderContent {
+  	width: 352px;
+  	margin: 0 !important;
+  	position: absolute;
+  	top: 24px;
+  	left: 24px;
+  	height: 42px;
+  	display: flex;
+  	flex-direction: row;
+  	align-items: center;
+  	justify-content: space-between;
+  	min-height: 42px;
+  	z-index: 1;
+}
+.header {
+  	width: 400px;
+  	height: 88px;
+  	overflow: hidden;
+  	flex-shrink: 0;
+  	display: flex;
+  	flex-direction: column;
+  	align-items: flex-start;
+  	justify-content: flex-start;
+  	position: relative;
+  	gap: 10px;
+  	z-index: 0;
+}
+.rapidlyBuildStunning {
+  	margin: 0;
+}
+.helloSystemMessageContainer {
+  	flex: 1;
+  	position: relative;
+}
+.messages {
+  	flex: 1;
+  	display: flex;
+  	flex-direction: row;
+  	align-items: flex-end;
+  	justify-content: flex-end;
+  	z-index: 0;
+}
+.bubbleSenderChild {
+  	width: 45px;
+  	position: absolute;
+  	margin: 0 !important;
+  	bottom: -21px;
+  	left: 0px;
+  	border-radius: 3px;
+  	height: 34px;
+  	z-index: 1;
+}
+.timestamp {
+  	width: 20px;
+  	position: relative;
+  	height: 7px;
+}
+.timestampWrapper {
+  	margin: 0 !important;
+  	position: absolute;
+  	bottom: -18px;
+  	left: 32px;
+  	display: flex;
+  	flex-direction: row;
+  	align-items: flex-end;
+  	justify-content: flex-start;
+  	z-index: 2;
+  	font-size: 10px;
+  	color: #888;
+}
+.bubbleSender {
+  	align-self: stretch;
+  	box-shadow: 0px 2px 1px rgba(0, 0, 0, 0.05);
+  	border-radius: 12px 12px 12px 0px;
+  	background-color: #3c096c;
+  	display: flex;
+  	flex-direction: row;
+  	align-items: flex-end;
+  	justify-content: flex-start;
+  	padding: 16px 16px 32px 20px;
+  	position: relative;
+  	gap: 10px;
+  	z-index: 0;
+}
+.vuesaxoutlineclipboardTextIcon {
+  	width: 16px;
+  	position: relative;
+  	height: 16px;
+}
+.icons1 {
+  	border-radius: 8px;
+  	background-color: #7b2cbf;
+  	display: flex;
+  	flex-direction: row;
+  	align-items: flex-start;
+  	justify-content: flex-start;
+  	padding: 4px;
+  	gap: 8px;
+}
+.copyLikeDislike {
+  	margin: 0 !important;
+  	position: absolute;
+  	right: 16px;
+  	bottom: 8px;
+  	display: flex;
+  	flex-direction: row;
+  	align-items: flex-start;
+  	justify-content: flex-start;
+  	padding: 0px 20px;
+  	z-index: 1;
+}
+.logoIcon1 {
+  	width: 48px;
+  	position: absolute;
+  	margin: 0 !important;
+  	bottom: -29.5px;
+  	left: 0px;
+  	border-radius: 80px;
+  	height: 48px;
+  	z-index: 2;
+}
+.systemMessage {
+  	align-self: stretch;
+  	display: flex;
+  	flex-direction: column;
+  	align-items: flex-start;
+  	justify-content: flex-end;
+  	padding: 0px 20px 20px;
+  	position: relative;
+  	gap: 7px;
+}
+.bubbleSenderItem {
+  	width: 45px;
+  	position: absolute;
+  	margin: 0 !important;
+  	bottom: -21px;
+  	left: 244px;
+  	border-radius: 3px;
+  	height: 34px;
+  	object-fit: contain;
+  	z-index: 1;
+}
+.bubbleSender1 {
+  	width: 289px;
+  	box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.2);
+  	border-radius: 12px 12px 0px 12px;
+  	background-color: #dee2e6;
+  	display: flex;
+  	flex-direction: row;
+  	align-items: flex-start;
+  	justify-content: flex-end;
+  	padding: 16px 16px 32px 20px;
+  	box-sizing: border-box;
+  	position: relative;
+  	gap: 10px;
+  	z-index: 0;
+}
+.timestampContainer {
+  	margin: 0 !important;
+  	position: absolute;
+  	bottom: 24px;
+  	left: 67px;
+  	display: flex;
+  	flex-direction: row;
+  	align-items: flex-end;
+  	justify-content: flex-start;
+  	z-index: 1;
+  	font-size: 10px;
+  	color: #888;
+}
+.checkIcon {
+  	width: 14.5px;
+  	position: absolute;
+  	margin: 0 !important;
+  	bottom: 22.5px;
+  	left: 91px;
+  	height: 8.5px;
+  	object-fit: cover;
+  	z-index: 2;
+}
+.avatars48x48 {
+  	width: 48px;
+  	position: absolute;
+  	margin: 0 !important;
+  	right: -1px;
+  	bottom: -18px;
+  	height: 48px;
+  	object-fit: cover;
+  	z-index: 3;
+}
+.userMessage {
+  	align-self: stretch;
+  	display: flex;
+  	flex-direction: column;
+  	align-items: flex-end;
+  	justify-content: flex-end;
+  	padding: 0px 12px 40px 20px;
+  	position: relative;
+  	gap: 7px;
+  	color: #444;
+}
+.checkIcon1 {
+  	width: 14.5px;
+  	position: absolute;
+  	margin: 0 !important;
+  	bottom: 22.5px;
+  	left: 91px;
+  	height: 8.5px;
+  	object-fit: cover;
+  	opacity: 0.72;
+  	z-index: 2;
+}
+.transcript {
+  	width: 400px;
+  	flex: 1;
+  	background-color: #f8f9fa;
+  	overflow-y: auto;
+  	display: flex;
+  	flex-direction: column;
+  	align-items: center;
+  	justify-content: flex-end;
+  	padding: 24px;
+  	box-sizing: border-box;
+  	gap: 24px;
+  	z-index: 1;
+  	font-size: 15px;
+}
+.tagMainComponent {
+  	position: relative;
+  	font-weight: 600;
+  	opacity: 0.9;
+}
+.tags {
+  	flex: 1;
+  	box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.12);
+  	border-radius: 10px;
+  	background-color: #f3f5f6;
+  	display: flex;
+  	flex-direction: row;
+  	align-items: center;
+  	justify-content: flex-start;
+  	padding: 6px 16px;
+}
+.tags1 {
+  	box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.12);
+  	border-radius: 10px;
+  	background-color: #f3f5f6;
+  	display: flex;
+  	flex-direction: row;
+  	align-items: center;
+  	justify-content: flex-start;
+  	padding: 6px 16px;
+}
+.tagContainer {
+  	align-self: stretch;
+  	display: flex;
+  	flex-direction: row;
+  	align-items: flex-start;
+  	justify-content: flex-start;
+  	gap: 8px;
+}
+.typeYourMessage {
+  	position: relative;
+}
+.textArea {
+  	align-self: stretch;
+  	border-radius: 16px;
+  	background-color: #e8ebf0;
+  	border-top: 1px solid #f3f5f6;
+  	overflow: hidden;
+  	display: flex;
+  	flex-direction: row;
+  	align-items: flex-start;
+  	justify-content: flex-start;
+  	padding: 20px 22px;
+  	gap: 75px;
+  	font-size: 18px;
+}
+.footer4 {
+  	align-self: stretch;
+  	box-shadow: 0px -4px 16px rgba(0, 0, 0, 0.08);
+  	border-radius: 0px 0px 20px 20px;
+  	background-color: #fff;
+  	display: flex;
+  	flex-direction: column;
+  	align-items: flex-start;
+  	justify-content: flex-start;
+  	padding: 16px;
+  	gap: 6px;
+  	z-index: 2;
+  	font-size: 12px;
+  	color: #444;
+}
+.shadow {
+  	width: 400px;
+  	position: absolute;
+  	margin: 0 !important;
+  	top: 88px;
+  	left: 0px;
+  	background: linear-gradient(0deg, rgba(217, 217, 217, 0), rgba(0, 0, 0, 0.24));
+  	height: 28px;
+  	z-index: 3;
+}
+.chatContainer {
+  	position: absolute;
+  	top: 0px;
+  	left: 0px;
+  	height: 750px;
+  	display: flex;
+  	flex-direction: column;
+  	align-items: flex-start;
+  	justify-content: space-between;
+}
+.previewPane {
+  	width: 100%;
+  	position: relative;
+  	height: 750px;
+  	overflow: hidden;
+  	text-align: left;
+  	font-size: 24px;
+  	color: #fff;
+  	font-family: Inter;
+	margin-left: 35%;
+	
+} 
+
+
+

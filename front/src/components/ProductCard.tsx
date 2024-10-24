@@ -4,7 +4,7 @@ import { productsToPreLoad } from '@/helpers/preLoadProducts';
 
 const ProductCard: React.FC = () => {
   return (
-    <div className="grid grid-cols-1 mx-12 *:md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <div className="grid grid-cols-2 mx-12 md:grid-cols-3 lg:grid-cols-4 gap-6">
       {productsToPreLoad.map((product, index) => (
         <div key={index} className="border p-4 rounded shadow-lg">
           <img src={product.images[0]} alt={product.name} className="w-full h-48 object-cover mb-4 rounded" />
@@ -25,43 +25,3 @@ const ProductCard: React.FC = () => {
 
 export default ProductCard;
 
-
-// import { productsToPreLoad } from '@/helpers/preLoadProducts'
-// import React from 'react'
-
-// interface IProduct {
-//   imageUrl: string;
-//   name: string;
-//   description: string;
-//   price: number;
-// }
-
-// return (
-//     const ProductCard : IProduct[] = () => {
-//     <>
-//     <div>tarjeta del producto</div>
-//     <div className=" min-h-80 flex flex-col items-center justify-center">
-//     <div className="flex">
-//       {productsToPreLoad.map((el, i) => (
-//         <div key={i} className="flex items-start mx-5 flex-wrap">
-//           <ProductCard
-//             id={el.id}
-//             name={el.name}
-//             imageUrl={el.imageUrl}
-//             price={el.price}
-//             description={el.description}
-//             stock={el.stock}
-//             categoryId={el.categoryId}
-//             />
-//           <button className=" cursor-pointer bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded mt-3" onClick={() => handleDelete(el.id)}>X</button>
-//         </div>
-//       ))}
-//     </div>
-//     {productsToPreLoad.length ? <button className=" cursor-pointer bg-gray-300 hover:bg-orange-400 text-gray-800 font-bold py-2 px-4 rounded mt-3 mb-5" onClick={handleCheckout}>Checkout</button> : <p>Your car is empty</p>}
-    
-//   </div>
-//       </>
-//   )
-// }
-
-// export default ProductCard

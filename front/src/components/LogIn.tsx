@@ -1,13 +1,72 @@
+"use client"
 import React from 'react';
+import { useState } from 'react';
 import { ILoginComponentProps } from '@/interface/types';
 import styles from "../styles/LogSign.module.css";
 import { FaGoogle, FaApple, FaEnvelope } from 'react-icons/fa';
 import { signIn } from "next-auth/react";
 import Link from 'next/link';
+import { useUserStore } from '@/store/useUserStore';
+import { logginProps } from '@/helpers/loginHelpers';
+import Swal from 'sweetalert2';
+import { useRouter } from 'next/navigation';
 
 const LogIn: React.FC<ILoginComponentProps> = ({ onCloseLogin, onSwitchToSignUp }) => {
+    const setUserData = useUserStore((state) => state.setUserData);
+    const router = useRouter();
+   
+    const [userData, setUserFormData] = useState<{ 
+        email: string; 
+        password: string 
+    }>({ 
+        email: "", 
+        password: "" 
+    });
+
     const handleModalClose = () => {
         onCloseLogin();
+    };
+
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = event.target;
+        setUserFormData({
+            ...userData,
+            [name]: value
+        })
+    }
+
+    const handleOnSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        
+        try {
+            const response = await logginProps(userData);
+            
+            // backend response
+            const { user_id, token, role_name } = response;
+            
+            // Actualize the global status 
+            setUserData(user_id, token, role_name);
+            
+            await Swal.fire({
+                title: `Welcome!`,
+                text: `Logged in succesfully`,
+                icon: 'success',
+                confirmButtonText: 'OK',
+                allowOutsideClick: false
+            });
+            
+            router.push("/")
+            onCloseLogin();
+            
+        } catch (error) {
+            await Swal.fire({
+                title: 'Login Error',
+                text: 'User not found wrong password',
+                icon: 'error',
+                confirmButtonText: 'OK',
+                allowOutsideClick: false
+            });
+        }
     };
 
     return (
@@ -15,14 +74,26 @@ const LogIn: React.FC<ILoginComponentProps> = ({ onCloseLogin, onSwitchToSignUp 
             <button onClick={handleModalClose} className='border-[2px] border-solid border-black pr-[0.5rem] pl-[0.5rem]'> x </button>
             <div className="flex flex-col">
             <h1 className={styles.Title}>Log in Agro Dexports</h1>
-                <form action="" className='flex flex-col w-[40%] m-auto mb-[3rem] '>
-                    <input className={styles.Email} type="email" placeholder='Email address' />
-                    <input className={styles.Password} type="password" placeholder='Password'/>
+                <form action="" className='flex flex-col w-[40%] m-auto mb-[3rem]' onSubmit={handleOnSubmit}>
+                    <input className={styles.CommonInput}
+                    onChange={handleChange}
+                    name='email'
+                    value={userData.email} 
+                    type="email" 
+                    autoComplete="current-password"
+                    placeholder='Email address' />
+                    <input className={styles.Password}
+                    onChange={handleChange}
+                    name='password'
+                    value={userData.password} 
+                    type="password" 
+                    autoComplete="current-password"
+                    placeholder='Password'/>
                     <Link className={styles.ForgotPassword} href="/help"> Forgot password? </Link>
                     <button className={styles.ButtonLogin}> Continue </button>
                 </form>
                 <p className={styles.OR}> ------------------- OR -------------------</p>
-                <button className={styles.ButtonGoogle} onClick={() => signIn("google")}>
+                <button className={styles.ButtonGoogle}  onClick={() => signIn("google")}>
                     <FaGoogle />
                     <p className="ml-[1rem]">Log in with Google</p>
                 </button>
@@ -49,3 +120,6 @@ const LogIn: React.FC<ILoginComponentProps> = ({ onCloseLogin, onSwitchToSignUp 
 };
 
 export default LogIn;
+
+
+

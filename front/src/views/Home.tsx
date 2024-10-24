@@ -1,8 +1,130 @@
+"use client"
 import React from "react";
 import Link from "next/link";
 import styles from "../styles/Home.module.css"
+import { useEffect, useCallback } from "react";
+import { useSession, signOut } from "next-auth/react";
+import { registerAuthProps } from "@/helpers/signUpHelpers";
+import { useAuthThirdStore } from "@/store/useAuthThirdStore";
+import Swal from "sweetalert2";
+import { useUserStore } from "@/store/useUserStore";
+import { logginAuthProps } from "@/helpers/loginHelpers";
 
 const HomeView: React.FC = () => {
+    const { 
+        googleSession, 
+        createGoogleSession, 
+        clearAllSessions,
+        isSessionSent,
+        hasInitialized,
+        resetInitialization, 
+        setSessionSent 
+    } = useAuthThirdStore();
+    // const { setUserData } = useUserStore();
+    const { data: session, status: sessionStatus } = useSession();
+    
+    // useEffect(() => {
+    //     const handleGoogleLogin = async () => {
+    //         if (sessionStatus === 'authenticated' && session?.user?.email && session?.user?.name) {
+    //             try {
+    //                 // Preparar datos para enviar al backendnew 
+    //                 const googleData = {
+    //                     email: session.user.email,
+    //                     name: session.user.name
+    //                 };
+
+    //                 // Enviar datos al backend a través de loginProps
+    //                 const response = await logginAuthProps(googleData);
+                    
+    //                 // Extraer datos de la respuesta
+    //                 const { user_id, token, role_name } = response;
+                    
+    //                 // Actualizar el estado global del usuario
+    //                 setUserData(user_id, token, role_name);
+                    
+    //                 await Swal.fire({
+    //                     icon: "success",
+    //                     title: "Success",
+    //                     text: "Google login successful",
+    //                     width: 400,
+    //                     padding: "3rem",
+    //                 });
+                    
+    //             } catch (error) {
+    //                 console.error("Error in back login:", error);
+    //                 await Swal.fire({
+    //                     icon: "error",
+    //                     title: "Error",
+    //                     text: "You need to register first",
+    //                     width: 400,
+    //                     padding: "3rem",
+    //                 });
+    //             } finally {
+    //                 await clearAllSessions();
+    //                 resetInitialization();
+    //             }
+    //         }
+    //     };
+
+    //     handleGoogleLogin();
+    // }, [session, sessionStatus, setUserData, resetInitialization, clearAllSessions]);
+
+    const handleBackendRegistration = useCallback(async () => {
+        if (googleSession && !isSessionSent && hasInitialized) {
+            try {
+                setSessionSent(true);
+                
+                await registerAuthProps(googleSession);
+                
+                // Si el registro fue exitoso, limpiar todas las sesiones
+                await clearAllSessions();
+                
+                await Swal.fire({
+                    icon: "success",
+                    title: "Success",
+                    text: "Session registered successfully",
+                    width: 400,
+                    padding: "3rem",
+                });
+                
+            } catch (error) {
+                console.error("Error in backend registration:", error);
+                // Los errores se manejan en registerAuthProps
+            } finally {
+                await clearAllSessions();
+                resetInitialization();
+            }
+        }
+    }, [googleSession, isSessionSent, clearAllSessions, setSessionSent, hasInitialized, resetInitialization]);
+
+    useEffect(() => {
+        if (sessionStatus === 'authenticated' && session && !hasInitialized && !isSessionSent) {
+            const role_name = localStorage.getItem("userRole");
+            if (role_name) {
+                createGoogleSession(session);
+            } else {
+                console.warn("Not found userRole in local storage");
+            }
+        }
+    }, [session, sessionStatus, createGoogleSession, hasInitialized, isSessionSent]);
+
+    useEffect(() => {
+        if (googleSession && !isSessionSent && hasInitialized) {
+            handleBackendRegistration();
+        }
+    }, [googleSession, handleBackendRegistration, isSessionSent, hasInitialized]);
+
+    useEffect(() => {
+        console.log("State currently", {
+            sessionStatus,
+            hasGoogleSession: !!googleSession,
+            isSessionSent,
+            hasInitialized,
+            role: localStorage.getItem("userRole")
+        });
+    }, [sessionStatus, googleSession, isSessionSent, hasInitialized]);
+
+
     return(
         <main style={{background: "#d8fba7", paddingTop: "5rem", paddingLeft: "5rem", paddingBottom: "8rem"}}>
             <div>

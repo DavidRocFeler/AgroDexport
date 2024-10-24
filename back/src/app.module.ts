@@ -14,14 +14,39 @@ import { PaymentsModule } from './payments/payments.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { TasksModule } from './tasks/tasks.module';
-import { EmailsModule } from './emails/emails.module';
 import { FarmerCertificationsModule } from './farmer-certifications/farmer-certifications.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { SupplyChainModule } from './supply-chain/supply-chain.module';
+import { JwtModule } from "@nestjs/jwt"
+import { PreloadService } from './preloadService';
+import { EmailModule } from './nodemail/nodemail.module';
 
 @Module({
-  imports: [AuthModule, RolesModule, UsersModule, CompaniesModule, AddressesModule, CompanyProductsModule, CategoriesModule, DiscountsModule, OrdersModule, PaymentsModule, CloudinaryModule, NotificationsModule, TasksModule, EmailsModule, FarmerCertificationsModule, PrismaModule, SupplyChainModule],
+  imports: [
+    AuthModule, 
+    RolesModule, 
+    UsersModule, 
+    CompaniesModule, 
+    AddressesModule, 
+    CompanyProductsModule, 
+    CategoriesModule, 
+    DiscountsModule, 
+    OrdersModule, 
+    PaymentsModule, 
+    CloudinaryModule, 
+    NotificationsModule, 
+    TasksModule, 
+    EmailModule, 
+    FarmerCertificationsModule, 
+    PrismaModule, 
+    SupplyChainModule,
+    JwtModule.register({
+      global: true,
+      signOptions: { expiresIn: "1h" },
+      secret: process.env.JWT_SECRET,
+    }),
+  ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, PreloadService],
 })
 export class AppModule {}
