@@ -55,8 +55,14 @@ export class CloudinaryController {
     return this.cloudinaryService.uploadFile(id, file, type);
   }
 
-  // @ApiBearerAuth()
+
+
+
+
+  @ApiBearerAuth()
   @HttpCode(200)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('admin', 'supplier')
 @Post(':companyId/:companyProductId')
 @UseInterceptors(FileFieldsInterceptor([
   { name: 'phytosanitary_certificate', maxCount: 1 },
