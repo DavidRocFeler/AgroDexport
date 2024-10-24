@@ -5,25 +5,21 @@ import React, { useState } from 'react';
 import styles from "../styles/UserPanel.module.css";
 import SupplyChainComponent from '@/components/SupplyChainComponent';
 import { supplyChainArray } from '@/helpers/supplyChain.helpers';
-import { INotificationsProps, ISupplyChainProps } from '@/interface/types';
+import { ISupplyChainProps } from '@/interface/types';
 import ProtectedRoute from '@/app/ProtectedRoute';
 import { useUserStore } from '@/store/useUserStore'; // Asegúrate de importar el hook para acceder al estado global
 import NotificationsModal from '@/components/NotificationsModal';
 
-const PanelUserView: React.FC<INotificationsProps> = ({isVisible, onClose}) => {
+const PanelUserView: React.FC = () => {
   const supplyChain: ISupplyChainProps[] = supplyChainArray;
   const { role_name } = useUserStore();
   const [isHydrated, setIsHydrated] = React.useState(false);
 
-  const [ modalNotificationsType, setModalNotificationsType ] = useState(false);
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  
   React.useEffect(() => {
     setIsHydrated(true);
   }, []);
-
-  const hanndleShowNotifications = () => {
-    setModalNotificationsType(!modalNotificationsType)
-  }
 
     if (!isHydrated) {
       return (
@@ -34,7 +30,7 @@ const PanelUserView: React.FC<INotificationsProps> = ({isVisible, onClose}) => {
               <button>
                 <MessageCircle/>
               </button>
-              <button onClick={hanndleShowNotifications} className='ml-[1rem] '>
+              <button className='ml-[1rem] '>
                 <Bell/>
               </button>
             </aside>
@@ -62,7 +58,7 @@ const PanelUserView: React.FC<INotificationsProps> = ({isVisible, onClose}) => {
             <button>
               <MessageCircle/>
             </button>
-            <button onClick={hanndleShowNotifications} className='ml-[1rem] '>
+            <button onClick={() => setIsModalOpen(true)} className='ml-[1rem] '>
               <Bell/>
             </button>
           </aside>
@@ -72,7 +68,7 @@ const PanelUserView: React.FC<INotificationsProps> = ({isVisible, onClose}) => {
             <button className={styles.ButtonHistory}> History </button>
           </aside>
           <nav className='flex flex-row justify-center'>
-            <Link className={styles.RedirectPanel} href="/supplychain"> Order Status </Link>
+            <Link className={styles.RedirectPanel} href="/orderstatus"> Order Status </Link>
             {role_name === "supplier" ? (
               <Link className={styles.RedirectPanel} href="/myproducts"> My products </Link>
             ) : (
@@ -94,8 +90,11 @@ const PanelUserView: React.FC<INotificationsProps> = ({isVisible, onClose}) => {
           ))}
         </div>
       </section>
-      {modalNotificationsType && (
-        <NotificationsModal isVisible={modalNotificationsType} onClose={hanndleShowNotifications}/>
+      {isModalOpen && (
+        <NotificationsModal 
+        isVisible={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+    />
       )}
     </ProtectedRoute>
   );

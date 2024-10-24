@@ -1,0 +1,42 @@
+/* Notifications.module.css */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 100%; /* Esto lo coloca justo fuera de la vista, en el lado derecho */
+    width: 400px;
+    height: 100vh;
+    background: white;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+    z-index: 1000;
+}
+
+.modalVisible {
+    transform: translateX(-100%); /* Esto lo mueve hacia la izquierda exactamente su ancho */
+}
+
+.modalHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+    border-bottom: 1px solid #eaeaea;
+}
+
+.modalTitle {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+.modalCloseButton {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 4px 8px;
+}
+
+.modalContent {
+    padding: 16px;
+}

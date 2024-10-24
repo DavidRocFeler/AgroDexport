@@ -18,6 +18,7 @@ export const logginProps = async ( userData: ILogin ) => {
             Swal.fire({
                 icon: "error",
                 title: "Error",
+                text: "User not found",
                 width: 400,
                 padding: "3rem",
                 customClass: {
@@ -47,6 +48,7 @@ export const logginAuthProps = async ( userData: ILoginAuth ) => {
             Swal.fire({
                 icon: "error",
                 title: "Error",
+                text: "You need to register first",
                 width: 400,
                 padding: "3rem",
                 customClass: {
@@ -54,7 +56,6 @@ export const logginAuthProps = async ( userData: ILoginAuth ) => {
                 }
             });
         }
-        throw new Error("Failed Logged")
     } catch (error: any) {
         throw new Error(error)
     }

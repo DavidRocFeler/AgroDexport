@@ -1,21 +1,57 @@
+"use client"
+import React, { useState } from 'react';
+import styles from '../styles/Notifications.module.css';
 import { INotificationsProps } from '@/interface/types';
-import React from 'react'
+import { useEffect } from 'react';
 
-const NotificationsModal: React.FC<INotificationsProps> = ({isVisible, onClose}) => {
-  return (
-    <div
-      className={`fixed top-0 right-0 h-full w-[30%] bg-white shadow-lg transition-transform duration-300 transform ${
-        isVisible ? "translate-x-0" : "translate-x-full"
-      }`}
-    >
-      <div className="flex items-center justify-between p-4 border-b">
-        <h2 className="text-lg font-semibold">Welcome Notifications</h2>
-        <button onClick={onClose} className="text-gray-600 hover:text-gray-800">
-          Close
-        </button>
-      </div>
-    </div>
-  )
-}
+const NotificationsModal: React.FC<INotificationsProps> = ({ isVisible, onClose }) => {
+  const [ modalVisible, setModalVisible ] = useState(true);
+  useEffect(() => {
+    if (isVisible) {
+        setModalVisible(true)
+        console.log("Modal is now visible");
+    } else {
+        console.log("Modal is now hidden");
+    }
+}, [isVisible]);
+
+    return (
+        <>
+            {/* Overlay/Fondo oscuro */}
+            <div 
+                style={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                    opacity: isVisible ? 1 : 0,
+                    transition: 'opacity 0.3s ease',
+                    visibility: isVisible ? 'visible' : 'hidden',
+                    zIndex: 999,
+                }}
+                onClick={onClose}
+            />
+            
+            {/* Modal */}
+            <div className={`${styles.modal} ${isVisible ? styles.modalVisible : ''}`}>
+                <div className={styles.modalHeader}>
+                    <h2 className={styles.modalTitle}>Welcome Notifications</h2>
+                    <button 
+                        onClick={onClose}
+                        className={styles.modalCloseButton}
+                    >
+                        ×
+                    </button>
+                </div>
+                <div className={styles.modalContent}>
+                    {/* Contenido del modal aquí */}
+                    <p className="p-4">Tus notificaciones aparecerán aquí</p>
+                </div>
+            </div>
+        </>
+    );
+};
 
 export default NotificationsModal;
