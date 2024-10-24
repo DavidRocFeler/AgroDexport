@@ -70,7 +70,7 @@ export class UsersController {
     @HttpCode(200)
       @Put(':id')
       @UseGuards(AuthGuard, RolesGuard)
-      @Roles('supplier', 'buyer')
+      @Roles('admin', 'supplier', 'buyer')
       async updateUser(
         @Param('id', new ParseUUIDPipe()) id: string,
         @Body() updateData: UpdateUserDto) {
