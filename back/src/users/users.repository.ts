@@ -8,8 +8,9 @@ import { JwtService } from "@nestjs/jwt";
 import { CreateUserDto } from './dtos/createUser.dto';
 import { LoginUserDto } from './dtos/loginUser.dto';
 import { NotificationsService } from '../notifications/notifications.service';
-import { RoleRepository } from 'src/roles/roles.repository';
-import { thirdAuthDto } from 'src/auth/dtos/thirdauth.dto';
+import { RoleRepository } from '../roles/roles.repository';
+import { thirdAuthDto } from '../auth/dtos/thirdauth.dto';
+import { EmailService } from '../nodemail/nodemail.service';
 
 @Injectable()
 export class UsersRepository {
@@ -18,6 +19,7 @@ export class UsersRepository {
     private readonly jwtService: JwtService,
     private readonly notificationService: NotificationsService,
     private readonly rolesRepository: RoleRepository,
+    private readonly emailService: EmailService
   ) {}
 
   async getAllUsers(): Promise<User[]> {
@@ -91,6 +93,12 @@ export class UsersRepository {
           },
         });
 
+        await this.emailService.sendRegistrationEmail(
+          newAccount.email, 
+          'Bienvenido a nuestra plataforma', 
+          'Gracias por registrarte'
+        );
+
         return newUser;
       }
       throw new BadRequestException('The email is already in use');
@@ -130,6 +138,12 @@ export class UsersRepository {
         },
       });
     }
+
+    await this.emailService.sendRegistrationEmail(
+      userData.email, 
+      'Bienvenido a nuestra plataforma', 
+      'Gracias por registrarte'
+    );
   
     return user;
   }

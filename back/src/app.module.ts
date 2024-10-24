@@ -14,12 +14,12 @@ import { PaymentsModule } from './payments/payments.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { TasksModule } from './tasks/tasks.module';
-import { EmailsModule } from './emails/emails.module';
 import { FarmerCertificationsModule } from './farmer-certifications/farmer-certifications.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { SupplyChainModule } from './supply-chain/supply-chain.module';
 import { JwtModule } from "@nestjs/jwt"
 import { PreloadService } from './preloadService';
+import { EmailModule } from './nodemail/nodemail.module';
 
 @Module({
   imports: [
@@ -36,7 +36,7 @@ import { PreloadService } from './preloadService';
     CloudinaryModule, 
     NotificationsModule, 
     TasksModule, 
-    EmailsModule, 
+    EmailModule, 
     FarmerCertificationsModule, 
     PrismaModule, 
     SupplyChainModule,
