@@ -1,12 +1,12 @@
 "use client"
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "../styles/ProductDetail.module.css"
 import { IAgroProduct } from "@/interface/types";
 
 const ProductDetail: React.FC<IAgroProduct> = ({
   name, description, variety, origin, harvestDate, pricePerUnit, unitType, stock, images, nutritionalInfo, certifications, shippingOptions
 }) => {
-
+  
   const { calories, protein, fat, carbs } = nutritionalInfo;
   const { method, deliveryTime, seaFreight } = shippingOptions
 
