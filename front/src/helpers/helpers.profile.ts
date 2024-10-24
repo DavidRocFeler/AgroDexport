@@ -17,7 +17,6 @@ export const updateUserProfile = async (
 
   try {
     const response = await fetch(`${BASE_URL}/users/${userId}`, {
-      method: "PUT",
       headers: {
         "Content-Type": "application/json",
         // Si necesitas incluir el token en las peticiones - ------------------------------????
