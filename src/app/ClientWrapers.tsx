@@ -1,13 +1,18 @@
-import Link from "next/link";
-import { useSelectedLayoutSegment } from "next/navigation";
+"use client"
+import Footer from "@/components/Footer";
+import FooterSecond from "@/components/FooterSecond";
+import { usePathname } from "next/navigation";
 
-export default function ClientWrapers({children}: {children: React.ReactNode}) {
-    const segment = useSelectedLayoutSegment();
-    const shouldRenderComponent = segment !== "dashboard";
+export default function ClientWrapers() {
+    const pathname = usePathname();
+    const isHomePage = pathname === "/";
     return(
         <>
-            {children}
-            {shouldRenderComponent && <Link href="/"/>}
+            {isHomePage ? (
+                <Footer/>
+            ) :(
+                <FooterSecond/>
+            )} 
         </>
     )
 }
