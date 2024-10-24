@@ -102,13 +102,3 @@ export interface IUser {
   role_name: "supplier" | "buyer" | null;
   isOlder: boolean;
 }
-
-export interface IUserData {
-  id: string;
-  name: string;
-  lastName: string;
-  country: string;
-  birthdate: string;
-  nDni: string;
-  phone: string;
-}
