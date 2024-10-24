@@ -4,7 +4,7 @@ import { UsersRepository } from "src/users/users.repository";
 import { randomPassword } from "src/utilities/randomPassword"; // Asegúrate de que esta función esté implementada
 import * as bcrypt from "bcrypt";
 import { LoginUserDto } from "src/users/dtos/loginUser.dto";
-import { EmailService } from "src/nodemail/nodemail";
+import { EmailService } from "src/nodemail/nodemail.service";
 import { thirdAuthDto } from "./dtos/thirdauth.dto";
 import { JwtService } from "@nestjs/jwt";
 
