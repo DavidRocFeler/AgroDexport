@@ -5,6 +5,7 @@ import { RolesGuard } from '../guards/RolesGuard';
 import { Roles } from '../decorators/roles.decorator';
 import { CreateFarmerCertificationDto } from './farmer-certifications.dto'; 
 import { FarmerCertificationService } from './farmer-certifications.service';
+import { UpdateFarmerCertificationDto } from './update-farmer-certifications.dto';
 
 @ApiBearerAuth()
 @ApiTags('farmer-certifications')
@@ -48,7 +49,7 @@ export class FarmerCertificationController {
     })
     async updateFarmerCertification(
         @Param('farmerId') farmerId: string,
-        @Body() updateFarmerCertificationDto: CreateFarmerCertificationDto,
+        @Body() updateFarmerCertificationDto: UpdateFarmerCertificationDto,
     ) {
         return this.farmerCertificationService.updateCertification(farmerId, updateFarmerCertificationDto);
     }

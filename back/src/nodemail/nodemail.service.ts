@@ -1,5 +1,8 @@
 import * as nodemailer from 'nodemailer';
 import { Injectable } from '@nestjs/common';
+import { config as dotenvConfig } from "dotenv";
+
+dotenvConfig({ path: ".env" });
 
 @Injectable()
 export class EmailService {
@@ -15,6 +18,10 @@ export class EmailService {
     });
   }
 
+  
+
+ 
+
   async sendRegistrationEmail(to: string, subject: string, text: string): Promise<void> {
     const mailOptions = {
       from: process.env.EMAIL_USER,
@@ -22,6 +29,7 @@ export class EmailService {
       subject,
       text,
     };
+
 
     try {
       const info = await this.transporter.sendMail(mailOptions);

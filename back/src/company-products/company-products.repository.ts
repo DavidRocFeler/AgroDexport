@@ -7,6 +7,8 @@ import { NotificationsService } from '../notifications/notifications.service';
 
 @Injectable()
 export class CompanyProductsRepository {
+   
+    
   constructor(private readonly prisma: PrismaService,
     private readonly notificationsService: NotificationsService
   ) {}
@@ -127,4 +129,21 @@ export class CompanyProductsRepository {
     });
   }
 
+  async findByIdMinimumOrder(product_one_id: string) {
+    const product = await this.prisma.companyProduct.findUnique({
+      where: { company_product_id: product_one_id},
+      select: { minimum_order: true },
+    });
+
+    return product?.minimum_order;
+  }
+
+    async findByIdStock(product_one_id: string) {
+      const product = await this.prisma.companyProduct.findUnique({
+        where: { company_product_id: product_one_id},
+        select: { stock: true },
+      });
+  
+      return product?.stock
+    }
 }
