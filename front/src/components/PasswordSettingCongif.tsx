@@ -1,21 +1,17 @@
 "use client"
 import React, { useState, useEffect } from "react";
-import { ISettingsUserProps } from "@/interface/types";
-import { getUserSettings } from "@/server/getUserSettings";
+import { ISettingsPasswordProps } from "@/interface/types";
 import { updateUserSettings } from "@/server/updateUserSettings";
 import { useUserStore } from "@/store/useUserStore";
+import { getPasswordSettings } from "@/server/updatePasswordSettings";
 
-const UserProfileForm = () => {
+const PasswordProfileForm = () => {
   const [isEditing, setIsEditing] = useState(false);
-  const [userData, setUserData] = useState<ISettingsUserProps>({
-    user_name: "",
-    user_lastname: "",
-    nDni: null,
-    birthday: "",
-    phone: "",
-    country: "",
+  const [userData, setUserData] = useState<ISettingsPasswordProps>({
+    password: "",
+    confirm_password: "",
   });
-  const [originalData, setOriginalData] = useState<ISettingsUserProps>(userData); // Guardamos datos originales
+  const [originalData, setOriginalData] = useState<ISettingsPasswordProps>(userData); // Guardamos datos originales
 
   const { user_id, token } = useUserStore();
 
@@ -24,7 +20,7 @@ const UserProfileForm = () => {
       try {
         if (user_id) {
           console.log("Obteniendo datos del usuario...");
-          const data = await getUserSettings(user_id);
+          const data = await getPasswordSettings(user_id);
           setUserData(data);
           setOriginalData(data); // Guardamos los datos originales
           console.log("Datos del usuario obtenidos:", data);
@@ -43,7 +39,7 @@ const UserProfileForm = () => {
     const { name, value } = event.target;
     setUserData({
       ...userData,
-      [name]: name === "nDni" ? (value === "" ? null : Number(value)) : value,
+      [name]: value
     });
   };
 
@@ -60,12 +56,17 @@ const UserProfileForm = () => {
       return; // Detén la ejecución si no hay token
     }
   
-    const updatedFields: Partial<ISettingsUserProps> = {};
-    Object.keys(userData).forEach((key) => {
-      if (userData[key as keyof ISettingsUserProps] !== originalData[key as keyof ISettingsUserProps]) {
-        updatedFields[key as keyof ISettingsUserProps] = userData[key as keyof ISettingsUserProps];
-      }
-    });
+    const updatedFields: Partial<ISettingsPasswordProps> = {};
+        (Object.keys(userData) as (keyof ISettingsPasswordProps)[]).forEach((key) => {
+        const newValue = userData[key];
+        const originalValue = originalData[key];
+
+        // Asegúrate de que los valores sean cadenas antes de asignarlos a updatedFields
+        if (newValue !== originalValue && typeof newValue === "string") {
+            updatedFields[key] = newValue; // Asigna solo si es una cadena
+        }
+        });
+
   
     console.log("Campos a actualizar:", updatedFields);
   
@@ -99,78 +100,26 @@ const UserProfileForm = () => {
     <div className="w-[100%] p-6 bg-white rounded-lg">
       <form className="space-y-4 flex flex-col">
         <label className="flex flex-row items-center w-[100%] text-gray-700 font-medium">
-          Name
+          Password
           <input
             className="ml-auto w-[70%] p-2 border border-gray-300 rounded-lg"
-            type="text"
-            name="user_name"
-            value={isEditing ? userData.user_name : ""}
-            placeholder={!isEditing ? userData.user_name : ""}
+            type="password"
+            name="password"
+            value={isEditing ? userData.password : ""}
+            placeholder={!isEditing ? userData.password : ""}
             onChange={handleChange}
             disabled={!isEditing}
           />
         </label>
 
         <label className="flex flex-row items-center w-[100%] text-gray-700 font-medium">
-          Last name
+          Confirm password
           <input
             className="ml-auto w-[70%] p-2 border border-gray-300 rounded-lg"
-            type="text"
-            name="user_lastname"
-            value={isEditing ? userData.user_lastname : ""}
-            placeholder={!isEditing ? userData.user_lastname : ""}
-            onChange={handleChange}
-            disabled={!isEditing}
-          />
-        </label>
-
-        <label className="flex flex-row items-center w-[100%] text-gray-700 font-medium">
-          Document ID
-          <input
-            className="ml-auto w-[70%] p-2 border border-gray-300 rounded-lg"
-            type="text"
-            name="nDni"
-            value={isEditing ? userData.nDni || "" : ""}
-            placeholder={!isEditing ? String(userData.nDni || "") : ""}
-            onChange={handleChange}
-            disabled={!isEditing}
-          />
-        </label>
-
-        <label className="flex flex-row items-center w-[100%] text-gray-700 font-medium">
-          Birthday
-          <input
-            className="ml-auto w-[70%] p-2 border border-gray-300 rounded-lg"
-            type="text"
-            name="birthday"
-            value={isEditing ? userData.birthday : ""}
-            placeholder={!isEditing ? userData.birthday : ""}
-            onChange={handleChange}
-            disabled={!isEditing}
-          />
-        </label>
-
-        <label className="flex flex-row items-center w-[100%] text-gray-700 font-medium">
-          Phone
-          <input
-            className="ml-auto w-[70%] p-2 border border-gray-300 rounded-lg"
-            type="text"
-            name="phone"
-            value={isEditing ? userData.phone : ""}
-            placeholder={!isEditing ? userData.phone : ""}
-            onChange={handleChange}
-            disabled={!isEditing}
-          />
-        </label>
-
-        <label className="flex flex-row items-center w-[100%] text-gray-700 font-medium">
-          Country
-          <input
-            className="ml-auto w-[70%] p-2 border border-gray-300 rounded-lg"
-            type="text"
-            name="country"
-            value={isEditing ? userData.country : ""}
-            placeholder={!isEditing ? userData.country : ""}
+            type="password"
+            name="confirm_password"
+            value={isEditing ? userData.confirm_password : ""}
+            placeholder={!isEditing ? userData.confirm_password : ""}
             onChange={handleChange}
             disabled={!isEditing}
           />
@@ -209,5 +158,5 @@ const UserProfileForm = () => {
   );
 };
 
-export default UserProfileForm;
+export default PasswordProfileForm;
 
