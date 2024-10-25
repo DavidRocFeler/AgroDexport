@@ -9,17 +9,34 @@ import { ISupplyChainProps } from '@/interface/types';
 import ProtectedRoute from '@/app/ProtectedRoute';
 import { useUserStore } from '@/store/useUserStore'; // Asegúrate de importar el hook para acceder al estado global
 import NotificationsModal from '@/components/NotificationsModal';
+import { useRouter } from 'next/navigation';
 
 const PanelUserView: React.FC = () => {
   const supplyChain: ISupplyChainProps[] = supplyChainArray;
   const { role_name } = useUserStore();
   const [isHydrated, setIsHydrated] = React.useState(false);
+  const router = useRouter();
+  const [ isAuth, setIsAuth ] = useState(false);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   
   React.useEffect(() => {
     setIsHydrated(true);
   }, []);
+
+  const handleRedirectProfile = () => {
+    setIsAuth(true);
+    router.push("/profile")
+  }
+
+  const handleRedirectHistorySales = () => {
+    setIsAuth(true);
+    router.push("/supplierhistorysales")
+  }
+
+  const handleRedirectHistoryBuys = () => {
+    router.push("/buyerhistorybuys")
+  }
 
     if (!isHydrated) {
       return (
@@ -64,8 +81,12 @@ const PanelUserView: React.FC = () => {
           </aside>
           <h1 className={styles.UserPanel}>User Panel</h1>
           <aside className='flex flex-row justify-center mb-[1rem]'>
-            <button className={styles.ButtonProfile}> Profile </button>
-            <button className={styles.ButtonHistory}> History </button>
+            <button onClick={handleRedirectProfile} className={styles.ButtonProfile}> Profile </button>
+            { role_name === "supplier" ? (
+            <button onClick={handleRedirectHistorySales} className={styles.ButtonHistory}> History </button>
+            ) : (
+            <button onClick={handleRedirectHistoryBuys} className={styles.ButtonHistory}> History </button>
+            )}
           </aside>
           <nav className='flex flex-row justify-center'>
             <Link className={styles.RedirectPanel} href="/orderstatus"> Order Status </Link>

@@ -132,3 +132,49 @@ export interface iProtectedRouteProps {
   children: React.ReactNode
   allowedRoles?: string[]
 }
+
+export interface Company {
+  id: number;
+  name: string;
+  role: "Admin" | "User";
+  status: "Active" | "Inactive";
+}
+
+export const companiesData: Company[] = [
+  {
+    id: 1,
+    name: "Company One",
+    role: "Admin",
+    status: "Active",
+  },
+];
+
+export interface ISettingsUserProps {
+  user_name?: string;
+  user_lastname?: string;
+  nDni?: number | any,
+  birthday?: string
+  phone?: string,
+  country?: string,
+  updatedFields?: Partial<ISettingsUserProps>; 
+}
+
+export interface ISettingsPasswordProps {
+  password: string,
+  confirm_password: string,
+  updatedFields?: Partial<ISettingsPasswordProps>; 
+}
+
+export interface ISettingsCompanyProps {
+  company_name: string;
+  tax_identification_number: number | null,
+  address: string,
+  postal_code: string,
+  city: string,
+  state: string,
+  country: string,
+  industry: string,
+  website: string,
+  company_description: string,
+
+}

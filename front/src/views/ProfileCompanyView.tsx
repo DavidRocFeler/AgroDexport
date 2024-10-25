@@ -11,11 +11,11 @@ const ProfileView: React.FC = () => {
   const router = useRouter();
 
   const handleRedirectPanel = () => {
-    router.push("/profilecompany");
+    router.push("/profile");
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b pb-[2rem] from-blue-100 to-blue-200">
+    <div className="min-h-screen bg-gradient-to-b from-blue-100 to-blue-200">
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Header Section with Profile and Companies */}
         <div className="mb-[2rem] mt-[2rem] flex flex-row">
@@ -66,7 +66,7 @@ const ProfileView: React.FC = () => {
           {/* Navigation Menu */}
           <div className="col-span-3">
             <div className="bg-white rounded-2xl shadow-lg p-4 h-[500px] relative">
-              <div className="space-y-10 mt-1 w-full">
+              <div className="space-y-3 w-full">
                 {["Information contact", "Security settings", "Payments methood"].map((item, index) => (
                   <button
                     key={index}
@@ -76,11 +76,12 @@ const ProfileView: React.FC = () => {
                     {item}
                   </button>
                 ))}
-                <img
-                  src="/LogoTypographic.png"
-                  alt="Logo"
-                  className="absolute bottom-5 left-0 items-center flex flex-row justify-center text-white font-medium py-2 px-6 rounded-lg transition-colors"
-                />
+                <button
+                  onClick={handleRedirectPanel}
+                  className="absolute bottom-5 left-[0.83rem] items-center flex flex-row justify-center bg-black w-[90%] hover:bg-gray-800 text-white font-medium py-2 px-6 rounded-lg transition-colors"
+                >
+                  User profile
+                </button>
               </div>
             </div>
           </div>
