@@ -66,7 +66,7 @@ __decorate([
     __metadata("design:type", Boolean)
 ], CreateUserDto.prototype, "isOlder", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ description: "Role asociado al usuario", example: "buyer" }),
+    (0, swagger_1.ApiProperty)({ description: "Role asociado al usuario", example: "Buyer" }),
     (0, class_validator_1.IsNotEmpty)({ message: 'El campo role_name no debe estar vacío' }),
     (0, class_validator_1.IsString)({ message: 'El campo role_name debe ser un string' }),
     __metadata("design:type", String)

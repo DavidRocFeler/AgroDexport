@@ -6,7 +6,7 @@ export interface ISignUpForm {
   email: string;
   password: string;
   confirm_password?: string;
-  role_name: "Supplier" | "Buyer" | null;
+  role_name: "supplier" | "buyer" | null;
   isOlder: boolean;
 }
 
@@ -78,15 +78,16 @@ export interface IPropsCards {
 }
 
 export interface IAgriProduct {
-  company_id: string;
-  company_product_name: string;
-  company_product_description?: string;
-  stock?: number;
-  minimum_order?: number;
+  company_id?: string;
+  company_product_img?: string;
+  company_product_name?: string;
+  category_id: string;
   origin?: string;
-  company_price_x_kg?: number | any;
-  company_product_img: string;
   harvest_date?: string;
+  company_price_x_kg?: number | any;
+  minimum_order?: number;
+  stock?: number;
+  company_product_description?: string;
   calories?: number;
   fat?: number;
   protein?: number;

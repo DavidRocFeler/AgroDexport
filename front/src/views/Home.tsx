@@ -22,52 +22,6 @@ const HomeView: React.FC = () => {
     } = useAuthThirdStore();
     // const { setUserData } = useUserStore();
     const { data: session, status: sessionStatus } = useSession();
-    
-    // useEffect(() => {
-    //     const handleGoogleLogin = async () => {
-    //         if (sessionStatus === 'authenticated' && session?.user?.email && session?.user?.name) {
-    //             try {
-    //                 // Preparar datos para enviar al backendnew 
-    //                 const googleData = {
-    //                     email: session.user.email,
-    //                     name: session.user.name
-    //                 };
-
-    //                 // Enviar datos al backend a través de loginProps
-    //                 const response = await logginAuthProps(googleData);
-                    
-    //                 // Extraer datos de la respuesta
-    //                 const { user_id, token, role_name } = response;
-                    
-    //                 // Actualizar el estado global del usuario
-    //                 setUserData(user_id, token, role_name);
-                    
-    //                 await Swal.fire({
-    //                     icon: "success",
-    //                     title: "Success",
-    //                     text: "Google login successful",
-    //                     width: 400,
-    //                     padding: "3rem",
-    //                 });
-                    
-    //             } catch (error) {
-    //                 console.error("Error in back login:", error);
-    //                 await Swal.fire({
-    //                     icon: "error",
-    //                     title: "Error",
-    //                     text: "You need to register first",
-    //                     width: 400,
-    //                     padding: "3rem",
-    //                 });
-    //             } finally {
-    //                 await clearAllSessions();
-    //                 resetInitialization();
-    //             }
-    //         }
-    //     };
-
-    //     handleGoogleLogin();
-    // }, [session, sessionStatus, setUserData, resetInitialization, clearAllSessions]);
 
     const handleBackendRegistration = useCallback(async () => {
         if (googleSession && !isSessionSent && hasInitialized) {

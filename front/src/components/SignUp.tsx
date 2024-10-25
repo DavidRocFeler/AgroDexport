@@ -39,7 +39,7 @@ const SignUp: React.FC<ISignUpComponentProps> = ({ onCloseSignUp, onSwitchToLogi
             let updatedData = { ...prevData };
         
             if (type === "checkbox") {
-                if (name === "Supplier" || name === "Buyer") {
+                if (name === "supplier" || name === "buyer") {
                     updatedData.role_name = checked ? name : null;
                 } else if (name === "isOlder") {
                     updatedData.isOlder = checked;
@@ -112,16 +112,16 @@ const SignUp: React.FC<ISignUpComponentProps> = ({ onCloseSignUp, onSwitchToLogi
                 <h1 className={styles.Title}>Join Agro Dexports</h1>
                 <div className="w-[50%] m-auto mb-[2rem]">
                     <input
-                        name="Supplier"
-                        checked={userData.role_name === "Supplier"}
+                        name="supplier"
+                        checked={userData.role_name === "supplier"}
                         onChange={handleChangeRegister}
                         className={styles.Supplier}
                         type="checkbox"
                     />{" "}
                     I'm a supplier
                     <input
-                        name="Buyer"
-                        checked={userData.role_name === "Buyer"}
+                        name="buyer"
+                        checked={userData.role_name === "buyer"}
                         onChange={handleChangeRegister}
                         className="ml-[8rem]"
                         type="checkbox"

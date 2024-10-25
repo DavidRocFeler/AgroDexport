@@ -1,13 +1,13 @@
-import { IAgroProduct } from "@/interface/types";
+import { IAgriProduct } from "@/interface/types";
 
 const APIURL = process.env.NEXT_PUBLIC_API_URL
 
-export async function getProductDB(): Promise<IAgroProduct[]> {
+export async function getProductDB(): Promise<IAgriProduct[]> {
     try {
-        const res = await fetch(`${APIURL}/products`, {
+        const res = await fetch(`${APIURL}/company-products`, {
             next: { revalidate: 1200}
         })
-        const products: IAgroProduct[] = await res.json();
+        const products: IAgriProduct[] = await res.json();
         return products;
     } catch (error: any) {
         throw Error(error)
