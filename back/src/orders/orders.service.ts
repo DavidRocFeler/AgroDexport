@@ -3,9 +3,11 @@ import { CreateOrderProductsDto } from './dtos/createOrderProducts.dto';
 import { CompanyRepository } from 'src/companies/companies.repository';
 import { CompanyProductsRepository } from 'src/company-products/company-products.repository';
 import { OrderRepository } from './orders.repositiry';
+import { Order } from '@prisma/client';
 
 @Injectable()
 export class OrdersService {
+    
 
     constructor (
         private readonly companyRepository: CompanyRepository,
@@ -13,6 +15,9 @@ export class OrdersService {
         private readonly orderRepository: OrderRepository,
     ){}
 
+    async getAllOrdersServices(): Promise<Order[]> {
+        return this.orderRepository.getAllOrdersRepository()
+    }
 
     async createOrderProductsServices(createOrderProductsDto: CreateOrderProductsDto) {
         const companyBuyer = await this.companyRepository.findById(createOrderProductsDto.company_buyer_id)
@@ -57,4 +62,6 @@ export class OrdersService {
 
         return this.orderRepository.createOrderProductsRepository(createOrderProductsDto)
     }
+
+    
 }

@@ -130,4 +130,12 @@ export class AddressesRepository {
           data: { isActive: false },
         });
       }
+
+      async findAdressIdByCompanyId(company_buyer_id: string) {
+        const shippingAddress = await this.prisma.shippingAddress.findFirst({
+          where: { company_id: company_buyer_id },
+          select: { shipping_address_id: true}
+        })
+        return shippingAddress?.shipping_address_id;
+    }
 }

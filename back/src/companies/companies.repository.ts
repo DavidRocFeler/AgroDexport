@@ -7,6 +7,7 @@ import { Company } from '@prisma/client';
 
 @Injectable()
 export class CompanyRepository {
+
   constructor(
     private readonly notificationsService: NotificationsService,
     private readonly prisma: PrismaService) {}
@@ -143,5 +144,13 @@ export class CompanyRepository {
       where: { company_id: companyId },
       data: { isActive: false },
     });
+  }
+
+  async findByAcoountPaypalById(company_supplier_id: string) {
+    const accountPaypal = await this.prisma.company.findUnique({
+      where: { company_id: company_supplier_id },
+      select: { account_paypal: true },
+    });
+    return accountPaypal?.account_paypal;
   }
 }
