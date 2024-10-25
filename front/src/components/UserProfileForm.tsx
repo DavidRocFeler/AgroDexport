@@ -37,7 +37,7 @@ const UserProfileForm = () => {
     };
 
     fetchData();
-  }, [user_id, token]); // Se ejecuta una vez cuando se carga el componente
+  }, [user_id, token]); 
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -53,11 +53,9 @@ const UserProfileForm = () => {
       setIsEditing(false);
       return;
     }
-  
-    // Verifica si el token es nulo antes de continuar
+
     if (!token) {
-      alert("No se encontró el token. Por favor, inicia sesión nuevamente.");
-      return; // Detén la ejecución si no hay token
+      return;
     }
   
     const updatedFields: Partial<ISettingsUserProps> = {};
@@ -67,32 +65,30 @@ const UserProfileForm = () => {
       }
     });
   
-    console.log("Campos a actualizar:", updatedFields);
+    console.log("Field update:", updatedFields);
   
     try {
       if (user_id) {
-        await updateUserSettings(user_id, updatedFields, token); // Pasamos el token sin problema
+        await updateUserSettings(user_id, updatedFields, token); 
         setOriginalData(userData);
         setIsEditing(false);
-        alert("Actualización exitosa");
+        alert("Successful update");
       } else {
-        alert("No se pudo obtener el ID del usuario.");
+        alert("The user's ID could not be obtained.");
       }
     } catch (error: any) {
-      alert("Error al guardar");
-      console.error("Error al guardar:", error.message);
+      alert("Error saving");
+      console.error("Error saving:", error.message);
     }
   };
 
-  // Nueva función para activar el modo de edición
   const handleEdit = () => {
-    setIsEditing(true); // Cambia a modo de edición
+    setIsEditing(true); 
   };
 
-  // Función para cancelar la edición
   const handleCancel = () => {
-    setUserData(originalData); // Restauramos los datos originales
-    setIsEditing(false); // Salimos del modo de edición
+    setUserData(originalData); 
+    setIsEditing(false); 
   };
   
   return (

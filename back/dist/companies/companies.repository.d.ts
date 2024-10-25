@@ -134,4 +134,5 @@ export declare class CompanyRepository {
         isActive: boolean;
         company_id: string;
     }>;
+    findByAcoountPaypalById(company_supplier_id: string): Promise<string>;
 }

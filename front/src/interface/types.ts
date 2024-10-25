@@ -6,7 +6,7 @@ export interface ISignUpForm {
   email: string;
   password: string;
   confirm_password?: string;
-  role_name: "supplier" | "buyer" | null;
+  role_name: "Supplier" | "Buyer" | null;
   isOlder: boolean;
 }
 
@@ -44,6 +44,61 @@ export interface ILoginComponentProps {
   onCloseLogin: () => void;
   onSwitchToSignUp: () => void;
 }
+
+export interface IUserSession {
+  token: string;
+  user: {
+      id: number;
+      address: string;
+      email: string;
+      name: string;
+      phone: string;
+      role: string;
+      orders: [];
+  }
+};
+
+export interface IOrderCarWishProps {
+  product: any;
+}
+
+export interface ILabelComponentProps {
+  product?: IAgriProduct;
+  units: number;
+  viewType: 'carShop' | 'ordersView' | 'wishListView';
+  orderStatus?: { status: string; date: string };
+};
+
+export interface IPropsCards {
+  company_id: string;
+  company_product_name: string;
+  company_product_description?: string;
+  company_price_x_kg?: number | any;
+  company_product_img?: string;
+}
+
+export interface IAgriProduct {
+  company_id: string;
+  company_product_name: string;
+  company_product_description?: string;
+  stock?: number;
+  minimum_order?: number;
+  origin?: string;
+  company_price_x_kg?: number | any;
+  company_product_img: string;
+  harvest_date?: string;
+  calories?: number;
+  fat?: number;
+  protein?: number;
+  carbs?: number;
+}
+
+export interface IOrder {
+  id: number;
+  status: string;
+  date: Date;
+  products: IAgriProduct[];
+};
 
 export interface IAgroProduct {
   id: number; // ID único del producto
@@ -95,8 +150,6 @@ export interface IUserState {
   isAuthenticated: boolean;
   setUserData: (id: string, token: string, role_name: string) => void;
   clearUser: () => void;
-  // addUser: () => void;
-  // removeUser: (email: string) => void;
 }
 
 export interface IAuthThirdState {

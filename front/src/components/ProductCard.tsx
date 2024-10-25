@@ -4,7 +4,7 @@ import { productsToPreLoad } from '@/helpers/preLoadProducts';
 
 const ProductCard: React.FC = () => {
   return (
-    <div className="grid grid-cols-2 mx-12 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <div className="border-black border-[1px] border-solid w-[95%] grid grid-cols-2 m-auto md:grid-cols-3 lg:grid-cols-4 gap-6">
       {productsToPreLoad.map((product, index) => (
         <div key={index} className="border p-4 rounded shadow-lg">
           <img src={product.images[0]} alt={product.name} className="w-full h-48 object-cover mb-4 rounded" />

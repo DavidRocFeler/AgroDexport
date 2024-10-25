@@ -96,4 +96,5 @@ export declare class AddressesRepository {
         delivery_hours: string | null;
         shipping_address_id: string;
     }>;
+    findAdressIdByCompanyId(company_buyer_id: string): Promise<string>;
 }

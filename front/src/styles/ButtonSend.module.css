@@ -1,0 +1,14 @@
+.Order {
+    background-color: #2e2e2e;
+    padding: 0.5rem;
+    border-radius: 4px;
+    font-weight: bold;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    margin-top: 2rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .Order:active {
+    transform: scale(0.95);
+    box-shadow: none;
+  }

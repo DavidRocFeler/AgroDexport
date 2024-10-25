@@ -1,11 +1,11 @@
 import React from "react";
 
-import CartShowView from "@/views/CartShowView";
+import CarShopView from "@/views/CarShop";
 
 const CartShow: React.FC = () => {
   return (
     <>
-      <CartShowView />
+      <CarShopView />
     </>
   );
 };
