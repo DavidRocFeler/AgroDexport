@@ -80,7 +80,7 @@ export class CompanyController {
     @HttpCode(200)
     @Post()
     @UseGuards(AuthGuard, RolesGuard)
-    @Roles('supplier', 'buyer')
+    @Roles('admin', 'supplier', 'buyer')
     async createCompany(@Body() companyData: CreateCompanyDto) {
     const newCompany = await this.companyServices.createCompanyServices(companyData);
     return {
@@ -93,7 +93,7 @@ export class CompanyController {
     @HttpCode(200)
     @Put(':id') 
     @UseGuards(AuthGuard, RolesGuard)
-    @Roles('supplier', 'buyer')
+    @Roles('admin', 'supplier', 'buyer')
     async updateCompany(@Param('id') companyId: string, @Body()companyData: UpdateCompanyDto) {
     const updatedCompany = await this.companyServices.updateCompanyServices(companyId, companyData);
     return updatedCompany;

@@ -14,10 +14,11 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
   
     @ApiProperty({
       description: 'Fecha de nacimiento del usuario',
-      example: '1990-01-01T00:00:00.000Z',
+      example: '05-10-1990',
     })
     @IsOptional()
-    birthday?: Date;
+    @IsString()
+    birthday?: string;
   
     @ApiProperty({
       description: 'Número de teléfono del usuario',

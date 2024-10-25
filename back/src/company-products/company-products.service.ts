@@ -16,7 +16,7 @@ export class CompanyProductsService {
     private readonly categoryRepository: CategoryRepository,
   ) {}
   
-  async findAllServices(): Promise<CompanyProduct[]> {
+  async findAllServices(): Promise<CompanyProduct[]> { 
     return this.companyProductsRepository.findAll();
   }
   
