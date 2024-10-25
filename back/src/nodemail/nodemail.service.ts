@@ -43,7 +43,7 @@ export class EmailService {
     const path = require('path');
     const fs = require('fs');
     
-    const templatePath = path.resolve(__dirname, '..','template', 'template', 'welcome-email.html');
+    const templatePath = path.join(process.cwd(), 'src', 'template', 'welcome-email.html');
     if (!fs.existsSync(templatePath)) {
       console.error(`El archivo de plantilla no existe en la ruta: ${templatePath}`);
     }
