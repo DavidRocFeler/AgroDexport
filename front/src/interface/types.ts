@@ -48,15 +48,15 @@ export interface ILoginComponentProps {
 export interface IUserSession {
   token: string;
   user: {
-      id: number;
-      address: string;
-      email: string;
-      name: string;
-      phone: string;
-      role: string;
-      orders: [];
-  }
-};
+    id: number;
+    address: string;
+    email: string;
+    name: string;
+    phone: string;
+    role: string;
+    orders: [];
+  };
+}
 
 export interface IOrderCarWishProps {
   product: any;
@@ -65,9 +65,9 @@ export interface IOrderCarWishProps {
 export interface ILabelComponentProps {
   product?: IAgriProduct;
   units: number;
-  viewType: 'carShop' | 'ordersView' | 'wishListView';
+  viewType: "carShop" | "ordersView" | "wishListView";
   orderStatus?: { status: string; date: string };
-};
+}
 
 export interface IPropsCards {
   company_id: string;
@@ -98,7 +98,7 @@ export interface IOrder {
   status: string;
   date: Date;
   products: IAgriProduct[];
-};
+}
 
 export interface IAgroProduct {
   id: number; // ID único del producto
@@ -240,7 +240,7 @@ export interface IPublishProductProps {
   discount: number;
   company_price_x_kg: number;
   harvest_date: string;
-  company_product_img: string;
+  company_product_img: FileList;
   calories: number;
   fat: number;
   protein: number;
