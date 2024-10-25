@@ -201,3 +201,12 @@ export interface ICertificationsProps {
   quality_certificate: FileList;
   certificate_of_origin: FileList;
 }
+
+export interface IFilePreview {
+  name: string;
+  size: string;
+}
+
+export interface IPreviewState {
+  [key: string]: IFilePreview | null;
+}
