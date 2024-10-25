@@ -29,7 +29,7 @@ const ProductSearch = () => {
   };
 
   return (
-    <div className="flex items-center mt-[2rem] mb-[2rem] ms-8 mr-8 px-4 py-3 border-black border-[1px] border-solid ">
+    <div className="flex items-center mt-[2rem] mb-[2rem] ms-8 mr-8 px-4 pr-0 pl-0 ">
       <div className="flex w-1/2"> 
         <label className="flex flex-col min-w-40 h-12 w-full">
           <div className="flex w-full flex-1 items-stretch rounded-xl h-full">

@@ -57,7 +57,7 @@ const DashboardView: React.FC = () => {
               <Bell />
             </button>
           </aside>
-          <h1 className={styles.UserPanel}>User Panel</h1>
+          <h1 className={styles.UserPanel}>Dashboard</h1>
           <aside className="flex flex-row justify-center mb-[4.3rem]">
             <button className={styles.ButtonProfile}> Profile </button>
             <button className={styles.ButtonHistory}> History </button>
@@ -91,7 +91,7 @@ const DashboardView: React.FC = () => {
               <Bell />
             </button>
           </aside>
-          <h1 className={styles.UserPanel}>User Panel</h1>
+          <h1 className={styles.UserPanel}>Dashboard</h1>
           <aside className="flex flex-row justify-center mb-[1rem]">
             <button
               onClick={handleRedirectProfile}

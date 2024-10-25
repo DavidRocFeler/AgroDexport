@@ -59,6 +59,11 @@ const Header: React.FC = () => {
         );
     }
 
+    const capitalizeFirstLetter = (role_name: string | null) => {
+        if (!role_name) return ""; // O "Guest", o cualquier otro valor predeterminado
+        return role_name.charAt(0).toUpperCase() + role_name.slice(1);
+    };
+
     return (
         <>
             <header className="flex flex-row p-[1.5rem]" style={{ backgroundColor }}>
@@ -78,7 +83,7 @@ const Header: React.FC = () => {
                     { isAuthenticated ? (
                         <>
                             <span className="mr-[1rem] ml-[1rem] text-[0.9rem]" style={{ color: textColor }}>
-                                { role_name }
+                                {capitalizeFirstLetter(role_name)}
                             </span>
                             <button
                                 onClick={handleLogout}
