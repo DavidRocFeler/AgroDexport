@@ -1,6 +1,6 @@
 ### User Story for AgroDExports
     - As a business owner or buyer for a company,
-    I want to connect with reliable suppliers who offer products in bulk with a minimum purchase value of $2000,
+    I want to connect with reliable suppliers who offer products in bulk with a minimum purchase value of 5000kl,
     So that I can efficiently source high-quality products and ensure transparency throughout the supply chain.
 
 ### Features:

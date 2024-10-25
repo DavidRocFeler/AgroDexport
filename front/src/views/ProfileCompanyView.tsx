@@ -11,7 +11,7 @@ const ProfileView: React.FC = () => {
   const { role_name } = useUserStore();
 
   const handleRedirectPanel = () => {
-    router.push("/profilecompany")
+    router.push("/profile")
   }
  
   return (
@@ -37,7 +37,7 @@ const ProfileView: React.FC = () => {
                             {company.name}
                           </h5>
                           <p className="text-sm text-gray-600">
-                            { role_name}
+                            {role_name}
                           </p>
                         </div>
                       </div>
@@ -54,6 +54,7 @@ const ProfileView: React.FC = () => {
                   ))}
                 </div>
 
+                {/* Add Company Button */}
                 <button className="w-full bg-black hover:bg-gray-800 text-white font-medium py-2 px-4 rounded-lg transition-colors mt-4">
                   Add company
                 </button>
@@ -75,17 +76,20 @@ const ProfileView: React.FC = () => {
             </div>
             </div>
 
+          {/* User Come Back Button */}
          
         </div>
 
+        {/* Main Content Section - Ajustado */}
         <div className="grid grid-cols-12 gap-8">
-         
+          {/* Navigation Menu - Más estrecho */}
           <div className="col-span-3">
             <div className="bg-white rounded-2xl shadow-lg p-4 h-[500px]  relative">
               <div className="space-y-3 w-full">
                 {[
                   "Information contact",
-                  "Security settings",
+                  "Methood payments",
+                  "Warehouse address",
                 ].map((item, index) => (
                   <button
                     key={index}
@@ -96,12 +100,13 @@ const ProfileView: React.FC = () => {
                   </button>
                 ))}
                 <button onClick={handleRedirectPanel} className=" absolute bottom-5 left-[0.83rem] items-center flex flex-row justify-center bg-black w-[90%] hover:bg-gray-800 text-white font-medium py-2 px-6 rounded-lg transition-colors ">
-                  Company profile
+                  User profile
                 </button>
               </div>
             </div>
           </div>
 
+          {/* Content Area - Más ancho */}
           <div className="col-span-9">
             <div className="bg-white rounded-2xl shadow-lg p-8 h-[500px]">
               <div className="h-full flex flex-col justify-between">
@@ -124,3 +129,6 @@ const ProfileView: React.FC = () => {
 };
 
 export default ProfileView;
+
+
+
