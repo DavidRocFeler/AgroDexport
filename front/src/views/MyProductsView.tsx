@@ -41,5 +41,3 @@ const MyProductsView: React.FC = () => {
 };
 
 export default MyProductsView;
-
-//--------------------------------------------------------------------
