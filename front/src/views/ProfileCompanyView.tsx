@@ -1,107 +1,124 @@
 "use client";
 import React, { useState } from "react";
 import UserProfileForm from "../components/UserProfileForm"; // Importa el componente
-import PasswordProfileForm from "@/components/PasswordSettingCongif"; // Importa el componente para la seguridad
 import { useRouter } from "next/navigation";
-import { companiesData } from "@/helpers/companiesData";
-import Paypal from "@/components/Paypal";
+import { companiesData } from "@/interface/types";
+import { useUserStore } from "@/store/useUserStore";
 
 const ProfileView: React.FC = () => {
-  const [activeSection, setActiveSection] = useState<string>("Information contact"); // Por defecto muestra UserProfileForm
+  const [activeSection, setActiveSection] = useState<string>(""); // Estado para controlar la sección activa
   const router = useRouter();
+  const { role_name } = useUserStore();
 
   const handleRedirectPanel = () => {
-    router.push("/profile");
-  };
-
+    router.push("/profile")
+  }
+ 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-100 to-blue-200">
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Header Section with Profile and Companies */}
         <div className="mb-[2rem] mt-[2rem] flex flex-row">
           {/* Companies List Section */}
-          <div className="bg-white h-fit rounded-2xl shadow-lg p-6 w-[23%] ">
-            <div className="space-y-4">
-              <h3 className="text-xl font-semibold text-gray-800">My Companies</h3>
-              <div className="space-y-3">
-                {companiesData.map((company) => (
-                  <div
-                    key={company.id}
-                    className="bg-gray-50 rounded-lg p-4 border border-gray-200 hover:border-gray-300 transition-colors"
-                  >
-                    <div className="flex justify-between items-start">
-                      <div className="space-y-1">
-                        <h5 className="font-medium text-gray-900">{company.name}</h5>
-                        <p className="text-sm text-gray-600">Role: {company.role}</p>
+            <div className="bg-white rounded-2xl shadow-lg p-6 w-[23%] ">
+              <div className="space-y-4">
+                <h3 className="text-xl font-semibold text-gray-800">
+                  My Companies
+                </h3>
+                <div className="space-y-3">
+                  {companiesData.map((company) => (
+                    <div
+                      key={company.id}
+                      className="bg-gray-50 rounded-lg p-4 border border-gray-200 hover:border-gray-300 transition-colors"
+                    >
+                      <div className="flex justify-between items-start">
+                        <div className="space-y-1">
+                          <h5 className="font-medium text-gray-900">
+                            {company.name}
+                          </h5>
+                          <p className="text-sm text-gray-600">
+                            {role_name}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="mt-3 flex gap-2">
+                        <button className="text-sm text-blue-600 hover:text-blue-800 font-medium">
+                          Edit
+                        </button>
+                        <span className="text-gray-300">|</span>
+                        <button className="text-sm text-red-600 hover:text-red-800 font-medium">
+                          Remove
+                        </button>
                       </div>
                     </div>
-                    <div className="mt-3 flex gap-2">
-                      <button className="text-sm text-blue-600 hover:text-blue-800 font-medium">Add</button>
-                      <span className="text-gray-300">|</span>
-                      <button className="text-sm text-red-600 hover:text-red-800 font-medium">Remove</button>
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
+
+                {/* Add Company Button */}
+                <button className="w-full bg-black hover:bg-gray-800 text-white font-medium py-2 px-4 rounded-lg transition-colors mt-4">
+                  Add company
+                </button>
               </div>
             </div>
-          </div>
-
-          {/* Profile Section */}
-          <div className="m-auto w-fit flex flex-col items-center space-y-4">
-            <div className="relative">
-              <img
-                className="w-60 h-60 rounded-full object-cover border-4 border-black"
+          
+            <div className="m-auto w-fit flex flex-col items-center space-y-4">
+                 <div className="relative">
+                   <img
+                className="w-60 h-60 rounded-full object-cover border-4 border-black ]"
                 src="/LogoIcon.png"
                 alt="Profile"
               />
             </div>
             <div className="text-center">
-              <h2 className="text-2xl font-bold text-gray-800 mb-2">John Doe</h2>
+              <h2 className="text-2xl font-bold text-gray-800 mb-2">
+                John Doe
+              </h2>
             </div>
-          </div>
+            </div>
+
+          {/* User Come Back Button */}
+         
         </div>
 
-        {/* Main Content Section */}
+        {/* Main Content Section - Ajustado */}
         <div className="grid grid-cols-12 gap-8">
-          {/* Navigation Menu */}
+          {/* Navigation Menu - Más estrecho */}
           <div className="col-span-3">
-            <div className="bg-white rounded-2xl shadow-lg p-4 h-[500px] relative">
+            <div className="bg-white rounded-2xl shadow-lg p-4 h-[500px]  relative">
               <div className="space-y-3 w-full">
-                {["Information contact", "Security settings", "Payments methood"].map((item, index) => (
+                {[
+                  "Information contact",
+                  "Methood payments",
+                  "Warehouse address",
+                ].map((item, index) => (
                   <button
                     key={index}
-                    onClick={() => setActiveSection(item)} // Cambia la sección activa
+                    onClick={() => setActiveSection(item)} // Al hacer clic, cambia la sección activa
                     className="w-full bg-black hover:bg-gray-800 text-white font-medium py-3 px-4 rounded-lg transition-colors text-center text-sm"
                   >
                     {item}
                   </button>
                 ))}
-                <button
-                  onClick={handleRedirectPanel}
-                  className="absolute bottom-5 left-[0.83rem] items-center flex flex-row justify-center bg-black w-[90%] hover:bg-gray-800 text-white font-medium py-2 px-6 rounded-lg transition-colors"
-                >
+                <button onClick={handleRedirectPanel} className=" absolute bottom-5 left-[0.83rem] items-center flex flex-row justify-center bg-black w-[90%] hover:bg-gray-800 text-white font-medium py-2 px-6 rounded-lg transition-colors ">
                   User profile
                 </button>
               </div>
             </div>
           </div>
 
-          {/* Content Area */}
+          {/* Content Area - Más ancho */}
           <div className="col-span-9">
             <div className="bg-white rounded-2xl shadow-lg p-8 h-[500px]">
               <div className="h-full flex flex-col justify-between">
                 <div className="flex-1 flex items-center justify-center text-gray-500">
-                  {/* Renderiza UserProfileForm por defecto, y PasswordProfileForm cuando se selecciona "Security settings" */}
+                  {/* Renderiza contenido basado en el botón clicado */}
                   {activeSection === "Information contact" ? (
-                    <UserProfileForm />
-                  ) : activeSection === "Security settings" ? (
-                    <PasswordProfileForm />
-                  ) : activeSection === "Payments methood" ? (
-                    <Paypal/>
+                    <UserProfileForm /> // Muestra el formulario si se clicó en "Information contact"
                   ) : (
-                    <span>{activeSection}</span>
+                    <span>{activeSection}</span> // Muestra el nombre de la sección seleccionada
                   )}
                 </div>
+                
               </div>
             </div>
           </div>
@@ -112,3 +129,6 @@ const ProfileView: React.FC = () => {
 };
 
 export default ProfileView;
+
+
+

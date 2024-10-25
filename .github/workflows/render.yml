@@ -1,0 +1,50 @@
+name: Deploy Backend to Render
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Navigate to 'back' directory
+        run: cd back
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Install dependencies
+        run: |
+          cd back
+          npm install
+
+      - name: Generate Prisma Client
+        run: |
+          cd back
+          npx prisma generate
+
+      - name: Run Prisma Migrations
+        run: |
+          cd back
+          npx prisma migrate deploy
+
+      - name: Build project
+        run: |
+          cd back
+          npm run build
+
+      - name: Deploy to Render
+        run: |
+          curl -X POST \
+          -H "Authorization: Bearer ${{ secrets.RENDER_API_TOKEN }}" \
+          -H "Content-Type: application/json" \
+          -d '{"serviceId": "${{ secrets.RENDER_SERVICE_ID }}", "branch": "main"}' \
+          "https://api.render.com/v1/deploys"
