@@ -15,15 +15,12 @@ import { Roles } from 'src/decorators/roles.decorator';
 export class CompanyProductsController {
   constructor(private readonly companyProductsService: CompanyProductsService) {}
 
-  @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin') 
   @Get()
   async allCompanyProducts(): Promise<CompanyProduct[]> {
     return this.companyProductsService.findAllServices();
   }
 
-  @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin', 'supplier') 
+
   @Get('company/:id')
   async getAllMyCompanyProducts(@Param('id') companyId: string) {
     return await this.companyProductsService.findAllByCompanyIdServices(companyId);
