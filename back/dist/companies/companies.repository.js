@@ -122,6 +122,13 @@ let CompanyRepository = class CompanyRepository {
             data: { isActive: false },
         });
     }
+    async findByAcoountPaypalById(company_supplier_id) {
+        const accountPaypal = await this.prisma.company.findUnique({
+            where: { company_id: company_supplier_id },
+            select: { account_paypal: true },
+        });
+        return accountPaypal?.account_paypal;
+    }
 };
 exports.CompanyRepository = CompanyRepository;
 exports.CompanyRepository = CompanyRepository = __decorate([
