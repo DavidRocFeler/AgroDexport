@@ -1,0 +1,5 @@
+.ImageProduct {
+    width: 20rem;
+    height: 20em;
+    object-fit: contain;
+}

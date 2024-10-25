@@ -1,0 +1,40 @@
+.Resumen {
+    background-color: white;
+    box-shadow: 0px 5px 20px rgb(190, 190, 190);
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+    padding: 1rem;
+    height: fit-content;
+  }
+  .Resumen h1 {
+    font-size: 1.2rem;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+  .Resumen .SubTotal {
+    padding: 0.5rem 1rem 0.5rem 1rem; 
+    display: flex;
+    flex-direction: row;
+  }
+  .Resumen .SubTotal p {
+    margin-left: auto;
+    margin-right: 1rem;
+  }
+  .Resumen .Total {
+    padding: 0.5rem 1rem 0.5rem 1rem; 
+    margin-bottom: 1rem;
+    background-color: #FFEE58;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: row;
+  }
+   .Resumen .Total p {
+    margin-left: auto;
+    margin-right: 1rem;
+   }
+  .Resumen .Description {
+    padding: 0.5rem 1rem 0.5rem 1rem; ;
+  }
+  

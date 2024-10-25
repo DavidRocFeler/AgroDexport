@@ -1,0 +1,61 @@
+.MainContent {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    background-color: #F6F6F6;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  } 
+  
+  .LabelContent {
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    width: 60%;
+    height: fit-content;
+    padding: 1rem;
+    box-shadow: 0px 5px 20px rgb(214, 213, 213);
+    border-radius: 8px;
+  }
+  
+  .Label {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    background-color: gray;
+    height: fit-content;
+    padding-bottom: 1rem;
+    padding-top: 1rem;
+  }
+  
+  .ImageIcon {
+    width: 7rem;  /* Ajusta el tamaño deseado para el contenedor */
+    height: 5rem; /* Ajusta el tamaño deseado para el contenedor */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; /* Para asegurarte de que la imagen no desborde */
+    position: relative;
+    background-color: pink;
+  }
+  
+  .ImageIcon img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain; /* o "cover" si quieres que ocupe todo el espacio */
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+  
+  
+  .Price {
+    margin-left: auto;
+    margin-right: 1rem;
+  }
+  
+  .Extrainfo {
+    margin-left: 2rem;
+  }
