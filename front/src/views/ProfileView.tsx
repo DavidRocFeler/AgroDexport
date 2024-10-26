@@ -12,9 +12,9 @@ const ProfileView: React.FC = () => {
   const router = useRouter();
   const { role_name } = useUserStore()
 
-  const handleRedirectPanel = () => {
-    router.push("/profilecompany");
-  };
+  // const handleRedirectPanel = () => {
+  //   router.push("/profilecompany");
+  // };
 
   return (
     <div className="min-h-screen bg-gradient-to-b pb-[2rem] from-blue-100 to-blue-200">
