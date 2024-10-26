@@ -133,7 +133,7 @@ export interface IAgroProduct {
 }
 
 export interface MyProductListProps extends IAgroProduct {
-  onDelete: (name: string) => void ; 
+  onDelete: (name: string) => void;
 }
 
 export interface ISupplyChainProps {
@@ -208,6 +208,7 @@ export const companiesData: Company[] = [
 ];
 
 export interface ISettingsUserProps {
+  id: string;
   user_name?: string;
   user_lastname?: string;
   nDni?: number | any;
