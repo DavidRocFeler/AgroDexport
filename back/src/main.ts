@@ -15,26 +15,35 @@ async function bootstrap() {
   app.use(express.urlencoded({ extended: true }));
   app.use(loggerGlobal);
 
-    // Middleware para manejar solicitudes preflight (OPTIONS)
-    app.use((req, res, next) => {
-      res.header('Access-Control-Allow-Origin', process.env.DOMAIN_FRONT);
-      res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE');
-      res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-      if (req.method === 'OPTIONS') {
-        return res.status(204).end();
-      }
-      next();
-    });
+  app.use((req, res, next) => {
+    const allowedOrigins = ['https://agro-dexports.vercel.app', 'https://agrodexports.onrender.com'];
+    const origin = req.headers.origin as string;
+  
+    if (allowedOrigins.includes(origin)) {
+      res.setHeader('Access-Control-Allow-Origin', origin);
+    }
+  
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+  
+    if (req.method === 'OPTIONS') {
+      return res.sendStatus(204);
+    }
+  
+    next();
+  });
+  
 
   console.log('CORS origin:', process.env.DOMAIN_FRONT);
  
   app.enableCors({
-    origin: process.env.DOMAIN_FRONT,  
-    methods: 'GET,POST,PUT,DELETE',    
-    credentials: true,                 // Permitir cookies o autenticación
+    origin: ['https://agro-dexports.vercel.app', 'https://agrodexports.onrender.com'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization']
-  }); 
-
+  });
+  
 
   app.useGlobalPipes(new ValidationPipe({
     transform: true,
