@@ -32,7 +32,7 @@ model Credential {
   credential_id String @id @default(uuid())
   email         String @unique @db.VarChar(255)
   password      String @db.VarChar(255)
-  user          User?  @relation
+  user          User?
 
   @@map("credentials")
 }
@@ -67,12 +67,12 @@ model RolePermission {
 }
 
 model Company {
-  company_id                String  @id @default(uuid())
+  company_id                String                @id @default(uuid())
   user_id                   String
-  company_name              String  @unique @db.VarChar(50)
+  company_name              String                @unique @db.VarChar(50)
   tax_identification_number Int
-  address                   String  @db.VarChar(255)
-  postal_code               String  @db.VarChar(20)
+  address                   String                @db.VarChar(255)
+  postal_code               String                @db.VarChar(20)
   city                      String
   state                     String
   country                   String
@@ -81,17 +81,15 @@ model Company {
   account_paypal            String?
   company_description       String?
   company_logo              String?
-  isActive                  Boolean @default(true)
-
-  // Relaciones
-  user                  User                  @relation(fields: [user_id], references: [user_id])
-  products              CompanyProduct[]
-  shippingAddresses     ShippingAddress[]
-  orders_supplier       Order[]               @relation("orderSupplier")
-  orders_buyer          Order[]               @relation("orderBuyer")
-  farmer_certifications FarmerCertification[]
-  supply_chain          SupplyChain[]
-  payment               Payment?              @relation()
+  isActive                  Boolean               @default(true)
+  user                      User                  @relation(fields: [user_id], references: [user_id])
+  products                  CompanyProduct[]
+  farmer_certifications     FarmerCertification[]
+  orders_buyer              Order[]               @relation("orderBuyer")
+  orders_supplier           Order[]               @relation("orderSupplier")
+  payment                   Payment?
+  shippingAddresses         ShippingAddress[]
+  supply_chain              SupplyChain?
 
   @@map("companies")
 }
@@ -106,23 +104,20 @@ model Commission {
   @@map("commissions")
 }
 
-// Definición del modelo Notification
 model Notification {
-  notification_id   String   @id @default(uuid())
+  notification_id   String       @id @default(uuid())
   user_id           String
   order_id          String?
   supply_chain_id   String?
   task_id           String?
   message           String
   type              String
-  isRead            Boolean  @default(false)
+  isRead            Boolean      @default(false)
   notification_date DateTime
-
-  // Relaciones
-  user         User         @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
-  task         Task?        @relation(fields: [task_id], references: [task_id])
-  supply_chain SupplyChain? @relation(fields: [supply_chain_id], references: [supply_chain_id])
-  order        Order?       @relation(fields: [order_id], references: [order_id])
+  order             Order?       @relation(fields: [order_id], references: [order_id])
+  supply_chain      SupplyChain? @relation(fields: [supply_chain_id], references: [supply_chain_id])
+  task              Task?        @relation(fields: [task_id], references: [task_id])
+  user              User         @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
 
   @@map("notifications")
 }
@@ -141,18 +136,15 @@ model Task {
   @@map("tasks")
 }
 
-// Definición del modelo CompanyProduct
 model CompanyProduct {
-  company_product_id          String   @id @default(uuid())
-  farmer_id                   String?
+  company_product_id          String                                    @id @default(uuid())
   company_id                  String
   category_id                 String
   order_details_id            String?
   company_product_name        String
   company_product_description String?
   stock                       Int
-  minimum_order               Int      @default(5)
-  discount                    Int      @default(0)
+  minimum_order               Int                                       @default(5)
   origin                      String
   company_price_x_kg          Float
   total_price                 Float
@@ -162,18 +154,17 @@ model CompanyProduct {
   fat                         Float?
   protein                     Float?
   carbs                       Float?
-  isActive                    Boolean  @default(true)
-
-  // Relaciones
-  company             Company              @relation(fields: [company_id], references: [company_id])
-  category            Category             @relation(fields: [category_id], references: [category_id], name: "CategoryProducts")
-  farmerCertification FarmerCertification? @relation(fields: [farmer_id], references: [farmer_id])
-  orderDetails        OrderDetailProduct[] // Relación muchos a muchos con OrderDetail a través de OrderDetailProduct
+  isActive                    Boolean                                   @default(true)
+  discount                    Int                                       @default(0)
+  farmer_id                   String?
+  category                    Category                                  @relation("CategoryProducts", fields: [category_id], references: [category_id])
+  company                     Company                                   @relation(fields: [company_id], references: [company_id])
+  farmerCertification         FarmerCertification?                      @relation(fields: [farmer_id], references: [farmer_id])
+  productStockOrderDetails    ProductStockOrderDetailOnCompanyProduct[]
 
   @@map("company_products")
 }
 
-// Definición del modelo ShippingAddress
 model ShippingAddress {
   shipping_address_id String  @id @default(uuid())
   company_id          String
@@ -188,10 +179,8 @@ model ShippingAddress {
   state               String
   country             String
   isActive            Boolean @default(true)
-
-  // Relación
-  company Company @relation(fields: [company_id], references: [company_id])
-  orders   Order[]  @relation
+  orders              Order[]
+  company             Company @relation(fields: [company_id], references: [company_id])
 
   @@map("shipping_addresses")
 }
@@ -205,64 +194,71 @@ model Category {
 }
 
 model FarmerCertification {
-  farmer_id                  String  @id @default(uuid())
+  farmer_id                  String           @id @default(uuid())
   company_id                 String
   phytosanitary_certificate  String
   agricultural_producer_cert String
   organic_certification      String?
   quality_certificate        String
   certificate_of_origin      String
-
-  //Relaciones
-  company  Company          @relation(fields: [company_id], references: [company_id])
-  products CompanyProduct[]
+  products                   CompanyProduct[]
+  company                    Company          @relation(fields: [company_id], references: [company_id])
 
   @@map("farmer_certifications")
 }
 
 model Order {
-  order_id            String         @id @default(uuid())
+  order_id            String           @id @default(uuid())
   id_company_sell     String
-  id_company_buy      String
-  account_paypal      String?
-  shipping_address_id String?        
-  order_details_id    String        @unique   
-  supply_chain_id     String?
+  shipping_address_id String?
+  order_details_id    String           @unique
   order_date          DateTime
-  payment_id          String?        
+  payment_id          String?
+  id_company_buy      String
+  supply_chain_id     String?
+  account_paypal      String?
   notifications       Notification[]
-
-  // Relaciones
-  buyer            Company?         @relation("orderBuyer", fields: [id_company_buy], references: [company_id])
-  supplier         Company?         @relation("orderSupplier", fields: [id_company_sell], references: [company_id])
-  orderDetail      OrderDetail?     @relation(fields: [order_details_id], references: [order_details_id], onDelete: Cascade)
-  payment          Payment?         @relation(fields: [payment_id], references: [payment_id], onDelete: Cascade)
-  shipping_address ShippingAddress? @relation(fields: [shipping_address_id], references: [shipping_address_id], onDelete: Cascade)
-  supply_chain        SupplyChain?     @relation(fields: [supply_chain_id], references: [supply_chain_id]) 
- 
+  buyer               Company          @relation("orderBuyer", fields: [id_company_buy], references: [company_id])
+  supplier            Company          @relation("orderSupplier", fields: [id_company_sell], references: [company_id])
+  orderDetail         OrderDetail      @relation(fields: [order_details_id], references: [order_details_id], onDelete: Cascade)
+  payment             Payment?         @relation(fields: [payment_id], references: [payment_id], onDelete: Cascade)
+  shipping_address    ShippingAddress? @relation(fields: [shipping_address_id], references: [shipping_address_id], onDelete: Cascade)
+  supply_chain        SupplyChain?     @relation(fields: [supply_chain_id], references: [supply_chain_id])
 
   @@map("orders")
 }
 
 model OrderDetail {
-  order_details_id String               @id @default(uuid())
-  iva              Float
-  total            Float
-  order_status     String
-  companyProducts  OrderDetailProduct[]
-  order            Order?
+  order_details_id      String                  @id @default(uuid())
+  iva                   Float
+  total                 Float
+  order_status          String
+  order                 Order?
+  producStockOrderDetail ProducStockOrderDetail[]
 
   @@map("order_details")
 }
 
-model OrderDetailProduct {
-  order_details_id   String
-  company_product_id String
-  companyProduct     CompanyProduct @relation(fields: [company_product_id], references: [company_product_id])
-  orderDetail        OrderDetail    @relation(fields: [order_details_id], references: [order_details_id])
+model ProducStockOrderDetail {
+  order_product_stock_id String                                    @id @default(uuid())
+  order_details_id       String
+  company_product_id     String
+  stock               Int
+  order_details          OrderDetail                               @relation(fields: [order_details_id], references: [order_details_id])
+  companyProducts        ProductStockOrderDetailOnCompanyProduct[]
 
-  @@id([order_details_id, company_product_id])
-  @@map("order_detail_products")
+   @@map("product_stock_order_detail")
+}
+
+model ProductStockOrderDetailOnCompanyProduct {
+  id                      String                @id @default(uuid())
+  company_product_id      String
+  order_product_stock_id  String
+  companyProduct          CompanyProduct        @relation(fields: [company_product_id], references: [company_product_id])
+  productStockOrderDetail ProducStockOrderDetail @relation(fields: [order_product_stock_id], references: [order_product_stock_id])
+
+  @@unique([company_product_id, order_product_stock_id])
+  @@map("product_stock_order_detail_on_company_product")
 }
 
 model SupplyChain {
@@ -272,10 +268,8 @@ model SupplyChain {
   update_date         DateTime
   shipping_status     String
   notifications       Notification[]
-
-  // Define la relación solo aquí
-  orders            Order[]   @relation
-  updatedByCompany Company @relation(fields: [updateBy_company_id], references: [company_id])
+  orders              Order[]
+  updatedByCompany    Company        @relation(fields: [updateBy_company_id], references: [company_id])
 
   @@map("supply_chain")
 }
@@ -294,8 +288,10 @@ model Payment {
   is_verified      Boolean  @default(false)
   created_at       DateTime @default(now())
   updated_at       DateTime @updatedAt
-  orders            Order[]
+  orders           Order[]
   company          Company  @relation(fields: [company_id], references: [company_id])
 
   @@map("payments")
 }
+
+
