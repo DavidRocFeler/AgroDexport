@@ -22,7 +22,7 @@ async function bootstrap() {
     methods: 'GET,POST,PUT,DELETE',    
     credentials: true,                 // Permitir cookies o autenticación
     allowedHeaders: ['Content-Type', 'Authorization']
-  });
+  }); 
 
 
   app.useGlobalPipes(new ValidationPipe({
