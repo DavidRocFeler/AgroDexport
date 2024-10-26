@@ -17,7 +17,6 @@ const adresses_repository_1 = require("../addresses/adresses.repository");
 const orderStatus_enum_1 = require("../helpers/orderStatus.enum");
 let OrderRepository = class OrderRepository {
     constructor(prisma, companyRepository, addressesRepository) {
-    constructor(prisma, companyRepository, addressesRepository) {
         this.prisma = prisma;
         this.companyRepository = companyRepository;
         this.addressesRepository = addressesRepository;
@@ -190,9 +189,6 @@ let OrderRepository = class OrderRepository {
 exports.OrderRepository = OrderRepository;
 exports.OrderRepository = OrderRepository = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [prisma_service_1.PrismaService,
-        companies_repository_1.CompanyRepository,
-        adresses_repository_1.AddressesRepository])
     __metadata("design:paramtypes", [prisma_service_1.PrismaService,
         companies_repository_1.CompanyRepository,
         adresses_repository_1.AddressesRepository])
