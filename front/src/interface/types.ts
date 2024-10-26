@@ -263,3 +263,25 @@ export interface IFilePreview {
 export interface IPreviewState {
   [key: string]: IFilePreview | null;
 }
+
+export interface FarmerCertificationsFormProps {
+  onCancel: () => void;
+}
+
+// for FileInput
+export interface FileInputProps {
+  name: keyof ICertificationsProps;
+  label: string;
+  description: string;
+  register: any; // should type this correctly with the react-hook-form register type
+  errors: any; //  should type this correctly with the react-hook-form errors type
+  handleFileChange: (
+    event: React.ChangeEvent<HTMLInputElement>,
+    fieldName: keyof ICertificationsProps
+  ) => void;
+  previews: IPreviewState;
+}
+
+export interface FormPublishProductProps {
+  onUpdateClick: () => void;
+}
