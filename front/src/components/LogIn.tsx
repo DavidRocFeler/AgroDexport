@@ -1,6 +1,6 @@
 "use client"
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ILoginComponentProps } from '@/interface/types';
 import styles from "../styles/LogSign.module.css";
 import { FaGoogle, FaApple, FaEnvelope } from 'react-icons/fa';
@@ -10,10 +10,15 @@ import { useUserStore } from '@/store/useUserStore';
 import { logginProps } from '@/helpers/loginHelpers';
 import Swal from 'sweetalert2';
 import { useRouter } from 'next/navigation';
+import { useSocket } from '../app/useSocket';
+
+
 
 const LogIn: React.FC<ILoginComponentProps> = ({ onCloseLogin, onSwitchToSignUp }) => {
     const setUserData = useUserStore((state) => state.setUserData);
     const router = useRouter();
+    const { notifications } = useSocket(); // pruebas del socket.io 
+    console.log('Hook useSocket inicializado en LogIn');
    
     const [userData, setUserFormData] = useState<{ 
         email: string; 

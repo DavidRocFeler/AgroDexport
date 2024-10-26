@@ -23,7 +23,7 @@ export class NotificationsService {
     });
 
     if (existingNotification) {
-        console.log(`Notification not sent to ${userId}: an unread notification with the same message already exists.`);
+        // console.log(`Notification not sent to ${userId}: an unread notification with the same message already exists.`);
         return {
             success: false,
             message: 'No new notification was sent: an unread notification with the same message already exists.',
@@ -108,6 +108,8 @@ export class NotificationsService {
     );
     return notifications;
   }  
+
+  
   
   async markAsRead(notificationId: string) {
     const notification = await this.prisma.notification.update({
