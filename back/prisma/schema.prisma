@@ -207,11 +207,11 @@ model Category {
 model FarmerCertification {
   farmer_id                  String  @id @default(uuid())
   company_id                 String
-  phytosanitary_certificate  String
-  agricultural_producer_cert String
+  phytosanitary_certificate  String?
+  agricultural_producer_cert String?
   organic_certification      String?
-  quality_certificate        String
-  certificate_of_origin      String
+  quality_certificate        String?
+  certificate_of_origin      String?
 
   //Relaciones
   company  Company          @relation(fields: [company_id], references: [company_id])

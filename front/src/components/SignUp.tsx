@@ -36,7 +36,7 @@ const SignUp: React.FC<ISignUpComponentProps> = ({ onCloseSignUp, onSwitchToLogi
         const { name, value, type, checked } = event.target;
                 
         setUserData((prevData) => {
-            let updatedData = { ...prevData };
+            const updatedData = { ...prevData };
         
             if (type === "checkbox") {
                 if (name === "supplier" || name === "buyer") {
@@ -118,7 +118,7 @@ const SignUp: React.FC<ISignUpComponentProps> = ({ onCloseSignUp, onSwitchToLogi
                         className={styles.Supplier}
                         type="checkbox"
                     />{" "}
-                    I'm a supplier
+                    I&apos;m a supplier
                     <input
                         name="buyer"
                         checked={userData.role_name === "buyer"}
@@ -126,7 +126,7 @@ const SignUp: React.FC<ISignUpComponentProps> = ({ onCloseSignUp, onSwitchToLogi
                         className="ml-[8rem]"
                         type="checkbox"
                     />{" "}
-                    I'm a buyer
+                    I&apos;m a buyer
                 </div>
                 <div className="w-[40%] flex flex-col m-auto mb-[3rem] ">
                     <input className={styles.CommonInput}

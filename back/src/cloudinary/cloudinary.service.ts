@@ -167,11 +167,11 @@ async saveUrlsToDatabase(
   // Crear el objeto DTO para guardar en la base de datos
   const updateData: CreateFarmerCertificationDto = {
     company_id: companyId,
-    phytosanitary_certificate: fileUrls.phytosanitary_certificate || '',
-    agricultural_producer_cert: fileUrls.agricultural_producer_cert || '',
-    organic_certification: fileUrls.organic_certification || '',
-    quality_certificate: fileUrls.quality_certificate || '',
-    certificate_of_origin: fileUrls.certificate_of_origin || '',
+    phytosanitary_certificate: fileUrls.phytosanitary_certificate || null,
+    agricultural_producer_cert: fileUrls.agricultural_producer_cert || null,
+    organic_certification: fileUrls.organic_certification || null,
+    quality_certificate: fileUrls.quality_certificate || null,
+    certificate_of_origin: fileUrls.certificate_of_origin || null,
     company_product_ids: [companyProductId], // Asegurar que se incluya company_product_ids
   };
 
