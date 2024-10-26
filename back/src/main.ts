@@ -18,7 +18,7 @@ async function bootstrap() {
   console.log('CORS origin:', process.env.DOMAIN_FRONT);
  
   app.enableCors({
-    origin: process.env.DOMAIN_FRONT,  
+    origin: 'https://agrodexports.onrender.com',  
     methods: 'GET,POST,PUT,DELETE',    
     credentials: true,                 // Permitir cookies o autenticación
     allowedHeaders: ['Content-Type', 'Authorization']
