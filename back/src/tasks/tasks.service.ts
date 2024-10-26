@@ -75,12 +75,12 @@ export class TasksService {
                 const companyName = products[0].company.company_name;
                 const productNames = products.map(product => product.company_product_name);
 
-                await this.notificationsService.createAndNotifyUser(
-                    user.user_id,
-                    'Please complete the certifications for your products.',
-                    'certifications',
-                    savedTask.task_id
-                  );
+                // await this.notificationsService.createAndNotifyUser(
+                //     user.user_id,
+                //     'Please complete the certifications for your products.',
+                //     'certifications',
+                //     savedTask.task_id
+                //   );
 
                 // Enviar correo
                 await this.emailService.sendIncompleteCertificationsEmail(
