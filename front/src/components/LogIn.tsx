@@ -111,7 +111,7 @@ const LogIn: React.FC<ILoginComponentProps> = ({ onCloseLogin, onSwitchToSignUp 
                     <p className="ml-[1rem]">Log in with Email</p>
                 </button>
                 <div className="flex flex-row justify-center items-center mt-[2rem]">
-                    <p>Don't have an account available yet?</p>
+                    <p>Don&apos;t have an account available yet?</p>
                     <button
                         onClick={onSwitchToSignUp}
                         className="ml-[1rem] text-[0.9rem] font-bold text-[#5c8b1b] mt-1"

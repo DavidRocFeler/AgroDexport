@@ -70,7 +70,7 @@ const AuthWrapper: React.FC<IAuthWrapperProps> = ({ children }) => {
             handleGoogleLogin();
         }
 
-    }, [session, sessionStatus, router]);
+    }, [session, sessionStatus, router, clearAllSessions, resetInitialization, setUserData, logginAuthProps]);
 
     return <>{children}</>;
 };
