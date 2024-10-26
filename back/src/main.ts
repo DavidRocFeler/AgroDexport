@@ -5,8 +5,9 @@ import { ValidationPipe } from '@nestjs/common';
 import { loggerGlobal } from './middlewares/logger.middleware';
 import * as express from 'express';
 import { config as dotenvConfig } from "dotenv";
+import { join } from 'path';
 
-dotenvConfig({ path: ".env" });
+dotenvConfig({ path: join(process.cwd(), '.env') });
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -16,7 +17,7 @@ async function bootstrap() {
   app.use(loggerGlobal);
 
   app.use((req, res, next) => {
-    const allowedOrigins = ['https://agro-dexports.vercel.app', 'https://agrodexports.onrender.com'];
+    const allowedOrigins = process.env.DOMAIN_FRONT;
     const origin = req.headers.origin as string;
   
     if (allowedOrigins.includes(origin)) {
@@ -38,7 +39,7 @@ async function bootstrap() {
   console.log('CORS origin:', process.env.DOMAIN_FRONT);
  
   app.enableCors({
-    origin: ['https://agro-dexports.vercel.app', 'https://agrodexports.onrender.com'],
+    origin: process.env.DOMAIN_FRONT,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization']
