@@ -22,28 +22,28 @@ export class OrdersController {
     }
 
     @UseGuards(AuthGuard, RolesGuard)
-    @Roles('admin', 'supplier')
+    @Roles('admin', 'buyer')
     @Get(":id")
     async getOrderById(@Param("id") orderId: string){
         return await this.orderService.getOrderByIdService(orderId);
     }
 
     @UseGuards(AuthGuard, RolesGuard)
-    @Roles('admin', 'supplier')
+    @Roles('admin', 'buyer')
     @Post()
     async createOrderProducts(@Body() createOrderProductsDto: CreateOrderProductsDto){
         return this.orderService.createOrderProductsServices(createOrderProductsDto)
     }
 
     @UseGuards(AuthGuard, RolesGuard)
-    @Roles('admin', 'supplier')
+    @Roles('admin', 'buyer')
     @Put(":id")
     async updateOrderSatus(@Param("id") orderId: string){
         return await this.orderService.updateOderStatusService(orderId)
     }
 
     @UseGuards(AuthGuard, RolesGuard)
-    @Roles('admin', 'supplier') 
+    @Roles('admin', 'buyer') 
     @Delete(":id")
     async softDeleteOrder(@Param("id") orderId: string){
         return await this.orderService.softDleteOrderService(orderId)
