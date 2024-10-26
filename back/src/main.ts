@@ -17,7 +17,7 @@ async function bootstrap() {
 
     // Middleware para manejar solicitudes preflight (OPTIONS)
     app.use((req, res, next) => {
-      res.header('Access-Control-Allow-Origin', 'https://agrodexports.onrender.com');
+      res.header('Access-Control-Allow-Origin', process.env.DOMAIN_FRONT);
       res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE');
       res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
       if (req.method === 'OPTIONS') {
@@ -29,7 +29,7 @@ async function bootstrap() {
   console.log('CORS origin:', process.env.DOMAIN_FRONT);
  
   app.enableCors({
-    origin: 'https://agrodexports.onrender.com',  
+    origin: process.env.DOMAIN_FRONT,  
     methods: 'GET,POST,PUT,DELETE',    
     credentials: true,                 // Permitir cookies o autenticación
     allowedHeaders: ['Content-Type', 'Authorization']
