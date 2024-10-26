@@ -18,5 +18,5 @@ jobs:
         with:
           node-version: 16
 
-      - name: Deploy to Render
+      - name: Deploy to Render Back
         run: curl -X POST "https://api.render.com/deploy/srv-csdfe1l6l47c73dad1i0?key=TjeWMUi4oNE"
