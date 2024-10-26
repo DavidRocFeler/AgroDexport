@@ -1364,5 +1364,22 @@
     "carbs": 22,
     "protein": 21,
     "company_product_img": "https://upload.wikimedia.org/wikipedia/commons/b/b0/Almonds.jpg"
+  },
+  {
+    "company_name": "Agro Jorge",
+    "category_name": "Nuts",
+    "company_product_name": "Almonds",
+    "company_product_description": "Almonds have a naturally sweet flavor, rich in nutrients.",
+    "stock": 52,
+    "minimum_order": 11,
+    "origin": "Brazil",
+    "discount": 8,
+    "company_price_x_kg": 4.92,
+    "harvest_date": "2024-12-11",
+    "calories": 576,
+    "fat": 49,
+    "carbs": 22,
+    "protein": 21,
+    "company_product_img": "https://upload.wikimedia.org/wikipedia/commons/b/b0/Almonds.jpg"
   }
 ]
