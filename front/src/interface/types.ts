@@ -132,6 +132,10 @@ export interface IAgroProduct {
   }[];
 }
 
+export interface MyProductListProps extends IAgroProduct {
+  onDelete: (name: string) => void ; 
+}
+
 export interface ISupplyChainProps {
   id: number;
   title: string;

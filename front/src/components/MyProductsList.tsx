@@ -2,11 +2,7 @@
 "use client";
 import React from "react";
 import { Trash2 } from "lucide-react"; // Importando el ícono de trash
-import { IAgroProduct } from "@/interface/types";
-
-interface MyProductListProps extends IAgroProduct {
-  onDelete: (name: string) => void;
-}
+import { MyProductListProps } from "@/interface/types";
 
 const MyProductList: React.FC<MyProductListProps> = ({
   name,
