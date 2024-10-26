@@ -19,7 +19,55 @@ let CompanyProductsRepository = class CompanyProductsRepository {
         this.notificationsService = notificationsService;
     }
     async findAll() {
-        return this.prisma.companyProduct.findMany();
+        return this.prisma.companyProduct.findMany({
+            include: {
+                farmerCertification: true,
+            },
+        });
+    }
+    async findProductsWithoutFarmer() {
+        return this.prisma.companyProduct.findMany({
+            where: { farmer_id: null },
+            include: {
+                company: {
+                    include: {
+                        user: {
+                            include: {
+                                credential: true,
+                            },
+                        },
+                    },
+                },
+            },
+        });
+    }
+    async findProductsWithIncompleteCertifications() {
+        return this.prisma.companyProduct.findMany({
+            where: {
+                farmer_id: { not: null },
+                farmerCertification: {
+                    OR: [
+                        { phytosanitary_certificate: null },
+                        { agricultural_producer_cert: null },
+                        { organic_certification: null },
+                        { quality_certificate: null },
+                        { certificate_of_origin: null },
+                    ],
+                },
+            },
+            include: {
+                farmerCertification: true,
+                company: {
+                    include: {
+                        user: {
+                            include: {
+                                credential: true,
+                            },
+                        },
+                    },
+                },
+            },
+        });
     }
     async findAllByCompanyId(companyId) {
         return this.prisma.companyProduct.findMany({

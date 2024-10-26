@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Incomplete Product Certifications</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Open Sans', sans-serif;
+        }
+        table {
+            border-spacing: 0;
+            width: 100%;
+            height: 100%;
+        }
+        td {
+            padding: 0;
+        }
+        .content {
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .titleSee {
+            color: #C57920;
+        }
+        .info {
+            color: white;
+            font-size: 18px;
+            text-align: justify;
+            padding: 0 15px;
+        }
+        .title {
+            color: white;
+            font-size: 40px;
+            text-align: center;
+        }
+        .logo {
+            width: 30%;
+            object-fit: contain;
+            object-position: center;
+        }
+        .product-list {
+            text-align: left;
+            margin: 20px 0;
+            padding: 0 15px;
+            color: white;
+        }
+        .product-list ol {
+            padding-left: 20px;
+        }
+        .product-list li {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <table role="presentation">
+        <tr>
+            <td background="https://res.cloudinary.com/dnahrkhol/image/upload/v1727718810/tfcapipylq0iodeozmi6.jpg" style="background-size: cover; background-position: center;">
+                <div class="content">
+                    <div class="containerLogo">
+                        <img class="logo" src="https://res.cloudinary.com/deflfnoba/image/upload/v1729805931/Front/z1ya7klcfaercnx5jvde.png">
+                    </div>
+                    <h1 class="title">Hello, <span class="titleSee">{{user_name}} {{user_lastname}}</span>!</h1>
+                    <p class="info">
+                        We have identified that your company, <span class="titleSee">{{company_name}}</span>, has products with <span class="titleSee">pending certifications</span>. The following products require additional information to complete their certifications:<br><br>
+                    </p>
+                    <div class="product-list">
+                        <ol>
+                            {{#each products_names}}
+                                <li><span class="titleSee">{{this}}</span></li>
+                            {{/each}}
+                        </ol>
+                    </div>
+                    <p class="info">
+                        Please review the listed products and complete the necessary certifications at your earliest convenience. Ensuring full compliance will help maintain the integrity of your product listings on AgroDexports.<br><br>
+                        
+                        <span class="titleSee">AgroDexports is committed to transparency and quality</span>, and your prompt action is greatly appreciated.<br><br>
+                        
+                        Best regards,<br>
+                        The AgroDexports Team
+                    </p>
+                </div>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
