@@ -12,9 +12,8 @@ export class NotificationsService {
 
 
   async createAndNotifyUser(userId: string, message: string, type: string, taskId?: string) {
-    const prisma = new PrismaClient();
 
-    const existingNotification = await prisma.notification.findFirst({
+    const existingNotification = await this.prisma.notification.findFirst({
         where: {
             user_id: userId,
             message: message,
@@ -40,7 +39,7 @@ export class NotificationsService {
         task_id: taskId,
     };
 
-    const notification = await prisma.notification.create({
+    const notification = await this.prisma.notification.create({
         data: notificationData,
     });
 
