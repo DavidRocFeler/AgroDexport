@@ -216,11 +216,20 @@
     "confirmPassword": "Password123!"
   },
   {
-    "user_name": "Camila",
-    "user_lastname": "Reyes",
+    "user_name": "Susana",
+    "user_lastname": "Villa",
     "role_name": "supplier",
     "isOlder": true,
-    "email": "camila@example.com",
+    "email": "susanav@example.com",
+    "password": "Password123!",
+    "confirmPassword": "Password123!"
+  },
+  {
+    "user_name": "Jorge",
+    "user_lastname": "Martínez",
+    "role_name": "supplier",
+    "isOlder": true,
+    "email": "jorgemartinez.jam@hotmail.com",
     "password": "Password123!",
     "confirmPassword": "Password123!"
   }

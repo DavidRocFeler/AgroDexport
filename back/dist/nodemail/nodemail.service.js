@@ -57,10 +57,39 @@ let EmailService = class EmailService {
         };
         try {
             const info = await this.transporter.sendMail(mailOptions);
-            console.log('Email enviado: ', info.response);
         }
         catch (error) {
             console.error('Error enviando email: ', error);
+        }
+    }
+    async sendIncompleteCertificationsEmail(userName, userLastName, email, companyName, productNames) {
+        const path = require('path');
+        const fs = require('fs');
+        const templatePath = path.join(process.cwd(), 'src', 'template', 'certifications-email.html');
+        if (!fs.existsSync(templatePath)) {
+            console.error(`El archivo de plantilla no existe en la ruta: ${templatePath}`);
+        }
+        let htmlTemplate = fs.readFileSync(templatePath, 'utf8');
+        htmlTemplate = htmlTemplate.replace('{{user_name}}', userName);
+        htmlTemplate = htmlTemplate.replace('{{user_lastname}}', userLastName);
+        htmlTemplate = htmlTemplate.replace('{{company_name}}', companyName);
+        console.log(productNames);
+        const productListHTML = productNames
+            .map(name => `<li><span class="titleSee">${name}</span></li>`)
+            .join('');
+        htmlTemplate = htmlTemplate.replace(/{{#each products_names}}[\s\S]*{{\/each}}/, productListHTML);
+        const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: email,
+            subject: 'Incomplete Product Certifications on AgroDexports',
+            html: htmlTemplate,
+        };
+        try {
+            const info = await this.transporter.sendMail(mailOptions);
+            console.log('Email sent:', info.response);
+        }
+        catch (error) {
+            console.error('Error sending email:', error);
         }
     }
 };

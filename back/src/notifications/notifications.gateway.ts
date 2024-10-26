@@ -1,17 +1,29 @@
 import { WebSocketGateway, WebSocketServer, SubscribeMessage, MessageBody, ConnectedSocket } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
+import { config as dotenvConfig } from "dotenv";
+
+dotenvConfig({ path: ".env" });
 
 @WebSocketGateway({
   cors: {
-    origin: 'http://localhost:3000', // Dominio del front
+    origin: process.env.DOMAIN_FRONT,
+    methods: ['GET', 'POST'],
   },
+  transports: ['websocket'],  // Agregar esta línea
 })
+
 export class NotificationsGateway {
+  constructor() {
+    console.log('NotificationsGateway inicializado');
+  }
   @WebSocketServer()
   server: Server;
 
   handleConnection(@ConnectedSocket() client: Socket) {
     console.log(`Cliente conectado: ${client.id}`);
+    this.server.to(client.id).emit('newNotification', {
+      message: 'Notificación de prueba desde el backend'
+    });
   }
 
   handleDisconnect(@ConnectedSocket() client: Socket) {
