@@ -28,19 +28,19 @@ export declare class CompanyProductsRepository {
         protein: number | null;
         carbs: number | null;
         company_product_id: string;
-        farmer_id: string | null;
         order_details_id: string | null;
         total_price: number;
+        farmer_id: string | null;
     }[]>;
     findProductByIdRepository(companyId: string, productId: string): Promise<{
         farmerCertification: {
             company_id: string;
             farmer_id: string;
-            phytosanitary_certificate: string | null;
-            agricultural_producer_cert: string | null;
+            phytosanitary_certificate: string;
+            agricultural_producer_cert: string;
             organic_certification: string | null;
-            quality_certificate: string | null;
-            certificate_of_origin: string | null;
+            quality_certificate: string;
+            certificate_of_origin: string;
         };
     } & {
         isActive: boolean;
@@ -60,9 +60,9 @@ export declare class CompanyProductsRepository {
         protein: number | null;
         carbs: number | null;
         company_product_id: string;
-        farmer_id: string | null;
         order_details_id: string | null;
         total_price: number;
+        farmer_id: string | null;
     }>;
     createProductRepository(createCompanyProductDto: CreateCompanyProductDto): Promise<CompanyProduct>;
     updateProductRepository(productId: string, productData: UpdateCompanyProductDto): Promise<{
@@ -83,9 +83,9 @@ export declare class CompanyProductsRepository {
         protein: number | null;
         carbs: number | null;
         company_product_id: string;
-        farmer_id: string | null;
         order_details_id: string | null;
         total_price: number;
+        farmer_id: string | null;
     }>;
     findByProductNameAndCompanyId(productName: string, companyId: string): Promise<(CompanyProduct & {
         company: Company;
@@ -112,9 +112,9 @@ export declare class CompanyProductsRepository {
         protein: number | null;
         carbs: number | null;
         company_product_id: string;
-        farmer_id: string | null;
         order_details_id: string | null;
         total_price: number;
+        farmer_id: string | null;
     }>;
     findByIdMinimumOrder(product_one_id: string): Promise<number>;
     findByIdStock(product_one_id: string): Promise<number>;
