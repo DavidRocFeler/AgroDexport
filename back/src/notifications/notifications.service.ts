@@ -12,9 +12,8 @@ export class NotificationsService {
 
 
   async createAndNotifyUser(userId: string, message: string, type: string, taskId?: string) {
-    const prisma = new PrismaClient();
 
-    const existingNotification = await prisma.notification.findFirst({
+    const existingNotification = await this.prisma.notification.findFirst({
         where: {
             user_id: userId,
             message: message,
@@ -23,7 +22,7 @@ export class NotificationsService {
     });
 
     if (existingNotification) {
-        console.log(`Notification not sent to ${userId}: an unread notification with the same message already exists.`);
+        // console.log(`Notification not sent to ${userId}: an unread notification with the same message already exists.`);
         return {
             success: false,
             message: 'No new notification was sent: an unread notification with the same message already exists.',
@@ -40,7 +39,7 @@ export class NotificationsService {
         task_id: taskId,
     };
 
-    const notification = await prisma.notification.create({
+    const notification = await this.prisma.notification.create({
         data: notificationData,
     });
 
@@ -108,6 +107,8 @@ export class NotificationsService {
     );
     return notifications;
   }  
+
+  
   
   async markAsRead(notificationId: string) {
     const notification = await this.prisma.notification.update({

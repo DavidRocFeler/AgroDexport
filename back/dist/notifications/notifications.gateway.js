@@ -15,9 +15,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.NotificationsGateway = void 0;
 const websockets_1 = require("@nestjs/websockets");
 const socket_io_1 = require("socket.io");
+const dotenv_1 = require("dotenv");
+(0, dotenv_1.config)({ path: ".env" });
 let NotificationsGateway = class NotificationsGateway {
+    constructor() {
+        console.log('NotificationsGateway inicializado');
+    }
     handleConnection(client) {
         console.log(`Cliente conectado: ${client.id}`);
+        this.server.to(client.id).emit('newNotification', {
+            message: 'Notificación de prueba desde el backend'
+        });
     }
     handleDisconnect(client) {
         console.log(`Cliente desconectado: ${client.id}`);
@@ -58,8 +66,11 @@ __decorate([
 exports.NotificationsGateway = NotificationsGateway = __decorate([
     (0, websockets_1.WebSocketGateway)({
         cors: {
-            origin: 'http://localhost:3000',
+            origin: process.env.DOMAIN_FRONT,
+            methods: ['GET', 'POST'],
         },
-    })
+        transports: ['websocket'],
+    }),
+    __metadata("design:paramtypes", [])
 ], NotificationsGateway);
 //# sourceMappingURL=notifications.gateway.js.map

@@ -3,6 +3,7 @@ import { CreateOrderProductsDto } from "./dtos/createOrderProducts.dto";
 import { CompanyRepository } from "src/companies/companies.repository";
 import { AddressesRepository } from "src/addresses/adresses.repository";
 import { Order } from "@prisma/client";
+
 export declare class OrderRepository {
     private readonly prisma;
     private readonly companyRepository;

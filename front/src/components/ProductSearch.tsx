@@ -29,7 +29,7 @@ const ProductSearch = () => {
   };
 
   return (
-    <div className="flex items-center ms-8 mr-8 px-4 py-3">
+    <div className="flex items-center mt-[2rem] mb-[2rem] ms-8 mr-8 px-4 pr-0 pl-0 ">
       <div className="flex w-1/2"> 
         <label className="flex flex-col min-w-40 h-12 w-full">
           <div className="flex w-full flex-1 items-stretch rounded-xl h-full">
@@ -55,7 +55,7 @@ const ProductSearch = () => {
           </div>
         </label>
       </div>
-      <form onSubmit={handleSubmit}  className="flex flex-row w-full items-center ms space-x-4  "> 
+      <form onSubmit={handleSubmit}  className="flex flex-row items-center space-x-4 ml-auto "> 
         <div className="flex w-full">
           <select className="rounded-xl px-3 py-2 h-12 text-black border border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
           value={category}
@@ -90,9 +90,6 @@ const ProductSearch = () => {
             <option value="Organic">Organic</option>
           </select>
         </div>
-        <button type="submit" className="rounded-xl px-4 py-2 bg-black text-white">
-          Search
-        </button>
       </form>
     </div>
   );

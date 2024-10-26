@@ -5,14 +5,16 @@ import PasswordProfileForm from "@/components/PasswordSettingCongif"; // Importa
 import { useRouter } from "next/navigation";
 import { companiesData } from "@/helpers/companiesData";
 import Paypal from "@/components/Paypal";
+import { useUserStore } from "@/store/useUserStore";
 
 const ProfileView: React.FC = () => {
   const [activeSection, setActiveSection] = useState<string>("Information contact"); // Por defecto muestra UserProfileForm
   const router = useRouter();
+  const { role_name } = useUserStore()
 
-  const handleRedirectPanel = () => {
-    router.push("/profilecompany");
-  };
+  // const handleRedirectPanel = () => {
+  //   router.push("/profilecompany");
+  // };
 
   return (
     <div className="min-h-screen bg-gradient-to-b pb-[2rem] from-blue-100 to-blue-200">
@@ -32,7 +34,7 @@ const ProfileView: React.FC = () => {
                     <div className="flex justify-between items-start">
                       <div className="space-y-1">
                         <h5 className="font-medium text-gray-900">{company.name}</h5>
-                        <p className="text-sm text-gray-600">Role: {company.role}</p>
+                        <p className="text-sm text-gray-600">{role_name}</p>
                       </div>
                     </div>
                     <div className="mt-3 flex gap-2">
@@ -47,17 +49,12 @@ const ProfileView: React.FC = () => {
           </div>
 
           {/* Profile Section */}
-          <div className="m-auto w-fit flex flex-col items-center space-y-4">
-            <div className="relative">
+          <div className="m-auto mb-[2.1rem] w-fit flex flex-col items-center space-y-4">
               <img
                 className="w-60 h-60 rounded-full object-cover border-4 border-black"
                 src="/LogoIcon.png"
                 alt="Profile"
               />
-            </div>
-            <div className="text-center">
-              <h2 className="text-2xl font-bold text-gray-800 mb-2">John Doe</h2>
-            </div>
           </div>
         </div>
 
@@ -70,8 +67,8 @@ const ProfileView: React.FC = () => {
                 {["Information contact", "Security settings", "Payments methood"].map((item, index) => (
                   <button
                     key={index}
-                    onClick={() => setActiveSection(item)} // Cambia la sección activa
-                    className="w-full bg-black hover:bg-gray-800 text-white font-medium py-3 px-4 rounded-lg transition-colors text-center text-sm"
+                    onClick={() => setActiveSection(item)} 
+                    className="w-full bg-[#242424] hover:bg-gray-800 text-white font-medium py-3 px-4 rounded-lg transition-colors text-center text-sm"
                   >
                     {item}
                   </button>

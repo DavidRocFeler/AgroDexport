@@ -45,6 +45,62 @@ export interface ILoginComponentProps {
   onSwitchToSignUp: () => void;
 }
 
+export interface IUserSession {
+  token: string;
+  user: {
+      id: number;
+      address: string;
+      email: string;
+      name: string;
+      phone: string;
+      role: string;
+      orders: [];
+  }
+};
+
+export interface IOrderCarWishProps {
+  product: any;
+}
+
+export interface ILabelComponentProps {
+  product?: IAgriProduct;
+  units: number;
+  viewType: 'carShop' | 'ordersView' | 'wishListView';
+  orderStatus?: { status: string; date: string };
+};
+
+export interface IPropsCards {
+  company_id: string;
+  company_product_name: string;
+  company_product_description?: string;
+  company_price_x_kg?: number | any;
+  company_product_img?: string;
+}
+
+export interface IAgriProduct {
+  company_id?: string;
+  company_product_img?: string;
+  company_product_name?: string;
+  category_id: string;
+  origin?: string;
+  harvest_date?: string;
+  company_price_x_kg?: number | any;
+  minimum_order?: number;
+  stock?: number;
+  company_product_description?: string;
+  calories?: number;
+  fat?: number;
+  protein?: number;
+  carbs?: number;
+}
+
+export interface IOrder {
+  id: number;
+  status: string;
+  date: Date;
+  products: IAgriProduct[];
+};
+
 export interface IAgroProduct {
   id: number; // ID único del producto
   name: string; // Nombre del producto
@@ -76,6 +132,10 @@ export interface IAgroProduct {
   }[];
 }
 
+export interface MyProductListProps extends IAgroProduct {
+  onDelete: (name: string) => void ; 
+}
+
 export interface ISupplyChainProps {
   id: number;
   title: string;
@@ -95,8 +155,6 @@ export interface IUserState {
   isAuthenticated: boolean;
   setUserData: (id: string, token: string, role_name: string) => void;
   clearUser: () => void;
-  // addUser: () => void;
-  // removeUser: (email: string) => void;
 }
 
 export interface IAuthThirdState {
@@ -119,18 +177,18 @@ export interface IProvidersProps {
   children: React.ReactNode;
 }
 
-  export interface INotificationsProps {
-    isVisible: boolean;
-    onClose: () => void;
-  }
+export interface INotificationsProps {
+  isVisible: boolean;
+  onClose: () => void;
+}
 
-  export interface IAuthWrapperProps {
-      children: React.ReactNode; // Define la prop 'children' como ReactNode
-  }
-  
+export interface IAuthWrapperProps {
+  children: React.ReactNode; // Define la prop 'children' como ReactNode
+}
+
 export interface iProtectedRouteProps {
-  children: React.ReactNode
-  allowedRoles?: string[]
+  children: React.ReactNode;
+  allowedRoles?: string[];
 }
 
 export interface Company {
@@ -152,29 +210,61 @@ export const companiesData: Company[] = [
 export interface ISettingsUserProps {
   user_name?: string;
   user_lastname?: string;
-  nDni?: number | any,
-  birthday?: string
-  phone?: string,
-  country?: string,
-  updatedFields?: Partial<ISettingsUserProps>; 
+  nDni?: number | any;
+  birthday?: string;
+  phone?: string;
+  country?: string;
+  updatedFields?: Partial<ISettingsUserProps>;
 }
 
 export interface ISettingsPasswordProps {
-  password: string,
-  confirm_password: string,
-  updatedFields?: Partial<ISettingsPasswordProps>; 
+  password: string;
+  confirm_password: string;
+  updatedFields?: Partial<ISettingsPasswordProps>;
 }
 
 export interface ISettingsCompanyProps {
   company_name: string;
-  tax_identification_number: number | null,
-  address: string,
-  postal_code: string,
-  city: string,
-  state: string,
-  country: string,
-  industry: string,
-  website: string,
-  company_description: string,
+  tax_identification_number: number | null;
+  address: string;
+  postal_code: string;
+  city: string;
+  state: string;
+  country: string;
+  industry: string;
+  website: string;
+  company_description: string;
+}
 
+export interface IPublishProductProps {
+  company_product_name: string;
+  company_product_description: string;
+  stock: number;
+  minimum_order: number;
+  origin: string;
+  discount: number;
+  company_price_x_kg: number;
+  harvest_date: string;
+  company_product_img: string;
+  calories: number;
+  fat: number;
+  protein: number;
+  carbs: number;
+}
+
+export interface ICertificationsProps {
+  phytosanitary_certificate: FileList;
+  agricultural_producer_cert: FileList;
+  organic_certification: FileList;
+  quality_certificate: FileList;
+  certificate_of_origin: FileList;
+}
+
+export interface IFilePreview {
+  name: string;
+  size: string;
+}
+
+export interface IPreviewState {
+  [key: string]: IFilePreview | null;
 }

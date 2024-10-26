@@ -1,0 +1,22 @@
+name: Deploy Frontend to Vercel
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16 
+
+      - name: Deploy to Render Front
+        run: curl -X POST "https://api.render.com/deploy/srv-cse738btq21c7385oovg?key=nMWWjfLptgM"

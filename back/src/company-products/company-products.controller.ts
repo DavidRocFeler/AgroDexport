@@ -9,7 +9,7 @@ import { AuthGuard } from 'src/guards/auth.guard';
 import { Roles } from 'src/decorators/roles.decorator';
 
 
-@ApiBearerAuth()
+
 @ApiTags("products")
 @Controller('company-products')
 export class CompanyProductsController {
@@ -25,28 +25,27 @@ export class CompanyProductsController {
   async getAllMyCompanyProducts(@Param('id') companyId: string) {
     return await this.companyProductsService.findAllByCompanyIdServices(companyId);
   }
-
-  @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin', 'supplier') 
+ 
   @Get("company/:companyId/product/:productId")
   async getProductById(@Param('companyId') companyId: string, @Param('productId') productId: string) {
     return await this.companyProductsService.findProductByIdServices(companyId, productId);
   }
-
+  
+  @ApiBearerAuth()
   @UseGuards(AuthGuard, RolesGuard)
   @Roles('admin', 'supplier') 
   @Post()
   async create(@Body() createCompanyProductDto: CreateCompanyProductDto) {
       return this.companyProductsService.createProductServices(createCompanyProductDto);
   }
-  
+  @ApiBearerAuth()
   @UseGuards(AuthGuard, RolesGuard)
   @Roles('admin', 'supplier') 
   @Put(":id")
   async updateProduct(@Param("id") productId: string, @Body() productData: UpdateCompanyProductDto){
     return this.companyProductsService.updateProductServices(productId, productData) 
   }
-
+  @ApiBearerAuth()
   @UseGuards(AuthGuard, RolesGuard)
   @Roles('admin', 'supplier') 
   @Delete(":id")

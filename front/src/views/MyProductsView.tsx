@@ -5,12 +5,14 @@ import { exampleMyProducts } from "@/helpers/myproductsHelpers";
 import { IAgroProduct } from "@/interface/types";
 
 const MyProductsView: React.FC = () => {
-  //  const [products, setProducts] = useState<IAgroProduct[]>();
-
-  //  const handleDelete = (product.id: string) => {
-  //    setProducts(products.filter((product) => product.id !== product.id));
-  //  };
-
+  
+  const productsArray = exampleMyProducts;
+  
+  const handleDelete = (name: string) => {
+    console.log(`Deleting product with id: ${name}`);
+    // Lógica adicional para eliminar el producto
+  };
+  
   return (
     <div className="container mx-auto py-8 font-inter">
       <h1 className="text-[96px] text-center mb-12 font-inter">My Products</h1>
@@ -22,13 +24,17 @@ const MyProductsView: React.FC = () => {
             : ""
         }`}
       >
-        {exampleMyProducts.map((product: IAgroProduct) => (
-          <MyProductList
-            key={product.id}
-            {...product}
-            // onDelete={handleDelete}
-          />
-        ))}
+        {
+          productsArray && productsArray?.map((product) => {
+            return(
+              <MyProductList
+              key={product.id}
+              {...product}
+              onDelete={handleDelete}
+              />
+            )
+          })
+        }
       </div>
 
       <div className="mt-8 flex justify-center">
@@ -41,5 +47,3 @@ const MyProductsView: React.FC = () => {
 };
 
 export default MyProductsView;
-
-//--------------------------------------------------------------------

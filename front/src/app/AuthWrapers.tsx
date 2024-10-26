@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, useEffect } from "react";
+import { useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
@@ -70,7 +70,7 @@ const AuthWrapper: React.FC<IAuthWrapperProps> = ({ children }) => {
             handleGoogleLogin();
         }
 
-    }, [session, sessionStatus, router]);
+    }, [session, sessionStatus, router, clearAllSessions, resetInitialization, setUserData, logginAuthProps]);
 
     return <>{children}</>;
 };

@@ -8,6 +8,8 @@ export declare class CompanyProductsRepository {
     private readonly notificationsService;
     constructor(prisma: PrismaService, notificationsService: NotificationsService);
     findAll(): Promise<CompanyProduct[]>;
+    findProductsWithoutFarmer(): Promise<any[]>;
+    findProductsWithIncompleteCertifications(): Promise<any[]>;
     findAllByCompanyId(companyId: string): Promise<{
         isActive: boolean;
         company_id: string;
@@ -34,11 +36,11 @@ export declare class CompanyProductsRepository {
         farmerCertification: {
             company_id: string;
             farmer_id: string;
-            phytosanitary_certificate: string;
-            agricultural_producer_cert: string;
+            phytosanitary_certificate: string | null;
+            agricultural_producer_cert: string | null;
             organic_certification: string | null;
-            quality_certificate: string;
-            certificate_of_origin: string;
+            quality_certificate: string | null;
+            certificate_of_origin: string | null;
         };
     } & {
         isActive: boolean;
