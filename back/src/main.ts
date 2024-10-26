@@ -15,6 +15,17 @@ async function bootstrap() {
   app.use(express.urlencoded({ extended: true }));
   app.use(loggerGlobal);
 
+    // Middleware para manejar solicitudes preflight (OPTIONS)
+    app.use((req, res, next) => {
+      res.header('Access-Control-Allow-Origin', 'https://agrodexports.onrender.com');
+      res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE');
+      res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+      if (req.method === 'OPTIONS') {
+        return res.status(204).end();
+      }
+      next();
+    });
+
   console.log('CORS origin:', process.env.DOMAIN_FRONT);
  
   app.enableCors({
