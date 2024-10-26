@@ -23,8 +23,14 @@ let NotificationsGateway = class NotificationsGateway {
     }
     handleConnection(client) {
         console.log(`Cliente conectado: ${client.id}`);
+        const userId = client.handshake.query.userId;
+        console.log(`Cliente conectado: ${client.id}`);
+        if (userId) {
+            client.join(userId);
+            console.log(`Cliente ${client.id} se ha unido a la sala ${userId}`);
+        }
         this.server.to(client.id).emit('newNotification', {
-            message: 'Notificación de prueba desde el backend'
+            message: 'Notificación de prueba desde el backend',
         });
     }
     handleDisconnect(client) {
