@@ -18,5 +18,5 @@ jobs:
         with:
           node-version: 16 
 
-      - name: Deploy to Vercel
+      - name: Deploy to Render Front
         run: curl -X POST "https://api.render.com/deploy/srv-cse738btq21c7385oovg?key=nMWWjfLptgM"

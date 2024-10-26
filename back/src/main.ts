@@ -15,6 +15,7 @@ async function bootstrap() {
   app.use(express.urlencoded({ extended: true }));
   app.use(loggerGlobal);
 
+  console.log('CORS origin:', process.env.DOMAIN_FRONT);
  
   app.enableCors({
     origin: process.env.DOMAIN_FRONT,  

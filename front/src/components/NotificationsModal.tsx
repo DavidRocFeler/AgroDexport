@@ -3,14 +3,15 @@ import React, { useState } from 'react';
 import styles from '../styles/Notifications.module.css';
 import { INotificationsProps } from '@/interface/types';
 import { useEffect } from 'react';
-import { useSocket } from '../app/useSocket';
+// import { useSocket } from '../app/useSocket';
 
 console.log('NotificationsModal montado');
 
 
 const NotificationsModal: React.FC<INotificationsProps> = ({ isVisible, onClose }) => {
   const [ modalVisible, setModalVisible ] = useState(true);
-  const { notifications } = useSocket(); // No se donde se monta este componente para ver si funciona el socket.io
+//   const { notifications } = useSocket(); 
+  // No se donde se monta este componente para ver si funciona el socket.io
   
   useEffect(() => {
     if (isVisible) {
