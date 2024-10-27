@@ -1,11 +1,4 @@
-// importar la interfaz de los usuarios
-// importar interface ISettingsUserProps
-//   user_name?: string;
-//   user_lastname?: string;
-
-//   phone?: string;
-//   country?: string;
-
+// UserCard
 "use client";
 import React from "react";
 import { Trash2 } from "lucide-react";
@@ -26,7 +19,7 @@ const UserCard: React.FC<UserCardProps> = ({
   return (
     <div className="bg-white rounded-lg shadow-md p-4 mb-4 hover:shadow-lg transition-shadow duration-300 mx-4">
       <div className="flex items-center gap-4">
-        {/* Avatar del usuario */}
+        {/* ---------------*/}
         <div className="flex-shrink-0">
           <img
             src="/api/placeholder/120/120"
@@ -34,7 +27,7 @@ const UserCard: React.FC<UserCardProps> = ({
             className="w-24 h-24 rounded-full object-cover"
           />
         </div>
-        {/* Información del usuario */}
+        {/* ------------------ */}
         <div className="flex-grow">
           <div className="grid grid-cols-2 gap-2">
             <div>
@@ -57,7 +50,7 @@ const UserCard: React.FC<UserCardProps> = ({
             </div>
           </div>
         </div>
-        {/* Botón de eliminar */}
+        {/* ------------------*/}
         <button
           onClick={() => onDelete(id)}
           className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-full transition-colors duration-200"

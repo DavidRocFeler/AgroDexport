@@ -1,59 +1,27 @@
-// Este archivo tiene que crear la logica para hacer un get a todos los usuarios.
-//Ir a swager para verificar la ruta a get a todos los usuarios.
-// const APIURL = process.env.NEXT_PUBLIC_API_URL
-
 import { ISettingsUserProps } from "@/interface/types";
+import { useUserStore } from "@/store/useUserStore";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export const getAllUsers = async (): Promise<ISettingsUserProps[]> => {
+  const { token } = useUserStore.getState();
+
   try {
     const res = await fetch(`${API_URL}/users`, {
       method: "GET",
       headers: {
-        "Content-type": "application/json",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
     });
 
     if (!res.ok) {
-      throw new Error("Error al obtener los datos de los usuarios");
+      throw new Error("Error obtaining user data");
     }
 
     const data: ISettingsUserProps[] = await res.json();
     return data;
   } catch (error: any) {
-    throw new Error(error.message || "Error inesperado");
+    throw new Error(error.message || "Unexpected error");
   }
 };
-
-//-----------------------
-
-// server/getAllUser.ts
-// const API_URL = process.env.NEXT_PUBLIC_API_URL;
-
-// export const getAllUsers = async (): Promise<ISettingsUserProps[]> => {
-//   try {
-//     // Verifica que la URL se está construyendo correctamente
-//     console.log("API URL:", `${API_URL}/users`);
-
-//     const res = await fetch(`${API_URL}/users`, {
-//       method: "GET",
-//       headers: {
-//         "Content-type": "application/json",
-//       },
-//       // Agrega estas opciones para debugging
-//       cache: "no-store",
-//       next: { revalidate: 0 },
-//     });
-
-//     if (!res.ok) {
-//       throw new Error(`HTTP error! status: ${res.status}`);
-//     }
-
-//     const data: ISettingsUserProps[] = await res.json();
-//     return data;
-//   } catch (error: any) {
-//     console.error("Error en getAllUsers:", error);
-//     throw new Error(error.message || "Error inesperado");
-//   }
-// };
