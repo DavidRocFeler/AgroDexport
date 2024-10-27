@@ -7,8 +7,8 @@ export declare class FarmerCertificationRepository {
     create(certificationData: CreateFarmerCertificationDto): Promise<{
         company_id: string;
         farmer_id: string;
-        phytosanitary_certificate: string;
-        agricultural_producer_cert: string;
+        phytosanitary_certificate: string | null;
+        agricultural_producer_cert: string | null;
         organic_certification: string | null;
         quality_certificate: string;
         certificate_of_origin: string;
@@ -16,8 +16,8 @@ export declare class FarmerCertificationRepository {
     findByFarmerId(farmerId: string): Promise<{
         company_id: string;
         farmer_id: string;
-        phytosanitary_certificate: string;
-        agricultural_producer_cert: string;
+        phytosanitary_certificate: string | null;
+        agricultural_producer_cert: string | null;
         organic_certification: string | null;
         quality_certificate: string;
         certificate_of_origin: string;
@@ -25,8 +25,8 @@ export declare class FarmerCertificationRepository {
     update(farmerId: string, updateData: UpdateFarmerCertificationDto): Promise<{
         company_id: string;
         farmer_id: string;
-        phytosanitary_certificate: string;
-        agricultural_producer_cert: string;
+        phytosanitary_certificate: string | null;
+        agricultural_producer_cert: string | null;
         organic_certification: string | null;
         quality_certificate: string;
         certificate_of_origin: string;
@@ -34,8 +34,8 @@ export declare class FarmerCertificationRepository {
     delete(farmerId: string): Promise<{
         company_id: string;
         farmer_id: string;
-        phytosanitary_certificate: string;
-        agricultural_producer_cert: string;
+        phytosanitary_certificate: string | null;
+        agricultural_producer_cert: string | null;
         organic_certification: string | null;
         quality_certificate: string;
         certificate_of_origin: string;
