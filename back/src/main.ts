@@ -21,31 +21,31 @@ console.log(allowedOrigins);
   app.use(express.urlencoded({ extended: true }));
   app.use(loggerGlobal);
 
-  app.use((req, res, next) => {
-    const origin = req.headers.origin as string;
-    console.log('Origen de la solicitud:', origin);  // Agregar este log
+  // app.use((req, res, next) => {
+  //   const origin = req.headers.origin as string;
+  //   console.log('Origen de la solicitud:', origin);  // Agregar este log
   
-    if (allowedOrigins.includes(origin)) {
-      res.setHeader('Access-Control-Allow-Origin', origin);
-    }
+  //   if (allowedOrigins.includes(origin)) {
+  //     res.setHeader('Access-Control-Allow-Origin', origin);
+  //   }
   
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
+  //   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
+  //   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  //   res.setHeader('Access-Control-Allow-Credentials', 'true');
   
-    if (req.method === 'OPTIONS') {
-      return res.sendStatus(204);
-    }
+  //   if (req.method === 'OPTIONS') {
+  //     return res.sendStatus(204);
+  //   }
   
-    next();
-  });
+  //   next();
+  // });
   
 
   console.log('CORS allowed origins:', allowedOrigins);
  
   app.enableCors({
     origin: allowedOrigins,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization']
   });
