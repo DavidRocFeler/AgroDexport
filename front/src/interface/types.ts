@@ -269,3 +269,13 @@ export interface IFilePreview {
 export interface IPreviewState {
   [key: string]: IFilePreview | null;
 }
+
+// types.ts
+export interface INotification {
+  notification_id: string;
+  user_id: string;
+  message: string;
+  isRead: boolean;
+  notification_date: string;
+  type: string;
+}

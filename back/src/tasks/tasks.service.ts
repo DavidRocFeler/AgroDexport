@@ -18,7 +18,7 @@ export class TasksService {
     ) {}
 
 
-    @Cron(CronExpression.EVERY_MINUTE)
+    @Cron(CronExpression.EVERY_10_MINUTES)
     async remindIncompleteProfiles() {
         const taskData: CreateTaskDto = {
             task_name: 'Reminder for Incomplete Profiles',
