@@ -3,13 +3,20 @@ import { Company, CompanyProduct } from '@prisma/client';
 import { CreateCompanyProductDto } from './dtos/create-company-product.dto';
 import { UpdateCompanyProductDto } from './dtos/update-company-product.dto';
 import { NotificationsService } from '../notifications/notifications.service';
+
 export declare class CompanyProductsRepository {
     private readonly prisma;
     private readonly notificationsService;
-    constructor(prisma: PrismaService, notificationsService: NotificationsService);
-    findAll(): Promise<CompanyProduct[]>;
-    findProductsWithoutFarmer(): Promise<any[]>;
-    findProductsWithIncompleteCertifications(): Promise<any[]>;
+
+    constructor(prisma: PrismaService, notificationsService: NotificationsService) {}
+
+    findAll(): Promise<CompanyProduct[]> {}
+
+    findProductsWithoutFarmer(): Promise<any[]> {}
+
+    findProductsWithIncompleteCertifications(): Promise<any[]> {
+    }
+
     findAllByCompanyId(companyId: string): Promise<{
         company_product_id: string;
         farmer_id: string | null;
@@ -31,7 +38,10 @@ export declare class CompanyProductsRepository {
         protein: number | null;
         carbs: number | null;
         isActive: boolean;
-    }[]>;
+    }[]> {
+
+    }
+
     findProductByIdRepository(companyId: string, productId: string): Promise<{
         farmerCertification: {
             farmer_id: string;
@@ -39,8 +49,8 @@ export declare class CompanyProductsRepository {
             phytosanitary_certificate: string | null;
             agricultural_producer_cert: string | null;
             organic_certification: string | null;
-            quality_certificate: string | null;
-            certificate_of_origin: string | null;
+            quality_certificate: string;
+            certificate_of_origin: string;
         };
     } & {
         company_product_id: string;
@@ -63,8 +73,14 @@ export declare class CompanyProductsRepository {
         protein: number | null;
         carbs: number | null;
         isActive: boolean;
-    }>;
-    createProductRepository(createCompanyProductDto: CreateCompanyProductDto): Promise<CompanyProduct>;
+    }> {
+
+    }
+
+    createProductRepository(createCompanyProductDto: CreateCompanyProductDto): Promise<CompanyProduct> {
+
+    }
+
     updateProductRepository(productId: string, productData: UpdateCompanyProductDto): Promise<{
         company_product_id: string;
         farmer_id: string | null;
@@ -86,14 +102,22 @@ export declare class CompanyProductsRepository {
         protein: number | null;
         carbs: number | null;
         isActive: boolean;
-    }>;
-    findByProductNameAndCompanyId(productName: string, companyId: string): Promise<(CompanyProduct & {
-        company: Company;
-    }) | null>;
-    findProductById(productId: string): Promise<{
-        isActive: boolean;
-    }>;
-    findProductsByIds(companyproductsIds: string[]): Promise<CompanyProduct[]>;
+    }> {
+
+    }
+
+    findByProductNameAndCompanyId(productName: string, companyId: string): Promise<(CompanyProduct & { company: Company }) | null> {
+
+    }
+
+    findProductById(productId: string): Promise<{ isActive: boolean }> {
+
+    }
+
+    findProductsByIds(companyproductsIds: string[]): Promise<CompanyProduct[]> {
+
+    }
+
     softDeleteProductRepository(productId: string): Promise<{
         company_product_id: string;
         farmer_id: string | null;
@@ -115,7 +139,16 @@ export declare class CompanyProductsRepository {
         protein: number | null;
         carbs: number | null;
         isActive: boolean;
-    }>;
-    findByIdMinimumOrder(product_one_id: string): Promise<number>;
-    findByIdStock(product_one_id: string): Promise<number>;
+    }> {
+
+    }
+
+    findByIdMinimumOrder(product_one_id: string): Promise<number> {
+
+    }
+
+    findByIdStock(product_one_id: string): Promise<number> {
+
+    }
 }
+
