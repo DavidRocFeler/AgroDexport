@@ -16,7 +16,6 @@ import { useRouter } from 'next/navigation';
 const LogIn: React.FC<ILoginComponentProps> = ({ onCloseLogin, onSwitchToSignUp }) => {
     const setUserData = useUserStore((state) => state.setUserData);
     const router = useRouter();
-    console.log('Hook useSocket inicializado en LogIn');
    
     const [userData, setUserFormData] = useState<{ 
         email: string; 
