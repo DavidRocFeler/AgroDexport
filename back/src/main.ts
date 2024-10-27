@@ -12,6 +12,10 @@ dotenvConfig({ path: join(process.cwd(), '.env') });
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+
+  // Convertir DOMAIN_FRONT a un array de dominios permitidos
+const allowedOrigins = process.env.DOMAIN_FRONT?.split(',') || [];
+
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   app.use(loggerGlobal);
@@ -36,15 +40,20 @@ async function bootstrap() {
   });
   
 
-  console.log('CORS origin:', process.env.DOMAIN_FRONT);
+  console.log('CORS allowed origins:', allowedOrigins);
  
   app.enableCors({
-    origin: process.env.DOMAIN_FRONT,
+    origin: (origin, callback) => {
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization']
   });
-  
 
   app.useGlobalPipes(new ValidationPipe({
     transform: true,
