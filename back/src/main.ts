@@ -5,8 +5,9 @@ import { ValidationPipe } from '@nestjs/common';
 import { loggerGlobal } from './middlewares/logger.middleware';
 import * as express from 'express';
 import { config as dotenvConfig } from "dotenv";
+import { join } from 'path';
 
-dotenvConfig({ path: ".env" });
+dotenvConfig({ path: join(process.cwd(), '.env') });
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -15,15 +16,35 @@ async function bootstrap() {
   app.use(express.urlencoded({ extended: true }));
   app.use(loggerGlobal);
 
+  app.use((req, res, next) => {
+    const allowedOrigins = process.env.DOMAIN_FRONT;
+    const origin = req.headers.origin as string;
+  
+    if (allowedOrigins.includes(origin)) {
+      res.setHeader('Access-Control-Allow-Origin', origin);
+    }
+  
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+  
+    if (req.method === 'OPTIONS') {
+      return res.sendStatus(204);
+    }
+  
+    next();
+  });
+  
+
   console.log('CORS origin:', process.env.DOMAIN_FRONT);
  
   app.enableCors({
-    origin: process.env.DOMAIN_FRONT,  
-    methods: 'GET,POST,PUT,DELETE',    
-    credentials: true,                 // Permitir cookies o autenticación
+    origin: process.env.DOMAIN_FRONT,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization']
   });
-
+  
 
   app.useGlobalPipes(new ValidationPipe({
     transform: true,
