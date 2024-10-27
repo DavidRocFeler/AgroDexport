@@ -14,15 +14,16 @@ async function bootstrap() {
 
 
   // Convertir DOMAIN_FRONT a un array de dominios permitidos
-const allowedOrigins = process.env.DOMAIN_FRONT?.split(',') || [];
+  const allowedOrigins = process.env.DOMAIN_FRONT?.split(',').map(origin => origin.trim()) || [];
+console.log(allowedOrigins);
 
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   app.use(loggerGlobal);
 
   app.use((req, res, next) => {
-    const allowedOrigins = process.env.DOMAIN_FRONT;
     const origin = req.headers.origin as string;
+    console.log('Origen de la solicitud:', origin);  // Agregar este log
   
     if (allowedOrigins.includes(origin)) {
       res.setHeader('Access-Control-Allow-Origin', origin);
@@ -43,13 +44,7 @@ const allowedOrigins = process.env.DOMAIN_FRONT?.split(',') || [];
   console.log('CORS allowed origins:', allowedOrigins);
  
   app.enableCors({
-    origin: (origin, callback) => {
-      if (allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
+    origin: allowedOrigins,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization']
