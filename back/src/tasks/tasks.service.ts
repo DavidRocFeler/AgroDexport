@@ -18,7 +18,7 @@ export class TasksService {
     ) {}
 
 
-    @Cron(CronExpression.EVERY_MINUTE)
+    @Cron(CronExpression.EVERY_HOUR)
     async remindIncompleteProfiles() {
         const taskData: CreateTaskDto = {
             task_name: 'Reminder for Incomplete Profiles',
@@ -65,7 +65,7 @@ export class TasksService {
         const productsWithoutFarmer = await this.companyProductsRepository.findProductsWithoutFarmer();
 
         if (productsWithoutFarmer.length > 0) {
-            console.log(`Productos sin farmer_id encontrados: ${productsWithoutFarmer.length}`);
+            // console.log(`Productos sin farmer_id encontrados: ${productsWithoutFarmer.length}`);
 
             // Agrupar productos por usuario y compañía
             const groupedProducts = this.groupProductsByUser(productsWithoutFarmer);
@@ -100,7 +100,7 @@ export class TasksService {
 
 
         if (productsWithIncompleteCertifications.length > 0) {
-            console.log(`Productos con certificaciones incompletas encontrados: ${productsWithIncompleteCertifications.length}`);
+            // console.log(`Productos con certificaciones incompletas encontrados: ${productsWithIncompleteCertifications.length}`);
 
             // Agrupar productos por usuario y compañía
             const groupedProducts = this.groupProductsByUser(productsWithIncompleteCertifications);
