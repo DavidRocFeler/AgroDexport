@@ -3,6 +3,8 @@
 // const users = getAllUserDB();
 // a la hora de hacer el mapeo cambiar el id a un sstring
 
+// ----Esta es la que va pero falta corregir error de token------------------------------------------------------------
+//-----------------------------------------------------------------------------------
 // "use client";
 // import React, { useEffect, useState } from "react";
 // // Ajusta la ruta según tu estructura
@@ -85,6 +87,7 @@
 
 // export default UserView;
 
+//-------esta harcodea un array y funciona--------------------------------------------------
 //---------------------------------------------------------
 "use client";
 import React from "react";
