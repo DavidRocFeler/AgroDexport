@@ -30,7 +30,7 @@ export class EmailService {
 
     try {
       const info = await this.transporter.sendMail(mailOptions);
-      console.log('Email enviado: ', info.response);
+      // console.log('Email enviado: ', info.response);
     } catch (error) {
       console.error('Error enviando email: ', error);
     }
@@ -94,7 +94,7 @@ export class EmailService {
     htmlTemplate = htmlTemplate.replace('{{user_lastname}}', userLastName);
     htmlTemplate = htmlTemplate.replace('{{company_name}}', companyName);
 
-    console.log(productNames);
+    // console.log(productNames);
 
  // Convertir el array de nombres de productos en una lista HTML
 const productListHTML = productNames
@@ -116,7 +116,7 @@ htmlTemplate = htmlTemplate.replace(
 
     try {
         const info = await this.transporter.sendMail(mailOptions);
-        console.log('Email sent:', info.response);
+        // console.log('Email sent:', info.response);
     } catch (error) {
         console.error('Error sending email:', error);
     }

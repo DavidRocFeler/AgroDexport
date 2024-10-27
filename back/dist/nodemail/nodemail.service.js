@@ -33,7 +33,6 @@ let EmailService = class EmailService {
         };
         try {
             const info = await this.transporter.sendMail(mailOptions);
-            console.log('Email enviado: ', info.response);
         }
         catch (error) {
             console.error('Error enviando email: ', error);
@@ -73,7 +72,6 @@ let EmailService = class EmailService {
         htmlTemplate = htmlTemplate.replace('{{user_name}}', userName);
         htmlTemplate = htmlTemplate.replace('{{user_lastname}}', userLastName);
         htmlTemplate = htmlTemplate.replace('{{company_name}}', companyName);
-        console.log(productNames);
         const productListHTML = productNames
             .map(name => `<li><span class="titleSee">${name}</span></li>`)
             .join('');
@@ -86,7 +84,6 @@ let EmailService = class EmailService {
         };
         try {
             const info = await this.transporter.sendMail(mailOptions);
-            console.log('Email sent:', info.response);
         }
         catch (error) {
             console.error('Error sending email:', error);
