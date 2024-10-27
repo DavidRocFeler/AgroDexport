@@ -1,10 +1,34 @@
 "use client";
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
+import { fetchCompanyById } from '@/server/companiesSetting';
 
-const Paypal = () => {
+const Paypal = ({ companyId }: { companyId: string }) => {
+  const [clientId, setClientId] = useState("");
+
+  useEffect(() => {
+    async function getClientId() {
+      try {
+        // Llama a la función para obtener la compañía por ID
+        const company = await fetchCompanyById(companyId);
+        // Usa el campo account_paypal como client ID
+        if (company.account_paypal) {
+          setClientId(company.account_paypal);
+        } else {
+          console.error("No se encontró el Client ID en account_paypal");
+        }
+      } catch (error) {
+        console.error("Error al obtener el Client ID:", error);
+      }
+    }
+
+    if (companyId) {
+      getClientId(); // Ejecuta la función cuando el companyId esté disponible
+    }
+  }, [companyId]);
+
   const initialOptions = {
-    clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || "", // Verifica que el ID de cliente esté definido
+    clientId: clientId || "", // Usa el clientId del estado
     currency: "USD",
     intent: "capture",
   };
