@@ -44,7 +44,7 @@ console.log(allowedOrigins);
   console.log('CORS allowed origins:', allowedOrigins);
  
   app.enableCors({
-    origin: allowedOrigins,
+    origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization']
