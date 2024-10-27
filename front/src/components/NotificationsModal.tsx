@@ -10,29 +10,23 @@ console.log('NotificationsModal montado');
 
 
 const NotificationsModal: React.FC<INotificationsProps> = ({ isVisible, onClose }) => {
-  const [ modalVisible, setModalVisible ] = useState(true);
-  const { user_id } = useUserStore(); //Me traigo el user_id del estado global
-
+  const { user_id } = useUserStore(); // Obtener user_id del estado global
+  
+  // Verifica si user_id está definido antes de seguir
   if (!user_id) {
     console.error('El user_id está indefinido en NotificationsModal');
-    return null; // Evita errores si no hay user_id
+    return null; // Retorna null para evitar errores si no hay user_id
   }
 
-  const { notifications } = useSocket(user_id); // Usa 'user_id' para inicializar el hook
-  console.log('Hook useSocket inicializado en Notifications modal con user_id:', user_id);
+  const { notifications } = useSocket(user_id); // Hook se llama solo si user_id está definido
+  const [modalVisible, setModalVisible] = useState(false);
 
-
-
+  // Efecto para manejar la visibilidad del modal
   useEffect(() => {
-    if (isVisible) {
-        setModalVisible(true)
-        console.log("Modal is now visible");
-    } else {
-        console.log("Modal is now hidden");
-    }
-}, [isVisible]);
+    setModalVisible(isVisible);
+  }, [isVisible]);
 
-  // Log para mostrar el estado de las notificaciones cuando cambian
+  // Efecto para manejar las notificaciones
   useEffect(() => {
     console.log('Notificaciones en NotificationsModal:', notifications);
   }, [notifications]);
