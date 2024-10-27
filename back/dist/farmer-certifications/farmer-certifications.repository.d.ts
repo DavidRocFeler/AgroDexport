@@ -7,37 +7,37 @@ export declare class FarmerCertificationRepository {
     create(certificationData: CreateFarmerCertificationDto): Promise<{
         company_id: string;
         farmer_id: string;
-        phytosanitary_certificate: string | null;
-        agricultural_producer_cert: string | null;
+        phytosanitary_certificate: string;
+        agricultural_producer_cert: string;
         organic_certification: string | null;
-        quality_certificate: string | null;
-        certificate_of_origin: string | null;
+        quality_certificate: string;
+        certificate_of_origin: string;
     }>;
     findByFarmerId(farmerId: string): Promise<{
         company_id: string;
         farmer_id: string;
-        phytosanitary_certificate: string | null;
-        agricultural_producer_cert: string | null;
+        phytosanitary_certificate: string;
+        agricultural_producer_cert: string;
         organic_certification: string | null;
-        quality_certificate: string | null;
-        certificate_of_origin: string | null;
+        quality_certificate: string;
+        certificate_of_origin: string;
     }[]>;
     update(farmerId: string, updateData: UpdateFarmerCertificationDto): Promise<{
         company_id: string;
         farmer_id: string;
-        phytosanitary_certificate: string | null;
-        agricultural_producer_cert: string | null;
+        phytosanitary_certificate: string;
+        agricultural_producer_cert: string;
         organic_certification: string | null;
-        quality_certificate: string | null;
-        certificate_of_origin: string | null;
+        quality_certificate: string;
+        certificate_of_origin: string;
     }>;
     delete(farmerId: string): Promise<{
         company_id: string;
         farmer_id: string;
-        phytosanitary_certificate: string | null;
-        agricultural_producer_cert: string | null;
+        phytosanitary_certificate: string;
+        agricultural_producer_cert: string;
         organic_certification: string | null;
-        quality_certificate: string | null;
-        certificate_of_origin: string | null;
+        quality_certificate: string;
+        certificate_of_origin: string;
     }>;
 }
