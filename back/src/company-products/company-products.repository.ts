@@ -17,6 +17,7 @@ export class CompanyProductsRepository {
     return this.prisma.companyProduct.findMany({
       include: {
         farmerCertification: true, 
+        category: true,
       },
     });
   }
