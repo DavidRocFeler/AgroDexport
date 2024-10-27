@@ -11,14 +11,7 @@ console.log('NotificationsModal montado');
 
 const NotificationsModal: React.FC<INotificationsProps> = ({ isVisible, onClose }) => {
   const { user_id } = useUserStore(); // Obtener user_id del estado global
-
-  // Verifica si user_id está definido antes de inicializar el socket
-  if (!user_id) {
-    console.error('El user_id está indefinido en NotificationsModal');
-    return null; // Detener la ejecución si no hay user_id
-  }
-
-  const { socket, notifications } = useSocket(user_id); // Inicializa el socket con user_id
+  const { socket, notifications } = useSocket(user_id || ''); // Inicializa el socket con un valor seguro
   const [modalVisible, setModalVisible] = useState(false);
 
   // Efecto para manejar la visibilidad del modal
@@ -28,7 +21,7 @@ const NotificationsModal: React.FC<INotificationsProps> = ({ isVisible, onClose 
 
   // Efecto para manejar el evento 'newNotification'
   useEffect(() => {
-    if (!socket) return;
+    if (!socket || !user_id) return; // Verifica si socket y user_id están definidos
 
     socket.on('newNotification', (notification) => {
       console.log('Nueva notificación recibida:', notification);
@@ -37,7 +30,7 @@ const NotificationsModal: React.FC<INotificationsProps> = ({ isVisible, onClose 
     return () => {
       socket.off('newNotification'); // Desconectar el evento al desmontar
     };
-  }, [socket]);
+  }, [socket, user_id]);
   
     return (
         <>
@@ -61,7 +54,7 @@ const NotificationsModal: React.FC<INotificationsProps> = ({ isVisible, onClose 
             {/* Modal */}
             <div className={`${styles.modal} ${isVisible ? styles.modalVisible : ''}`}>
                 <div className={styles.modalHeader}>
-                    <h2 className={styles.modalTitle}>Welcome Notifications</h2>
+                    <h2 className={styles.modalTitle}>Notifications</h2>
                     <button 
                         onClick={onClose}
                         className={styles.modalCloseButton}
