@@ -11,7 +11,14 @@ console.log('NotificationsModal montado');
 
 const NotificationsModal: React.FC<INotificationsProps> = ({ isVisible, onClose }) => {
   const { user_id } = useUserStore(); // Obtener user_id del estado global
-  const { notifications } = useSocket(user_id || ''); // Hook siempre se llama, pero con un valor seguro
+
+  // Verifica si user_id está definido antes de inicializar el socket
+  if (!user_id) {
+    console.error('El user_id está indefinido en NotificationsModal');
+    return null; // Detener la ejecución si no hay user_id
+  }
+
+  const { socket, notifications } = useSocket(user_id); // Inicializa el socket con user_id
   const [modalVisible, setModalVisible] = useState(false);
 
   // Efecto para manejar la visibilidad del modal
@@ -19,17 +26,19 @@ const NotificationsModal: React.FC<INotificationsProps> = ({ isVisible, onClose 
     setModalVisible(isVisible);
   }, [isVisible]);
 
-  // Efecto para manejar las notificaciones
+  // Efecto para manejar el evento 'newNotification'
   useEffect(() => {
-    console.log('Notificaciones en NotificationsModal:', notifications);
-  }, [notifications]);
+    if (!socket) return;
 
-  // Si no hay user_id, muestra un mensaje y no renderiza el modal
-  if (!user_id) {
-    console.error('El user_id está indefinido en NotificationsModal');
-    return <p>No se puede cargar el modal de notificaciones.</p>; // Muestra un mensaje alternativo
-  }
+    socket.on('newNotification', (notification) => {
+      console.log('Nueva notificación recibida:', notification);
+    });
 
+    return () => {
+      socket.off('newNotification'); // Desconectar el evento al desmontar
+    };
+  }, [socket]);
+  
     return (
         <>
             {/* Overlay/Fondo oscuro */}
