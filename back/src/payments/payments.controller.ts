@@ -3,12 +3,31 @@ import * as crypto from 'crypto';
 import { Controller, Post, Req, Res, HttpStatus } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { PaymentService } from './payments.service'; 
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('webhook')
 export class WebhookController {
   constructor(private readonly paymentService: PaymentService) {}
 
+  @ApiTags('webhook')
   @Post('paypal')
+  @ApiOperation({ summary: 'Handle PayPal webhook events' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        event_type: { type: 'string', example: 'PAYMENT.CAPTURE.COMPLETED' },
+        resource: {
+          type: 'object',
+          properties: {
+            id: { type: 'string', example: 'test_transaction_id' },
+          },
+        },
+      },
+    },
+  })
+  @ApiResponse({ status: 200, description: 'Webhook processed successfully' })
+  @ApiResponse({ status: 401, description: 'Invalid signature' })
   async handlePayPalWebhook(@Req() req: Request, @Res() res: Response) {
     const headers = req.headers;
     const body = req.body;
