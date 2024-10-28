@@ -85,7 +85,7 @@ const MarketView: React.FC = () => {
             disabled={!canGoLeft}
             className={`px-4 py-2 rounded bg-green-500 text-white ${!canGoLeft ? 'opacity-50 cursor-not-allowed' : 'hover:bg-green-600'}`}
           >
-            ← Anterior
+            ← Prev
           </button>
           <span className="py-2">
             {currentPage + 1} - {totalPages}
@@ -95,7 +95,7 @@ const MarketView: React.FC = () => {
             disabled={!canGoRight}
             className={`px-4 py-2 rounded bg-green-500 text-white ${!canGoRight ? 'opacity-50 cursor-not-allowed' : 'hover:bg-green-600'}`}
           >
-            Siguiente →
+            Next →
           </button>
         </div>
       </div>

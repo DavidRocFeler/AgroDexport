@@ -74,7 +74,7 @@ const DashboardView: React.FC = () => {
   }
 
   return (
-    <ProtectedRoute allowedRoles={["supplier", "buyer"]}>
+    <ProtectedRoute allowedRoles={["admin"]}>
       <section>
         <div
           style={{
@@ -164,6 +164,7 @@ const DashboardView: React.FC = () => {
       </section>
       {isModalOpen && (
         <NotificationsModal
+          userId=""
           isVisible={isModalOpen}
           onClose={() => setIsModalOpen(false)}
         />

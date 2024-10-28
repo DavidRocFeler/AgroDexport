@@ -3,7 +3,6 @@ import "./globals.css";
 import ClientWrapers from "./ClientWrapers";
 import Header from "@/components/Header";
 import GoogleProviders from "./GoogleProviders";
-import UserProviders from "./UserProoviders";
 import AuthWrapper from "./AuthWrapers";
 
 export const metadata: Metadata = {
@@ -16,16 +15,16 @@ export default function RootLayout({children}: Readonly<{children: React.ReactNo
   return(
     <html lang="en">
       <body>
-        <UserProviders>
+        <main>
           <GoogleProviders>
-            <Header/>
-            <hr className="border-black border-1 "/>
             <AuthWrapper>
-              {children}
+              <Header/>
+              <hr className="border-black border-1 "/>
+                  {children}
+              <ClientWrapers/>
             </AuthWrapper>
-            <ClientWrapers/>
-          </GoogleProviders>
-        </UserProviders>
+            </GoogleProviders>
+          </main>
       </body>
     </html>
   )

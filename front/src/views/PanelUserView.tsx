@@ -68,7 +68,7 @@ const PanelUserView: React.FC = () => {
     }
 
   return (
-    <ProtectedRoute allowedRoles={['supplier', 'buyer']}>
+    <ProtectedRoute allowedRoles={['supplier', 'buyer', 'admin']}>
       <section>
         <div style={{ backgroundColor: "#C4E2FF", paddingTop: "2rem", paddingBottom: "4rem" }}>
           <aside className='w-fit ml-auto mb-[4rem] mr-[2rem]'>
@@ -112,7 +112,8 @@ const PanelUserView: React.FC = () => {
         </div>
       </section>
       {isModalOpen && (
-        <NotificationsModal 
+        <NotificationsModal
+        userId='' 
         isVisible={isModalOpen}
         onClose={() => setIsModalOpen(false)}
     />

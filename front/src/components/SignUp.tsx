@@ -73,7 +73,6 @@ const SignUp: React.FC<ISignUpComponentProps> = ({ onCloseSignUp, onSwitchToLogi
                 onCloseSignUp();
             } catch (error) {
                 console.error("Registration error:", error);
-                alert("Registration failed. Please try again.");
             }
         } else {
             alert("Please correct the following errors:\n\n" + errors.join("\n"));

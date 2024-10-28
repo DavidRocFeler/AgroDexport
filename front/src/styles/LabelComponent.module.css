@@ -4,8 +4,6 @@
     flex-direction: row;
     width: 60%;
     height: fit-content;
-    box-shadow: 0px 5px 20px rgb(214, 213, 213);
-    border-radius: 8px;
   }
   
   .Label {
@@ -15,6 +13,10 @@
     height: fit-content;
     padding-bottom: 1.5rem;
     padding-top: 1rem;
+    padding-left: 1rem;
+    box-shadow: 0px 5px 20px rgb(214, 213, 213);
+    border-radius: 8px;
+    margin-bottom: 2rem;
   }
   
   .ImageIcon {
@@ -25,14 +27,13 @@
     align-items: center;
     overflow: hidden; /* Para asegurarte de que la imagen no desborde */
     position: relative;
-    border: #FFEE58 2px solid;
+    border: #034B35 2px solid;
   }
   
   .ImageIcon img {
     max-width: 100%;
     max-height: 100%;
     object-fit: contain; /* o "cover" si quieres que ocupe todo el espacio */
-    position: absolute;
     top: 0;
     left: 0;
     right: 0;
@@ -43,6 +44,8 @@
   .Price {
     margin-left: auto;
     margin-right: 1rem;
+    position: relative;
+
   }
   
   .Extrainfo {

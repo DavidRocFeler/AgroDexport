@@ -3,12 +3,10 @@ import React from "react";
 import Link from "next/link";
 import styles from "../styles/Home.module.css"
 import { useEffect, useCallback } from "react";
-import { useSession, signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { registerAuthProps } from "@/helpers/signUpHelpers";
 import { useAuthThirdStore } from "@/store/useAuthThirdStore";
 import Swal from "sweetalert2";
-import { useUserStore } from "@/store/useUserStore";
-import { logginAuthProps } from "@/helpers/loginHelpers";
 
 const HomeView: React.FC = () => {
     const { 
@@ -80,13 +78,13 @@ const HomeView: React.FC = () => {
 
 
     return(
-        <main style={{background: "#d8fba7", paddingTop: "5rem", paddingLeft: "5rem", paddingBottom: "8rem"}}>
+        <div style={{background: "#d8fba7", paddingTop: "5rem", paddingLeft: "5rem", paddingBottom: "8rem"}}>
             <div>
                 <h1 className={styles.CoverTitle}> Supervise the agro supply chain</h1>
                 <p className={styles.Paragraph}> Connect with suppliers and entrepreneurs in a B2B e-commerce service.</p>
-                <Link className={styles.SignUp} href="/market"> See The Market </Link>
+                <Link className={styles.SignUp} href="/market"> Market </Link>
             </div>
-        </main>
+        </div>
     )
 };
 export default HomeView;

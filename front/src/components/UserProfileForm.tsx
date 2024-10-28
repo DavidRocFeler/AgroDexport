@@ -8,6 +8,7 @@ import { useUserStore } from "@/store/useUserStore";
 const UserProfileForm = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [userData, setUserData] = useState<ISettingsUserProps>({
+    user_id: "",
     user_name: "",
     user_lastname: "",
     nDni: null,
@@ -20,24 +21,19 @@ const UserProfileForm = () => {
   const { user_id, token } = useUserStore();
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        if (user_id) {
-          console.log("Obteniendo datos del usuario...");
-          const data = await getUserSettings(user_id);
+    const fetchUserSettings = async () => {
+      if (user_id && token) {
+        try {
+          const data = await getUserSettings(user_id, token);
           setUserData(data);
-          setOriginalData(data); // Guardamos los datos originales
-          console.log("Datos del usuario obtenidos:", data);
-        } else {
-          alert("No se pudo obtener el ID del usuario.");
+        } catch (error) {
+          console.error('Error al cargar notificaciones:', error);
         }
-      } catch (error: any) {
-        console.error("Error al cargar los datos:", error.message);
       }
     };
 
-    fetchData();
-  }, [user_id, token]); 
+    fetchUserSettings();
+  }, [user_id, token]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;

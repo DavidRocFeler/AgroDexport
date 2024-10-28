@@ -5,7 +5,7 @@ import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 import { IAuthWrapperProps } from "@/interface/types";
-import { useAuthThirdStore } from "@/store/useAuthThirdStore"; // Importa correctamente tus funciones
+import { useAuthThirdStore } from "@/store/useAuthThirdStore";
 import { logginAuthProps } from "@/helpers/loginHelpers";
 import { useUserStore } from "@/store/useUserStore";
 

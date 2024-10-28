@@ -62,13 +62,6 @@ export interface IOrderCarWishProps {
   product: any;
 }
 
-export interface ILabelComponentProps {
-  product?: IAgriProduct;
-  units: number;
-  viewType: 'carShop' | 'ordersView' | 'wishListView';
-  orderStatus?: { status: string; date: string };
-};
-
 export interface IPropsCards {
   company_id: string;
   company_product_name: string;
@@ -78,7 +71,8 @@ export interface IPropsCards {
 }
 
 export interface IAgriProduct {
-  company_id?: string;
+  company_product_id?: string | any;
+  company_id?: string | any;
   company_product_img?: string;
   company_product_name?: string;
   category_id: string;
@@ -94,12 +88,21 @@ export interface IAgriProduct {
   carbs?: number;
 }
 
+export interface ILabelComponentProps {
+  products: IAgriProduct[]; // Usa la interfaz aquí
+}
+
 export interface IOrder {
   id: number;
   status: string;
   date: Date;
   products: IAgriProduct[];
 };
+
+export interface OrderCarWishProps {
+  order?: IOrder;
+  products?: IAgriProduct[];
+}
 
 export interface IAgroProduct {
   id: number; // ID único del producto
@@ -177,7 +180,7 @@ export interface IProvidersProps {
   children: React.ReactNode;
 }
 
-export interface INotificationsProps {
+export interface  INotificationsProps {
   isVisible: boolean;
   onClose: () => void;
   userId: string;  // Agrega esta línea para incluir el userId
@@ -187,7 +190,7 @@ export interface IAuthWrapperProps {
   children: React.ReactNode; // Define la prop 'children' como ReactNode
 }
 
-export interface iProtectedRouteProps {
+export interface IProtectedRouteProps {
   children: React.ReactNode;
   allowedRoles?: string[];
 }
@@ -209,6 +212,7 @@ export const companiesData: Company[] = [
 ];
 
 export interface ISettingsUserProps {
+  user_id: string;
   user_name?: string;
   user_lastname?: string;
   nDni?: number | any;

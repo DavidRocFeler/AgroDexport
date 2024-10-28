@@ -3,12 +3,13 @@ import { IAgriProduct } from '@/interface/types';
 import React from 'react';
 import { useRouter } from 'next/navigation';
 
-const ProductCard: React.FC<IAgriProduct> = ({company_id, carbs, fat, calories, protein, category_id, stock, minimum_order, harvest_date, company_product_name, company_product_img, company_product_description, company_price_x_kg}) => {
+const ProductCard: React.FC<IAgriProduct> = ({company_product_id ,company_id, carbs, fat, calories, protein, category_id, stock, minimum_order, harvest_date, company_product_name, company_product_img, company_product_description, company_price_x_kg}) => {
   
   const router = useRouter();
     const handleButtonProduct = () => {
         
         const product = { 
+          company_product_id,
           company_id,
           company_product_img,
           company_product_name,
@@ -27,7 +28,10 @@ const ProductCard: React.FC<IAgriProduct> = ({company_id, carbs, fat, calories, 
         localStorage.setItem("selectedProduct", JSON.stringify(product));
 
         //guardar category por separado
-        localStorage.setItem("categoryId", category_id);
+        localStorage.setItem("companyId", company_id);
+
+         //guardar product ID por separado
+         localStorage.setItem("productId", company_product_id);
 
         // Redirigir a la página del producto con el id
         router.push(`/detailproduct/${company_id}`);

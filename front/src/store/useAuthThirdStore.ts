@@ -67,16 +67,3 @@ export const useAuthThirdStore = create<IAuthThirdState>((set) => ({
         }
     }
 }));
-
-// export const useAuthThird = () => {
-//     const { data: session } = useSession();
-//     const store = useAuthThirdStore();
-    
-//     React.useEffect(() => {
-//         if (session?.user) {
-//             store.createGoogleSession();
-//         }
-//     }, [session]);
-    
-//     return store;
-// };
