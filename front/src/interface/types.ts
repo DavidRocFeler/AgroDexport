@@ -219,6 +219,7 @@ export interface ISettingsUserProps {
   birthday?: string;
   phone?: string;
   country?: string;
+  profile_picture?: string;
   updatedFields?: Partial<ISettingsUserProps>;
 }
 
