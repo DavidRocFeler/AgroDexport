@@ -83,6 +83,13 @@ export class CompanyRepository {
     return company;
   }
   
+  async findCompaniesByUserId(userId: string) {
+    return this.prisma.company.findMany({
+      where: {
+        user_id: userId,
+      },
+    });
+  }
   
 
   async create(companyData: CreateCompanyDto) {

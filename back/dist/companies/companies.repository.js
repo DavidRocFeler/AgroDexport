@@ -78,6 +78,13 @@ let CompanyRepository = class CompanyRepository {
         });
         return company;
     }
+    async findCompaniesByUserId(userId) {
+        return this.prisma.company.findMany({
+            where: {
+                user_id: userId,
+            },
+        });
+    }
     async create(companyData) {
         const existingCompany = await this.prisma.company.findFirst({
             where: {

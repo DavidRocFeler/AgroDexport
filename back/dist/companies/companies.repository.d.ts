@@ -83,6 +83,23 @@ export declare class CompanyRepository {
         isActive: boolean;
         company_id: string;
     }>;
+    findCompaniesByUserId(userId: string): Promise<{
+        user_id: string;
+        country: string;
+        company_name: string;
+        tax_identification_number: number;
+        address: string;
+        postal_code: string;
+        city: string;
+        state: string;
+        industry: string;
+        website: string | null;
+        account_paypal: string | null;
+        company_description: string | null;
+        company_logo: string | null;
+        isActive: boolean;
+        company_id: string;
+    }[]>;
     create(companyData: CreateCompanyDto): Promise<{
         user_id: string;
         country: string;

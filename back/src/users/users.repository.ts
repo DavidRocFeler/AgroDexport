@@ -229,11 +229,17 @@ export class UsersRepository {
       const user = await this.getUserById(id);
   
       if (updateData.password) {
-        const hashedPassword = await bcrypt.hash(updateData, 10);
+        const hashedPassword = await bcrypt.hash(updateData.password, 10);
         await this.prisma.credential.update({
           where: { credential_id: user.credential_id },
           data: { password: hashedPassword },
         });
+
+        delete updateData.password;
+      }
+      
+      if ('confirm_password' in updateData) {
+        delete updateData.confirm_password;
       }
 
       const updatedUser = await this.prisma.user.update({
