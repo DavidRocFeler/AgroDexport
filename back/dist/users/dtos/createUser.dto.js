@@ -19,14 +19,14 @@ exports.CreateUserDto = CreateUserDto;
 __decorate([
     (0, swagger_1.ApiProperty)({ description: 'User first name', example: "Juan", maxLength: 50 }),
     (0, class_validator_1.IsNotEmpty)(),
-    (0, class_validator_1.Matches)(/^[a-zA-ZÀ-ÿÑñ]+$/, { message: 'The first name should only contain letters and no spaces' }),
+    (0, class_validator_1.Matches)(/^[a-zA-ZÀ-ÿÑñ\s]+$/, { message: 'The first name should only contain letters and spaces' }),
     (0, class_validator_1.Length)(1, 50),
     __metadata("design:type", String)
 ], CreateUserDto.prototype, "user_name", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({ description: 'User last name', example: "Perez", maxLength: 50 }),
     (0, class_validator_1.IsNotEmpty)(),
-    (0, class_validator_1.Matches)(/^[a-zA-ZÀ-ÿÑñ]+$/, { message: 'The last name should only contain letters and no spaces' }),
+    (0, class_validator_1.Matches)(/^[a-zA-ZÀ-ÿÑñ\s]+$/, { message: 'The last name should only contain letters and spaces' }),
     (0, class_validator_1.Length)(1, 50),
     __metadata("design:type", String)
 ], CreateUserDto.prototype, "user_lastname", void 0);
