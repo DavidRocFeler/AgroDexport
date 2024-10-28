@@ -96,16 +96,31 @@ const CarShopComponent: React.FC<ILabelComponentProps> = ({ products }) => {
     };
   };
 
+  const fetchCompanyData = async (companyId: string) => {
+    try {
+      const response = await fetch(`http://localhost:3002/companies/user/accountPaypal/${companyId}`);
+      const data = await response.json()
+      setCompanyData(data); // Guarda los datos de la compañía en el estado
+    } catch (error) {
+      console.error("Error fetching company data:", error);
+      MySwal.fire({
+        icon: 'error',
+        title: 'Error loading company data',
+        text: 'Could not load company information. Please try again later.',
+      });
+    }
+  };
+
+
   const handlePaymentProcess = async () => {
     if (!selectedProduct || isProcessing) return;
   
     setIsProcessing(true);
     try {
       // Log para verificar el producto seleccionado
-      console.log('Selected Product:', selectedProduct);
-  
+      await fetchCompanyData(selectedProduct.company_id);
       const companyId = selectedProduct.company_id; // Asumiendo que el company_id viene de selectedProduct
-      const companyAccount = companyData?.account_paypal; // Usa companyData que ya deberías tener en el estado
+      const companyAccount = companyData.account_paypal
   
       // Log para verificar el account_paypal
       console.log('Company ID:', companyId);
