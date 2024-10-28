@@ -15,6 +15,7 @@ interface PayPalComponentProps {
   onError?: (error: any) => void;
 }
 
+// fixed 
 const PayPalButtonsComponent: React.FC<PayPalComponentProps> = ({ amount, companyId, onSuccess, onError }) => {
   return (
     <div className="bg-white p-6 rounded-lg">
