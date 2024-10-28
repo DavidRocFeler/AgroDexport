@@ -29,9 +29,6 @@ let NotificationsGateway = class NotificationsGateway {
             client.join(userId);
             console.log(`Cliente ${client.id} se ha unido a la sala ${userId}`);
         }
-        this.server.to(client.id).emit('newNotification', {
-            message: 'Notificación de prueba desde el backend',
-        });
     }
     handleDisconnect(client) {
         console.log(`Cliente desconectado: ${client.id}`);

@@ -39,8 +39,8 @@ export declare class CompanyProductsRepository {
             phytosanitary_certificate: string | null;
             agricultural_producer_cert: string | null;
             organic_certification: string | null;
-            quality_certificate: string;
-            certificate_of_origin: string;
+            quality_certificate: string | null;
+            certificate_of_origin: string | null;
         };
     } & {
         isActive: boolean;
