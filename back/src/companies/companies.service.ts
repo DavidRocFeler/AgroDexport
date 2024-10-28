@@ -25,6 +25,10 @@ export class CompanyService {
     async getCompanyByIdServices(companyId: string) {
       return this.companyRepository.findById(companyId);
     }
+
+    async getCompaniesByUserId(userId: string) {
+      return this.companyRepository.findCompaniesByUserId(userId);
+    }
   
     async createCompanyServices(companyData: CreateCompanyDto) {
       const userExists = await this.usersRepository.getUserById(companyData.user_id);

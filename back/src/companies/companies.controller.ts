@@ -78,6 +78,17 @@ export class CompanyController {
 
     @ApiBearerAuth()
     @HttpCode(200)
+    @Get('user/:user_id')
+    @UseGuards(AuthGuard, RolesGuard)
+    @Roles('admin', 'supplier', 'buyer')
+    async getCompaniesByUserId(@Param('user_id') userId: string) {
+      const companies = await this.companyServices.getCompaniesByUserId(userId);
+      return companies;
+    }
+
+
+    @ApiBearerAuth()
+    @HttpCode(200)
     @Post()
     @UseGuards(AuthGuard, RolesGuard)
     @Roles('admin', 'supplier', 'buyer')
