@@ -4,6 +4,7 @@ import { ISettingsUserProps } from "@/interface/types";
 import { getUserSettings } from "@/server/getUserSettings";
 import { updateUserSettings } from "@/server/updateUserSettings";
 import { useUserStore } from "@/store/useUserStore";
+import Swal from "sweetalert2";
 
 const UserProfileForm = () => {
   const [isEditing, setIsEditing] = useState(false);
@@ -16,7 +17,8 @@ const UserProfileForm = () => {
     phone: "",
     country: "",
   });
-  const [originalData, setOriginalData] = useState<ISettingsUserProps>(userData); // Guardamos datos originales
+  const [originalData, setOriginalData] = useState<ISettingsUserProps>(userData);
+  const [resetFlag, setResetFlag] = useState(false); // Estado para reiniciar el ciclo de vida
 
   const { user_id, token } = useUserStore();
 
@@ -26,14 +28,15 @@ const UserProfileForm = () => {
         try {
           const data = await getUserSettings(user_id, token);
           setUserData(data);
+          setOriginalData(data); // Establecer originalData cuando se obtienen los datos
         } catch (error) {
-          console.error('Error al cargar notificaciones:', error);
+          console.error('failed to update notifications:', error);
         }
       }
     };
 
     fetchUserSettings();
-  }, [user_id, token]);
+  }, [user_id, token, resetFlag]); // Agregar resetFlag para reiniciar
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -45,7 +48,12 @@ const UserProfileForm = () => {
 
   const handleSave = async () => {
     if (JSON.stringify(userData) === JSON.stringify(originalData)) {
-      alert("No hay cambios para guardar.");
+      Swal.fire({
+        title: 'No changes to save',
+        text: 'There are no changes to save.',
+        icon: 'info',
+        confirmButtonText: 'OK'
+      });
       setIsEditing(false);
       return;
     }
@@ -53,27 +61,36 @@ const UserProfileForm = () => {
     if (!token) {
       return;
     }
-  
+
     const updatedFields: Partial<ISettingsUserProps> = {};
     Object.keys(userData).forEach((key) => {
       if (userData[key as keyof ISettingsUserProps] !== originalData[key as keyof ISettingsUserProps]) {
         updatedFields[key as keyof ISettingsUserProps] = userData[key as keyof ISettingsUserProps];
       }
     });
-  
+
     console.log("Field update:", updatedFields);
-  
+
     try {
       if (user_id) {
         await updateUserSettings(user_id, updatedFields, token); 
         setOriginalData(userData);
         setIsEditing(false);
-        alert("Successful update");
+        await Swal.fire({
+          title: 'Success!',
+          text: 'Your settings have been updated successfully.',
+          icon: 'success',
+          confirmButtonText: 'Ok',
+        });
       } else {
         alert("The user's ID could not be obtained.");
       }
     } catch (error: any) {
-      alert("Error saving");
+      Swal.fire({
+        icon: 'warning',
+        title: 'Incomplete Field',
+        text: 'You need to complete a field.',
+      });
       console.error("Error saving:", error.message);
     }
   };
@@ -83,10 +100,10 @@ const UserProfileForm = () => {
   };
 
   const handleCancel = () => {
-    setUserData(originalData); 
+    setResetFlag(prev => !prev); // Cambiar el estado para reiniciar el ciclo de vida
     setIsEditing(false); 
   };
-  
+
   return (
     <div className="w-[100%] p-6 bg-white rounded-lg">
       <form className="space-y-4 flex flex-col">

@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import styles from '../styles/Notifications.module.css';
 import { INotificationsProps } from '@/interface/types';
 import { useEffect } from 'react';
-import { useSocket } from '../app/useSocket';
+import { useSocket } from '../server/useSocket';
 import { useUserStore } from '@/store/useUserStore';
 import { INotification } from '@/interface/types';
 import { getNotifications, markNotificationAsRead } from "@/server/notificationsSetting"

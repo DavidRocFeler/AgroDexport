@@ -5,9 +5,12 @@ import LabelComponent from './LabelComponent';
 import { ILabelComponentProps, IAgriProduct } from '@/interface/types';
 import ResumeShopComponent from './ResumeShopComponent';
 import Swal from 'sweetalert2';
+import { fetchCompanyById } from '@/server/companiesSetting';
 
 const CarShopComponent: React.FC<ILabelComponentProps> = ({ products }) => {
   const [selectedProduct, setSelectedProduct] = useState<IAgriProduct | null>(null);
+  const [clientId, setClientId] = useState("");
+  const [showPaypal, setShowPaypal] = useState(false);
 
   const handleProductSelect = (product: IAgriProduct) => {
     setSelectedProduct(selectedProduct?.company_product_id === product.company_product_id ? null : product);
@@ -43,11 +46,11 @@ const CarShopComponent: React.FC<ILabelComponentProps> = ({ products }) => {
       }
     };
   };
-
+  
   const handlePaymentProcess = async () => {
-    const totals = calculateTotals();
-    
-    if (!selectedProduct) {
+  const totals = calculateTotals();
+  
+    if (!selectedProduct || !totals.productData) { // Verifica si productData es null
       Swal.fire({
         icon: 'warning',
         title: 'No product selected',
@@ -56,31 +59,23 @@ const CarShopComponent: React.FC<ILabelComponentProps> = ({ products }) => {
       });
       return;
     }
-
+  
     try {
-      // Aquí puedes agregar lógica de PayPal
-      const paymentData = {
-        amount: totals.total,
-        currency: 'USD',
-        company_id: totals.productData?.company_id,
-        company_product_id: totals.productData?.company_product_id,
-        product_name: selectedProduct.company_product_name,
-        quantity: selectedProduct.minimum_order
-      };
-
-      // Ejemplo de llamada a PayPal (implementar esto según el backend)
-      // const response = await initiatePayPalPayment(paymentData);
+      // Obtén el `clientId` desde la API usando `companyId`
+      const companyData = await fetchCompanyById(totals.productData.company_id);
       
-      // mensaje de éxito simulado
-      Swal.fire({
-        icon: 'success',
-        title: 'Payment Initiated',
-        html: `
-          Total Amount: $${totals.total.toFixed(2)}<br>
-          Company name: ${paymentData.company_id}<br>
-        `,
-        confirmButtonColor: '#3085d6'
-      });
+      if (companyData && companyData.account_paypal) {
+        setClientId(companyData.account_paypal); // Configura el clientId en el estado
+        setShowPaypal(true); // Habilita la vista de PayPal
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Payment Error',
+          text: 'PayPal account not found for this company.',
+          confirmButtonColor: '#3085d6'
+        });
+      }
+      
     } catch (error) {
       Swal.fire({
         icon: 'error',
@@ -90,7 +85,7 @@ const CarShopComponent: React.FC<ILabelComponentProps> = ({ products }) => {
       });
     }
   };
-
+  
   return (
     <div className=" flex flex-row pl-[2rem] pr-[2rem] pt-[3rem] pb-[2rem]">
       <div className=" w-[60%]">

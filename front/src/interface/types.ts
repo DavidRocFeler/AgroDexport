@@ -283,3 +283,15 @@ export interface INotification {
   notification_date: string;
   type: string;
 }
+
+export interface IUserPanel {
+  title: string;
+  buttonOne: string;
+  buttonTwo: string;
+  buttonThree: string;
+  buttonFour: string;
+  buttonFive: string;
+  buttonSix?: string;
+  buttonSeven?: string;
+  buttonEight?: string;
+}

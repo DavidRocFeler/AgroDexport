@@ -5,104 +5,66 @@ import React, { useState } from 'react';
 import styles from "../styles/UserPanel.module.css";
 import SupplyChainComponent from '@/components/SupplyChainComponent';
 import { supplyChainArray } from '@/helpers/supplyChain.helpers';
-import { ISupplyChainProps } from '@/interface/types';
+import { ISupplyChainProps, IUserPanel } from '@/interface/types';
 import ProtectedRoute from '@/app/ProtectedRoute';
 import { useUserStore } from '@/store/useUserStore'; // Asegúrate de importar el hook para acceder al estado global
 import NotificationsModal from '@/components/NotificationsModal';
 import { useRouter } from 'next/navigation';
 
-const PanelUserView: React.FC = () => {
+const PanelUserView: React.FC<IUserPanel> = ({
+  title, buttonOne, buttonTwo,
+  buttonThree, buttonFour, buttonFive,
+  buttonSix, buttonSeven, buttonEight, 
+}) => {
   const supplyChain: ISupplyChainProps[] = supplyChainArray;
   const { role_name } = useUserStore();
   const [isHydrated, setIsHydrated] = React.useState(false);
-  const router = useRouter();
-  const [ isAuth, setIsAuth ] = useState(false);
-
+  const [isAuth, setIsAuth] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  
+  const [viewMode, setViewMode] = useState("supplier"); // Estado para el modo de vista
+  const router = useRouter();
+
   React.useEffect(() => {
     setIsHydrated(true);
   }, []);
 
   const handleRedirectProfile = () => {
     setIsAuth(true);
-    router.push("/profile")
-  }
+    router.push("/profile");
+  };
 
   const handleRedirectHistorySales = () => {
     setIsAuth(true);
-    router.push("/supplierhistorysales")
-  }
+    router.push("/supplierhistorysales");
+  };
 
-  const handleRedirectHistoryBuys = () => {
-    router.push("/buyerhistorybuys")
-  }
+  const handleRedirectPurchaseHistory = () => {
+    router.push("/purchasehistory");
+  };
 
-    if (!isHydrated) {
-      return (
-        // <ProtectedRoute allowedRoles={['supplier', 'buyer']}>
-        <section>
-          <div style={{ backgroundColor: "#C4E2FF", paddingTop: "2rem", paddingBottom: "4rem" }}>
-            <aside className='w-fit ml-auto mb-[4rem] mr-[2rem]'>
-              <button>
-                <MessageCircle/>
-              </button>
-              <button className='ml-[1rem] '>
-                <Bell/>
-              </button>
-            </aside>
-            <h1 className={styles.UserPanel}>User Panel</h1>
-            <aside className='flex flex-row justify-center mb-[4.3rem]'>
-              <button className={styles.ButtonProfile}> Profile </button>
-              <button className={styles.ButtonHistory}> History </button>
-            </aside>
-          </div>
-          <div className={styles.SupplyChain}>
-            {supplyChain.map((item) => (
-              // Render supplychain per each component
-              <SupplyChainComponent key={item.id} {...item} />
-            ))}
-          </div>
-        </section>
-      );
-    }
+  // Funciones para cambiar el modo de vista
+  const handleViewAsSupplier = () => setViewMode("supplier");
+  const handleViewAsBuyer = () => setViewMode("buyer");
 
-  return (
-    <ProtectedRoute allowedRoles={['supplier', 'buyer', 'admin']}>
+  
+  if (!isHydrated) {
+    return (
+      // <ProtectedRoute allowedRoles={['supplier', 'buyer']}>
       <section>
         <div style={{ backgroundColor: "#C4E2FF", paddingTop: "2rem", paddingBottom: "4rem" }}>
           <aside className='w-fit ml-auto mb-[4rem] mr-[2rem]'>
             <button>
               <MessageCircle/>
             </button>
-            <button onClick={() => setIsModalOpen(true)} className='ml-[1rem] '>
+            <button className='ml-[1rem] '>
               <Bell/>
             </button>
           </aside>
           <h1 className={styles.UserPanel}>User Panel</h1>
-          <aside className='flex flex-row justify-center mb-[1rem]'>
-            <button onClick={handleRedirectProfile} className={styles.ButtonProfile}> Profile </button>
-            { role_name === "supplier" ? (
-            <button onClick={handleRedirectHistorySales} className={styles.ButtonHistory}> History </button>
-            ) : (
-            <button onClick={handleRedirectHistoryBuys} className={styles.ButtonHistory}> History </button>
-            )}
+          <aside className='flex flex-row justify-center mb-[4.3rem]'>
+            <button className={styles.ButtonProfile}> Profile </button>
+            <button className={styles.ButtonHistory}> History </button>
           </aside>
-          <nav className='flex flex-row justify-center'>
-            <Link className={styles.RedirectPanel} href="/orderstatus"> Order Status </Link>
-            {role_name === "supplier" ? (
-              <Link className={styles.RedirectPanel} href="/myproducts"> My products </Link>
-            ) : (
-              <Link className={styles.RedirectPanel} href="/cartshop"> Cart Shop </Link>
-            )}
-            {role_name === 'supplier' ? ( 
-              <Link className={styles.RedirectPanel} href="/publishproduct"> Publish Product </Link>
-            ) : (
-              <Link className={styles.RedirectPanel} href="/market"> See Market </Link>
-            )}
-            <Link className={styles.RedirectPanel} href="/payments"> Payments </Link>
-            <Link className={styles.RedirectPanel} href="/help"> Help </Link>
-          </nav>
         </div>
         <div className={styles.SupplyChain}>
           {supplyChain.map((item) => (
@@ -111,16 +73,73 @@ const PanelUserView: React.FC = () => {
           ))}
         </div>
       </section>
-      {isModalOpen && (
+    );
+  }
+
+  return (
+      <section>
+        <div style={{ backgroundColor: "#C4E2FF", paddingTop: "2rem", paddingBottom: "4rem" }}>
+          {/* Botones para el admin elegir el modo de visualización */}
+          {role_name === "admin" && (
+            <aside className='flex flex-row relative'>
+              <button onClick={handleViewAsBuyer} className="absolute top-0 left-[10rem] pt-[0.5rem] pb-[0.5rem] pl-[1rem] pr-[1rem] border-black border-solid border-[1px] "> View as Supplier </button>
+              <button onClick={handleViewAsSupplier} className="absolute top-0 left-[1rem] pt-[0.5rem] pb-[0.5rem] pl-[1rem] pr-[1rem] border-black border-solid border-[1px]"> View as Buyer </button>
+            </aside>
+          )}
+          <aside className='w-fit ml-auto mb-[4rem] mr-[2rem]'>
+            <button>
+              <MessageCircle/>
+            </button>
+            <button onClick={() => setIsModalOpen(true)} className='ml-[1rem] '>
+              <Bell/>
+            </button>
+            
+          </aside>
+          <h1 className={styles.UserPanel}>User Panel</h1>
+          {/* Renderizado condicional basado en el modo de vista seleccionado */}
+          <aside className='flex flex-row justify-center mb-[1rem]'>
+            <button onClick={handleRedirectProfile} className={styles.ButtonProfile}> Profile </button>
+            {viewMode === "buyer" && (
+              <button onClick={handleRedirectHistorySales} className={styles.ButtonHistory}> History </button>
+            )}
+            {viewMode === "supplier" && (
+              <button onClick={handleRedirectPurchaseHistory} className={styles.ButtonHistory}> History </button>
+            )}
+          </aside>
+
+          <nav className='flex flex-row justify-center'>
+            <Link className={styles.RedirectPanel} href="/orderstatus"> Order Status </Link>
+            {viewMode === "buyer" ? (
+              <Link className={styles.RedirectPanel} href="/myproducts"> My products </Link>
+            ) : (
+              <Link className={styles.RedirectPanel} href="/cartshop"> Cart Shop </Link>
+            )}
+            {viewMode === 'buyer' ? ( 
+              <Link className={styles.RedirectPanel} href="/publishproduct"> Publish Product </Link>
+            ) : (
+              <Link className={styles.RedirectPanel} href="/market"> See Market </Link>
+            )}
+            <Link className={styles.RedirectPanel} href="/payments"> Payments </Link>
+            <Link className={styles.RedirectPanel} href="/help"> Help </Link>
+          </nav>
+        </div>
+
+        <div className={styles.SupplyChain}>
+          {supplyChain.map((item) => (
+            <SupplyChainComponent key={item.id} {...item} />
+          ))}
+        </div>
+        {isModalOpen && (
         <NotificationsModal
-        userId='' 
-        isVisible={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-    />
+          userId='' 
+          isVisible={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+        />
       )}
-    </ProtectedRoute>
+      </section>
   );
 };
 
 export default PanelUserView;
+
 

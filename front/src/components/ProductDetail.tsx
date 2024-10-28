@@ -149,7 +149,7 @@ const ProductDetail: React.FC<IAgriProduct> = ({
 
         </div>
         <div className="flex flex-col w-[20%] border-[1px] border-solid border-black ">
-          <button onClick={handleAddShop} className={styles.ButtonCartshop} > Add to carth </button>
+          <button onClick={handleAddShop} className={styles.ButtonCartshop} > Add to cart </button>
           <button onClick={handleCompanyId} className={styles.ButtonSupplier}> Supplier </button>{styles.ButtonSuppier}
           <button onClick={handleProductId} className={styles.ButtonSupply} > Supply chain </button>
         </div>
