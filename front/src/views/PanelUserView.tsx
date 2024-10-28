@@ -11,10 +11,7 @@ import { useUserStore } from '@/store/useUserStore'; // Asegúrate de importar e
 import NotificationsModal from '@/components/NotificationsModal';
 import { useRouter } from 'next/navigation';
 
-const PanelUserView: React.FC<IUserPanel> = ({
-  title, buttonOne, buttonTwo,
-  buttonThree, buttonFour, buttonFive,
-  buttonSix, buttonSeven, buttonEight, 
+const PanelUserView: React.FC = ({
 }) => {
   const supplyChain: ISupplyChainProps[] = supplyChainArray;
   const { role_name } = useUserStore();
