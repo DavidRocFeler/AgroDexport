@@ -12,144 +12,153 @@ export declare class CompanyRepository {
     findById(companyId: string): Promise<{
         user: {
             role: {
-                role_name: string;
                 role_id: string;
+                role_name: string;
                 role_description: string;
             };
         } & {
+            user_id: string;
+            country: string | null;
             user_name: string;
             user_lastname: string;
-            isOlder: boolean;
-            user_id: string;
             nDni: number | null;
             birthday: string | null;
             phone: string | null;
-            country: string | null;
             profile_picture: string | null;
+            isOlder: boolean;
             role_id: string;
             credential_id: string | null;
         };
     } & {
+        company_id: string;
         user_id: string;
-        country: string;
         company_name: string;
         tax_identification_number: number;
         address: string;
         postal_code: string;
         city: string;
         state: string;
+        country: string;
         industry: string;
         website: string | null;
         account_paypal: string | null;
         company_description: string | null;
         company_logo: string | null;
         isActive: boolean;
-        company_id: string;
     }>;
     findByName(companyName: string): Promise<{
         user: {
             role: {
-                role_name: string;
                 role_id: string;
+                role_name: string;
                 role_description: string;
             };
         } & {
+            user_id: string;
+            country: string | null;
             user_name: string;
             user_lastname: string;
-            isOlder: boolean;
-            user_id: string;
             nDni: number | null;
             birthday: string | null;
             phone: string | null;
-            country: string | null;
             profile_picture: string | null;
+            isOlder: boolean;
             role_id: string;
             credential_id: string | null;
         };
     } & {
+        company_id: string;
         user_id: string;
-        country: string;
         company_name: string;
         tax_identification_number: number;
         address: string;
         postal_code: string;
         city: string;
         state: string;
+        country: string;
         industry: string;
         website: string | null;
         account_paypal: string | null;
         company_description: string | null;
         company_logo: string | null;
         isActive: boolean;
-        company_id: string;
     }>;
     findCompaniesByUserId(userId: string): Promise<{
+        company_id: string;
         user_id: string;
-        country: string;
         company_name: string;
         tax_identification_number: number;
         address: string;
         postal_code: string;
         city: string;
         state: string;
+        country: string;
         industry: string;
         website: string | null;
         account_paypal: string | null;
         company_description: string | null;
         company_logo: string | null;
         isActive: boolean;
-        company_id: string;
     }[]>;
+    getAccountPaypalByUserIdRepository(companyId: string): Promise<{
+        error: string;
+        statusCode: number;
+        account_paypal?: undefined;
+    } | {
+        account_paypal: string;
+        statusCode: number;
+        error?: undefined;
+    }>;
     create(companyData: CreateCompanyDto): Promise<{
+        company_id: string;
         user_id: string;
-        country: string;
         company_name: string;
         tax_identification_number: number;
         address: string;
         postal_code: string;
         city: string;
         state: string;
+        country: string;
         industry: string;
         website: string | null;
         account_paypal: string | null;
         company_description: string | null;
         company_logo: string | null;
         isActive: boolean;
-        company_id: string;
     }>;
     update(companyId: string, companyData: UpdateCompanyDto): Promise<{
+        company_id: string;
         user_id: string;
-        country: string;
         company_name: string;
         tax_identification_number: number;
         address: string;
         postal_code: string;
         city: string;
         state: string;
+        country: string;
         industry: string;
         website: string | null;
         account_paypal: string | null;
         company_description: string | null;
         company_logo: string | null;
         isActive: boolean;
-        company_id: string;
     }>;
     softDelete(companyId: string): Promise<{
+        company_id: string;
         user_id: string;
-        country: string;
         company_name: string;
         tax_identification_number: number;
         address: string;
         postal_code: string;
         city: string;
         state: string;
+        country: string;
         industry: string;
         website: string | null;
         account_paypal: string | null;
         company_description: string | null;
         company_logo: string | null;
         isActive: boolean;
-        company_id: string;
     }>;
     findByAcoountPaypalById(company_supplier_id: string): Promise<string>;
 }

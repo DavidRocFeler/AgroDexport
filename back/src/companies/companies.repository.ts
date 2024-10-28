@@ -7,6 +7,7 @@ import { Company } from '@prisma/client';
 
 @Injectable()
 export class CompanyRepository {
+  
 
   constructor(
     private readonly notificationsService: NotificationsService,
@@ -89,6 +90,19 @@ export class CompanyRepository {
         user_id: userId,
       },
     });
+  }
+
+  async getAccountPaypalByUserIdRepository(companyId: string) {
+    const company = await this.prisma.company.findUnique({
+      where: { company_id: companyId }
+    });
+
+    if (!company || !company.isActive) {
+      return { error: 'Company not found ', statusCode: 404 };
+    }
+
+    
+    return { account_paypal: company.account_paypal, statusCode: 200 };
   }
   
 

@@ -85,6 +85,15 @@ let CompanyRepository = class CompanyRepository {
             },
         });
     }
+    async getAccountPaypalByUserIdRepository(companyId) {
+        const company = await this.prisma.company.findUnique({
+            where: { company_id: companyId }
+        });
+        if (!company || !company.isActive) {
+            return { error: 'Company not found ', statusCode: 404 };
+        }
+        return { account_paypal: company.account_paypal, statusCode: 200 };
+    }
     async create(companyData) {
         const existingCompany = await this.prisma.company.findFirst({
             where: {

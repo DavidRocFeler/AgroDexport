@@ -9,6 +9,7 @@ import { Company } from '@prisma/client';
 
 @Injectable()
 export class CompanyService {
+  
   constructor(
     private readonly usersRepository: UsersRepository,
     private readonly companyRepository: CompanyRepository,
@@ -28,6 +29,10 @@ export class CompanyService {
 
     async getCompaniesByUserId(userId: string) {
       return this.companyRepository.findCompaniesByUserId(userId);
+    }
+
+    async getAccountPaypalByUserIdServices(companyId: string) {
+      return this.companyRepository.getAccountPaypalByUserIdRepository(companyId);
     }
   
     async createCompanyServices(companyData: CreateCompanyDto) {
