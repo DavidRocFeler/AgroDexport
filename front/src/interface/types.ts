@@ -48,15 +48,15 @@ export interface ILoginComponentProps {
 export interface IUserSession {
   token: string;
   user: {
-      id: number;
-      address: string;
-      email: string;
-      name: string;
-      phone: string;
-      role: string;
-      orders: [];
-  }
-};
+    id: number;
+    address: string;
+    email: string;
+    name: string;
+    phone: string;
+    role: string;
+    orders: [];
+  };
+}
 
 export interface IOrderCarWishProps {
   product: any;
@@ -97,7 +97,7 @@ export interface IOrder {
   status: string;
   date: Date;
   products: IAgriProduct[];
-};
+}
 
 export interface OrderCarWishProps {
   order?: IOrder;
@@ -136,7 +136,7 @@ export interface IAgroProduct {
 }
 
 export interface MyProductListProps extends IAgroProduct {
-  onDelete: (name: string) => void ; 
+  onDelete: (name: string) => void;
 }
 
 export interface ISupplyChainProps {
@@ -180,10 +180,10 @@ export interface IProvidersProps {
   children: React.ReactNode;
 }
 
-export interface  INotificationsProps {
+export interface INotificationsProps {
   isVisible: boolean;
   onClose: () => void;
-  userId?: string;  // Agrega esta línea para incluir el userId
+  userId?: string; // Agrega esta línea para incluir el userId
 }
 
 export interface IAuthWrapperProps {
@@ -211,6 +211,7 @@ export const companiesData: Company[] = [
   },
 ];
 
+// /-------------------------------------------------------------------------------
 export interface ISettingsUserProps {
   user_id: string;
   user_name?: string;
@@ -220,6 +221,18 @@ export interface ISettingsUserProps {
   phone?: string;
   country?: string;
   updatedFields?: Partial<ISettingsUserProps>;
+}
+
+// export interface ISettingsUserProps {
+//   id: string;
+//   user_name: string;
+//   user_lastname: string;
+//   phone: string;
+//   country: string;
+// }
+
+interface UserCardProps extends ISettingsUserProps {
+  onDelete: (id: string) => void;
 }
 
 export interface ISettingsPasswordProps {
