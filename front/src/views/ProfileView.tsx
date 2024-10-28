@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import UserProfileForm from "../components/UserProfileForm"; // Importa el componente
-import PasswordProfileForm from "@/components/PasswordSettingCongif"; // Importa el componente para la seguridad
+import PasswordProfileForm from "@/components/PasswordSettingConfig"; // Importa el componente para la seguridad
 import { useRouter } from "next/navigation";
 import { companiesData } from "@/helpers/companiesData";
 import Paypal from "@/components/Paypal";

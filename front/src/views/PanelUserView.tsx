@@ -5,8 +5,7 @@ import React, { useState } from 'react';
 import styles from "../styles/UserPanel.module.css";
 import SupplyChainComponent from '@/components/SupplyChainComponent';
 import { supplyChainArray } from '@/helpers/supplyChain.helpers';
-import { ISupplyChainProps, IUserPanel } from '@/interface/types';
-import ProtectedRoute from '@/app/ProtectedRoute';
+import { ISupplyChainProps} from '@/interface/types';
 import { useUserStore } from '@/store/useUserStore'; // Asegúrate de importar el hook para acceder al estado global
 import NotificationsModal from '@/components/NotificationsModal';
 import { useRouter } from 'next/navigation';
@@ -79,8 +78,8 @@ const PanelUserView: React.FC = ({
           {/* Botones para el admin elegir el modo de visualización */}
           {role_name === "admin" && (
             <aside className='flex flex-row relative'>
-              <button onClick={handleViewAsBuyer} className="absolute top-0 left-[10rem] pt-[0.5rem] pb-[0.5rem] pl-[1rem] pr-[1rem] border-black border-solid border-[1px] "> View as Supplier </button>
-              <button onClick={handleViewAsSupplier} className="absolute top-0 left-[1rem] pt-[0.5rem] pb-[0.5rem] pl-[1rem] pr-[1rem] border-black border-solid border-[1px]"> View as Buyer </button>
+              <button id='' onClick={handleViewAsBuyer} className={styles.ButtonSupplier}> View as Supplier </button>
+              <button id='' onClick={handleViewAsSupplier} className={styles.ButtonBuyer}> View as Buyer </button>
             </aside>
           )}
           <aside className='w-fit ml-auto mb-[4rem] mr-[2rem]'>

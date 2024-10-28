@@ -10,7 +10,7 @@ export const updatePasswordSettings = async (user_id: string, updatedFields: Par
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}` // Incluye el token en el header
+          "Authorization": `Bearer ${token}` 
         },
         body: JSON.stringify(updatedFields),
       });
@@ -27,12 +27,13 @@ export const updatePasswordSettings = async (user_id: string, updatedFields: Par
   };
   
 
-  export const getPasswordSettings = async (user_id: string): Promise<ISettingsPasswordProps> => {
+  export const getPasswordSettings = async (user_id: string, token: string): Promise<ISettingsPasswordProps> => {
     try {
         const res = await fetch(`${API_URL}/users/${user_id}`, {
             method: "GET",
             headers: {
                 "Content-type": "application/json",
+                "Authorization": `Bearer ${token}`,
             },
         });
 

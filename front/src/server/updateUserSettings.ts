@@ -10,7 +10,7 @@ export const updateUserSettings = async (user_id: string, updatedFields: Partial
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}` // Incluye el token en el header
+          "Authorization": `Bearer ${token}` 
         },
         body: JSON.stringify(updatedFields),
       });
