@@ -86,6 +86,13 @@ export class CompanyController {
       return companies;
     }
 
+    //no proteger esta ruta!!!
+    @HttpCode(200)
+    @Get("user/accountPaypal/:id")
+    async getAccountPaypalByCompanyId(@Param("id") companyId: string){
+      return this.companyServices.getAccountPaypalByUserIdServices(companyId);
+    }
+
 
     @ApiBearerAuth()
     @HttpCode(200)
