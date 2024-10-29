@@ -26,6 +26,38 @@ let CompanyProductsRepository = class CompanyProductsRepository {
             },
         });
     }
+    async findAllWithFilters(filters) {
+        return this.prisma.companyProduct.findMany({
+            where: {
+                ...filters,
+                ...(filters.category && {
+                    category: {
+                        is: {
+                            name_category: {
+                                contains: filters.category.name_category,
+                                mode: 'insensitive',
+                            },
+                        },
+                    },
+                }),
+                ...(filters.company && {
+                    company: {
+                        is: {
+                            company_name: {
+                                contains: filters.company.company_name,
+                                mode: 'insensitive',
+                            },
+                        },
+                    },
+                }),
+            },
+            include: {
+                farmerCertification: true,
+                category: true,
+                company: true,
+            },
+        });
+    }
     async findProductsWithoutFarmer() {
         return this.prisma.companyProduct.findMany({
             where: { farmer_id: null },

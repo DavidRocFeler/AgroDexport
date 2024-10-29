@@ -10,6 +10,10 @@ export interface ISignUpForm {
   isOlder: boolean;
 }
 
+export interface ProductSearchProps {
+  onFilterChange: (filters: any) => void;
+}
+
 export interface ISignUpErrors {
   name?: string;
   lastName?: string;
@@ -219,6 +223,7 @@ export interface ISettingsUserProps {
   birthday?: string;
   phone?: string;
   country?: string;
+  profile_picture?: string;
   updatedFields?: Partial<ISettingsUserProps>;
 }
 
