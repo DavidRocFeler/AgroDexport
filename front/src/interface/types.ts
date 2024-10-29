@@ -10,6 +10,10 @@ export interface ISignUpForm {
   isOlder: boolean;
 }
 
+export interface ProductSearchProps {
+  onFilterChange: (filters: any) => void;
+}
+
 export interface ISignUpErrors {
   name?: string;
   lastName?: string;

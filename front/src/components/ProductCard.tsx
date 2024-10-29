@@ -2,6 +2,7 @@
 import { IAgriProduct } from '@/interface/types';
 import React from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 const ProductCard: React.FC<IAgriProduct> = ({company_product_id ,company_id, carbs, fat, calories, protein, category_id, stock, minimum_order, harvest_date, company_product_name, company_product_img, company_product_description, company_price_x_kg}) => {
   
@@ -39,7 +40,13 @@ const ProductCard: React.FC<IAgriProduct> = ({company_product_id ,company_id, ca
   
   return (
         <div className="relative border h-[28rem] p-[2rem] rounded shadow-lg w-[100%] ">
-          <img src={company_product_img} alt={company_product_name} className="w-full h-48 object-content mb-4 rounded" />
+          <Image 
+        src={company_product_img || '/placeholder-image.png'} // Reemplazar con una imagen por defecto si es undefined
+        alt={company_product_name || 'Product Image'} 
+        width={300}
+        height={200}
+        className="w-full h-48 object-cover mb-4 rounded" 
+      />
           <h2 className="text-lg text-black font-bold">{company_product_name}</h2>
           <p className="text-gray-600">{company_product_description}</p>
           <p className="text-green-500 font-semibold">${company_price_x_kg}</p>
