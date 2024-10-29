@@ -211,7 +211,6 @@ export const companiesData: Company[] = [
   },
 ];
 
-// /-------------------------------------------------------------------------------
 export interface ISettingsUserProps {
   user_id: string;
   user_name?: string;
@@ -223,14 +222,6 @@ export interface ISettingsUserProps {
   profile_picture?: string;
   updatedFields?: Partial<ISettingsUserProps>;
 }
-
-// export interface ISettingsUserProps {
-//   id: string;
-//   user_name: string;
-//   user_lastname: string;
-//   phone: string;
-//   country: string;
-// }
 
 interface UserCardProps extends ISettingsUserProps {
   onDelete: (id: string) => void;
