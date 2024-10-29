@@ -75,6 +75,7 @@ export interface IAgriProduct {
   company_id?: string | any;
   company_product_img?: string;
   company_product_name?: string;
+
   category_id: string;
   origin?: string;
   harvest_date?: string;
@@ -114,7 +115,7 @@ export interface IAgroProduct {
   pricePerUnit: number; // Precio por unidad o peso
   unitType: string; // Tipo de unidad (kg, caja, etc.)
   stock: string; // Cantidad disponible
-  images: string[]; // URLs de las imágenes del producto
+  images?: string; // URLs de las imágenes del producto
   nutritionalInfo: {
     calories: number; // Información nutricional
     protein: number; // Valor nutricional de la proteína
@@ -133,10 +134,6 @@ export interface IAgroProduct {
     rating: number; // Puntuación de la reseña (1-5)
     comment: string; // Comentario del usuario
   }[];
-}
-
-export interface MyProductListProps extends IAgroProduct {
-  onDelete: (name: string) => void;
 }
 
 export interface ISupplyChainProps {
