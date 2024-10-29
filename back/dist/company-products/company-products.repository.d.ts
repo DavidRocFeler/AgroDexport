@@ -8,6 +8,7 @@ export declare class CompanyProductsRepository {
     private readonly notificationsService;
     constructor(prisma: PrismaService, notificationsService: NotificationsService);
     findAll(): Promise<CompanyProduct[]>;
+    findAllWithFilters(filters: any): Promise<CompanyProduct[]>;
     findProductsWithoutFarmer(): Promise<any[]>;
     findProductsWithIncompleteCertifications(): Promise<any[]>;
     findAllByCompanyId(companyId: string): Promise<{
