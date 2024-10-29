@@ -112,6 +112,10 @@ export class UsersRepository {
 
   async createUserThird(userData: thirdAuthDto): Promise<User> {
     let user = await this.findUserByEmail(userData.email);
+
+    if (user){
+      throw new BadRequestException("Email Already exists")
+    }
   
     if (!user) {
       const role = await this.rolesRepository.getRoleByName(userData.role_name);
