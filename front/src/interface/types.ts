@@ -258,7 +258,7 @@ export interface IPublishProductProps {
   discount: number;
   company_price_x_kg: number;
   harvest_date: string;
-  company_product_img: string;
+  company_product_img: FileList;
   calories: number;
   fat: number;
   protein: number;

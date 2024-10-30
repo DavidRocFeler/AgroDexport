@@ -199,21 +199,21 @@ const FormPublishProduct: React.FC<FormPublishProductProps> = ({
           </label>
           <input
             type="file"
-            accept=".jpg,.jpeg,.png"
+            accept=".jpg,.png"
             {...register("company_product_img", {
               required: "Product image jpg or png is required",
               validate: {
                 fileType: (value) => {
-                  if (!value[0]) return true;
-                  const types = ["image/jpeg", "image/png"];
+                  if (!value[0]) return true; // Si no hay archivo, retorna true
+                  const types = ["image/jpeg", "image/png"]; // Ajuste aquí para incluir 'image/jpeg'
                   return (
-                    types.includes(value[0]?.type) ||
+                    types.includes(value[0].type) ||
                     "File must be in JPG or PNG format"
                   );
                 },
                 fileSize: (value) => {
-                  if (!value[0]) return true;
-                  const fileSize = value[0]?.size / 1024 / 1024;
+                  if (!value[0]) return true; // Si no hay archivo, retorna true
+                  const fileSize = value[0].size / 1024 / 1024; // Convertir a MB
                   return fileSize <= 5 || "File size must be less than 5MB";
                 },
               },
