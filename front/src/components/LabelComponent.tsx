@@ -3,26 +3,17 @@ import styles from "../styles/LabelComponent.module.css";
 import { IAgriProduct } from '@/interface/types';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+import { ILabelComponentPropsAgri } from '@/interface/types';
 
 const MySwal = withReactContent(Swal);
 
-interface LabelComponentProps extends IAgriProduct {
-  isSelected: boolean;
-  onSelect: () => void;
-  onRemove: () => void; 
-  quantity?: number ; 
-  onQuantityChange: (quantity: number) => void;
-}
-
-export const LabelComponent: React.FC<LabelComponentProps> = ({
+export const LabelComponent: React.FC<ILabelComponentPropsAgri> = ({
   company_product_img,
   company_product_name,
   minimum_order,
   company_price_x_kg,
   isSelected,
   stock,
-  category_id,
-  company_id,
   onSelect,
   onRemove,
   onQuantityChange, 

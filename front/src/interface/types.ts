@@ -86,7 +86,7 @@ export interface IAgriProduct {
   fat: number;
   protein: number;
   carbs: number;
-  quantity: number; // Agrega esta línea
+  quantity?: number; // Agrega esta línea
 }
 
 export interface IAgriProductErrors {
@@ -106,6 +106,14 @@ export interface IAgriProductErrors {
   protein?: number;
   carbs?: number;
   quantity?: number; // Agrega esta línea
+}
+
+export interface ILabelComponentPropsAgri extends IAgriProduct {
+  isSelected: boolean;
+  onSelect: () => void;
+  onRemove: () => void; 
+  quantity?: number ; 
+  onQuantityChange: (quantity: number) => void;
 }
 
 export interface ILabelComponentProps {
