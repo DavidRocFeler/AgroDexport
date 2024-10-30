@@ -1,28 +1,38 @@
-// Instead of a handleOnChange function, react-hook-form allows you to use the watch hook to observe field values ​​in real time. A watch() can be added to see the status of all inputs in the console.
+// // Instead of a handleOnChange function, react-hook-form allows you to use the watch hook to observe field values ​​in real time. A watch() can be added to see the status of all inputs in the console.
 
 "use client";
 import { IPublishProductProps } from "@/interface/types";
 import React from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { useRouter } from "next/navigation";
 
-const FormPublishProduct: React.FC = () => {
+interface FormPublishProductProps {
+  onSubmit: (data: IPublishProductProps) => void;
+}
+
+const FormPublishProduct: React.FC<FormPublishProductProps> = ({
+  onSubmit,
+}) => {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
     formState: { errors },
-    // watch,
   } = useForm<IPublishProductProps>();
 
-  const onSubmit: SubmitHandler<IPublishProductProps> = (data) => {
-    console.log(data);
-    // Here you can manage the form submission
+  const handleFormSubmit: SubmitHandler<IPublishProductProps> = (data) => {
+    onSubmit(data);
+  };
+
+  const handleCancel = () => {
+    router.push("/userpanel");
   };
 
   return (
     <div className="max-w-2xl mx-auto p-6 font-inter">
       <h2 className="text-2xl font-bold mb-6">Publish New Product</h2>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
         <div className="form-group">
           <label className="block mb-2 font-semibold">Product Name</label>
           <input
@@ -60,7 +70,7 @@ const FormPublishProduct: React.FC = () => {
 
         <div className="grid grid-cols-2 gap-4">
           <div className="form-group">
-            <label className="block mb-2 font-semibold">Stock (kg)</label>
+            <label className="block mb-2 font-semibold">Stock (ton)</label>
             <input
               type="number"
               {...register("stock", {
@@ -81,15 +91,15 @@ const FormPublishProduct: React.FC = () => {
 
           <div className="form-group">
             <label className="block mb-2 font-semibold">
-              Minimum Order (kg)
+              Minimum Order 5 ton
             </label>
             <input
               type="number"
               {...register("minimum_order", {
                 required: "Minimum order is required",
                 min: {
-                  value: 1,
-                  message: "Minimum order must be at least 1",
+                  value: 5,
+                  message: "Minimum order must be at least 5",
                 },
               })}
               className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -117,11 +127,12 @@ const FormPublishProduct: React.FC = () => {
           </div>
 
           <div className="form-group">
-            <label className="block mb-2 font-semibold">Discount (%)</label>
+            <label className="block mb-2 font-semibold">
+              Discount (%) Optional
+            </label>
             <input
               type="number"
               {...register("discount", {
-                required: "Discount is required",
                 min: {
                   value: 0,
                   message: "Discount cannot be negative",
@@ -143,7 +154,9 @@ const FormPublishProduct: React.FC = () => {
 
         <div className="grid grid-cols-2 gap-4">
           <div className="form-group">
-            <label className="block mb-2 font-semibold">Price per kg ($)</label>
+            <label className="block mb-2 font-semibold">
+              Price per ton ($)
+            </label>
             <input
               type="number"
               step="0.01"
@@ -181,10 +194,29 @@ const FormPublishProduct: React.FC = () => {
         </div>
 
         <div className="form-group font-inter">
-          <label className="block mb-2 font-semibold">Product Image URL</label>
+          <label className="block mb-2 font-semibold">
+            Product Image jpg or png
+          </label>
           <input
+            type="file"
+            accept=".jpg,.jpeg,.png"
             {...register("company_product_img", {
-              required: "Product image URL is required",
+              required: "Product image jpg or png is required",
+              validate: {
+                fileType: (value) => {
+                  if (!value[0]) return true;
+                  const types = ["image/jpeg", "image/png"];
+                  return (
+                    types.includes(value[0]?.type) ||
+                    "File must be in JPG or PNG format"
+                  );
+                },
+                fileSize: (value) => {
+                  if (!value[0]) return true;
+                  const fileSize = value[0]?.size / 1024 / 1024;
+                  return fileSize <= 5 || "File size must be less than 5MB";
+                },
+              },
             })}
             className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
@@ -278,12 +310,20 @@ const FormPublishProduct: React.FC = () => {
           </div>
         </div>
 
-        <div className="flex justify-end">
+        <div className="flex justify-end gap-4">
+          <button
+            type="button"
+            onClick={handleCancel}
+            className="font-inter border border-black px-4 py-2 hover:bg-gray-50"
+          >
+            Cancel
+          </button>
+
           <button
             type="submit"
-            className="font-inter border border-black px-4 py-2"
+            className="font-inter border border-black px-4 py-2 bg-black text-white hover:bg-gray-800"
           >
-            Publish Product
+            Update Product
           </button>
         </div>
       </form>
