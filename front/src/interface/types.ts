@@ -90,6 +90,7 @@ export interface IAgriProduct {
   fat?: number;
   protein?: number;
   carbs?: number;
+  quantity?: number; // Agrega esta línea
 }
 
 export interface ILabelComponentProps {
