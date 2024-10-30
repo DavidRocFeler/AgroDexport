@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from "react";
 import UserProfileForm from "../components/UserProfileForm"; // Importa el componente
 import PasswordProfileForm from "@/components/PasswordSettingConfig"; // Importa el componente para la seguridad
-import { useRouter } from "next/navigation";
 import { companiesData } from "@/helpers/companiesData";
 import Paypal from "@/components/Paypal";
 import { useUserStore } from "@/store/useUserStore";
@@ -57,9 +56,6 @@ const ProfileView: React.FC = () => {
     }
   };
   
-  
-
-
   const capitalizeFirstLetter = (role_name: string | null) => {
     if (!role_name) return ""; 
     return role_name.charAt(0).toUpperCase() + role_name.slice(1);
