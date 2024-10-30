@@ -4,6 +4,8 @@ import ClientWrapers from "./ClientWrapers";
 import Header from "@/components/Header";
 import GoogleProviders from "./GoogleProviders";
 import AuthWrapper from "./AuthWrapers";
+import AuthWrapperLoggin from "./AuthWrapersLoggin";
+import GoogleWrapper from "./GoogleWrapers";
 
 export const metadata: Metadata = {
   title: "Agro-Dexports",

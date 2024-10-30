@@ -10,6 +10,10 @@ export interface ISignUpForm {
   isOlder: boolean;
 }
 
+export interface ProductSearchProps {
+  onFilterChange: (filters: any) => void;
+}
+
 export interface ISignUpErrors {
   name?: string;
   lastName?: string;
@@ -179,6 +183,7 @@ export interface IProvidersProps {
 
 export interface INotificationsProps {
   isVisible: boolean;
+  notifications: INotification[];
   onClose: () => void;
   userId?: string; // Agrega esta línea para incluir el userId
 }
