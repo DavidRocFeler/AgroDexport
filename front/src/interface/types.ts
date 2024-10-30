@@ -10,10 +10,6 @@ export interface ISignUpForm {
   isOlder: boolean;
 }
 
-export interface ProductSearchProps {
-  onFilterChange: (filters: any) => void;
-}
-
 export interface ISignUpErrors {
   name?: string;
   lastName?: string;
@@ -24,14 +20,14 @@ export interface ISignUpErrors {
   phone?: number;
 }
 
-export interface ILogin {
-  email: string;
-  password: string;
-}
-
 export interface ILoginAuth {
   email: string;
   name: string;
+}
+
+export interface ILogin {
+  email: string;
+  password: string;
 }
 
 export interface ILoginError {
@@ -49,6 +45,10 @@ export interface ILoginComponentProps {
   onSwitchToSignUp: () => void;
 }
 
+export interface ProductSearchProps {
+  onFilterChange: (filters: any) => void;
+}
+
 export interface IUserSession {
   token: string;
   user: {
@@ -62,10 +62,6 @@ export interface IUserSession {
   };
 }
 
-export interface IOrderCarWishProps {
-  product: any;
-}
-
 export interface IPropsCards {
   company_id: string;
   company_product_name: string;
@@ -75,6 +71,25 @@ export interface IPropsCards {
 }
 
 export interface IAgriProduct {
+  company_product_id: string | any;
+  company_id: string | any;
+  company_product_img: string;
+  company_product_name: string;
+  category_id: string;
+  origin: string;
+  harvest_date: string;
+  company_price_x_kg: number | any;
+  minimum_order: number;
+  stock: number;
+  company_product_description: string;
+  calories: number;
+  fat: number;
+  protein: number;
+  carbs: number;
+  quantity?: number; // Agrega esta línea
+}
+
+export interface IAgriProductErrors {
   company_product_id?: string | any;
   company_id?: string | any;
   company_product_img?: string;
@@ -94,6 +109,14 @@ export interface IAgriProduct {
   quantity?: number; // Agrega esta línea
 }
 
+export interface ILabelComponentPropsAgri extends IAgriProduct {
+  isSelected: boolean;
+  onSelect: () => void;
+  onRemove: () => void; 
+  quantity?: number ; 
+  onQuantityChange: (quantity: number) => void;
+}
+
 export interface ILabelComponentProps {
   products: IAgriProduct[]; // Usa la interfaz aquí
 }
@@ -105,7 +128,7 @@ export interface IOrder {
   products: IAgriProduct[];
 }
 
-export interface OrderCarWishProps {
+export interface ICarProps {
   order?: IOrder;
   products?: IAgriProduct[];
 }
@@ -205,15 +228,6 @@ export interface Company {
   status: "Active" | "Inactive";
 }
 
-export const companiesData: Company[] = [
-  {
-    id: 1,
-    name: "Company One",
-    role: "Admin",
-    status: "Active",
-  },
-];
-
 export interface ISettingsUserProps {
   user_id: string;
   user_name?: string;
@@ -282,7 +296,6 @@ export interface IPreviewState {
   [key: string]: IFilePreview | null;
 }
 
-// types.ts
 export interface INotification {
   notification_id: string;
   user_id: string;
