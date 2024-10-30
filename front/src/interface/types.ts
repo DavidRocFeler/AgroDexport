@@ -90,6 +90,7 @@ export interface IAgriProduct {
   fat?: number;
   protein?: number;
   carbs?: number;
+  quantity?: number; // Agrega esta línea
 }
 
 export interface ILabelComponentProps {
@@ -186,6 +187,7 @@ export interface IProvidersProps {
 
 export interface  INotificationsProps {
   isVisible: boolean;
+  notifications: INotification[];
   onClose: () => void;
   userId?: string;  // Agrega esta línea para incluir el userId
 }
