@@ -187,6 +187,7 @@ export interface IProvidersProps {
 
 export interface  INotificationsProps {
   isVisible: boolean;
+  notifications: INotification[];
   onClose: () => void;
   userId?: string;  // Agrega esta línea para incluir el userId
 }
