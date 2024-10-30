@@ -1,11 +1,11 @@
-// LabelComponent.tsx
-import React from 'react';
+import React, { useState } from 'react';
 import styles from "../styles/LabelComponent.module.css";
 import { IAgriProduct } from '@/interface/types';
 
 interface LabelComponentProps extends IAgriProduct {
   isSelected: boolean;
   onSelect: () => void;
+  onRemove: () => void; // Nueva prop para eliminar el producto
 }
 
 const LabelComponent: React.FC<LabelComponentProps> = ({
@@ -14,9 +14,34 @@ const LabelComponent: React.FC<LabelComponentProps> = ({
   minimum_order,
   company_price_x_kg,
   isSelected,
+  stock,
   onSelect,
-  category_id // Añadimos esta prop requerida
+  category_id,
+  onRemove 
 }) => {
+ 
+  const availableStock = stock ?? 0; 
+  const initialQuantity = Math.min(minimum_order ?? 0, availableStock); 
+  const adjustedMinimumOrder = minimum_order ?? 0; // Usar 0 si minimum_order es undefined
+
+  const [quantity, setQuantity] = useState(initialQuantity); // Estado para la cantidad seleccionada
+
+  const handleIncrease = () => {
+    if (quantity < availableStock) { // Verifica si la cantidad es menor que el stock
+      setQuantity(quantity + 1);
+    } else {
+      alert("Stock máximo alcanzado");
+    }
+  };
+
+  const handleDecrease = () => {
+    if (quantity > adjustedMinimumOrder) {
+      setQuantity(quantity - 1);
+    } else if (quantity === adjustedMinimumOrder) {
+      onRemove();
+    }
+  };
+
   return (
     <div className={styles.Label}>
       <figure className={styles.ImageIcon}>
@@ -25,7 +50,11 @@ const LabelComponent: React.FC<LabelComponentProps> = ({
       <div className={styles.Extrainfo}>
         <p>{company_product_name}</p>
         <div className="flex flex-row">
-          <p className="mr-2">Quantity: {minimum_order} t</p>
+          <p className="mr-2">Quantity: {quantity} t</p>
+        </div>
+        <div className={styles.CantButton}>
+          <button className={styles.LessButton} onClick={handleDecrease}>-</button>
+          <button className={styles.MoreButton} onClick={handleIncrease}>+</button>
         </div>
       </div>
       <div className={styles.Price}>
@@ -42,4 +71,3 @@ const LabelComponent: React.FC<LabelComponentProps> = ({
 };
 
 export default LabelComponent;
-

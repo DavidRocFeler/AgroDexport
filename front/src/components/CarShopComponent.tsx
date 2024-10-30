@@ -10,7 +10,7 @@ const MySwal = withReactContent(Swal);
 
 interface PayPalComponentProps {
   amount: number;
-  companyId: string; // Agrega companyId aquí
+  companyId: string; 
   onSuccess?: (details: any) => void;
   onError?: (error: any) => void;
 }
@@ -58,12 +58,59 @@ const PayPalButtonsComponent: React.FC<PayPalComponentProps> = ({ amount, compan
 
 
 const CarShopComponent: React.FC<ILabelComponentProps> = ({ products }) => {
+  const [productList, setProductList] = useState<IAgriProduct[]>(products); 
   const [selectedProduct, setSelectedProduct] = useState<IAgriProduct | null>(null);
   const [companyData, setCompanyData] = useState<any>(null);
   const [isProcessing, setIsProcessing] = useState(false);
 
+  useEffect(() => {
+    // Cargar productos desde el localStorage al iniciar el componente
+    const storedProducts = localStorage.getItem('productos');
+    if (storedProducts) {
+      setProductList(JSON.parse(storedProducts));
+    }
+  }, []);
+
+  useEffect(() => {
+    setProductList(products);
+  }, [products]);
+
   const handleProductSelect = (product: IAgriProduct) => {
     setSelectedProduct(selectedProduct?.company_product_id === product.company_product_id ? null : product);
+  };
+
+  const handleRemoveProduct = (productId: string) => {
+    setProductList((prevProducts) => {
+      const updatedProducts = prevProducts.filter(product => product.company_product_id !== productId);
+      
+      // Guardar los productos actualizados en localStorage
+      localStorage.setItem('productos', JSON.stringify(updatedProducts));
+
+      // Si el producto eliminado es el que está seleccionado, reseteamos selectedProduct
+      if (selectedProduct?.company_product_id === productId) {
+        setSelectedProduct(null);
+      }
+      
+      return updatedProducts;
+    });
+  };
+
+  const handleQuantityChange = (productId: string, newQuantity: number) => {
+    setProductList((prevProducts) => {
+      const updatedProducts = prevProducts.map(product => {
+        if (product.company_product_id === productId) {
+          return {
+            ...product,
+            quantity: newQuantity, // Asegúrate de tener un campo quantity en tu IAgriProduct
+          };
+        }
+        return product;
+      });
+      
+      // Guardar los productos actualizados en localStorage
+      localStorage.setItem('productos', JSON.stringify(updatedProducts));
+      return updatedProducts;
+    });
   };
 
   const calculateTotals = () => {
@@ -203,13 +250,14 @@ const CarShopComponent: React.FC<ILabelComponentProps> = ({ products }) => {
   return (
     <div className="flex flex-row pl-[2rem] pr-[2rem] pt-[3rem] pb-[2rem]">
       <div className="w-[60%]">
-        {products && products.map((product) => (
+      {productList.map((product) => (
           <div key={product.company_product_id}>
             <LabelComponent
               {...product}
               category_id={product.category_id || ''}
               isSelected={selectedProduct?.company_product_id === product.company_product_id}
               onSelect={() => handleProductSelect(product)}
+              onRemove={() => handleRemoveProduct(product.company_product_id)}
             />
           </div>
         ))}
