@@ -19,24 +19,24 @@ export declare class OrderRepository {
     } & {
         order_id: string;
         supply_chain_id: string | null;
-        account_paypal: string | null;
-        shipping_address_id: string | null;
         order_details_id: string;
-        payment_id: string | null;
+        shipping_address_id: string | null;
+        account_paypal: string | null;
         id_company_sell: string;
         order_date: Date;
+        payment_id: string | null;
         id_company_buy: string;
     }>;
     createOrderProductsRepository(createOrderProductsDto: CreateOrderProductsDto): Promise<{
         order: {
             order_id: string;
             supply_chain_id: string | null;
-            account_paypal: string | null;
-            shipping_address_id: string | null;
             order_details_id: string;
-            payment_id: string | null;
+            shipping_address_id: string | null;
+            account_paypal: string | null;
             id_company_sell: string;
             order_date: Date;
+            payment_id: string | null;
             id_company_buy: string;
         };
         orderDetail: {
@@ -56,12 +56,12 @@ export declare class OrderRepository {
     } & {
         order_id: string;
         supply_chain_id: string | null;
-        account_paypal: string | null;
-        shipping_address_id: string | null;
         order_details_id: string;
-        payment_id: string | null;
+        shipping_address_id: string | null;
+        account_paypal: string | null;
         id_company_sell: string;
         order_date: Date;
+        payment_id: string | null;
         id_company_buy: string;
     }>;
     softDeleteOrderRepository(orderId: string): Promise<{
@@ -74,12 +74,12 @@ export declare class OrderRepository {
     } & {
         order_id: string;
         supply_chain_id: string | null;
-        account_paypal: string | null;
-        shipping_address_id: string | null;
         order_details_id: string;
-        payment_id: string | null;
+        shipping_address_id: string | null;
+        account_paypal: string | null;
         id_company_sell: string;
         order_date: Date;
+        payment_id: string | null;
         id_company_buy: string;
     }>;
 }
