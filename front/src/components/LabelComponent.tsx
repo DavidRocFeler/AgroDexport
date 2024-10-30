@@ -1,46 +1,73 @@
 import React, { useState } from 'react';
 import styles from "../styles/LabelComponent.module.css";
 import { IAgriProduct } from '@/interface/types';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+
+const MySwal = withReactContent(Swal);
 
 interface LabelComponentProps extends IAgriProduct {
   isSelected: boolean;
   onSelect: () => void;
-  onRemove: () => void; // Nueva prop para eliminar el producto
+  onRemove: () => void; 
+  quantity?: number ; 
+  onQuantityChange: (quantity: number) => void;
 }
 
-const LabelComponent: React.FC<LabelComponentProps> = ({
+export const LabelComponent: React.FC<LabelComponentProps> = ({
   company_product_img,
   company_product_name,
   minimum_order,
   company_price_x_kg,
   isSelected,
   stock,
-  onSelect,
   category_id,
-  onRemove 
+  company_id,
+  onSelect,
+  onRemove,
+  onQuantityChange, 
 }) => {
  
   const availableStock = stock ?? 0; 
   const initialQuantity = Math.min(minimum_order ?? 0, availableStock); 
-  const adjustedMinimumOrder = minimum_order ?? 0; // Usar 0 si minimum_order es undefined
+  const adjustedMinimumOrder = minimum_order ?? 0; 
 
-  const [quantity, setQuantity] = useState(initialQuantity); // Estado para la cantidad seleccionada
+  const [quantity, setQuantity] = useState(initialQuantity); 
 
   const handleIncrease = () => {
-    if (quantity < availableStock) { // Verifica si la cantidad es menor que el stock
+    if (quantity < availableStock) { 
       setQuantity(quantity + 1);
+      onQuantityChange(quantity + 1);
     } else {
-      alert("Stock máximo alcanzado");
+      MySwal.fire({
+        icon: 'info',
+        title: 'Maximum Stock Reached',
+        text: 'You cannot add more products because you have reached the maximum stock limit.',
+      });
     }
   };
 
   const handleDecrease = () => {
     if (quantity > adjustedMinimumOrder) {
       setQuantity(quantity - 1);
+      onQuantityChange(quantity - 1);
     } else if (quantity === adjustedMinimumOrder) {
-      onRemove();
+      MySwal.fire({
+        icon: 'warning', 
+        title: 'Remove Product?',
+        text: 'Are you sure you want to remove this product?',
+        showCancelButton: true, 
+        confirmButtonText: 'Yes, remove it',
+        cancelButtonText: 'Cancel',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          onRemove();
+        }
+      });
     }
   };
+  
+  
 
   return (
     <div className={styles.Label}>
@@ -70,4 +97,5 @@ const LabelComponent: React.FC<LabelComponentProps> = ({
   );
 };
 
-export default LabelComponent;
+
+
