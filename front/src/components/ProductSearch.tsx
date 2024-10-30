@@ -1,5 +1,4 @@
-"use client";
-
+"use client"
 import React, { useState } from 'react';
 import { ProductSearchProps } from '@/interface/types'; // Asegúrate de que esté correctamente definido
 
