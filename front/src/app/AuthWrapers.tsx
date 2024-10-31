@@ -1,56 +1,76 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect } from "react";
+import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
-import { registerAuthProps } from "@/server/signUpHelpers";
 import { IAuthWrapperProps } from "@/interface/types";
-import { useAuthThirdStore } from "@/store/useAuthThirdStore";
+import { useAuthThirdStore } from "@/store/useAuthThirdStore"; // Importa correctamente tus funciones
+import { logginAuthProps } from "@/helpers/loginHelpers";
+import { useUserStore } from "@/store/useUserStore";
 
 const AuthWrapper: React.FC<IAuthWrapperProps> = ({ children }) => {
-    const { googleSession, clearAllSessions } = useAuthThirdStore();
+    const { data: session, status: sessionStatus } = useSession();
     const router = useRouter();
-
-    // Manejar el registro en el backend
-    const handleBackendRegistration = useCallback(async () => {
-        if (googleSession) {
-          try {
-              console.log("Enviando datos de googleSession al backend:", googleSession); // Verificar el contenido
-              await registerAuthProps(googleSession);
-              Swal.fire({
-                  icon: "success",
-                  title: "Successfully",
-                  text: "You registered successfully",
-                  width: 400,
-                  padding: "3rem",
-                  customClass: {
-                      popup: "custom-swal-popup",
-                  },
-              });
-          } catch (error) {
-              console.error("Error en el registro del backend:", error);
-              Swal.fire({
-                  icon: "error",
-                  title: "Error",
-                  text: "There was an error during registration.",
-              });
-          } finally {
-              clearAllSessions();
-              router.push("/");
-          }
-        }
-    }, [googleSession,  clearAllSessions, router ]);    
+    const { clearAllSessions, resetInitialization } = useAuthThirdStore();
+    const { setUserData } = useUserStore();
 
     useEffect(() => {
-      const registerUser = async () => {
-        if (googleSession) {
-            await handleBackendRegistration(); // Llama a la función de registro
+        const handleGoogleLogin = async () => {
+            if (sessionStatus === 'authenticated' && session?.user?.email && session?.user?.name) {
+                // Preparar los datos para enviar al backend
+                const googleData = {
+                    email: session.user.email,
+                    name: session.user.name,
+                };
+
+                // Enviar los datos al backend
+                const response = await logginAuthProps(googleData);
+
+                // Verificar si la respuesta es exitosa
+                if (response && response.user_id && response.token && response.role_name) {
+                    // Extraer los datos de la respuesta
+                    const { user_id, token, role_name } = response;
+
+                    // Actualizar el estado global del usuario
+                    setUserData(user_id, token, role_name);
+
+                    // Mostrar éxito en el login
+                    await Swal.fire({
+                        icon: "success",
+                        title: "Success",
+                        text: "Google login successful",
+                        width: 400,
+                        padding: "3rem",
+                    });
+
+                    // Redirigir al home después del éxito en el login
+                    router.push("/");
+
+                } else {
+                    // Mostrar mensaje de error si el login falla
+                    await Swal.fire({
+                        icon: "error",
+                        title: "Error",
+                        text: "You need to register first",
+                        width: 400,
+                        padding: "3rem",
+                    });
+                }
+
+                // Destruir la sesión y limpiar todo, independientemente del éxito o error
+                await clearAllSessions();  // Lógica personalizada para limpiar sesiones
+                await signOut({ redirect: false });  // Destruir la sesión
+                resetInitialization();  // Lógica personalizada para resetear cualquier estado
+            }
+        };
+
+        // Ejecutar la lógica de login cuando la sesión esté autenticada
+        if (sessionStatus === "authenticated") {
+            handleGoogleLogin();
         }
-    };
 
-    registerUser(); // Llama a la función dentro del useEffect
-
-    }, [googleSession, handleBackendRegistration])
+    }, [session, sessionStatus, router, clearAllSessions, resetInitialization, setUserData, logginAuthProps]);
 
     return <>{children}</>;
 };

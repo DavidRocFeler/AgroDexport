@@ -78,24 +78,6 @@ export class CompanyController {
 
     @ApiBearerAuth()
     @HttpCode(200)
-    @Get('user/:user_id')
-    @UseGuards(AuthGuard, RolesGuard)
-    @Roles('admin', 'supplier', 'buyer')
-    async getCompaniesByUserId(@Param('user_id') userId: string) {
-      const companies = await this.companyServices.getCompaniesByUserId(userId);
-      return companies;
-    }
-
-    //no proteger esta ruta!!!
-    @HttpCode(200)
-    @Get("user/accountPaypal/:id")
-    async getAccountPaypalByCompanyId(@Param("id") companyId: string){
-      return this.companyServices.getAccountPaypalByUserIdServices(companyId);
-    }
-
-
-    @ApiBearerAuth()
-    @HttpCode(200)
     @Post()
     @UseGuards(AuthGuard, RolesGuard)
     @Roles('admin', 'supplier', 'buyer')

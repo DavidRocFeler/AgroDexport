@@ -1,5 +1,5 @@
 
-import { BadRequestException, ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { User, Credential } from '@prisma/client';
 import { validateExists } from '../helpers/validation.helper';
@@ -26,15 +26,9 @@ export class UsersRepository {
     return this.prisma.user.findMany({
       include: {
         role: true,
-        companies: { // Asumiendo que el campo de relación es 'company'
-          select: {
-            company_name: true,
-          },
-        },
       },
     });
   }
-  
 
   async getAllWithFilters(filters: any[]): Promise<User[]> {
     return this.prisma.user.findMany({
@@ -118,10 +112,6 @@ export class UsersRepository {
 
   async createUserThird(userData: thirdAuthDto): Promise<User> {
     let user = await this.findUserByEmail(userData.email);
-
-    if (user){
-      throw new BadRequestException('The email is already in use')
-    }
   
     if (!user) {
       const role = await this.rolesRepository.getRoleByName(userData.role_name);
@@ -167,15 +157,13 @@ export class UsersRepository {
     console.log(credentials)
     const { email, password } = credentials
     const account = await this.findCredentialByEmail(email)
-    if (account && account.user) {
-      const { isActive, user_id, user_name, role } = account.user;
-  
-      // Verifica si el usuario está activo
-      if (!isActive) {
-        throw new UnauthorizedException("User account is banned.");
-      }
+    if ( account ) {
+      const user = await this.prisma.user.findUnique({
+        where: { credential_id: account.credential_id },  // Usar la credencial para encontrar el usuario
+        include: { role: true },  // Incluir la relación con `role` para obtener `role_name`
+      });
 
-      const userId = account.user.user_id
+      const userId = user.user_id
       const accountPassword = account.password
 
       const isPasswordValid = await bcrypt.compare(password, accountPassword)
@@ -184,15 +172,15 @@ export class UsersRepository {
         const userPayload = {
           sub: userId,
           user_id: userId,
-          user_name: account.user.user_name,
-          role: account.user.role.role_name,
+          user_name: user.user_name,
+          role: user.role.role_name,
         }
 
         const token = this.jwtService.sign(userPayload)
         return {
           token,
           user_id: userId,
-          role_name: account.user.role.role_name,
+          role_name: user.role.role_name,
         };
       }
     }
@@ -207,9 +195,7 @@ export class UsersRepository {
       include: {
         user: {
           select: {
-            user_id: true, 
-            user_name: true,
-            isActive: true, 
+            user_id: true,  
             role: {
               select: {
                 role_name: true,
@@ -243,17 +229,11 @@ export class UsersRepository {
       const user = await this.getUserById(id);
   
       if (updateData.password) {
-        const hashedPassword = await bcrypt.hash(updateData.password, 10);
+        const hashedPassword = await bcrypt.hash(updateData, 10);
         await this.prisma.credential.update({
           where: { credential_id: user.credential_id },
           data: { password: hashedPassword },
         });
-
-        delete updateData.password;
-      }
-      
-      if ('confirm_password' in updateData) {
-        delete updateData.confirm_password;
       }
 
       const updatedUser = await this.prisma.user.update({
@@ -274,37 +254,5 @@ export class UsersRepository {
       }
       throw error;
     }
-  }
-
-  // Soft delete - desactivar usuario
-  async softDeleteUser(id: string): Promise<void> {
-    const userWithCompanies = await this.prisma.user.findUnique({
-      where: { user_id: id },
-      include: {
-        companies: {
-          where: { isActive: true },
-        },
-      },
-    });
-  
-    if (userWithCompanies && userWithCompanies.companies.length > 0) {
-      await this.prisma.company.updateMany({
-        where: { user_id: id },
-        data: { isActive: false },
-      });
-    }
-  
-    await this.prisma.user.update({
-      where: { user_id: id },
-      data: { isActive: false },
-    });
-  }
-  
-
-  // Delete - eliminar usuario permanentemente
-  async deleteUser(id: string): Promise<void> {
-    await this.prisma.user.delete({
-      where: { user_id: id },
-    });
   }
 }

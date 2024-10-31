@@ -10,7 +10,7 @@ export class CreateCompanyDto {
   user_id: string; 
 
   @ApiProperty({ description: 'Name of the company', example: "AgroVerde", maxLength: 50 })
-  @IsOptional() 
+  @IsNotEmpty({ message: 'The company name cannot be empty.' })
   @IsString({ message: 'The company name must be a string.' })
   @Length(1, 50, { message: 'The company name must be between 1 and 50 characters.' })
   @Matches(/^[a-zA-Z0-9\s\-]+$/, { message: 'The company name can only contain letters, numbers, spaces, and hyphens.' })
@@ -19,7 +19,7 @@ export class CreateCompanyDto {
 
   @ApiProperty({ description: 'Tax identification number of the company', example: 123456789 })
   @IsInt({ message: 'The tax identification number must be an integer.' })
-  @IsOptional() 
+  @IsNotEmpty({ message: 'The tax identification number cannot be empty.' })
   @IsPositive({ message: 'The tax identification number must be a positive number.' })
   @Min(100000000, { message: 'The tax identification number must be at least 9 digits.' })
   @Max(999999999, { message: 'The tax identification number cannot exceed 9 digits.' })
@@ -27,7 +27,7 @@ export class CreateCompanyDto {
   tax_identification_number: number;
 
   @ApiProperty({ description: 'Address of the company', example: "Camino del Sol 123", maxLength: 255 })
-  @IsOptional() 
+  @IsNotEmpty({ message: 'The address cannot be empty.' })
   @IsString({ message: 'The address must be a string.' })
   @Length(1, 255, { message: 'The address must be between 1 and 255 characters.' })
   @Matches(/^[a-zA-Z0-9\s\-,.#/]+$/, { message: 'The address can only contain letters, numbers, spaces, commas, periods, hyphens, and slashes.' })
@@ -35,7 +35,7 @@ export class CreateCompanyDto {
   address: string;
 
   @ApiProperty({ description: 'Postal code of the company', example: "111112", maxLength: 20 })
-  @IsOptional() 
+  @IsNotEmpty({ message: 'The postal code cannot be empty.' })
   @IsString({ message: 'The postal code must be a string.' })
   @MinLength(1, { message: 'The postal code must have at least 1 character.' })
   @MaxLength(20, { message: 'The postal code cannot exceed 20 characters.' })
@@ -44,7 +44,7 @@ export class CreateCompanyDto {
   postal_code: string;
  
   @ApiProperty({ description: 'City where the company is located', example: "Zipaquira" })
-  @IsOptional() 
+  @IsNotEmpty({ message: 'The city cannot be empty.' })
   @IsString({ message: 'The city must be a string.' })
   @Length(1, 100, { message: 'The city name must be between 1 and 100 characters.' })
   @Matches(/^[a-zA-Z\s\-\'\.]+$/, { message: 'The city can only contain letters, spaces, hyphens, apostrophes, and periods.' })
@@ -52,7 +52,7 @@ export class CreateCompanyDto {
   city: string;
 
   @ApiProperty({ description: 'State where the company is located', example: "Cundinamarca" })
-  @IsOptional() 
+  @IsNotEmpty({ message: 'The state cannot be empty.' })
   @IsString({ message: 'The state must be a string.' })
   @Length(1, 100, { message: 'The state name must be between 1 and 100 characters.' })
   @Matches(/^[a-zA-Z\s\-\'\.]+$/, { message: 'The state can only contain letters, spaces, hyphens, apostrophes, and periods.' })
@@ -60,7 +60,7 @@ export class CreateCompanyDto {
   state: string;
 
   @ApiProperty({ description: 'Country where the company is located', example: "Colombia" })
-  @IsOptional() 
+  @IsNotEmpty({ message: 'The country cannot be empty.' }) 
   @IsString({ message: 'The country must be a string.' })
   @Length(1, 100, { message: 'The country name must be between 1 and 100 characters.' })
   @Matches(/^[a-zA-Z\s\-\'\.]+$/, { message: 'The country can only contain letters, spaces, hyphens, apostrophes, and periods.' })
@@ -68,7 +68,7 @@ export class CreateCompanyDto {
   country: string;
 
   @ApiProperty({ description: 'Industry in which the company operates', example: "Cafetera" })
-  @IsOptional() 
+  @IsNotEmpty({ message: 'The industry cannot be empty.' })
   @IsString({ message: 'The industry must be a string.' })
   @Length(1, 100, { message: 'The industry name must be between 1 and 100 characters.' }) 
   @Matches(/^[a-zA-Z\s\-\'\.]+$/, { message: 'The industry can only contain letters, spaces, hyphens, apostrophes, and periods.' }) 
@@ -82,7 +82,7 @@ export class CreateCompanyDto {
   website?: string;
 
   @ApiProperty({ description: 'PayPal account associated with the company', example: "paypal@agroverde.com.co" })
-  @IsOptional() 
+  @IsNotEmpty({ message: 'The PayPal account cannot be empty.' }) 
   @IsString({ message: 'The PayPal account must be a string.' })
   @Matches(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, { message: 'The PayPal account must be a valid email format.' }) 
   @Length(1, 255, { message: 'The PayPal account must be between 1 and 255 characters.' }) 
@@ -99,7 +99,6 @@ export class CreateCompanyDto {
 
   @ApiProperty({ description: 'Logo URL of the company', example: "https://www.agroverde.com.co/logo.jpg" })
   @IsString({ message: 'The company logo must be a string.' })
-  @IsOptional() 
   @Matches(/^https?:\/\/[^\s]+$/, { message: 'The company logo must be a valid URL.' }) 
   @Length(1, 255, { message: 'The company logo must be between 1 and 255 characters.' }) 
   company_logo: string = "https://i.mkt.lu/assets/logo_empresa_5.png"; 

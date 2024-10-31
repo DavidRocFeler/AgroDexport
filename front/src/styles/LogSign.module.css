@@ -13,23 +13,15 @@
 }
 .ButtonGoogle {
     border: solid 1px rgb(153, 153, 153);
+    border-radius: 20px;
     width: 40%;
     padding: 0.5rem 1rem 0.5rem 1rem;
     margin: auto;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
     display: flex;
     flex-direction: row;
-    justify-content: space-evenly;
+    justify-content: center;
     align-items: center;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-.ButtonGoogle:hover {
-    background-color: #5c8b1b;
-    color: white;
-}
-.ButtonGoogle:active {
-    transform: scale(0.95);
-    box-shadow: none;
 }
 .ButtonApple {
     border: solid 1px rgb(153, 153, 153);
@@ -62,7 +54,7 @@
 }
 .Password {
     padding: 0.5rem 1rem 0.5rem 1rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
     border: 1px solid rgb(153, 153, 153);
 }
 .ForgotPassword {
@@ -75,15 +67,10 @@
     padding: 0.5rem 1rem 0.5rem 1rem;
     border: solid 1px rgb(153, 153, 153);
     transition: 0.5s;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 .ButtonLogin:hover {
-    background-color: #5c8b1b;
+    background-color: black;
     color: white;
-}
-.ButtonLogin:active {
-    transform: scale(0.95);
-    box-shadow: none;
 }
 .OR {
     margin: auto;

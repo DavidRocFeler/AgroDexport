@@ -1,10 +1,10 @@
-import UsersView from "@/views/UsersView";
+import UserView from "@/views/UserView";
 import React from "react";
 
 const Users = () => {
   return (
     <div>
-      <UsersView />
+      <UserView />
     </div>
   );
 };

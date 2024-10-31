@@ -29,9 +29,14 @@ const DashboardView: React.FC = () => {
     router.push("/profile");
   };
 
-  const handleRedirectAdminHistory = () => {
-    router.push("/orderhistory")
-  }
+  const handleRedirectHistorySales = () => {
+    setIsAuth(true);
+    router.push("/supplierhistorysales");
+  };
+
+  const handleRedirectHistoryBuys = () => {
+    router.push("/buyerhistorybuys");
+  };
 
   if (!isHydrated) {
     return (
@@ -69,7 +74,7 @@ const DashboardView: React.FC = () => {
   }
 
   return (
-    <ProtectedRoute allowedRoles={["admin"]}>
+    <ProtectedRoute allowedRoles={["supplier", "buyer"]}>
       <section>
         <div
           style={{
@@ -95,9 +100,17 @@ const DashboardView: React.FC = () => {
               {" "}
               Profile{" "}
             </button>
-            {role_name === "admin" && (
+            {role_name === "supplier" ? (
               <button
-                onClick={handleRedirectAdminHistory}
+                onClick={handleRedirectHistorySales}
+                className={styles.ButtonHistory}
+              >
+                {" "}
+                History{" "}
+              </button>
+            ) : (
+              <button
+                onClick={handleRedirectHistoryBuys}
                 className={styles.ButtonHistory}
               >
                 {" "}
@@ -149,13 +162,12 @@ const DashboardView: React.FC = () => {
           ))}
         </div>
       </section>
-      {/* {isModalOpen && (
+      {isModalOpen && (
         <NotificationsModal
           isVisible={isModalOpen}
-          notifications={allNotifications}
-          onClose={handleCloseModal}
+          onClose={() => setIsModalOpen(false)}
         />
-      )} */}
+      )}
     </ProtectedRoute>
   );
 };

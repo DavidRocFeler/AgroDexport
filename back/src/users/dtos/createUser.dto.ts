@@ -6,16 +6,15 @@ export class CreateUserDto {
     
     @ApiProperty({ description: 'User first name', example: "Juan", maxLength: 50 })
     @IsNotEmpty()
-    @Matches(/^[a-zA-ZÀ-ÿÑñ\s]+$/, { message: 'The first name should only contain letters and spaces' })
+    @Matches(/^[a-zA-ZÀ-ÿÑñ]+$/, { message: 'The first name should only contain letters and no spaces' })
     @Length(1, 50)
     user_name: string;
-    
-    @ApiProperty({ description: 'User last name', example: "Perez", maxLength: 50 })
+  
+    @ApiProperty({ description: 'User last name',  example: "Perez", maxLength: 50 })
     @IsNotEmpty()
-    @Matches(/^[a-zA-ZÀ-ÿÑñ\s]+$/, { message: 'The last name should only contain letters and spaces' })
+    @Matches(/^[a-zA-ZÀ-ÿÑñ]+$/, { message: 'The last name should only contain letters and no spaces' })
     @Length(1, 50)
     user_lastname: string;
-    
 
     @ApiProperty({ description: 'User email', example: "javier@example.com", maxLength: 255 })
     @IsNotEmpty()

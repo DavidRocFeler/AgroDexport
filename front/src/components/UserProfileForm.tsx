@@ -4,44 +4,40 @@ import { ISettingsUserProps } from "@/interface/types";
 import { getUserSettings } from "@/server/getUserSettings";
 import { updateUserSettings } from "@/server/updateUserSettings";
 import { useUserStore } from "@/store/useUserStore";
-import Swal from "sweetalert2";
-import { validateUserSettings } from "@/helpers/validateUserSettings";
-import 'react-datepicker/dist/react-datepicker.css';
-import DatePicker from 'react-datepicker';
 
 const UserProfileForm = () => {
-  const initialState: ISettingsUserProps = {
-    user_id: "",
+  const [isEditing, setIsEditing] = useState(false);
+  const [userData, setUserData] = useState<ISettingsUserProps>({
     user_name: "",
     user_lastname: "",
     nDni: null,
     birthday: "",
     phone: "",
     country: "",
-  } 
+  });
+  const [originalData, setOriginalData] = useState<ISettingsUserProps>(userData); // Guardamos datos originales
 
-  const [isEditing, setIsEditing] = useState(false);
-  const [userData, setUserData] = useState(initialState);
-  const [error, setError] = useState<Partial<Record<keyof ISettingsUserProps, string>>>({});
-  const [originalData, setOriginalData] = useState<ISettingsUserProps>(userData);
-  const [resetFlag, setResetFlag] = useState(false); // Estado para reiniciar el ciclo de vida
   const { user_id, token } = useUserStore();
 
   useEffect(() => {
-    const fetchUserSettings = async () => {
-      if (user_id && token) {
-        try {
-          const data = await getUserSettings(user_id, token);
+    const fetchData = async () => {
+      try {
+        if (user_id) {
+          console.log("Obteniendo datos del usuario...");
+          const data = await getUserSettings(user_id);
           setUserData(data);
-          setOriginalData(data); // Establecer originalData cuando se obtienen los datos
-        } catch (error) {
-          console.error('failed to update notifications:', error);
+          setOriginalData(data); // Guardamos los datos originales
+          console.log("Datos del usuario obtenidos:", data);
+        } else {
+          alert("No se pudo obtener el ID del usuario.");
         }
+      } catch (error: any) {
+        console.error("Error al cargar los datos:", error.message);
       }
     };
 
-    fetchUserSettings();
-  }, [user_id, token, resetFlag]); // Agregar resetFlag para reiniciar
+    fetchData();
+  }, [user_id, token]); 
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -53,12 +49,7 @@ const UserProfileForm = () => {
 
   const handleSave = async () => {
     if (JSON.stringify(userData) === JSON.stringify(originalData)) {
-      Swal.fire({
-        title: 'No changes to save',
-        text: 'There are no changes to save.',
-        icon: 'info',
-        confirmButtonText: 'OK'
-      });
+      alert("No hay cambios para guardar.");
       setIsEditing(false);
       return;
     }
@@ -66,53 +57,27 @@ const UserProfileForm = () => {
     if (!token) {
       return;
     }
-
-    const errors = validateUserSettings(userData);
-    if (Object.keys(errors).length > 0) {
-      // Encontrar el primer error
-      const firstErrorField = Object.keys(errors)[0];
-      const firstErrorMessage = errors[firstErrorField as keyof typeof errors];
-
-      if (firstErrorMessage) {
-        Swal.fire({
-          icon: 'warning',
-          title: 'Validation Error',
-          text: `${firstErrorMessage}`,
-        });
-      }
-
-    return;
-  }
-    
+  
     const updatedFields: Partial<ISettingsUserProps> = {};
     Object.keys(userData).forEach((key) => {
       if (userData[key as keyof ISettingsUserProps] !== originalData[key as keyof ISettingsUserProps]) {
         updatedFields[key as keyof ISettingsUserProps] = userData[key as keyof ISettingsUserProps];
       }
     });
-
+  
     console.log("Field update:", updatedFields);
-
+  
     try {
       if (user_id) {
         await updateUserSettings(user_id, updatedFields, token); 
         setOriginalData(userData);
         setIsEditing(false);
-        await Swal.fire({
-          title: 'Success!',
-          text: 'Your settings have been updated successfully.',
-          icon: 'success',
-          confirmButtonText: 'Ok',
-        });
+        alert("Successful update");
       } else {
         alert("The user's ID could not be obtained.");
       }
     } catch (error: any) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Incomplete Field',
-        text: 'You need to complete a field.',
-      });
+      alert("Error saving");
       console.error("Error saving:", error.message);
     }
   };
@@ -122,22 +87,17 @@ const UserProfileForm = () => {
   };
 
   const handleCancel = () => {
-    setResetFlag(prev => !prev); // Cambiar el estado para reiniciar el ciclo de vida
+    setUserData(originalData); 
     setIsEditing(false); 
   };
-
-  useEffect(() => {
-    const newErrors = validateUserSettings(userData);
-    setError(newErrors)
-  }, [userData])
-
+  
   return (
     <div className="w-[100%] p-6 bg-white rounded-lg">
       <form className="space-y-4 flex flex-col">
         <label className="flex flex-row items-center w-[100%] text-gray-700 font-medium">
           Name
           <input
-            className="ml-auto w-[70%] p-2 border border-gray-300 rounded-[2px] "
+            className="ml-auto w-[70%] p-2 border border-gray-300 rounded-lg"
             type="text"
             name="user_name"
             value={isEditing ? userData.user_name : ""}
@@ -150,7 +110,7 @@ const UserProfileForm = () => {
         <label className="flex flex-row items-center w-[100%] text-gray-700 font-medium">
           Last name
           <input
-            className="ml-auto w-[70%] p-2 border border-gray-300 rounded-[2px]"
+            className="ml-auto w-[70%] p-2 border border-gray-300 rounded-lg"
             type="text"
             name="user_lastname"
             value={isEditing ? userData.user_lastname : ""}
@@ -163,7 +123,7 @@ const UserProfileForm = () => {
         <label className="flex flex-row items-center w-[100%] text-gray-700 font-medium">
           Document ID
           <input
-            className="ml-auto w-[70%] p-2 border border-gray-300 rounded-[2px]"
+            className="ml-auto w-[70%] p-2 border border-gray-300 rounded-lg"
             type="text"
             name="nDni"
             value={isEditing ? userData.nDni || "" : ""}
@@ -176,31 +136,20 @@ const UserProfileForm = () => {
         <label className="flex flex-row items-center w-[100%] text-gray-700 font-medium">
           Birthday
           <input
-            type="date"
+            className="ml-auto w-[70%] p-2 border border-gray-300 rounded-lg"
+            type="text"
             name="birthday"
             value={isEditing ? userData.birthday : ""}
-            placeholder="dd/mm/aaaa"
+            placeholder={!isEditing ? userData.birthday : ""}
             onChange={handleChange}
             disabled={!isEditing}
-            className="ml-auto w-[70%] p-2 border border-gray-300 rounded-[2px]"
           />
         </label>
-
-        <style jsx>{`
-          input[type="date"] {
-              color: #888; /* Cambia esto al color que desees que sea similar al del placeholder */
-          }
-
-          input[type="date"]::-webkit-inner-spin-button,
-          input[type="date"]::-webkit-calendar-picker-indicator {
-              display: none; /* Esto oculta los elementos de selector nativos */
-          }
-    `   }</style>
 
         <label className="flex flex-row items-center w-[100%] text-gray-700 font-medium">
           Phone
           <input
-            className="ml-auto w-[70%] p-2 border border-gray-300 rounded-[2px]"
+            className="ml-auto w-[70%] p-2 border border-gray-300 rounded-lg"
             type="text"
             name="phone"
             value={isEditing ? userData.phone : ""}
@@ -213,7 +162,7 @@ const UserProfileForm = () => {
         <label className="flex flex-row items-center w-[100%] text-gray-700 font-medium">
           Country
           <input
-            className="ml-auto w-[70%] p-2 border border-gray-300 rounded-[2px] "
+            className="ml-auto w-[70%] p-2 border border-gray-300 rounded-lg"
             type="text"
             name="country"
             value={isEditing ? userData.country : ""}
@@ -221,9 +170,6 @@ const UserProfileForm = () => {
             onChange={handleChange}
             disabled={!isEditing}
           />
-          {userData.country && error.country && (
-            <p> {error.country} </p>
-          )}
         </label>
 
         <div className="flex justify-between mt-4">

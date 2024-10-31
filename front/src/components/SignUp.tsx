@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { IGoogleSession, ISignUpComponentProps, ISignUpForm } from "@/interface/types";
 import styles from "../styles/LogSign.module.css";
-import { FaGoogle } from "react-icons/fa";
+import { FaGoogle, FaApple, FaEnvelope } from "react-icons/fa";
 import { signIn } from "next-auth/react";
-import { registerProps } from "@/server/signUpHelpers";
+import { registerProps } from "@/helpers/signUpHelpers";
 import Swal from "sweetalert2";
-import { X } from "lucide-react";
-import CustomCheckbox from "./CustomCheckbox";
 
 const SignUp: React.FC<ISignUpComponentProps> = ({ onCloseSignUp, onSwitchToLogin }) => {
     const initialState: ISignUpForm = {
@@ -75,45 +73,32 @@ const SignUp: React.FC<ISignUpComponentProps> = ({ onCloseSignUp, onSwitchToLogi
                 onCloseSignUp();
             } catch (error) {
                 console.error("Registration error:", error);
+                alert("Registration failed. Please try again.");
             }
         } else {
-            Swal.fire({
-                title: "Please correct the following errors:",
-                text: errors.join("\n"),
-                icon: "warning",
-                confirmButtonText: 'OK',
-                allowOutsideClick: false
-            });
+            alert("Please correct the following errors:\n\n" + errors.join("\n"));
         }
     };
     
     const handleOnSubmitAuth = async (event: React.SyntheticEvent) => {
-    event.preventDefault();
-    console.log("UserData before submission:", userData);
+        event.preventDefault();
+        console.log("UserData before submission:", userData);
+    
+        if (!userData.role_name) {
+            return;
+        }
+    
+        // Create the objeth with the available data 
+        const newUser: IGoogleSession = {
+            name: userData.user_name || "",
+            email: userData.email || "",
+            role_name: userData.role_name,
+        };
+    
+        localStorage.setItem('userRole', userData.role_name);
 
-    // Verifica si se seleccionó un rol
-    if (!userData.role_name) {
-        await Swal.fire({
-            title: 'Role required',
-            text: 'Please select if you are a buyer or supplier before signing up.',
-            icon: 'warning',
-            confirmButtonText: 'OK',
-            allowOutsideClick: false
-        });
-        return; // Detener el flujo si no hay rol seleccionado
-    }
-
-    // Continúa si se ha seleccionado un rol
-    const newUser: IGoogleSession = {
-        name: userData.user_name || "",
-        email: userData.email || "",
-        role_name: userData.role_name,
+        await signIn("google");
     };
-
-    localStorage.setItem('userRole', userData.role_name);
-
-    await signIn("google");
-};
 
         useEffect(() => {
             const isRoleSelected = userData.role_name !== null;
@@ -122,10 +107,27 @@ const SignUp: React.FC<ISignUpComponentProps> = ({ onCloseSignUp, onSwitchToLogi
     
     return (
         <section className={styles.LogSign}>
-            <button onClick={onCloseSignUp} className=' pr-[0.5rem] pl-[0.5rem]'>  <X size={24} color= "#5c8b1b" /> </button>
+            <button onClick={onCloseSignUp} className='border-[2px] border-solid border-black pr-[0.5rem] pl-[0.5rem]'> x </button>
             <form className="flex flex-col" onSubmit={handleOnSubmit}>
                 <h1 className={styles.Title}>Join Agro Dexports</h1>
-              
+                <div className="w-[50%] m-auto mb-[2rem]">
+                    <input
+                        name="supplier"
+                        checked={userData.role_name === "supplier"}
+                        onChange={handleChangeRegister}
+                        className={styles.Supplier}
+                        type="checkbox"
+                    />{" "}
+                    I&apos;m a supplier
+                    <input
+                        name="buyer"
+                        checked={userData.role_name === "buyer"}
+                        onChange={handleChangeRegister}
+                        className="ml-[8rem]"
+                        type="checkbox"
+                    />{" "}
+                    I&apos;m a buyer
+                </div>
                 <div className="w-[40%] flex flex-col m-auto mb-[3rem] ">
                     <input className={styles.CommonInput}
                         value={userData.user_name}
@@ -167,65 +169,26 @@ const SignUp: React.FC<ISignUpComponentProps> = ({ onCloseSignUp, onSwitchToLogi
                         required
                         placeholder='Repeat password' />
 
-                    <div className="flex flex-row">
-                    <label htmlFor="">
-                        <CustomCheckbox
-                            name="supplier"
-                            checked={userData.role_name === "supplier"}
-                            onChange={handleChangeRegister}
-                        />{" "}
-                        </label>
-
-                        <label className="ml-auto">
-                        <CustomCheckbox
-                            name="buyer"
-                            checked={userData.role_name === "buyer"}
-                            onChange={handleChangeRegister}
-                        />{" "}
-                        </label>
-                    </div>
-
-                    <div className="mb-[2rem]  flex flex-col mt-[1rem] ">
-                        <label className="">
+                    <div className="mb-[2rem]">
                         <input
                             name="isOlder"
                             type="checkbox"
                             checked={userData.isOlder}
                             onChange={handleChangeRegister}
                             required
-                        />{" "} I am of legal age,
-                        </label>
+                        />{" "} I am of legal age.
                     </div>
 
-                    <button type="submit" className={styles.ButtonLogin}>Continue</button>
+                    <button type="submit" className={styles.ButtonLogin} disabled={isButtonDisabled}>Continue</button>
                 </div>
                 <p className={styles.OR}> ------------------- OR -------------------</p>
                 <div>
-                    <button className={styles.ButtonGoogle} onClick={async (event) => { await handleOnSubmitAuth(event);}} >
+                    <button className={styles.ButtonGoogle} onClick={async (event) => { await handleOnSubmitAuth(event);}} disabled={isAuthButtonDisabled}>
                         <FaGoogle />
-                        Sign up with Google
+                        <p className="ml-[1rem]">Sign up with Google</p>
                     </button>
-                    <div className="mb-[2rem] w-[40%] m-auto flex flex-row">
-                        <label htmlFor="" className="bg-red-500 w-[8rem]" >
-                        <CustomCheckbox
-                            name="supplier"
-                            checked={userData.role_name === "supplier"}
-                            onChange={handleChangeRegister}
-                        />{" "}
-                       
-                        </label>
 
-                        <label className="ml-auto bg-green-400 w-[8rem] h-[2.5rem] ">
-                        <CustomCheckbox
-                            name="buyer"
-                            checked={userData.role_name === "buyer"}
-                            onChange={handleChangeRegister}
-                        />{" "}
-                        
-                        </label>
-                    </div>
-
-                    {/* <button className={styles.ButtonApple} onClick={() => signIn()} disabled={isAuthButtonDisabled}>
+                    <button className={styles.ButtonApple} onClick={() => signIn()} disabled={isAuthButtonDisabled}>
                         <FaApple />
                         <p className="ml-[1rem]">Sign up with Apple</p>
                     </button>
@@ -233,7 +196,7 @@ const SignUp: React.FC<ISignUpComponentProps> = ({ onCloseSignUp, onSwitchToLogi
                     <button className={styles.ButtonEmail} onClick={() => signIn()} disabled={isAuthButtonDisabled}>
                         <FaEnvelope />
                         <p className="ml-[1rem]">Sign up with Email</p>
-                    </button> */}
+                    </button>
                 </div>
 
                 <div className="flex flex-row justify-center items-center mt-[2rem]">

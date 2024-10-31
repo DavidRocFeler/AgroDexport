@@ -1,12 +1,12 @@
 // components/ProtectedRoute.tsx
 import { useRouter } from 'next/navigation'
 import { useUserStore } from '@/store/useUserStore'
-import { IProtectedRouteProps } from '@/interface/types'
+import { iProtectedRouteProps } from '@/interface/types'
 
 export default function ProtectedRoute({ 
   children, 
   allowedRoles = [] 
-}: IProtectedRouteProps) {
+}: iProtectedRouteProps) {
   const router = useRouter()
   const { role_name, isAuthenticated } = useUserStore()
 

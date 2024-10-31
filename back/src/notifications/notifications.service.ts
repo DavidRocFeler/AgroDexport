@@ -2,14 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { NotificationsGateway } from './notifications.gateway';
 import { Prisma, PrismaClient } from '@prisma/client';
-import { NotificationRepository } from './notifications.repository';
 
 @Injectable()
 export class NotificationsService {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly notificationsGateway: NotificationsGateway,
-    private readonly notificationsRepository: NotificationRepository
+    private readonly notificationsGateway: NotificationsGateway
   ) {}
 
 
@@ -138,27 +136,15 @@ async createAndNotifyBuyers(message: string, type: string) {
 }
 
 
-
   
-async markAsRead(notificationId: string) {
-  return this.notificationsRepository.updateNotificationToRead(notificationId);
-}
-
-async getAllNotifications() {
-  return this.notificationsRepository.findAllNotifications();
-}
-
-
-async getNotificationById(notificationId: string) {
-  return this.notificationsRepository.findNotificationById(notificationId);
-}
-
-async getUnreadNotifications(userId: string) {
-  return this.notificationsRepository.findUnreadNotifications(userId);
-}
-
-async getAllUserNotifications(userId: string) {
-  return this.notificationsRepository.findAllByUserId(userId);
-}
-
+  
+  async markAsRead(notificationId: string) {
+    const notification = await this.prisma.notification.update({
+      where: { notification_id: notificationId },
+      data: { isRead: true },
+    });
+  
+    return notification;
+  }
+  
 }

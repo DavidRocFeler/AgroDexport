@@ -1,4 +1,4 @@
-import { Get, Injectable, NotFoundException, Param } from '@nestjs/common';
+import { Get, Injectable, Param } from '@nestjs/common';
 import { CreateUserDto } from './dtos/createUser.dto';
 import { UsersRepository } from './users.repository';
 import { User } from '@prisma/client';
@@ -27,23 +27,5 @@ export class UsersService {
     async updateUserService(id: string, updateData: UpdateUserDto): Promise<User> {
         validateRequestBodyNotEmpty(updateData);
             return await this.userRepository.updateUser(id, updateData);
-        }     
-        
-        
-        async softDeleteUserService(id: string): Promise<void> {
-          const user = await this.userRepository.getUserById(id);
-          if (!user) {
-            throw new NotFoundException('User not found.');
-          }
-
-          await this.userRepository.softDeleteUser(id);
-        }
-      
-        async deleteUserService(id: string): Promise<void> {
-          const user = await this.userRepository.getUserById(id);
-          if (!user) {
-            throw new NotFoundException('User not found.');
-          }
-          await this.userRepository.deleteUser(id);
-        }
+        }      
 }

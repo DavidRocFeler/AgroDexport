@@ -55,14 +55,10 @@ export class AuthRepository {
         const { email } = userData;
       
         const credential = await this.userRepository.findCredentialByEmail(email);
-        
+      
         if (credential && credential.user) {
-          const { user_id, role, isActive } = credential.user;
-
-          if (!isActive) {
-            throw new UnauthorizedException('User account is banned.');
-          }
-          
+          const { user_id, role } = credential.user;
+      
           const userPayload = {
             sub: user_id,
             user_id,

@@ -4,7 +4,7 @@ const SupplyChainViewSupplier: React.FC = () => {
     return(
         <main className="pl-[1.5rem] pr-[1.5rem] pt-[2rem] pb-[2rem] ">
             <div className="flex flex-row items-center mb-[2rem]">
-                <h1 className="text-[6rem] "> Purchase history </h1>
+                <h1 className="text-[6rem] "> History Buys </h1>
                 <div className="ml-auto mt-[2rem] ">
                     <select className=" mr-[1rem] border-black border-[1px] border-solid pt-[0.5rem] pb-[0.5rem] pr-[1rem] pl-[1rem]" name="Order List" id="">
                         <option className="" value=""> My companies</option>
