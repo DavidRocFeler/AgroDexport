@@ -62,6 +62,17 @@ export interface IUserSession {
   };
 }
 
+export interface IOrderCarWishProps {
+  product: any;
+}
+
+export interface ILabelComponentProps {
+  product?: IAgriProduct;
+  units: number;
+  viewType: "carShop" | "ordersView" | "wishListView";
+  orderStatus?: { status: string; date: string };
+}
+
 export interface IPropsCards {
   company_id: string;
   company_product_name: string;
@@ -102,6 +113,7 @@ export interface IAgriProductErrors {
   company_id?: string | any;
   company_product_img?: string;
   company_product_name?: string;
+
   category_id: string;
   origin?: string;
   harvest_date?: string;
@@ -127,8 +139,8 @@ export interface IAgriProductErrors {
 export interface ILabelComponentPropsAgri extends IAgriProduct {
   isSelected: boolean;
   onSelect: () => void;
-  onRemove: () => void; 
-  quantity?: number ; 
+  onRemove: () => void;
+  quantity?: number;
   onQuantityChange: (quantity: number) => void;
 }
 
@@ -158,7 +170,7 @@ export interface IAgroProduct {
   pricePerUnit: number; // Precio por unidad o peso
   unitType: string; // Tipo de unidad (kg, caja, etc.)
   stock: string; // Cantidad disponible
-  images: string[]; // URLs de las imágenes del producto
+  images?: string; // URLs de las imágenes del producto
   nutritionalInfo: {
     calories: number; // Información nutricional
     protein: number; // Valor nutricional de la proteína
@@ -179,10 +191,6 @@ export interface IAgroProduct {
   }[];
 }
 
-export interface MyProductListProps extends IAgroProduct {
-  onDelete: (name: string) => void;
-}
-
 export interface ISupplyChainProps {
   id: number;
   title: string;
@@ -198,9 +206,15 @@ export interface ISupplyChainProps {
 export interface IUserState {
   user_id: string | null;
   token: string | null;
+
   role_name: string | null;
   isAuthenticated: boolean;
-  setUserData: (id: string, token: string, role_name: string) => void;
+  setUserData: (
+    id: string,
+    token: string,
+
+    role_name: string
+  ) => void;
   clearUser: () => void;
 }
 
@@ -249,6 +263,7 @@ export interface Company {
 
 export interface ISettingsUserProps {
   user_id: string;
+
   user_name?: string;
   user_lastname?: string;
   nDni?: number | any;
@@ -297,7 +312,7 @@ export interface IPublishProductProps {
   discount: number;
   company_price_x_kg: number;
   harvest_date: string;
-  company_product_img: string;
+  company_product_img: FileList;
   calories: number;
   fat: number;
   protein: number;
@@ -321,6 +336,28 @@ export interface IPreviewState {
   [key: string]: IFilePreview | null;
 }
 
+export interface FarmerCertificationsFormProps {
+  onCancel: () => void;
+}
+
+// for FileInput
+export interface FileInputProps {
+  name: keyof ICertificationsProps;
+  label: string;
+  description: string;
+  register: any; // should type this correctly with the react-hook-form register type
+  errors: any; //  should type this correctly with the react-hook-form errors type
+  handleFileChange: (
+    event: React.ChangeEvent<HTMLInputElement>,
+    fieldName: keyof ICertificationsProps
+  ) => void;
+  previews: IPreviewState;
+}
+
+export interface FormPublishProductProps {
+  onUpdateClick: () => void;
+}
+
 export interface INotification {
   notification_id: string;
   user_id: string;
@@ -341,7 +378,6 @@ export interface IUserPanel {
   buttonSeven?: string;
   buttonEight?: string;
 }
-
 
 export interface ICompany {
   company_id: string;
@@ -365,5 +401,3 @@ export interface ICompany {
     };
   };
 }
-
-
