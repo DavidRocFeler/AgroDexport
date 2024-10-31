@@ -15,7 +15,7 @@ interface PayPalComponentProps {
   onError?: (error: any) => void;
 }
 
-// fixed 
+
 const PayPalButtonsComponent: React.FC<PayPalComponentProps> = ({ amount, companyId, onSuccess, onError }) => {
   return (
     <div className="bg-white p-6 rounded-lg">
@@ -146,6 +146,12 @@ const CarShopComponent: React.FC<ILabelComponentProps> = ({ products }) => {
       }
     };
   };
+
+  const fetchCreateOrder = async () => {
+
+      
+
+  }
 
   const fetchCompanyData = async (companyId: string) => {
     try {
