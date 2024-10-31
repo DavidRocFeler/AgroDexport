@@ -4,19 +4,25 @@ import { CompanyRepository } from 'src/companies/companies.repository';
 import { CompanyProductsRepository } from 'src/company-products/company-products.repository';
 import { OrderRepository } from './orders.repositiry';
 import { Order } from '@prisma/client';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { OrderStatus } from 'src/helpers/orderStatus.enum';
 
 @Injectable()
 export class OrdersService {
     
-
     constructor (
         private readonly companyRepository: CompanyRepository,
         private readonly companyProductRepository: CompanyProductsRepository,
         private readonly orderRepository: OrderRepository,
+        private readonly prisma: PrismaService
     ){}
 
     async getAllOrdersServices(): Promise<Order[]> {
         return this.orderRepository.getAllOrdersRepository()
+    }
+
+    async getOrderByIdService(orderId: string) {
+        return this.orderRepository.getOrderByIdRepository(orderId);
     }
 
     async createOrderProductsServices(createOrderProductsDto: CreateOrderProductsDto) {
@@ -63,5 +69,46 @@ export class OrdersService {
         return this.orderRepository.createOrderProductsRepository(createOrderProductsDto)
     }
 
-    
+    async updateOderStatusService(orderId: string) {
+        const order = await this.prisma.order.findUnique({
+            where: {order_id: orderId },
+            include: { orderDetail: true }
+        })
+
+        if(!order){
+            throw new ForbiddenException('The order does not exist');
+        }
+
+        if (order.orderDetail.order_status === OrderStatus.finished){
+            throw new ForbiddenException('The order is already finished');
+        }
+
+        if(order.orderDetail.order_status === OrderStatus.Canceled){
+            throw new ForbiddenException('The order is already canceled');
+        }
+
+        return this.orderRepository.updateOrderStatusRepository(orderId)
+    }
+
+    async softDleteOrderService(orderId: string) {
+        const order = await this.prisma.order.findUnique({
+            where: {order_id: orderId },
+            include: { orderDetail: true }
+        })
+
+        if(!order){
+            throw new ForbiddenException('The order does not exist');
+        }
+
+        if (order.orderDetail.order_status === OrderStatus.finished){
+            throw new ForbiddenException('The order is already finished');
+        }
+
+        if(order.orderDetail.order_status === OrderStatus.Canceled){
+            throw new ForbiddenException('The order is already canceled');
+        }
+
+        return this.orderRepository.softDeleteOrderRepository(orderId)
+    }
+   
 }

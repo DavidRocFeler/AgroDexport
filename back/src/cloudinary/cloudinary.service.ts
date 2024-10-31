@@ -5,7 +5,7 @@ import { UsersRepository } from "../users/users.repository";
 import { CompanyRepository } from "../companies/companies.repository"
 import { CompanyProductsRepository } from "../company-products/company-products.repository";
 import { FarmerCertificationRepository } from "../farmer-certifications/farmer-certifications.repository";
-import { CreateFarmerCertificationDto } from "src/farmer-certifications/farmer-certifications.dto";
+import { CreateFarmerCertificationDto } from "../farmer-certifications/farmer-certifications.dto";
 
 @Injectable()
 export class CloudinaryService {
@@ -22,13 +22,17 @@ export class CloudinaryService {
     const result = await new Promise<UploadApiResponse>((resolve, reject) => {
       const upload = Cloudinary.uploader.upload_stream(
         {
-          resource_type: "auto", // Manejo automático de imágenes y documentos
+          resource_type: "image", 
           folder,
           public_id: id,
         },
         (error, result) => {
-          if (error) reject(error);
-          else resolve(result);
+          if (error) {
+            console.error('Error during upload to Cloudinary:', error);
+            reject(new BadRequestException('Error uploading file to Cloudinary'));
+          } else {
+            resolve(result);
+          }
         }
       );
       toStream(file.buffer).pipe(upload);
@@ -40,21 +44,6 @@ export class CloudinaryService {
     return { secure_url };
   }
 
-//   async uploadMultipleFiles(companyId: string, productId: string, files: Record<string, Express.Multer.File | undefined>): Promise<{ [key: string]: string }> {
-//     const uploadPromises = Object.entries(files).map(async ([docType, file]) => {
-//         if (file) {
-//             const result = await this.uploadFile(productId, file, docType);
-//             await this.updateCertificationFileUrl(companyId, productId, result.secure_url, docType);
-//             return { [docType]: result.secure_url };
-//         }
-//         return null;
-//     });
-
-//     const uploadedUrls = await Promise.all(uploadPromises);
-//     return Object.assign({}, ...uploadedUrls.filter(url => url !== null));
-// }
-
-
   private getFolderByType(type: string): string {
     switch (type) {
       case 'user':
@@ -63,12 +52,6 @@ export class CloudinaryService {
         return 'companyLogos';
       case 'product':
         return 'products';
-      case 'phytosanitary_certificate':
-      case 'agricultural_producer_cert':
-      case 'organic_certification':
-      case 'quality_certificate':
-      case 'certificate_of_origin':
-        return 'farmerCertifications';
       default:
         throw new BadRequestException('Invalid type for file upload');
     }
@@ -167,11 +150,11 @@ async saveUrlsToDatabase(
   // Crear el objeto DTO para guardar en la base de datos
   const updateData: CreateFarmerCertificationDto = {
     company_id: companyId,
-    phytosanitary_certificate: fileUrls.phytosanitary_certificate || '',
-    agricultural_producer_cert: fileUrls.agricultural_producer_cert || '',
-    organic_certification: fileUrls.organic_certification || '',
-    quality_certificate: fileUrls.quality_certificate || '',
-    certificate_of_origin: fileUrls.certificate_of_origin || '',
+    phytosanitary_certificate: fileUrls.phytosanitary_certificate || null,
+    agricultural_producer_cert: fileUrls.agricultural_producer_cert || null,
+    organic_certification: fileUrls.organic_certification || null,
+    quality_certificate: fileUrls.quality_certificate || null,
+    certificate_of_origin: fileUrls.certificate_of_origin || null,
     company_product_ids: [companyProductId], // Asegurar que se incluya company_product_ids
   };
 
