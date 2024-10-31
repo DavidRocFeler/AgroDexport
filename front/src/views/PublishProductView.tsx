@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
-// import FormPublishProduct from "../components/FormPublishProduct";
-import FarmerCertificationsForm from "@/components/FarmerCertificationsForm";
+import FormPublishProduct from "../components/FormPublishProduct";
+// import FarmerCertificationsForm from "@/components/FarmerCertificationsForm";
 
 const PublishProductView: React.FC = () => {
   return (
@@ -10,7 +10,7 @@ const PublishProductView: React.FC = () => {
         Publish Products
       </h1>
       <div className="border border-black max-w-3xl mx-auto p-8 ">
-        <FarmerCertificationsForm />
+        <FormPublishProduct />
       </div>
     </div>
   );
