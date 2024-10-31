@@ -62,7 +62,6 @@ export interface IUserSession {
   };
 }
 
-
 export interface IOrderCarWishProps {
   product: any;
 }
@@ -73,7 +72,6 @@ export interface ILabelComponentProps {
   viewType: "carShop" | "ordersView" | "wishListView";
   orderStatus?: { status: string; date: string };
 }
-
 
 export interface IPropsCards {
   company_id: string;
@@ -140,8 +138,8 @@ export interface IAgriProductErrors {
 export interface ILabelComponentPropsAgri extends IAgriProduct {
   isSelected: boolean;
   onSelect: () => void;
-  onRemove: () => void; 
-  quantity?: number ; 
+  onRemove: () => void;
+  quantity?: number;
   onQuantityChange: (quantity: number) => void;
 }
 
@@ -237,11 +235,11 @@ export interface IProvidersProps {
   children: React.ReactNode;
 }
 
-export interface  INotificationsProps {
+export interface INotificationsProps {
   isVisible: boolean;
   notifications: INotification[];
   onClose: () => void;
-  userId?: string;  // Agrega esta línea para incluir el userId
+  userId?: string; // Agrega esta línea para incluir el userId
 }
 
 export interface IAuthWrapperProps {
@@ -261,7 +259,6 @@ export interface Company {
 }
 
 export interface ISettingsUserProps {
-
   user_id: string;
 
   user_name?: string;
@@ -332,7 +329,6 @@ export interface IPreviewState {
   [key: string]: IFilePreview | null;
 }
 
-
 export interface FarmerCertificationsFormProps {
   onCancel: () => void;
 }
@@ -398,5 +394,3 @@ export interface ICompany {
     };
   };
 }
-
-
