@@ -206,9 +206,15 @@ export interface ISupplyChainProps {
 export interface IUserState {
   user_id: string | null;
   token: string | null;
+
   role_name: string | null;
   isAuthenticated: boolean;
-  setUserData: (id: string, token: string, role_name: string) => void;
+  setUserData: (
+    id: string,
+    token: string,
+
+    role_name: string
+  ) => void;
   clearUser: () => void;
 }
 
