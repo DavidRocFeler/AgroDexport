@@ -5,7 +5,7 @@ import { Trash2 } from "lucide-react";
 import { ISettingsUserProps } from "@/interface/types";
 
 interface UserCardProps extends ISettingsUserProps {
-  onDelete: (id: string) => void;
+  onDelete: (user_id: string) => void;
 }
 
 const UserCard: React.FC<UserCardProps> = ({
@@ -52,7 +52,7 @@ const UserCard: React.FC<UserCardProps> = ({
         </div>
         {/* ------------------*/}
         <button
-          onClick={() => onDelete(id)}
+          onClick={() => onDelete(user_id)}
           className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-full transition-colors duration-200"
           aria-label="Delete user"
         >

@@ -3,6 +3,7 @@ import React from "react";
 import Link from "next/link";
 import styles from "../styles/Home.module.css";
 import { useEffect, useCallback } from "react";
+
 import { useSession } from "next-auth/react";
 import { registerAuthProps } from "@/server/signUpHelpers";
 import { useAuthThirdStore } from "@/store/useAuthThirdStore";
@@ -95,7 +96,7 @@ const HomeView: React.FC = () => {
 
   return (
     <div
-      className="h-[83vh]"
+      className="h-[78vh]"
       style={{
         background: "#d8fba7",
         paddingTop: "5rem",
@@ -117,4 +118,5 @@ const HomeView: React.FC = () => {
     </div>
   );
 };
+
 export default HomeView;
