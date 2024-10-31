@@ -19,6 +19,7 @@ model User {
   isOlder         Boolean
   role_id         String
   credential_id   String?        @unique
+  isActive        Boolean       @default(true)
   commission      Commission?
   companies       Company[]
   notifications   Notification[]

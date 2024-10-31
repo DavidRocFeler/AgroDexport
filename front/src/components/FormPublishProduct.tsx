@@ -1,28 +1,55 @@
 // Instead of a handleOnChange function, react-hook-form allows you to use the watch hook to observe field values ​​in real time. A watch() can be added to see the status of all inputs in the console.
 
 "use client";
-import { IPublishProductProps } from "@/interface/types";
 import React from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { useRouter } from "next/navigation";
+import { File } from "lucide-react";
+import {
+  FormPublishProductProps,
+  IPublishProductProps,
+} from "@/interface/types";
 
-const FormPublishProduct: React.FC = () => {
+const FormPublishProduct: React.FC<FormPublishProductProps> = ({
+  onUpdateClick,
+}) => {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
     formState: { errors },
-    // watch,
   } = useForm<IPublishProductProps>();
 
+  const [filePreview, setFilePreview] = React.useState<string | null>(null);
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFilePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleComeBack = () => {
+    router.push("/userpanel");
+  };
+
   const onSubmit: SubmitHandler<IPublishProductProps> = (data) => {
+    // Aquí puedes manejar el envío del formulario
     console.log(data);
-    // Here you can manage the form submission
+    // Después de procesar el formulario, llamamos a onUpdateClick para mostrar el siguiente formulario
+    onUpdateClick();
   };
 
   return (
     <div className="max-w-2xl mx-auto p-6 font-inter">
-      <h2 className="text-2xl font-bold mb-6">Publish New Product</h2>
+      <h2 className="text-2xl font-bold mb-6">Publish Product</h2>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+        {/* Product Name */}
         <div className="form-group">
           <label className="block mb-2 font-semibold">Product Name</label>
           <input
@@ -42,6 +69,7 @@ const FormPublishProduct: React.FC = () => {
           )}
         </div>
 
+        {/* Description */}
         <div className="form-group">
           <label className="block mb-2 font-semibold">Description</label>
           <textarea
@@ -58,9 +86,10 @@ const FormPublishProduct: React.FC = () => {
           )}
         </div>
 
+        {/* Stock and Minimum Order in Tons */}
         <div className="grid grid-cols-2 gap-4">
           <div className="form-group">
-            <label className="block mb-2 font-semibold">Stock (kg)</label>
+            <label className="block mb-2 font-semibold">Stock (tons)</label>
             <input
               type="number"
               {...register("stock", {
@@ -81,15 +110,15 @@ const FormPublishProduct: React.FC = () => {
 
           <div className="form-group">
             <label className="block mb-2 font-semibold">
-              Minimum Order (kg)
+              Minimum Order (5 tons)
             </label>
             <input
               type="number"
               {...register("minimum_order", {
                 required: "Minimum order is required",
                 min: {
-                  value: 1,
-                  message: "Minimum order must be at least 1",
+                  value: 5,
+                  message: "Minimum order must be at least 5 tons",
                 },
               })}
               className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -102,6 +131,7 @@ const FormPublishProduct: React.FC = () => {
           </div>
         </div>
 
+        {/* Origin and Optional Discount */}
         <div className="grid grid-cols-2 gap-4">
           <div className="form-group">
             <label className="block mb-2 font-semibold">Origin</label>
@@ -117,11 +147,14 @@ const FormPublishProduct: React.FC = () => {
           </div>
 
           <div className="form-group">
-            <label className="block mb-2 font-semibold">Discount (%)</label>
+            <label className="block mb-2 font-semibold">
+              Discount (%) Optional
+            </label>
             <input
               type="number"
+              placeholder="Optional"
               {...register("discount", {
-                required: "Discount is required",
+                required: false,
                 min: {
                   value: 0,
                   message: "Discount cannot be negative",
@@ -141,9 +174,12 @@ const FormPublishProduct: React.FC = () => {
           </div>
         </div>
 
+        {/* Price and Harvest Date */}
         <div className="grid grid-cols-2 gap-4">
           <div className="form-group">
-            <label className="block mb-2 font-semibold">Price per kg ($)</label>
+            <label className="block mb-2 font-semibold">
+              Price per ton ($)
+            </label>
             <input
               type="number"
               step="0.01"
@@ -180,14 +216,55 @@ const FormPublishProduct: React.FC = () => {
           </div>
         </div>
 
-        <div className="form-group font-inter">
-          <label className="block mb-2 font-semibold">Product Image URL</label>
-          <input
-            {...register("company_product_img", {
-              required: "Product image URL is required",
-            })}
-            className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-          />
+        {/* Product Image File Upload */}
+        <div className="form-group space-y-4">
+          <label className="block mb-2 font-semibold">Product Image</label>
+          <div className="relative">
+            <input
+              type="file"
+              accept="image/*"
+              {...register("company_product_img", {
+                required: "Product image is required",
+                validate: {
+                  isImage: (files) => {
+                    return (
+                      !files?.[0] ||
+                      files[0].type.startsWith("image/") ||
+                      "File must be an image"
+                    );
+                  },
+                  maxSize: (files) => {
+                    return (
+                      !files?.[0] ||
+                      files[0].size <= 5000000 ||
+                      "Image size must be less than 5MB"
+                    );
+                  },
+                },
+              })}
+              onChange={handleFileChange}
+              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+            />
+            <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-blue-500 transition-colors">
+              {filePreview ? (
+                <div className="flex items-center justify-center">
+                  <img
+                    src={filePreview}
+                    alt="Preview"
+                    className="max-h-40 object-contain"
+                  />
+                </div>
+              ) : (
+                <div className="text-gray-500">
+                  <File className="mx-auto h-12 w-12 text-gray-400" />
+                  <p className="mt-1">
+                    Drop your image here or click to browse
+                  </p>
+                  <p className="text-sm text-gray-500">PNG, JPG up to 5MB</p>
+                </div>
+              )}
+            </div>
+          </div>
           {errors.company_product_img && (
             <p className="text-red-500 text-sm mt-1">
               {errors.company_product_img.message}
@@ -195,6 +272,7 @@ const FormPublishProduct: React.FC = () => {
           )}
         </div>
 
+        {/* Nutritional Information */}
         <div className="grid grid-cols-2 gap-4">
           <div className="form-group">
             <label className="block mb-2 font-semibold">Calories (kcal)</label>
@@ -278,12 +356,19 @@ const FormPublishProduct: React.FC = () => {
           </div>
         </div>
 
-        <div className="flex justify-end">
+        <div className="flex justify-end space-x-4">
+          <button
+            type="button"
+            onClick={handleComeBack}
+            className="px-6 py-2 border border-black text-black hover:bg-gray-50 transition-colors"
+          >
+            Come back
+          </button>
           <button
             type="submit"
-            className="font-inter border border-black px-4 py-2"
+            className="bg-white border border-black text-black px-6 py-2 hover:bg-gray-50 transition-colors"
           >
-            Publish Product
+            Update Product
           </button>
         </div>
       </form>

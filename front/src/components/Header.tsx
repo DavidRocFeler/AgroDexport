@@ -167,9 +167,9 @@
 //------------------------------------------------------------------------
 
 "use client";
-import { getUserSettings } from "@/server/getUserSettings"; //add
-import { ISettingsUserProps } from "@/interface/types"; //add
-import React, { useEffect, useState } from "react"; //add useEffect, useState
+import { getUserSettings } from "@/server/getUserSettings";
+import { ISettingsUserProps } from "@/interface/types";
+import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import styles from "../styles/Header.module.css";
@@ -200,11 +200,10 @@ const Header: React.FC = () => {
     null
   );
 
-  //------------------ add const
   const [userSettings, setUserSettings] = useState<ISettingsUserProps | null>(
     null
   );
-  //------------------
+
   const handleShowLogIn = () => setModalType("login");
   const handleShowSignUp = () => {
     signOut({ redirect: false });
@@ -229,22 +228,20 @@ const Header: React.FC = () => {
 
   React.useEffect(() => {
     setIsHydrated(true);
-    // Llamada a getUserSettings para obtener los datos del usuario si está autenticado
+
     const fetchUserSettings = async () => {
       if (isAuthenticated && user_id && token) {
         try {
           const settings = await getUserSettings(user_id, token);
           setUserSettings(settings);
         } catch (error) {
-          console.error("Error al obtener los datos del usuario:", error);
+          console.error("Error getting user data:", error);
         }
       }
     };
 
     fetchUserSettings();
   }, [isAuthenticated, user_id, token]);
-
-  //---fin de llamada-----------
 
   if (!isHydrated) {
     return (
@@ -299,14 +296,12 @@ const Header: React.FC = () => {
           </Link>
           {isAuthenticated ? (
             <>
-              <span
-                className="text-[1rem] font-bold rounded-full py-2 px-3 bg-white text-center flex items-center justify-center"
-                //className="mr-[1rem] ml-[1rem] text-[1rem] font-bold"
-              >
+              <span className="text-[1rem] font-bold rounded-full py-2 px-3 bg-white text-center flex items-center justify-center">
                 {userSettings?.user_name
-                  ? ` ${userSettings.user_name}`
-                  : "Cargando..."}
+                  ? `${userSettings.user_name.split(" ")[0]}`
+                  : "Loading..."}
               </span>
+
               <span
                 className="mr-[1rem] ml-[1rem] text-[0.9rem]"
                 style={{ color: textColor }}

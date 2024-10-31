@@ -20,20 +20,18 @@ export default function RootLayout({
       <body className="min-h-screen flex flex-col ">
         <main className="min-h-screen">
           <GoogleProviders>
-
-              <Header/>
+            <Header />
             <GoogleWrapper>
-            <AuthWrapper>
-              <AuthWrapperLoggin>
-              <hr className="border-black border-1 "/>
+              <AuthWrapper>
+                <AuthWrapperLoggin>
+                  <hr className="border-black border-1 " />
                   {children}
-              </AuthWrapperLoggin>
-            </AuthWrapper>
+                </AuthWrapperLoggin>
+              </AuthWrapper>
             </GoogleWrapper>
-            <ClientWrapers/>
-            </GoogleProviders>
-          </main>
-
+            <ClientWrapers />
+          </GoogleProviders>
+        </main>
       </body>
     </html>
   );
