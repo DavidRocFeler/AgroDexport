@@ -62,6 +62,7 @@ export interface IUserSession {
   };
 }
 
+
 export interface IPropsCards {
   company_id: string;
   company_product_name: string;
@@ -294,7 +295,7 @@ export interface IPublishProductProps {
   discount: number;
   company_price_x_kg: number;
   harvest_date: string;
-  company_product_img: string;
+  company_product_img: FileList;
   calories: number;
   fat: number;
   protein: number;
