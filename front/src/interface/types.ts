@@ -1,3 +1,4 @@
+import { DateTime } from "next-auth/providers/kakao";
 import React from "react";
 
 export interface ISignUpForm {
@@ -394,3 +395,12 @@ export interface ICompany {
     };
   };
 }
+
+export interface IOrder {
+  order_date: DateTime,
+  orderDetail: {
+    status: string;
+    total: number;
+  }
+}
+

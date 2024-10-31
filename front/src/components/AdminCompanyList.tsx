@@ -100,7 +100,6 @@ const AdminCompanyList: React.FC = () => {
     ],
   };
 
-
   const pieChartOptions = (title: string) => ({
     plugins: {
       legend: {
@@ -130,29 +129,6 @@ const AdminCompanyList: React.FC = () => {
           <Pie data={roleChartData} options={pieChartOptions("Company Types")} />
         </div>
       </div>
-
-      <table className={styles.CompanyListTable}>
-        <thead>
-          <tr>
-            <th>Company Name</th>
-            <th>Industry</th>
-            <th>Country</th>
-            <th>Status</th>
-            <th>Type</th>
-          </tr>
-        </thead>
-        <tbody>
-          {companies.map(company => (
-            <tr key={company.company_id}>
-              <td>{company.company_name || "N/A"}</td>
-              <td>{company.industry || "N/A"}</td>
-              <td>{company.country || "N/A"}</td>
-              <td>{company.isActive ? "Active" : "Inactive"}</td>
-              <td>{company.user?.role?.role_name || "Unknown"}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
     </section>
   );
 };
