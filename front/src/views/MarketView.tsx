@@ -15,9 +15,9 @@ const MarketView: React.FC = () => {
   const COLS = 4;
   const PRODUCTS_PER_PAGE = ROWS * COLS;
 
-  const loadProducts = async () => {
+  const loadProducts = async (filters = {}) => {
     try {
-      const data: IAgriProduct[] = await getProductDB();
+      const data: IAgriProduct[] = await getProductDB(filters);
       setProducts(data);
     } catch (err) {
       console.error("Error loading products:", err);
@@ -45,10 +45,16 @@ const MarketView: React.FC = () => {
     }
   };
 
+    // Nueva función para manejar el cambio de filtros
+    const handleFilterChange = (filters: any) => {
+      setCurrentPage(0); // Reiniciar la página al aplicar filtros
+      loadProducts(filters); // Cargar productos con los nuevos filtros
+    };
+
   return (
     <div className='pb-[3rem]' style={{ background: "white" }}>
       <Image src="/ImgMarketView.png" alt="Market View" layout="responsive" width={500} height={300} />
-      <ProductSearch />
+      <ProductSearch onFilterChange={handleFilterChange} />
       
       <div className='w-[95%] m-auto'>
         {error ? (
@@ -70,7 +76,7 @@ const MarketView: React.FC = () => {
                           .slice(pageIndex * PRODUCTS_PER_PAGE, (pageIndex + 1) * PRODUCTS_PER_PAGE)
                           .map((product) => (
                             <ProductCard 
-                              key={String(product.company_id)}
+                              key={String(product.company_product_id)}
                               {...product}
                             />
                           ))}
