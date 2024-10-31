@@ -62,6 +62,17 @@ export interface IUserSession {
   };
 }
 
+export interface IOrderCarWishProps {
+  product: any;
+}
+
+export interface ILabelComponentProps {
+  product?: IAgriProduct;
+  units: number;
+  viewType: "carShop" | "ordersView" | "wishListView";
+  orderStatus?: { status: string; date: string };
+}
+
 export interface IPropsCards {
   company_id: string;
   company_product_name: string;
@@ -246,6 +257,7 @@ export interface Company {
 
 export interface ISettingsUserProps {
   user_id: string;
+
   user_name?: string;
   user_lastname?: string;
   nDni?: number | any;

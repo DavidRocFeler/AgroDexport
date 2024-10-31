@@ -33,6 +33,10 @@ const FormPublishProduct: React.FC<FormPublishProductProps> = ({
     }
   };
 
+  const handleComeBack = () => {
+    router.push("/userpanel");
+  };
+
   const onSubmit: SubmitHandler<IPublishProductProps> = (data) => {
     // Aquí puedes manejar el envío del formulario
     console.log(data);
@@ -355,6 +359,7 @@ const FormPublishProduct: React.FC<FormPublishProductProps> = ({
         <div className="flex justify-end space-x-4">
           <button
             type="button"
+            onClick={handleComeBack}
             className="px-6 py-2 border border-black text-black hover:bg-gray-50 transition-colors"
           >
             Come back
