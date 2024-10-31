@@ -1,17 +1,31 @@
-// Instead of a handleOnChange function, react-hook-form allows you to use the watch hook to observe field values ​​in real time. A watch() can be added to see the status of all inputs in the console.
+// // Instead of a handleOnChange function, react-hook-form allows you to use the watch hook to observe field values ​​in real time. A watch() can be added to see the status of all inputs in the console.
 
 "use client";
-import { ICertificationsProps, IPreviewState } from "@/interface/types";
+import {
+  FarmerCertificationsFormProps,
+  FileInputProps,
+  ICertificationsProps,
+  IPreviewState,
+} from "@/interface/types";
 import React, { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { File } from "lucide-react";
 
-const FarmerCertificationsForm: React.FC = () => {
+interface FarmerCertificationsFormProps {
+  onBack: () => void;
+  productData?: any;
+  onCertificationsSubmit?: (certifications: FormData) => void;
+}
+
+const FarmerCertificationsForm: React.FC<FarmerCertificationsFormProps> = ({
+  onBack,
+  productData,
+  onCertificationsSubmit,
+}) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-    // watch,
   } = useForm<ICertificationsProps>();
 
   const [previews, setPreviews] = useState<IPreviewState>({
@@ -46,28 +60,38 @@ const FarmerCertificationsForm: React.FC = () => {
     }
   };
 
-  const onSubmit: SubmitHandler<ICertificationsProps> = (data) => {
-    console.log(data);
-    // Here you can handle the form submission
-    // For example, create a FormData and send it to your API
+  const handleFormSubmit: SubmitHandler<ICertificationsProps> = (data) => {
+    //Create FormData and add the files
     const formData = new FormData();
+
+    //Add product data if it exists
+    if (productData) {
+      Object.keys(productData).forEach((key) => {
+        formData.append(key, productData[key]);
+      });
+    }
+
+    // Add certification files
     Object.keys(data).forEach((key) => {
       const file = data[key as keyof ICertificationsProps][0];
       if (file) {
         formData.append(key, file);
       }
     });
+
+    // Call dispatch function if it exists
+    if (onCertificationsSubmit) {
+      onCertificationsSubmit(formData);
+    } else {
+      console.log("Form Data:", formData);
+    }
   };
 
   // Component for the file field
-  const FileInput = ({
+  const FileInput: React.FC<FileInputProps> = ({
     name,
     label,
     description,
-  }: {
-    name: keyof ICertificationsProps;
-    label: string;
-    description: string;
   }) => (
     <div className="space-y-4 p-6 bg-gray-50 rounded-lg">
       <div className="flex justify-between items-start">
@@ -132,6 +156,24 @@ const FarmerCertificationsForm: React.FC = () => {
     </div>
   );
 
+  const onSubmit: SubmitHandler<ICertificationsProps> = async (data) => {
+    try {
+      console.log(data);
+      const formData = new FormData();
+      Object.keys(data).forEach((key) => {
+        const file = data[key as keyof ICertificationsProps][0];
+        if (file) {
+          formData.append(key, file);
+        }
+      });
+
+      alert("Certificates uploaded successfully!");
+    } catch (error) {
+      console.error("Error uploading certificates:", error);
+      alert("Error uploading certificates. Please try again.");
+    }
+  };
+
   return (
     <div className="max-w-3xl mx-auto p-6 font-inter">
       <div className="mb-8">
@@ -144,47 +186,68 @@ const FarmerCertificationsForm: React.FC = () => {
         </p>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
         <FileInput
           name="phytosanitary_certificate"
           label="Phytosanitary Certificate"
           description="Official document certifying the phytosanitary condition of plants or plant products"
+          register={register}
+          errors={errors}
+          handleFileChange={handleFileChange}
+          previews={previews}
         />
 
         <FileInput
           name="agricultural_producer_cert"
           label="Agricultural Producer Certificate"
           description="Documentation proving your status as a certified agricultural producer"
+          register={register}
+          errors={errors}
+          handleFileChange={handleFileChange}
+          previews={previews}
         />
 
         <FileInput
           name="organic_certification"
           label="Organic Certification"
           description="Certification verifying organic farming practices and standards"
+          register={register}
+          errors={errors}
+          handleFileChange={handleFileChange}
+          previews={previews}
         />
 
         <FileInput
           name="quality_certificate"
           label="Quality Certificate"
           description="Documentation of product quality standards and testing"
+          register={register}
+          errors={errors}
+          handleFileChange={handleFileChange}
+          previews={previews}
         />
 
         <FileInput
           name="certificate_of_origin"
           label="Certificate of Origin"
           description="Official document declaring the origin of your agricultural products"
+          register={register}
+          errors={errors}
+          handleFileChange={handleFileChange}
+          previews={previews}
         />
 
         <div className="flex justify-end space-x-4">
           <button
             type="button"
-            className="px-6 py-2 border border-black  text-black hover:bg-gray-50 transition-colors"
+            onClick={onBack}
+            className="px-6 py-2 border border-black text-black hover:bg-gray-50 transition-colors"
           >
-            Cancel
+            Come back
           </button>
           <button
             type="submit"
-            className="px-6 py-2 border border-black  text-black hover:bg-gray-50 transition-colors"
+            className="px-6 py-2 border border-black bg-black text-white hover:bg-gray-800 transition-colors"
           >
             Upload Certificates
           </button>

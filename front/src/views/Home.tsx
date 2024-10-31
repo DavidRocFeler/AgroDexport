@@ -1,4 +1,3 @@
-
 "use client";
 import React from "react";
 import Link from "next/link";
@@ -11,7 +10,6 @@ import { useAuthThirdStore } from "@/store/useAuthThirdStore";
 import Swal from "sweetalert2";
 
 const HomeView: React.FC = () => {
-
   const {
     googleSession,
     createGoogleSession,
@@ -80,7 +78,6 @@ const HomeView: React.FC = () => {
     isSessionSent,
   ]);
 
-
   useEffect(() => {
     if (googleSession && !isSessionSent && hasInitialized) {
       handleBackendRegistration();
@@ -99,7 +96,7 @@ const HomeView: React.FC = () => {
 
   return (
     <div
-      className="h-[83vh]"
+      className="h-[78vh]"
       style={{
         background: "#d8fba7",
         paddingTop: "5rem",
@@ -123,6 +120,3 @@ const HomeView: React.FC = () => {
 };
 
 export default HomeView;
-
-
-

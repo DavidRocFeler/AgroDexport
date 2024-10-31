@@ -4,7 +4,7 @@ import { Trash2 } from "lucide-react";
 import { IAgriProduct } from "@/interface/types";
 
 interface MyProductListProps extends IAgriProduct {
-  onDelete: (name: string) => void;
+  onDelete: (company_product_id: string) => void;
 }
 
 const MyProductList: React.FC<IAgriProduct> = ({

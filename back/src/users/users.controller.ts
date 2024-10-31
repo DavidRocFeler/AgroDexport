@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, Param, ParseUUIDPipe, Post, Put, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, ParseUUIDPipe, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UsersRepository } from './users.repository';
 import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
@@ -75,5 +75,29 @@ export class UsersController {
         @Param('id', new ParseUUIDPipe()) id: string,
         @Body() updateData: UpdateUserDto) {
         return await this.userServices.updateUserService(id, updateData);
+      }
+
+      @ApiBearerAuth()
+      @HttpCode(200)
+      @Put('soft-delete/:id')
+      @UseGuards(AuthGuard, RolesGuard)
+      @Roles('admin')
+      async softDeleteUser(
+        @Param('id', new ParseUUIDPipe()) id: string
+      ): Promise<{ message: string }> {
+        await this.userServices.softDeleteUserService(id);
+        return { message: 'User has been deactivated successfully.' };
+      }
+  
+      @ApiBearerAuth()
+      @HttpCode(200)
+      @Delete(':id')
+      @UseGuards(AuthGuard, RolesGuard)
+      @Roles('admin', 'supplier', 'buyer')
+      async deleteUser(
+        @Param('id', new ParseUUIDPipe()) id: string
+      ): Promise<{ message: string }> {
+        await this.userServices.deleteUserService(id);
+        return { message: 'User has been deleted permanently.' };
       }
 }
