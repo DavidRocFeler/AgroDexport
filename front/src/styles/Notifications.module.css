@@ -2,9 +2,9 @@
 .modal {
     position: fixed;
     top: 0;
-    left: 100%; /* Esto lo coloca justo fuera de la vista, en el lado derecho */
+    left: 100%;
     width: 400px;
-    height: 100vh;
+    height: 70vh; /* Incrementar la altura del modal */
     background: white;
     box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease-in-out;
@@ -12,7 +12,7 @@
 }
 
 .modalVisible {
-    transform: translateX(-100%); /* Esto lo mueve hacia la izquierda exactamente su ancho */
+    transform: translateX(-100%);
 }
 
 .modalHeader {
@@ -25,7 +25,7 @@
 
 .modalTitle {
     margin: 0;
-    font-size: 1.25rem;
+    font-size: 0.8rem;
     font-weight: bold;
 }
 
@@ -39,4 +39,51 @@
 
 .modalContent {
     padding: 16px;
+    max-height: 55vh; /* Ajustar la altura máxima del contenido para mayor espacio */
+    overflow-y: auto;
+}
+
+/* Ajustes para la lista de notificaciones */
+.notificationsList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.notificationItem {
+    padding: 10px;
+    border-bottom: 1px solid #e0e0e0;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    white-space: normal; /* Permitir que el texto se ajuste en varias líneas */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-wrap: break-word; /* Romper las palabras largas */
+}
+
+
+/* Estilo para las notificaciones leídas */
+.read {
+    background-color: #f5f5f5; /* Color gris claro para notificaciones leídas */
+    color: #8a8a8a; /* Texto gris */
+}
+
+/* Estilo para las notificaciones no leídas */
+.unread {
+    background-color: #ffffff; 
+    font-weight: bold; 
+    color: #333; 
+}
+
+
+.notificationItem.reminder {
+    border-left: 4px solid #ffca28; 
+}
+
+.notificationItem.certifications {
+    border-left: 4px solid #ff5722; 
+}
+
+.notificationItem.product_created{
+    border-left: 4px solid #2196f3; 
 }

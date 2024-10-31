@@ -4,6 +4,8 @@ import ClientWrapers from "./ClientWrapers";
 import Header from "@/components/Header";
 import GoogleProviders from "./GoogleProviders";
 import AuthWrapper from "./AuthWrapers";
+import AuthWrapperLoggin from "./AuthWrapersLoggin";
+import GoogleWrapper from "./GoogleWrapers";
 
 export const metadata: Metadata = {
   title: "Agro-Dexports",
@@ -18,14 +20,20 @@ export default function RootLayout({
       <body className="min-h-screen flex flex-col ">
         <main className="min-h-screen">
           <GoogleProviders>
+
+              <Header/>
+            <GoogleWrapper>
             <AuthWrapper>
-              <Header />
-              <hr className="border-black border-1 " />
-              {children}
-              <ClientWrapers />
+              <AuthWrapperLoggin>
+              <hr className="border-black border-1 "/>
+                  {children}
+              </AuthWrapperLoggin>
             </AuthWrapper>
-          </GoogleProviders>
-        </main>
+            </GoogleWrapper>
+            <ClientWrapers/>
+            </GoogleProviders>
+          </main>
+
       </body>
     </html>
   );
