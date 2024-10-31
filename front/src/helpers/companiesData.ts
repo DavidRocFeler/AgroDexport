@@ -12,4 +12,17 @@ export const companiesData: Company[] = [
     role: "Admin",
     status: "Active",
   },
+  // {
+  //   id: 2,
+  //   name: "Company Two",
+  //   role: "Admin",
+  //   status: "Active",
+  // },
+  // {
+  //   id: 3,
+  //   name: "Company Three",
+  //   role: "Admin",
+  //   status: "Active",
+  // },
+
 ];

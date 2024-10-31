@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
-import { logginAuthProps } from "@/helpers/loginHelpers";
+import { logginAuthProps } from "@/server/loginHelpers";
 import { IAuthWrapperProps } from "@/interface/types";
 import { useAuthThirdStore } from "@/store/useAuthThirdStore";
 import { useUserStore } from "@/store/useUserStore";
