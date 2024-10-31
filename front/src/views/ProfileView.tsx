@@ -7,15 +7,17 @@ import Paypal from "@/components/Paypal";
 import { useUserStore } from "@/store/useUserStore";
 import { uploadImageToCloudinary } from "@/server/cloudinarySetting"
 import { getUserSettings } from "@/server/getUserSettings"
-
+import StackedCompanyCards from "@/components/CompanyCards";
+import CompanyForms from "@/components/CompanyProfileSettings";
 
 const ProfileView: React.FC = () => {
   const [activeSection, setActiveSection] = useState<string>("Information contact"); // Por defecto muestra UserProfileForm
   const [isHydrated, setIsHydrated] = React.useState(false);
   const { role_name, token, user_id } = useUserStore()
-  const [profileImage, setProfileImage] = useState<string>("/LogoIcon.png"); // Default profile image
+  const [profileImage, setProfileImage] = useState<string>("/LogoIcon.png"); 
+  const [userIdExists, setUserIdExists] = useState(false);
+  const [companyIdExists, setCompanyIdExists] = useState(false);
   
-
    // Obtener la imagen del usuario al cargar el componente
    useEffect(() => {
     const fetchUserProfile = async () => {
@@ -68,6 +70,53 @@ const ProfileView: React.FC = () => {
   // const handleRedirectPanel = () => {
   //   router.push("/profilecompany");
   // };
+
+  const checkLocalStorage = () => {
+    const userId = localStorage.getItem("user_id");
+    const companyId = localStorage.getItem("company_id");
+
+    setUserIdExists(!!userId);
+    setCompanyIdExists(!!companyId);
+  };
+
+  useEffect(() => {
+    // Verificar localStorage al montar el componente
+    checkLocalStorage();
+
+    // Configurar un interval para verificar cambios en localStorage
+    const intervalId = setInterval(checkLocalStorage, 1000); // Verifica cada segundo
+
+    return () => clearInterval(intervalId); // Limpieza al desmontar
+  }, []);
+
+  const renderButtons = () => {
+    if (userIdExists) {
+      // Mostrar botones si solo hay user_id
+      return ["Information contact", "Security settings", "Payments method"].map((item, index) => (
+        <button
+          key={index}
+          onClick={() => setActiveSection(item)} 
+          className="w-full bg-[#242424] hover:bg-gray-800 text-white font-medium py-3 px-4 rounded-lg transition-colors text-center text-sm"
+        >
+          {item}
+        </button>
+      ));
+    } else if (companyIdExists) {
+      // Mostrar botones si hay company_id
+      return ["Company information", "Warehouse address", "Payments method"].map((item, index) => (
+        <button
+          key={index}
+          onClick={() => setActiveSection(item)} 
+          className="w-full bg-[#242424] hover:bg-gray-800 text-white font-medium py-3 px-4 rounded-lg transition-colors text-center text-sm"
+        >
+          {item}
+        </button>
+      ));
+    } else {
+      // O manejar el caso en que no haya user o company
+      return <p>No user or company selected</p>;
+    }
+  };
 
    if (!isHydrated) {
         return (
@@ -146,10 +195,10 @@ const ProfileView: React.FC = () => {
                         <UserProfileForm />
                       ) : activeSection === "Security settings" ? (
                         <PasswordProfileForm />
-                      ) : activeSection === "Payments methood" ? (
+                      ) : activeSection === "Payments method" ? (
                         <Paypal/>
                       ) : (
-                        <span></span>
+                        <span> {activeSection} </span>
                       )}
                     </div>
                   </div>
@@ -167,36 +216,14 @@ const ProfileView: React.FC = () => {
           {/* Header Section with Profile and Companies */}
           <div className="mb-[2rem] mt-[2rem] flex flex-row">
             {/* Companies List Section */}
-            <div className="bg-white h-fit rounded-2xl shadow-lg p-6 w-[23%] ">
-              <div className="space-y-4">
-                <h3 className="text-xl font-semibold text-gray-800">My Companies</h3>
-                <div className="space-y-3">
-                  {companiesData.map((company) => (
-                    <div
-                      key={company.id}
-                      className="bg-gray-50 rounded-lg p-4 border border-gray-200 hover:border-gray-300 transition-colors"
-                    >
-                      <div className="flex justify-between items-start">
-                        <div className="space-y-1">
-                          <h5 className="font-medium text-gray-900">{company.name}</h5>
-                          <p className="text-sm text-gray-600">{capitalizeFirstLetter(role_name)}</p>
-                        </div>
-                      </div>
-                      <div className="mt-3 flex gap-2">
-                        <button className="text-sm text-blue-600 hover:text-blue-800 font-medium">Add</button>
-                        <span className="text-gray-300">|</span>
-                        <button className="text-sm text-red-600 hover:text-red-800 font-medium">Remove</button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+            <div className="bg-white  h-[15rem] rounded-2xl shadow-lg  w-[23%] ">
+            <StackedCompanyCards/>
             </div>
   
             {/* Profile Section */}
             <div className="m-auto mb-[2.1rem] w-fit flex flex-col items-center space-y-4 relative">
               <img
-                className="w-60 h-60 rounded-full object-cover border-4 border-black"
+                className="w-60 h-60 rounded-full object-cover border-4 "
                 src={profileImage}
                 alt="Profile"
               />
@@ -242,15 +269,7 @@ const ProfileView: React.FC = () => {
             <div className="col-span-3">
               <div className="bg-white rounded-2xl shadow-lg p-4 h-[500px] relative">
                 <div className="space-y-10 mt-1 w-full">
-                  {["Information contact", "Security settings", "Payments methood"].map((item, index) => (
-                    <button
-                      key={index}
-                      onClick={() => setActiveSection(item)} 
-                      className="w-full bg-[#242424] hover:bg-gray-800 text-white font-medium py-3 px-4 rounded-lg transition-colors text-center text-sm"
-                    >
-                      {item}
-                    </button>
-                  ))}
+                  {renderButtons()}
                   <img
                     src="/LogoTypographic.png"
                     alt="Logo"
@@ -270,8 +289,10 @@ const ProfileView: React.FC = () => {
                       <UserProfileForm />
                     ) : activeSection === "Security settings" ? (
                       <PasswordProfileForm />
-                    ) : activeSection === "Payments methood" ? (
+                    ) : activeSection === "Payments method" ? (
                       <Paypal/>
+                    ) : activeSection === "Company information" ? (
+                      <CompanyForms/>
                     ) : (
                       <span>{activeSection}</span>
                     )}

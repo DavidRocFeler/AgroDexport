@@ -224,13 +224,27 @@ export interface IProtectedRouteProps {
   allowedRoles?: string[];
 }
 
-export interface Company {
-  id: number;
-  name: string;
-  role: "Admin" | "User";
-  status: "Active" | "Inactive";
+export interface ICompany {
+  company_id: string;
+  company_name: string;
+  tax_identification_number?: number;
+  address?: string;
+  postal_code?: string;
+  city?: string;
+  state?: string;
+  country?: string;
+  industry?: string;
+  website?: string;
+  account_paypal?: string;
+  company_description?: string;
+  company_logo?: string;
+  isActive?: true
 }
 
+export interface ICompanyRegister {
+  user_id: string;
+  company_name: string;
+}
 export interface ISettingsUserProps {
   user_id: string;
   user_name?: string;
