@@ -14,7 +14,102 @@ export class CompanyProductsRepository {
   ) {}
 
   async findAll(): Promise<CompanyProduct[]> {
-    return this.prisma.companyProduct.findMany();
+    return this.prisma.companyProduct.findMany({
+      include: {
+        farmerCertification: true, 
+        category: true,
+        company: {  
+          select: {
+            company_name: true,  
+          },
+        },
+      },
+    });
+  }
+
+  async findAllWithFilters(filters: any): Promise<CompanyProduct[]> {
+    return this.prisma.companyProduct.findMany({
+      where: {
+        ...filters,
+        ...(filters.category && {
+          category: {
+            is: {
+              name_category: {
+                contains: filters.category.name_category,
+                mode: 'insensitive',
+              },
+            },
+          },
+        }),
+        ...(filters.company && {
+          company: {
+            is: {
+              company_name: {
+                contains: filters.company.company_name,
+                mode: 'insensitive',
+              },
+            },
+          },
+        }),
+      },
+      include: {
+        farmerCertification: true,
+        category: true,
+        company: true,
+      },
+    });
+  }
+  
+  
+
+
+
+
+  async findProductsWithoutFarmer(): Promise<any[]> {
+    return this.prisma.companyProduct.findMany({
+      where: { farmer_id: null },
+      include: {
+        company: {
+          include: {
+            user: {
+              include: {
+                credential: true,
+              },
+            },
+          },
+        },
+      },
+    });
+  }
+
+
+  async findProductsWithIncompleteCertifications(): Promise<any[]> {
+    return this.prisma.companyProduct.findMany({
+      where: {
+        farmer_id: { not: null },
+        farmerCertification: {
+          OR: [
+            { phytosanitary_certificate: null },
+            { agricultural_producer_cert: null },
+            { organic_certification: null },
+            { quality_certificate: null },
+            { certificate_of_origin: null },
+          ],
+        },
+      },
+      include: {
+        farmerCertification: true,
+        company: {
+          include: {
+            user: {
+              include: {
+                credential: true,
+              },
+            },
+          },
+        },
+      },
+    });
   }
 
   async findAllByCompanyId(companyId: string) {

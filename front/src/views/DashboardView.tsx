@@ -29,14 +29,9 @@ const DashboardView: React.FC = () => {
     router.push("/profile");
   };
 
-  const handleRedirectHistorySales = () => {
-    setIsAuth(true);
-    router.push("/supplierhistorysales");
-  };
-
-  const handleRedirectHistoryBuys = () => {
-    router.push("/buyerhistorybuys");
-  };
+  const handleRedirectAdminHistory = () => {
+    router.push("/orderhistory")
+  }
 
   if (!isHydrated) {
     return (
@@ -57,7 +52,7 @@ const DashboardView: React.FC = () => {
               <Bell />
             </button>
           </aside>
-          <h1 className={styles.UserPanel}>User Panel</h1>
+          <h1 className={styles.UserPanel}>Dashboard</h1>
           <aside className="flex flex-row justify-center mb-[4.3rem]">
             <button className={styles.ButtonProfile}> Profile </button>
             <button className={styles.ButtonHistory}> History </button>
@@ -74,7 +69,7 @@ const DashboardView: React.FC = () => {
   }
 
   return (
-    <ProtectedRoute allowedRoles={["supplier", "buyer"]}>
+    <ProtectedRoute allowedRoles={["admin"]}>
       <section>
         <div
           style={{
@@ -91,7 +86,7 @@ const DashboardView: React.FC = () => {
               <Bell />
             </button>
           </aside>
-          <h1 className={styles.UserPanel}>User Panel</h1>
+          <h1 className={styles.UserPanel}>Dashboard</h1>
           <aside className="flex flex-row justify-center mb-[1rem]">
             <button
               onClick={handleRedirectProfile}
@@ -100,17 +95,9 @@ const DashboardView: React.FC = () => {
               {" "}
               Profile{" "}
             </button>
-            {role_name === "supplier" ? (
+            {role_name === "admin" && (
               <button
-                onClick={handleRedirectHistorySales}
-                className={styles.ButtonHistory}
-              >
-                {" "}
-                History{" "}
-              </button>
-            ) : (
-              <button
-                onClick={handleRedirectHistoryBuys}
+                onClick={handleRedirectAdminHistory}
                 className={styles.ButtonHistory}
               >
                 {" "}
@@ -162,12 +149,13 @@ const DashboardView: React.FC = () => {
           ))}
         </div>
       </section>
-      {isModalOpen && (
+      {/* {isModalOpen && (
         <NotificationsModal
           isVisible={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
+          notifications={allNotifications}
+          onClose={handleCloseModal}
         />
-      )}
+      )} */}
     </ProtectedRoute>
   );
 };

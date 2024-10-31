@@ -12,6 +12,11 @@
     padding: 1rem 6rem 1rem 6rem;
     font-weight: bold;
     border-radius: 20px 0px 0px 20px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.ButtonProfile:active {
+    transform: scale(0.95);
+    box-shadow: none;
 }
 .ButtonHistory {
     background-color: white;
@@ -20,6 +25,11 @@
     padding: 1rem 6rem 1rem 6rem;
     font-weight: bold;
     border-radius: 0px 20px 20px 0px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.ButtonHistory:active {
+    transform: scale(0.95);
+    box-shadow: none;
 }
 .RedirectPanel {
     font-size: 0.9rem;
@@ -33,4 +43,27 @@
     grid-template-rows: repeat(2, 1fr);
     row-gap: 2rem;
     padding: 2rem;
+}
+
+.ButtonSupplier {
+    border: solid 1px black;
+    padding: 0.5rem 1rem 0.5rem 1rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    position: absolute;
+    left: 2%;
+}
+.ButtonSupplier:active {
+    transform: scale(0.95);
+    box-shadow: none;
+  }
+.ButtonBuyer {
+    left: 12rem;
+    position: absolute;
+    border: solid 1px black;
+    padding: 0.5rem 1rem 0.5rem 1rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.ButtonBuyer:active {
+    transform: scale(0.95);
+    box-shadow: none;
 }
