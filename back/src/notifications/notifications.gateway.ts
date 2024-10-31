@@ -30,9 +30,9 @@ export class NotificationsGateway {
       console.log(`Cliente ${client.id} se ha unido a la sala ${userId}`);
     }
   
-    this.server.to(client.id).emit('newNotification', {
-      message: 'Notificación de prueba desde el backend',
-    });
+    // this.server.to(client.id).emit('newNotification', {
+    //   message: 'Notificación de prueba desde el backend',
+    // });
   }
 
   handleDisconnect(@ConnectedSocket() client: Socket) {

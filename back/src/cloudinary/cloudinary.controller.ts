@@ -23,7 +23,7 @@ export class CloudinaryController {
   @ApiParam({ name: 'id', description: 'ID del recurso al cual asociar la imagen', type: 'string' })
   @ApiConsumes('multipart/form-data')
   @ApiBody({
-    description: 'Archivo de imagen (JPG, PNG, o WEBP y menor a 300KB)',
+    description: 'Archivo de imagen (JPG, PNG, o WEBP y menor a 2MB)',
     required: true,
     schema: {
       type: 'object',
@@ -42,8 +42,8 @@ export class CloudinaryController {
         new ParseFilePipe({
             validators: [
               new MaxFileSizeValidator({
-                maxSize: 300000, // 300KB
-                message: 'El archivo debe ser menor a 300KB',
+                maxSize: 2000000, // 300KB
+                message: 'El archivo debe ser menor a 2MB',
               }),
               new FileTypeValidator({
                 fileType: /(jpg|jpeg|png|webp)$/, // Solo imágenes JPG, PNG, o WEBP
@@ -52,7 +52,22 @@ export class CloudinaryController {
           }),
     ) file: Express.Multer.File,
   ) {
-    return this.cloudinaryService.uploadFile(id, file, type);
+
+    console.log('File:', file);
+    console.log('Type:', type);
+    console.log('ID:', id);
+    if (!file) {
+      console.error('Archivo no proporcionado');
+      throw new BadRequestException('File not provided');
+    }
+  
+    try {
+      const uploadResult = await this.cloudinaryService.uploadFile(id, file, type);
+      return uploadResult;
+    } catch (error) {
+      console.error('Error during file upload:', error);
+      throw new BadRequestException('Failed to upload file to Cloudinary');
+    }
   }
 
 
