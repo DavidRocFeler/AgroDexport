@@ -2,10 +2,10 @@
 import React, { useEffect, useState } from "react";
 import { ISettingsUserProps } from "@/interface/types";
 import { getAllUsers } from "@/server/getAllUser";
-import UserCard from "@/components/UserCard";
+import UserCard from "@/components/UserCards";
 import { useUserStore } from "@/store/useUserStore";
 
-const UsersView: React.FC = () => {
+const UserView: React.FC = () => {
   const [users, setUsers] = useState<ISettingsUserProps[] | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -81,4 +81,4 @@ const UsersView: React.FC = () => {
   );
 };
 
-export default UsersView;
+export default UserView;

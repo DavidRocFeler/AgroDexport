@@ -1,17 +1,17 @@
-// // Instead of a handleOnChange function, react-hook-form allows you to use the watch hook to observe field values ​​in real time. A watch() can be added to see the status of all inputs in the console.
+// Instead of a handleOnChange function, react-hook-form allows you to use the watch hook to observe field values ​​in real time. A watch() can be added to see the status of all inputs in the console.
 
 "use client";
-import { IPublishProductProps } from "@/interface/types";
 import React from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useRouter } from "next/navigation";
-
-interface FormPublishProductProps {
-  onSubmit: (data: IPublishProductProps) => void;
-}
+import { File } from "lucide-react";
+import {
+  FormPublishProductProps,
+  IPublishProductProps,
+} from "@/interface/types";
 
 const FormPublishProduct: React.FC<FormPublishProductProps> = ({
-  onSubmit,
+  onUpdateClick,
 }) => {
   const router = useRouter();
   const {
@@ -20,19 +20,36 @@ const FormPublishProduct: React.FC<FormPublishProductProps> = ({
     formState: { errors },
   } = useForm<IPublishProductProps>();
 
-  const handleFormSubmit: SubmitHandler<IPublishProductProps> = (data) => {
-    onSubmit(data);
+  const [filePreview, setFilePreview] = React.useState<string | null>(null);
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFilePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
-  const handleCancel = () => {
+  const handleComeBack = () => {
     router.push("/userpanel");
+  };
+
+  const onSubmit: SubmitHandler<IPublishProductProps> = (data) => {
+    // Aquí puedes manejar el envío del formulario
+    console.log(data);
+    // Después de procesar el formulario, llamamos a onUpdateClick para mostrar el siguiente formulario
+    onUpdateClick();
   };
 
   return (
     <div className="max-w-2xl mx-auto p-6 font-inter">
-      <h2 className="text-2xl font-bold mb-6">Publish New Product</h2>
+      <h2 className="text-2xl font-bold mb-6">Publish Product</h2>
 
-      <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
+      <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+        {/* Product Name */}
         <div className="form-group">
           <label className="block mb-2 font-semibold">Product Name</label>
           <input
@@ -52,6 +69,7 @@ const FormPublishProduct: React.FC<FormPublishProductProps> = ({
           )}
         </div>
 
+        {/* Description */}
         <div className="form-group">
           <label className="block mb-2 font-semibold">Description</label>
           <textarea
@@ -68,9 +86,10 @@ const FormPublishProduct: React.FC<FormPublishProductProps> = ({
           )}
         </div>
 
+        {/* Stock and Minimum Order in Tons */}
         <div className="grid grid-cols-2 gap-4">
           <div className="form-group">
-            <label className="block mb-2 font-semibold">Stock (ton)</label>
+            <label className="block mb-2 font-semibold">Stock (tons)</label>
             <input
               type="number"
               {...register("stock", {
@@ -91,7 +110,7 @@ const FormPublishProduct: React.FC<FormPublishProductProps> = ({
 
           <div className="form-group">
             <label className="block mb-2 font-semibold">
-              Minimum Order 5 ton
+              Minimum Order (5 tons)
             </label>
             <input
               type="number"
@@ -99,7 +118,7 @@ const FormPublishProduct: React.FC<FormPublishProductProps> = ({
                 required: "Minimum order is required",
                 min: {
                   value: 5,
-                  message: "Minimum order must be at least 5",
+                  message: "Minimum order must be at least 5 tons",
                 },
               })}
               className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -112,6 +131,7 @@ const FormPublishProduct: React.FC<FormPublishProductProps> = ({
           </div>
         </div>
 
+        {/* Origin and Optional Discount */}
         <div className="grid grid-cols-2 gap-4">
           <div className="form-group">
             <label className="block mb-2 font-semibold">Origin</label>
@@ -127,12 +147,12 @@ const FormPublishProduct: React.FC<FormPublishProductProps> = ({
           </div>
 
           <div className="form-group">
-            <label className="block mb-2 font-semibold">
-              Discount (%) Optional
-            </label>
+            <label className="block mb-2 font-semibold">Discount (%)</label>
             <input
               type="number"
+              placeholder="Optional"
               {...register("discount", {
+                required: false,
                 min: {
                   value: 0,
                   message: "Discount cannot be negative",
@@ -152,6 +172,7 @@ const FormPublishProduct: React.FC<FormPublishProductProps> = ({
           </div>
         </div>
 
+        {/* Price and Harvest Date */}
         <div className="grid grid-cols-2 gap-4">
           <div className="form-group">
             <label className="block mb-2 font-semibold">
@@ -193,33 +214,55 @@ const FormPublishProduct: React.FC<FormPublishProductProps> = ({
           </div>
         </div>
 
-        <div className="form-group font-inter">
-          <label className="block mb-2 font-semibold">
-            Product Image jpg or png
-          </label>
-          <input
-            type="file"
-            accept=".jpg,.png"
-            {...register("company_product_img", {
-              required: "Product image jpg or png is required",
-              validate: {
-                fileType: (value) => {
-                  if (!value[0]) return true; // Si no hay archivo, retorna true
-                  const types = ["image/jpeg", "image/png"]; // Ajuste aquí para incluir 'image/jpeg'
-                  return (
-                    types.includes(value[0].type) ||
-                    "File must be in JPG or PNG format"
-                  );
+        {/* Product Image File Upload */}
+        <div className="form-group space-y-4">
+          <label className="block mb-2 font-semibold">Product Image</label>
+          <div className="relative">
+            <input
+              type="file"
+              accept="image/*"
+              {...register("company_product_img", {
+                required: "Product image is required",
+                validate: {
+                  isImage: (files) => {
+                    return (
+                      !files?.[0] ||
+                      files[0].type.startsWith("image/") ||
+                      "File must be an image"
+                    );
+                  },
+                  maxSize: (files) => {
+                    return (
+                      !files?.[0] ||
+                      files[0].size <= 5000000 ||
+                      "Image size must be less than 5MB"
+                    );
+                  },
                 },
-                fileSize: (value) => {
-                  if (!value[0]) return true; // Si no hay archivo, retorna true
-                  const fileSize = value[0].size / 1024 / 1024; // Convertir a MB
-                  return fileSize <= 5 || "File size must be less than 5MB";
-                },
-              },
-            })}
-            className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-          />
+              })}
+              onChange={handleFileChange}
+              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+            />
+            <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-blue-500 transition-colors">
+              {filePreview ? (
+                <div className="flex items-center justify-center">
+                  <img
+                    src={filePreview}
+                    alt="Preview"
+                    className="max-h-40 object-contain"
+                  />
+                </div>
+              ) : (
+                <div className="text-gray-500">
+                  <File className="mx-auto h-12 w-12 text-gray-400" />
+                  <p className="mt-1">
+                    Drop your image here or click to browse
+                  </p>
+                  <p className="text-sm text-gray-500">PNG, JPG up to 5MB</p>
+                </div>
+              )}
+            </div>
+          </div>
           {errors.company_product_img && (
             <p className="text-red-500 text-sm mt-1">
               {errors.company_product_img.message}
@@ -227,6 +270,7 @@ const FormPublishProduct: React.FC<FormPublishProductProps> = ({
           )}
         </div>
 
+        {/* Nutritional Information */}
         <div className="grid grid-cols-2 gap-4">
           <div className="form-group">
             <label className="block mb-2 font-semibold">Calories (kcal)</label>
@@ -310,18 +354,17 @@ const FormPublishProduct: React.FC<FormPublishProductProps> = ({
           </div>
         </div>
 
-        <div className="flex justify-end gap-4">
+        <div className="flex justify-end space-x-4">
           <button
             type="button"
-            onClick={handleCancel}
-            className="font-inter border border-black px-4 py-2 hover:bg-gray-50"
+            onClick={handleComeBack}
+            className="px-6 py-2 border border-black text-black hover:bg-gray-50 transition-colors"
           >
-            Cancel
+            Come back
           </button>
-
           <button
             type="submit"
-            className="font-inter border border-black px-4 py-2 bg-black text-white hover:bg-gray-800"
+            className="bg-white border border-black text-black px-6 py-2 hover:bg-gray-50 transition-colors"
           >
             Update Product
           </button>

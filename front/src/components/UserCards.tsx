@@ -1,4 +1,3 @@
-// UserCard
 "use client";
 import React from "react";
 import { Trash2 } from "lucide-react";
@@ -9,7 +8,7 @@ interface UserCardProps extends ISettingsUserProps {
 }
 
 const UserCard: React.FC<UserCardProps> = ({
-  user_id,
+  id,
   user_name,
   user_lastname,
   phone,
