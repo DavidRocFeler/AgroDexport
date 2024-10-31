@@ -99,7 +99,9 @@ const HomeView: React.FC = () => {
 
   return (
     <div
-      className="h-[83vh]"
+
+      className="h-[78vh]"
+
       style={{
         background: "#d8fba7",
         paddingTop: "5rem",
