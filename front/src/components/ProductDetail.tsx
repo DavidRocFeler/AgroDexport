@@ -24,8 +24,8 @@ const ProductDetail: React.FC<IAgriProduct> = ({
         const existingProductIndex = existingCart.findIndex(product => product.company_product_id === newProduct.company_product_id);
 
         if (existingProductIndex !== -1) {
-            // Si el producto ya existe, solo sumar la cantidad
-            existingCart[existingProductIndex].minimum_order = (existingCart[existingProductIndex].minimum_order || 0) + (newProduct.minimum_order || 0);
+            // Si el producto ya existe, (reenviar al carrito cambio)
+            router.push("/cartshop");
         } else {
             // Si no existe, agregar el producto al carrito
             newProduct.minimum_order = newProduct.minimum_order || 0; // Asigna una cantidad inicial
