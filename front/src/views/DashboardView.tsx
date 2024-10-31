@@ -149,13 +149,13 @@ const DashboardView: React.FC = () => {
           ))}
         </div>
       </section>
-      {isModalOpen && (
+      {/* {isModalOpen && (
         <NotificationsModal
-          userId=""
           isVisible={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
+          notifications={allNotifications}
+          onClose={handleCloseModal}
         />
-      )}
+      )} */}
     </ProtectedRoute>
   );
 };
