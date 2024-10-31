@@ -4,7 +4,7 @@ import Link from "next/link";
 import styles from "../styles/Home.module.css";
 import { useEffect, useCallback } from "react";
 import { useSession } from "next-auth/react";
-import { registerAuthProps } from "@/helpers/signUpHelpers";
+import { registerAuthProps } from "@/server/signUpHelpers";
 import { useAuthThirdStore } from "@/store/useAuthThirdStore";
 import Swal from "sweetalert2";
 

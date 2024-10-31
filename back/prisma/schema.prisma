@@ -70,18 +70,18 @@ model Company {
   company_id                String                @id @default(uuid())
   user_id                   String
   company_name              String                @unique @db.VarChar(50)
-  tax_identification_number Int
-  address                   String                @db.VarChar(255)
-  postal_code               String                @db.VarChar(20)
-  city                      String
-  state                     String
-  country                   String
-  industry                  String
+  tax_identification_number Int?
+  address                   String?                @db.VarChar(255)
+  postal_code               String?               @db.VarChar(20)
+  city                      String?
+  state                     String?
+  country                   String?
+  industry                  String?
   website                   String?
   account_paypal            String?
   company_description       String?
   company_logo              String?
-  isActive                  Boolean               @default(true)
+  isActive                  Boolean?               @default(true)
   user                      User                  @relation(fields: [user_id], references: [user_id])
   products                  CompanyProduct[]
   farmer_certifications     FarmerCertification[]
