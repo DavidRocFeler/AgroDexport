@@ -1,4 +1,4 @@
-import { ICompany, ISettingsUserProps } from "@/interface/types";
+import { ICompany, IOrder, ISettingsUserProps } from "@/interface/types";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -58,5 +58,26 @@ export const getUsers = async (filters: Record<string, any>, token: string): Pro
     return await res.json();
   } catch (error: any) {
     throw new Error(error.message || "Error inesperado al obtener los usuarios");
+  }
+};
+
+
+export const getOrders = async (token: string): Promise<IOrder[]> => {
+  try {
+    const res = await fetch(`${API_URL}/orders`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
+      },
+    });
+
+    if (!res.ok) {
+      throw new Error("Error al obtener las órdenes");
+    }
+
+    return await res.json();
+  } catch (error: any) {
+    throw new Error(error.message || "Error inesperado al obtener las órdenes");
   }
 };
