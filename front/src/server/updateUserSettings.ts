@@ -1,9 +1,6 @@
 import { ISettingsUserProps } from "@/interface/types";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
-
-// updateUserSettings.ts
-
 export const updateUserSettings = async (user_id: string, updatedFields: Partial<ISettingsUserProps>, token: string) => {
     try {
       const response = await fetch(`${API_URL}/users/${user_id}`, {
