@@ -143,7 +143,9 @@ const FormPublishProduct: React.FC<FormPublishProductProps> = ({
           </div>
 
           <div className="form-group">
-            <label className="block mb-2 font-semibold">Discount (%)</label>
+            <label className="block mb-2 font-semibold">
+              Discount (%) Optional
+            </label>
             <input
               type="number"
               placeholder="Optional"
