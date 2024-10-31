@@ -86,6 +86,14 @@ export interface IAgriProduct {
   fat: number;
   protein: number;
   carbs: number;
+  discount?: number;
+  farmer_id?: string;
+  category?: {
+    name_category?: string;
+  };
+  company?: {
+    company_name?: string;
+  };
   quantity?: number; // Agrega esta línea
 }
 
