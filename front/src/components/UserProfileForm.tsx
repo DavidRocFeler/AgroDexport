@@ -5,10 +5,12 @@ import { getUserSettings } from "@/server/getUserSettings";
 import { updateUserSettings } from "@/server/updateUserSettings";
 import { useUserStore } from "@/store/useUserStore";
 import Swal from "sweetalert2";
+import { validateUserSettings } from "@/helpers/validateUserSettings";
+import 'react-datepicker/dist/react-datepicker.css';
+import DatePicker from 'react-datepicker';
 
 const UserProfileForm = () => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [userData, setUserData] = useState<ISettingsUserProps>({
+  const initialState: ISettingsUserProps = {
     user_id: "",
     user_name: "",
     user_lastname: "",
@@ -16,10 +18,13 @@ const UserProfileForm = () => {
     birthday: "",
     phone: "",
     country: "",
-  });
+  } 
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [userData, setUserData] = useState(initialState);
+  const [error, setError] = useState<Partial<Record<keyof ISettingsUserProps, string>>>({});
   const [originalData, setOriginalData] = useState<ISettingsUserProps>(userData);
   const [resetFlag, setResetFlag] = useState(false); // Estado para reiniciar el ciclo de vida
-
   const { user_id, token } = useUserStore();
 
   useEffect(() => {
@@ -62,6 +67,23 @@ const UserProfileForm = () => {
       return;
     }
 
+    const errors = validateUserSettings(userData);
+    if (Object.keys(errors).length > 0) {
+      // Encontrar el primer error
+      const firstErrorField = Object.keys(errors)[0];
+      const firstErrorMessage = errors[firstErrorField as keyof typeof errors];
+
+      if (firstErrorMessage) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Validation Error',
+          text: `${firstErrorMessage}`,
+        });
+      }
+
+    return;
+  }
+    
     const updatedFields: Partial<ISettingsUserProps> = {};
     Object.keys(userData).forEach((key) => {
       if (userData[key as keyof ISettingsUserProps] !== originalData[key as keyof ISettingsUserProps]) {
@@ -104,13 +126,18 @@ const UserProfileForm = () => {
     setIsEditing(false); 
   };
 
+  useEffect(() => {
+    const newErrors = validateUserSettings(userData);
+    setError(newErrors)
+  }, [userData])
+
   return (
     <div className="w-[100%] p-6 bg-white rounded-lg">
       <form className="space-y-4 flex flex-col">
         <label className="flex flex-row items-center w-[100%] text-gray-700 font-medium">
           Name
           <input
-            className="ml-auto w-[70%] p-2 border border-gray-300 rounded-lg"
+            className="ml-auto w-[70%] p-2 border border-gray-300 rounded-[2px] "
             type="text"
             name="user_name"
             value={isEditing ? userData.user_name : ""}
@@ -123,7 +150,7 @@ const UserProfileForm = () => {
         <label className="flex flex-row items-center w-[100%] text-gray-700 font-medium">
           Last name
           <input
-            className="ml-auto w-[70%] p-2 border border-gray-300 rounded-lg"
+            className="ml-auto w-[70%] p-2 border border-gray-300 rounded-[2px]"
             type="text"
             name="user_lastname"
             value={isEditing ? userData.user_lastname : ""}
@@ -136,7 +163,7 @@ const UserProfileForm = () => {
         <label className="flex flex-row items-center w-[100%] text-gray-700 font-medium">
           Document ID
           <input
-            className="ml-auto w-[70%] p-2 border border-gray-300 rounded-lg"
+            className="ml-auto w-[70%] p-2 border border-gray-300 rounded-[2px]"
             type="text"
             name="nDni"
             value={isEditing ? userData.nDni || "" : ""}
@@ -149,20 +176,31 @@ const UserProfileForm = () => {
         <label className="flex flex-row items-center w-[100%] text-gray-700 font-medium">
           Birthday
           <input
-            className="ml-auto w-[70%] p-2 border border-gray-300 rounded-lg"
-            type="text"
+            type="date"
             name="birthday"
             value={isEditing ? userData.birthday : ""}
-            placeholder={!isEditing ? userData.birthday : ""}
+            placeholder="dd/mm/aaaa"
             onChange={handleChange}
             disabled={!isEditing}
+            className="ml-auto w-[70%] p-2 border border-gray-300 rounded-[2px]"
           />
         </label>
+
+        <style jsx>{`
+          input[type="date"] {
+              color: #888; /* Cambia esto al color que desees que sea similar al del placeholder */
+          }
+
+          input[type="date"]::-webkit-inner-spin-button,
+          input[type="date"]::-webkit-calendar-picker-indicator {
+              display: none; /* Esto oculta los elementos de selector nativos */
+          }
+    `   }</style>
 
         <label className="flex flex-row items-center w-[100%] text-gray-700 font-medium">
           Phone
           <input
-            className="ml-auto w-[70%] p-2 border border-gray-300 rounded-lg"
+            className="ml-auto w-[70%] p-2 border border-gray-300 rounded-[2px]"
             type="text"
             name="phone"
             value={isEditing ? userData.phone : ""}
@@ -175,7 +213,7 @@ const UserProfileForm = () => {
         <label className="flex flex-row items-center w-[100%] text-gray-700 font-medium">
           Country
           <input
-            className="ml-auto w-[70%] p-2 border border-gray-300 rounded-lg"
+            className="ml-auto w-[70%] p-2 border border-gray-300 rounded-[2px] "
             type="text"
             name="country"
             value={isEditing ? userData.country : ""}
@@ -183,6 +221,9 @@ const UserProfileForm = () => {
             onChange={handleChange}
             disabled={!isEditing}
           />
+          {userData.country && error.country && (
+            <p> {error.country} </p>
+          )}
         </label>
 
         <div className="flex justify-between mt-4">

@@ -26,9 +26,15 @@ export class UsersRepository {
     return this.prisma.user.findMany({
       include: {
         role: true,
+        companies: { // Asumiendo que el campo de relación es 'company'
+          select: {
+            company_name: true,
+          },
+        },
       },
     });
   }
+  
 
   async getAllWithFilters(filters: any[]): Promise<User[]> {
     return this.prisma.user.findMany({
@@ -112,6 +118,10 @@ export class UsersRepository {
 
   async createUserThird(userData: thirdAuthDto): Promise<User> {
     let user = await this.findUserByEmail(userData.email);
+
+    if (user){
+      throw new BadRequestException('The email is already in use')
+    }
   
     if (!user) {
       const role = await this.rolesRepository.getRoleByName(userData.role_name);
