@@ -7,7 +7,7 @@ import { FaGoogle, FaApple, FaEnvelope } from 'react-icons/fa';
 import { signIn } from "next-auth/react";
 import Link from 'next/link';
 import { useUserStore } from '@/store/useUserStore';
-import { logginProps } from '@/helpers/loginHelpers';
+import { logginProps } from '@/server/loginHelpers';
 import Swal from 'sweetalert2';
 import { useRouter } from 'next/navigation';
 import { X } from "lucide-react";

@@ -88,7 +88,7 @@ const PasswordProfileForm = () => {
         <label className="flex flex-row items-center w-[100%] text-gray-700 font-medium">
           Password
           <input
-            className="ml-auto w-[70%] p-2 border border-gray-300 rounded-lg"
+            className="ml-auto w-[70%] p-2 border border-gray-300 rounded-[2px]"
             type="password"
             name="password"
             value={isEditing ? userData.password : "*******"}
@@ -101,7 +101,7 @@ const PasswordProfileForm = () => {
         <label className="flex flex-row items-center w-[100%] text-gray-700 font-medium">
           Confirm password
           <input
-            className="ml-auto w-[70%] p-2 border border-gray-300 rounded-lg"
+            className="ml-auto w-[70%] p-2 border border-gray-300 rounded-[2px]"
             type="password"
             name="confirm_password"
             value={isEditing ? userData.confirm_password : "*******"}

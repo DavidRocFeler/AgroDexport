@@ -3,7 +3,7 @@ import { IGoogleSession, ISignUpComponentProps, ISignUpForm } from "@/interface/
 import styles from "../styles/LogSign.module.css";
 import { FaGoogle } from "react-icons/fa";
 import { signIn } from "next-auth/react";
-import { registerProps } from "@/helpers/signUpHelpers";
+import { registerProps } from "@/server/signUpHelpers";
 import Swal from "sweetalert2";
 import { X } from "lucide-react";
 import CustomCheckbox from "./CustomCheckbox";

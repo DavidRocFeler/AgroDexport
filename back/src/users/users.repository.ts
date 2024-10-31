@@ -26,9 +26,15 @@ export class UsersRepository {
     return this.prisma.user.findMany({
       include: {
         role: true,
+        companies: { // Asumiendo que el campo de relación es 'company'
+          select: {
+            company_name: true,
+          },
+        },
       },
     });
   }
+  
 
   async getAllWithFilters(filters: any[]): Promise<User[]> {
     return this.prisma.user.findMany({
@@ -114,7 +120,7 @@ export class UsersRepository {
     let user = await this.findUserByEmail(userData.email);
 
     if (user){
-      throw new BadRequestException("Email Already exists")
+      throw new BadRequestException('The email is already in use')
     }
   
     if (!user) {
