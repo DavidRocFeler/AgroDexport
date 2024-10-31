@@ -12,39 +12,43 @@ dotenvConfig({ path: join(process.cwd(), '.env') });
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+
+  // Convertir DOMAIN_FRONT a un array de dominios permitidos
+  const allowedOrigins = process.env.DOMAIN_FRONT?.split(',').map(origin => origin.trim()) || [];
+console.log(allowedOrigins);
+
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   app.use(loggerGlobal);
 
-  app.use((req, res, next) => {
-    const allowedOrigins = process.env.DOMAIN_FRONT;
-    const origin = req.headers.origin as string;
+  // app.use((req, res, next) => {
+  //   const origin = req.headers.origin as string;
+  //   console.log('Origen de la solicitud:', origin);  // Agregar este log
   
-    if (allowedOrigins.includes(origin)) {
-      res.setHeader('Access-Control-Allow-Origin', origin);
-    }
+  //   if (allowedOrigins.includes(origin)) {
+  //     res.setHeader('Access-Control-Allow-Origin', origin);
+  //   }
   
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
+  //   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
+  //   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  //   res.setHeader('Access-Control-Allow-Credentials', 'true');
   
-    if (req.method === 'OPTIONS') {
-      return res.sendStatus(204);
-    }
+  //   if (req.method === 'OPTIONS') {
+  //     return res.sendStatus(204);
+  //   }
   
-    next();
-  });
+  //   next();
+  // });
   
 
-  console.log('CORS origin:', process.env.DOMAIN_FRONT);
+  console.log('CORS allowed origins:', allowedOrigins);
  
   app.enableCors({
-    origin: process.env.DOMAIN_FRONT,
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization']
   });
-  
 
   app.useGlobalPipes(new ValidationPipe({
     transform: true,
