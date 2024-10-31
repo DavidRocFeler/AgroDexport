@@ -103,6 +103,7 @@ export interface IAgriProductErrors {
   company_id?: string | any;
   company_product_img?: string;
   company_product_name?: string;
+
   category_id: string;
   origin?: string;
   harvest_date?: string;
@@ -159,7 +160,7 @@ export interface IAgroProduct {
   pricePerUnit: number; // Precio por unidad o peso
   unitType: string; // Tipo de unidad (kg, caja, etc.)
   stock: string; // Cantidad disponible
-  images: string[]; // URLs de las imágenes del producto
+  images?: string; // URLs de las imágenes del producto
   nutritionalInfo: {
     calories: number; // Información nutricional
     protein: number; // Valor nutricional de la proteína
@@ -178,10 +179,6 @@ export interface IAgroProduct {
     rating: number; // Puntuación de la reseña (1-5)
     comment: string; // Comentario del usuario
   }[];
-}
-
-export interface MyProductListProps extends IAgroProduct {
-  onDelete: (name: string) => void ; 
 }
 
 export interface ISupplyChainProps {
@@ -225,11 +222,11 @@ export interface IProvidersProps {
   children: React.ReactNode;
 }
 
-export interface  INotificationsProps {
+export interface INotificationsProps {
   isVisible: boolean;
   notifications: INotification[];
   onClose: () => void;
-  userId?: string;  // Agrega esta línea para incluir el userId
+  userId?: string; // Agrega esta línea para incluir el userId
 }
 
 export interface IAuthWrapperProps {
@@ -264,6 +261,10 @@ export interface ISettingsUserProps {
     company_name?: string;
   }[];
   updatedFields?: Partial<ISettingsUserProps>;
+}
+
+interface UserCardProps extends ISettingsUserProps {
+  onDelete: (id: string) => void;
 }
 
 export interface ISettingsPasswordProps {
@@ -339,6 +340,7 @@ export interface IUserPanel {
   buttonEight?: string;
 }
 
+
 export interface ICompany {
   company_id: string;
   user_id: string;
@@ -361,4 +363,5 @@ export interface ICompany {
     };
   };
 }
+
 
