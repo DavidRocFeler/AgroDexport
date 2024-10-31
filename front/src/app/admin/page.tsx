@@ -6,7 +6,7 @@ import AdminProductList from "@/components/AdminProductsList";
 const Admin: React.FC = () => {
   return (
     <>
-      <AdminUserList />
+      <AdminProductList />
     </>
   );
 };

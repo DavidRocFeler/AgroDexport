@@ -34,6 +34,7 @@ const Header: React.FC = () => {
     
     const handleLogout = async () => {
         clearUser(); 
+        localStorage.removeItem("CartProduct")
         router.push('/'); 
     };
 
@@ -60,7 +61,7 @@ const Header: React.FC = () => {
     }
 
     const capitalizeFirstLetter = (role_name: string | null) => {
-        if (!role_name) return ""; // O "Guest", o cualquier otro valor predeterminado
+        if (!role_name) return ""; 
         return role_name.charAt(0).toUpperCase() + role_name.slice(1);
     };
 
