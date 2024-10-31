@@ -23,6 +23,11 @@ let CompanyProductsRepository = class CompanyProductsRepository {
             include: {
                 farmerCertification: true,
                 category: true,
+                company: {
+                    select: {
+                        company_name: true,
+                    },
+                },
             },
         });
     }

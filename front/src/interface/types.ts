@@ -90,6 +90,14 @@ export interface IAgriProduct {
   fat?: number;
   protein?: number;
   carbs?: number;
+  discount?: number;
+  farmer_id?: string;
+  category?: {
+    name_category?: string;
+  };
+  company?: {
+    company_name?: string;
+  };
 }
 
 export interface ILabelComponentProps {
@@ -225,6 +233,12 @@ export interface ISettingsUserProps {
   phone?: string;
   country?: string;
   profile_picture?: string;
+  role?: {
+    role_name?: string;
+  };
+  companies?: {
+    company_name?: string;
+  }[];
   updatedFields?: Partial<ISettingsUserProps>;
 }
 
@@ -301,3 +315,27 @@ export interface IUserPanel {
   buttonSeven?: string;
   buttonEight?: string;
 }
+
+export interface ICompany {
+  company_id: string;
+  user_id: string;
+  company_name: string;
+  tax_identification_number: number;
+  address: string;
+  postal_code: string;
+  city: string;
+  state: string;
+  country: string;
+  industry: string;
+  website?: string;
+  account_paypal?: string;
+  company_description?: string;
+  company_logo?: string;
+  isActive: boolean;
+  user?: {
+    role?: {
+      role_name: string;
+    };
+  };
+}
+
