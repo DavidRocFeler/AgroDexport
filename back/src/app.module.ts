@@ -42,7 +42,7 @@ import { EmailModule } from './nodemail/nodemail.module';
     SupplyChainModule,
     JwtModule.register({
       global: true,
-      signOptions: { expiresIn: "1h" },
+      signOptions: { expiresIn: "4h" },
       secret: process.env.JWT_SECRET,
     }),
   ],
