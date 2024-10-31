@@ -21,9 +21,18 @@ export class NotificationsGateway {
 
   handleConnection(@ConnectedSocket() client: Socket) {
     console.log(`Cliente conectado: ${client.id}`);
-    this.server.to(client.id).emit('newNotification', {
-      message: 'Notificación de prueba desde el backend'
-    });
+    
+    const userId = client.handshake.query.userId as string; // Asegúrate de convertirlo a string
+    console.log(`Cliente conectado: ${client.id}`);
+
+    if (userId) {
+      client.join(userId);
+      console.log(`Cliente ${client.id} se ha unido a la sala ${userId}`);
+    }
+  
+    // this.server.to(client.id).emit('newNotification', {
+    //   message: 'Notificación de prueba desde el backend',
+    // });
   }
 
   handleDisconnect(@ConnectedSocket() client: Socket) {

@@ -20,14 +20,14 @@ export interface ISignUpErrors {
   phone?: number;
 }
 
-export interface ILogin {
-  email: string;
-  password: string;
-}
-
 export interface ILoginAuth {
   email: string;
   name: string;
+}
+
+export interface ILogin {
+  email: string;
+  password: string;
 }
 
 export interface ILoginError {
@@ -45,6 +45,10 @@ export interface ILoginComponentProps {
   onSwitchToSignUp: () => void;
 }
 
+export interface ProductSearchProps {
+  onFilterChange: (filters: any) => void;
+}
+
 export interface IUserSession {
   token: string;
   user: {
@@ -58,17 +62,6 @@ export interface IUserSession {
   };
 }
 
-export interface IOrderCarWishProps {
-  product: any;
-}
-
-export interface ILabelComponentProps {
-  product?: IAgriProduct;
-  units: number;
-  viewType: "carShop" | "ordersView" | "wishListView";
-  orderStatus?: { status: string; date: string };
-}
-
 export interface IPropsCards {
   company_id: string;
   company_product_name: string;
@@ -78,9 +71,38 @@ export interface IPropsCards {
 }
 
 export interface IAgriProduct {
-  company_id?: string;
+  company_product_id: string | any;
+  company_id: string | any;
+  company_product_img: string;
+  company_product_name: string;
+  category_id: string;
+  origin: string;
+  harvest_date: string;
+  company_price_x_kg: number | any;
+  minimum_order: number;
+  stock: number;
+  company_product_description: string;
+  calories: number;
+  fat: number;
+  protein: number;
+  carbs: number;
+  discount?: number;
+  farmer_id?: string;
+  category?: {
+    name_category?: string;
+  };
+  company?: {
+    company_name?: string;
+  };
+  quantity?: number; // Agrega esta línea
+}
+
+export interface IAgriProductErrors {
+  company_product_id?: string | any;
+  company_id?: string | any;
   company_product_img?: string;
   company_product_name?: string;
+
   category_id: string;
   origin?: string;
   harvest_date?: string;
@@ -92,6 +114,27 @@ export interface IAgriProduct {
   fat?: number;
   protein?: number;
   carbs?: number;
+  discount?: number;
+  farmer_id?: string;
+  category?: {
+    name_category?: string;
+  };
+  company?: {
+    company_name?: string;
+  };
+  quantity?: number; // Agrega esta línea
+}
+
+export interface ILabelComponentPropsAgri extends IAgriProduct {
+  isSelected: boolean;
+  onSelect: () => void;
+  onRemove: () => void;
+  quantity?: number;
+  onQuantityChange: (quantity: number) => void;
+}
+
+export interface ILabelComponentProps {
+  products: IAgriProduct[]; // Usa la interfaz aquí
 }
 
 export interface IOrder {
@@ -99,6 +142,11 @@ export interface IOrder {
   status: string;
   date: Date;
   products: IAgriProduct[];
+}
+
+export interface ICarProps {
+  order?: IOrder;
+  products?: IAgriProduct[];
 }
 
 export interface IAgroProduct {
@@ -111,7 +159,7 @@ export interface IAgroProduct {
   pricePerUnit: number; // Precio por unidad o peso
   unitType: string; // Tipo de unidad (kg, caja, etc.)
   stock: string; // Cantidad disponible
-  images: string[]; // URLs de las imágenes del producto
+  images?: string; // URLs de las imágenes del producto
   nutritionalInfo: {
     calories: number; // Información nutricional
     protein: number; // Valor nutricional de la proteína
@@ -130,10 +178,6 @@ export interface IAgroProduct {
     rating: number; // Puntuación de la reseña (1-5)
     comment: string; // Comentario del usuario
   }[];
-}
-
-export interface MyProductListProps extends IAgroProduct {
-  onDelete: (name: string) => void;
 }
 
 export interface ISupplyChainProps {
@@ -179,14 +223,16 @@ export interface IProvidersProps {
 
 export interface INotificationsProps {
   isVisible: boolean;
+  notifications: INotification[];
   onClose: () => void;
+  userId?: string; // Agrega esta línea para incluir el userId
 }
 
 export interface IAuthWrapperProps {
   children: React.ReactNode; // Define la prop 'children' como ReactNode
 }
 
-export interface iProtectedRouteProps {
+export interface IProtectedRouteProps {
   children: React.ReactNode;
   allowedRoles?: string[];
 }
@@ -198,24 +244,26 @@ export interface Company {
   status: "Active" | "Inactive";
 }
 
-export const companiesData: Company[] = [
-  {
-    id: 1,
-    name: "Company One",
-    role: "Admin",
-    status: "Active",
-  },
-];
-
 export interface ISettingsUserProps {
-  id: string;
+  user_id: string;
   user_name?: string;
   user_lastname?: string;
   nDni?: number | any;
   birthday?: string;
   phone?: string;
   country?: string;
+  profile_picture?: string;
+  role?: {
+    role_name?: string;
+  };
+  companies?: {
+    company_name?: string;
+  }[];
   updatedFields?: Partial<ISettingsUserProps>;
+}
+
+interface UserCardProps extends ISettingsUserProps {
+  onDelete: (id: string) => void;
 }
 
 export interface ISettingsPasswordProps {
@@ -290,4 +338,48 @@ export interface FileInputProps {
 
 export interface FormPublishProductProps {
   onUpdateClick: () => void;
+}
+
+export interface INotification {
+  notification_id: string;
+  user_id: string;
+  message: string;
+  isRead: boolean;
+  notification_date: string;
+  type: string;
+}
+
+export interface IUserPanel {
+  title: string;
+  buttonOne: string;
+  buttonTwo: string;
+  buttonThree: string;
+  buttonFour: string;
+  buttonFive: string;
+  buttonSix?: string;
+  buttonSeven?: string;
+  buttonEight?: string;
+}
+
+export interface ICompany {
+  company_id: string;
+  user_id: string;
+  company_name: string;
+  tax_identification_number: number;
+  address: string;
+  postal_code: string;
+  city: string;
+  state: string;
+  country: string;
+  industry: string;
+  website?: string;
+  account_paypal?: string;
+  company_description?: string;
+  company_logo?: string;
+  isActive: boolean;
+  user?: {
+    role?: {
+      role_name: string;
+    };
+  };
 }

@@ -1,64 +1,75 @@
-"use client"
-import React, { useState } from 'react';
+"use client";
+import React, { useEffect, useState } from 'react';
 import styles from '../styles/Notifications.module.css';
-import { INotificationsProps } from '@/interface/types';
-import { useEffect } from 'react';
-// import { useSocket } from '../app/useSocket';
+import { INotificationsProps, INotification } from '@/interface/types';
 
-console.log('NotificationsModal montado');
+const NotificationsModal: React.FC<INotificationsProps> = ({ isVisible, notifications, onClose }) => {
+  const [modalVisible, setModalVisible] = useState(false);
 
-
-const NotificationsModal: React.FC<INotificationsProps> = ({ isVisible, onClose }) => {
-  const [ modalVisible, setModalVisible ] = useState(true);
-//   const { notifications } = useSocket(); 
-  // No se donde se monta este componente para ver si funciona el socket.io
-  
   useEffect(() => {
-    if (isVisible) {
-        setModalVisible(true)
-        console.log("Modal is now visible");
-    } else {
-        console.log("Modal is now hidden");
-    }
-}, [isVisible]);
+    setModalVisible(isVisible);
+  }, [isVisible]);
 
-    return (
-        <>
-            {/* Overlay/Fondo oscuro */}
-            <div 
-                style={{
-                    position: 'fixed',
-                    top: 0,
-                    left: 0,
-                    width: '100%',
-                    height: '100%',
-                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                    opacity: isVisible ? 1 : 0,
-                    transition: 'opacity 0.3s ease',
-                    visibility: isVisible ? 'visible' : 'hidden',
-                    zIndex: 999,
-                }}
-                onClick={onClose}
-            />
-            
-            {/* Modal */}
-            <div className={`${styles.modal} ${isVisible ? styles.modalVisible : ''}`}>
-                <div className={styles.modalHeader}>
-                    <h2 className={styles.modalTitle}>Welcome Notifications</h2>
-                    <button 
-                        onClick={onClose}
-                        className={styles.modalCloseButton}
-                    >
-                        ×
-                    </button>
-                </div>
-                <div className={styles.modalContent}>
-                    {/* Contenido del modal aquí */}
-                    <p className="p-4">Tus notificaciones aparecerán aquí</p>
-                </div>
-            </div>
-        </>
-    );
+  const handleCloseModal = () => {
+    setModalVisible(false);
+    onClose(); // Cerrar el modal llamando a la función proporcionada por el padre
+  };
+
+  return (
+    <>
+      {/* Overlay/Fondo oscuro */}
+      <div 
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          opacity: modalVisible ? 1 : 0,
+          transition: 'opacity 0.3s ease',
+          visibility: modalVisible ? 'visible' : 'hidden',
+          zIndex: 999,
+        }}
+        onClick={handleCloseModal}
+      />
+      
+      {/* Modal */}
+      <div className={`${styles.modal} ${modalVisible ? styles.modalVisible : ''}`}>
+        <div className={styles.modalHeader}>
+          <h2 className={styles.modalTitle}>Notifications</h2>
+          {/* Botón de cierre del modal */}
+          <button 
+            onClick={handleCloseModal}
+            className={styles.modalCloseButton}
+          >
+            ×
+          </button>
+        </div>
+        <div className={styles.modalContent}>
+          {/* Mostrar notificaciones recibidas */}
+          {notifications.length > 0 ? (
+            <ul className={styles.notificationsList}>
+              {notifications.map((notification: INotification, index: number) => (
+                <li 
+                  key={index} 
+                  className={`
+                    ${styles.notificationItem} 
+                    ${notification.isRead ? styles.read : styles.unread} 
+                    ${styles[notification.type]}  
+                  `}
+                >
+                  {notification.message}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="p-4">No hay notificaciones nuevas</p>
+          )}
+        </div>
+      </div>
+    </>
+  );
 };
 
 export default NotificationsModal;

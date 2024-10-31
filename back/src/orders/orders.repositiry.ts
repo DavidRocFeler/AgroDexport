@@ -4,28 +4,37 @@ import { CreateOrderProductsDto } from "./dtos/createOrderProducts.dto";
 import { CompanyRepository } from "src/companies/companies.repository";
 import { AddressesRepository } from "src/addresses/adresses.repository";
 import { Order } from "@prisma/client";
+import { OrderStatus } from "src/helpers/orderStatus.enum";
 
 @Injectable()
 export class OrderRepository {
     
+
     constructor (
         private readonly prisma: PrismaService,
         private readonly companyRepository: CompanyRepository,
         private readonly addressesRepository: AddressesRepository
     ) {}
-
+    
     getAllOrdersRepository(): Promise<Order[]> {
         return this.prisma.order.findMany({
             include: { orderDetail: true}
         })
     }
-
+    
+    async getOrderByIdRepository(orderId: string) {
+        return this.prisma.order.findUnique({
+            where: {order_id: orderId },
+            include: {orderDetail: true}
+        })
+    }
     async createOrderProductsRepository(createOrderProductsDto: CreateOrderProductsDto) {
         let subtotal = 0;
         const ivaPercentage = 0.19;
         let iva = 0;
         let total = 0;
-        const orderStatus = "pending";
+        const orderStatus = OrderStatus.Pending;
+        const productQuantities: { productId: string; quantity: number }[] = [];
 
         const roundToTwoDecimals = (num: number): number => {
             return Math.round(num * 100) / 100;
@@ -42,8 +51,6 @@ export class OrderRepository {
             return roundToTwoDecimals(product.company_price_x_kg * (quantity * 1000)) * ((100 - product.discount) / 100);
         };
 
-       
-        const productQuantities: { productId: string; quantity: number }[] = [];
 
         if (createOrderProductsDto.product_one_id) {
             const quantity = createOrderProductsDto.quantity_product_one;
@@ -124,6 +131,14 @@ export class OrderRepository {
                     where: { company_product_id: productId },
                     data: { stock: product.stock - quantity },
                 });
+
+                await this.prisma.producStockOrderDetail.create({
+                    data: {
+                        order_details_id: order.order_details_id,
+                        company_product_id: productId,
+                        stock: quantity,
+                    },
+                });
             }
 
             return {
@@ -131,7 +146,69 @@ export class OrderRepository {
                 orderDetail
             };
         } catch (error) {
-            throw new ConflictException('Failed to create order. Transaction rolled back.');
+            throw new ConflictException('Failed to create order. Transaction rolled back.', error.message);
         }
     }
+
+    async updateOrderStatusRepository(orderId: string) {
+        return this.prisma.order.update({
+            where: { order_id: orderId },
+            data: {
+                orderDetail: {
+                    update: { order_status: OrderStatus.finished }
+                }
+            },
+            include: { orderDetail: true }
+        });
+    }
+    
+
+    async softDeleteOrderRepository(orderId: string) {
+        
+        const orderDetail = await this.prisma.order.findUnique({
+            where: { order_id: orderId },
+            select: { order_details_id: true },
+        });
+        
+        const orderDetailsId = orderDetail.order_details_id;
+    
+        const orderDetails = await this.prisma.producStockOrderDetail.findMany({
+            where: { order_details_id: orderDetailsId }, 
+            select: {
+                company_product_id: true,
+                stock: true,
+            },
+        });
+    
+        if (!orderDetails.length) {
+            throw new Error('No order details found for this order');
+        }
+    
+        const updatePromises = orderDetails.map(async (detail) => {
+            const { company_product_id, stock } = detail;
+    
+            await this.prisma.companyProduct.update({
+                where: { company_product_id: company_product_id },
+                data: {
+                    stock: {
+                        increment: stock, 
+                    },
+                },
+            });
+        });
+    
+        await Promise.all(updatePromises);
+    
+        await this.prisma.order.update({
+            where: { order_id: orderId },
+            data: { orderDetail: { update: { order_status: OrderStatus.Canceled } } }
+        });
+        
+        const order = await this.prisma.order.findUnique({
+            where: { order_id: orderId },
+            include: { orderDetail: true, }        
+        });
+        return order
+    }
+    
 }
