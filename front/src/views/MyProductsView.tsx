@@ -24,8 +24,8 @@ const MyProductsView: React.FC = () => {
     fetchProducts();
   }, []);
 
-  const handleDelete = (name: string) => {
-    console.log(`Deleting product with id: ${name}`);
+  const handleDelete = (company_product_id: string) => {
+    console.log(`Deleting product with id: ${company_product_id}`);
     // ??
   };
 
@@ -64,7 +64,7 @@ const MyProductsView: React.FC = () => {
           <MyProductList
             key={product.company_product_id}
             {...product}
-            onDelete={handleDelete}
+            //onDelete={handleDelete}
           />
         ))}
       </div>
