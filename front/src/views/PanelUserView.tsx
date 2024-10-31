@@ -1,36 +1,97 @@
 "use client";
 import { Bell, MessageCircle } from 'lucide-react';
 import Link from 'next/link';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from "../styles/UserPanel.module.css";
 import SupplyChainComponent from '@/components/SupplyChainComponent';
 import { supplyChainArray } from '@/helpers/supplyChain.helpers';
-import { ISupplyChainProps} from '@/interface/types';
-import { useUserStore } from '@/store/useUserStore'; // Asegúrate de importar el hook para acceder al estado global
+import { INotification, ISupplyChainProps } from '@/interface/types';
+import { useUserStore } from '@/store/useUserStore';
 import NotificationsModal from '@/components/NotificationsModal';
 import { useRouter } from 'next/navigation';
+import { useSocket } from '../server/useSocket';
+import { getNotifications, markNotificationAsRead } from "@/server/notificationsSetting";
 
-const PanelUserView: React.FC = ({
-}) => {
+const PanelUserView: React.FC = () => {
   const supplyChain: ISupplyChainProps[] = supplyChainArray;
-  const { role_name } = useUserStore();
-  const [isHydrated, setIsHydrated] = React.useState(false);
-  const [isAuth, setIsAuth] = useState(false);
+  const { user_id, token, role_name } = useUserStore();
+  const { socket } = useSocket(user_id || '');
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [allNotifications, setAllNotifications] = useState<INotification[]>([]);
+  const [isHydrated, setIsHydrated] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [viewMode, setViewMode] = useState("supplier"); // Estado para el modo de vista
+  const [viewMode, setViewMode] = useState("supplier");
   const router = useRouter();
 
-  React.useEffect(() => {
+  useEffect(() => {
     setIsHydrated(true);
   }, []);
 
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      if (user_id && token) {
+        try {
+          const data = await getNotifications(user_id, token);
+          setAllNotifications(data);
+
+          // Contar las no leídas
+          const unreadNotifications = data.filter(n => !n.isRead).length;
+          setUnreadCount(unreadNotifications);
+        } catch (error) {
+          console.error('Error al cargar notificaciones:', error);
+        }
+      }
+    };
+
+    fetchNotifications();
+  }, [user_id, token]);
+
+  useEffect(() => {
+    if (socket && user_id) {
+      socket.on('newNotification', (notification: INotification) => {
+        setAllNotifications((prev) => [notification, ...prev]);
+        setUnreadCount(prev => prev + 1);
+      });
+
+      return () => {
+        socket.off('newNotification');
+      };
+    }
+  }, [socket, user_id]);
+
+  const handleMarkAllAsRead = async () => {
+    if (!token) {
+      console.error('Token no disponible');
+      return;
+    }
+
+    const unreadNotifications = allNotifications.filter(notification => !notification.isRead);
+
+    for (const notification of unreadNotifications) {
+      await markNotificationAsRead(notification.notification_id, token);
+    }
+
+    setAllNotifications(prev =>
+      prev.map(notification => ({ ...notification, isRead: true }))
+    );
+    setUnreadCount(0);
+  };
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+    setUnreadCount(0);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    handleMarkAllAsRead();
+  };
+
   const handleRedirectProfile = () => {
-    setIsAuth(true);
     router.push("/profile");
   };
 
   const handleRedirectHistorySales = () => {
-    setIsAuth(true);
     router.push("/supplierhistorysales");
   };
 
@@ -38,33 +99,30 @@ const PanelUserView: React.FC = ({
     router.push("/purchasehistory");
   };
 
-  // Funciones para cambiar el modo de vista
   const handleViewAsSupplier = () => setViewMode("supplier");
   const handleViewAsBuyer = () => setViewMode("buyer");
 
-  
   if (!isHydrated) {
     return (
-      // <ProtectedRoute allowedRoles={['supplier', 'buyer']}>
       <section>
         <div style={{ backgroundColor: "#C4E2FF", paddingTop: "2rem", paddingBottom: "4rem" }}>
           <aside className='w-fit ml-auto mb-[4rem] mr-[2rem]'>
             <button>
-              <MessageCircle/>
+              <MessageCircle />
             </button>
-            <button className='ml-[1rem] '>
-              <Bell/>
+            <button onClick={handleOpenModal} className='BellButton'>
+              <Bell className='BellIcon' />
+                  {unreadCount > 0 && <span className='NotificationCount'>{unreadCount}</span>}
             </button>
           </aside>
           <h1 className={styles.UserPanel}>User Panel</h1>
           <aside className='flex flex-row justify-center mb-[4.3rem]'>
-            <button className={styles.ButtonProfile}> Profile </button>
-            <button className={styles.ButtonHistory}> History </button>
+            <button className={styles.ButtonProfile}>Profile</button>
+            <button className={styles.ButtonHistory}>History</button>
           </aside>
         </div>
         <div className={styles.SupplyChain}>
           {supplyChain.map((item) => (
-            // Render supplychain per each component
             <SupplyChainComponent key={item.id} {...item} />
           ))}
         </div>
@@ -73,69 +131,66 @@ const PanelUserView: React.FC = ({
   }
 
   return (
-      <section>
-        <div style={{ backgroundColor: "#C4E2FF", paddingTop: "2rem", paddingBottom: "4rem" }}>
-          {/* Botones para el admin elegir el modo de visualización */}
-          {role_name === "admin" && (
-            <aside className='flex flex-row relative'>
-              <button id='' onClick={handleViewAsBuyer} className={styles.ButtonSupplier}> View as Supplier </button>
-              <button id='' onClick={handleViewAsSupplier} className={styles.ButtonBuyer}> View as Buyer </button>
-            </aside>
+    <section>
+      <div style={{ backgroundColor: "#C4E2FF", paddingTop: "2rem", paddingBottom: "4rem" }}>
+        {role_name === "admin" && (
+          <aside className='flex flex-row relative'>
+            <button onClick={handleViewAsBuyer} className={styles.ButtonSupplier}>View as Supplier</button>
+            <button onClick={handleViewAsSupplier} className={styles.ButtonBuyer}>View as Buyer</button>
+          </aside>
+        )}
+        <aside className='w-fit ml-auto mb-[4rem] mr-[2rem]'>
+          <button>
+            <MessageCircle />
+          </button>
+          <button onClick={handleOpenModal} className='ml-[1rem]'>
+            <Bell />
+            {unreadCount > 0 && <span>{unreadCount}</span>}
+          </button>
+        </aside>
+        <h1 className={styles.UserPanel}>User Panel</h1>
+        <aside className='flex flex-row justify-center mb-[1rem]'>
+          <button onClick={handleRedirectProfile} className={styles.ButtonProfile}>Profile</button>
+          {viewMode === "buyer" && (
+            <button onClick={handleRedirectHistorySales} className={styles.ButtonHistory}>History</button>
           )}
-          <aside className='w-fit ml-auto mb-[4rem] mr-[2rem]'>
-            <button>
-              <MessageCircle/>
-            </button>
-            <button onClick={() => setIsModalOpen(true)} className='ml-[1rem] '>
-              <Bell/>
-            </button>
-            
-          </aside>
-          <h1 className={styles.UserPanel}>User Panel</h1>
-          {/* Renderizado condicional basado en el modo de vista seleccionado */}
-          <aside className='flex flex-row justify-center mb-[1rem]'>
-            <button onClick={handleRedirectProfile} className={styles.ButtonProfile}> Profile </button>
-            {viewMode === "buyer" && (
-              <button onClick={handleRedirectHistorySales} className={styles.ButtonHistory}> History </button>
-            )}
-            {viewMode === "supplier" && (
-              <button onClick={handleRedirectPurchaseHistory} className={styles.ButtonHistory}> History </button>
-            )}
-          </aside>
+          {viewMode === "supplier" && (
+            <button onClick={handleRedirectPurchaseHistory} className={styles.ButtonHistory}>History</button>
+          )}
+        </aside>
 
-          <nav className='flex flex-row justify-center'>
-            <Link className={styles.RedirectPanel} href="/orderstatus"> Order Status </Link>
-            {viewMode === "buyer" ? (
-              <Link className={styles.RedirectPanel} href="/myproducts"> My products </Link>
-            ) : (
-              <Link className={styles.RedirectPanel} href="/cartshop"> Cart Shop </Link>
-            )}
-            {viewMode === 'buyer' ? ( 
-              <Link className={styles.RedirectPanel} href="/publishproduct"> Publish Product </Link>
-            ) : (
-              <Link className={styles.RedirectPanel} href="/market"> See Market </Link>
-            )}
-            <Link className={styles.RedirectPanel} href="/payments"> Payments </Link>
-            <Link className={styles.RedirectPanel} href="/help"> Help </Link>
-          </nav>
-        </div>
+        <nav className='flex flex-row justify-center'>
+          <Link className={styles.RedirectPanel} href="/orderstatus">Order Status</Link>
+          {viewMode === "buyer" ? (
+            <Link className={styles.RedirectPanel} href="/myproducts">My products</Link>
+          ) : (
+            <Link className={styles.RedirectPanel} href="/cartshop">Cart Shop</Link>
+          )}
+          {viewMode === 'buyer' ? (
+            <Link className={styles.RedirectPanel} href="/publishproduct">Publish Product</Link>
+          ) : (
+            <Link className={styles.RedirectPanel} href="/market">See Market</Link>
+          )}
+          <Link className={styles.RedirectPanel} href="/payments">Payments</Link>
+          <Link className={styles.RedirectPanel} href="/help">Help</Link>
+        </nav>
+      </div>
 
-        <div className={styles.SupplyChain}>
-          {supplyChain.map((item) => (
-            <SupplyChainComponent key={item.id} {...item} />
-          ))}
-        </div>
-        {isModalOpen && (
+      <div className={styles.SupplyChain}>
+        {supplyChain.map((item) => (
+          <SupplyChainComponent key={item.id} {...item} />
+        ))}
+      </div>
+
+      {isModalOpen && (
         <NotificationsModal
-          userId='' 
           isVisible={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
+          notifications={allNotifications}
+          onClose={handleCloseModal}
         />
       )}
-      </section>
+    </section>
   );
 };
 
 export default PanelUserView;
-
-
