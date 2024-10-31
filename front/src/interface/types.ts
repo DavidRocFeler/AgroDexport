@@ -128,8 +128,8 @@ export interface IAgriProductErrors {
 export interface ILabelComponentPropsAgri extends IAgriProduct {
   isSelected: boolean;
   onSelect: () => void;
-  onRemove: () => void; 
-  quantity?: number ; 
+  onRemove: () => void;
+  quantity?: number;
   onQuantityChange: (quantity: number) => void;
 }
 
@@ -339,7 +339,6 @@ export interface IUserPanel {
   buttonEight?: string;
 }
 
-
 export interface ICompany {
   company_id: string;
   user_id: string;
@@ -362,5 +361,3 @@ export interface ICompany {
     };
   };
 }
-
-

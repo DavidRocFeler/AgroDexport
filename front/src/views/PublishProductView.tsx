@@ -1,7 +1,7 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import FormPublishProduct from "../components/FormPublishProduct";
-import FarmerCertificationsForm from "@/components/FarmerCertificationsForm";
+// import FarmerCertificationsForm from "@/components/FarmerCertificationsForm";
 
 const PublishProductView: React.FC = () => {
   const [currentStep, setCurrentStep] = useState<"product" | "certifications">(
@@ -32,23 +32,8 @@ const PublishProductView: React.FC = () => {
       <h1 className="text-[48px] md:text-[80px] text-center mb-12 font-inter">
         Publish New Products
       </h1>
-      <div className="border border-black max-w-3xl mx-auto p-8">
-        {currentStep === "product" ? (
-          <FormPublishProduct onSubmit={handleProductSubmit} />
-        ) : (
-          <>
-            <h1 className="text-[48px] md:text-[80px] text-center mb-12 font-inter">
-              Certifications Form
-            </h1>
-            <div className="border border-black max-w-3xl mx-auto p-8">
-              <FarmerCertificationsForm
-                onBack={handleBack}
-                productData={productData}
-                onCertificationsSubmit={handleCertificationsSubmit}
-              />
-            </div>
-          </>
-        )}
+      <div className="border border-black max-w-3xl mx-auto p-8 ">
+        <FormPublishProduct />
       </div>
     </div>
   );
