@@ -1,25 +1,24 @@
 // Instead of a handleOnChange function, react-hook-form allows you to use the watch hook to observe field values ​​in real time. A watch() can be added to see the status of all inputs in the console.
-// FormPublishProduct.tsx
+
 "use client";
 import React from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { File } from "lucide-react";
-import { IPublishProductProps } from "@/interface/types";
+import {
+  FormPublishProductProps,
+  IPublishProductProps,
+} from "@/interface/types";
 
-const FormPublishProduct: React.FC = () => {
+const FormPublishProduct: React.FC<FormPublishProductProps> = ({
+  onUpdateClick,
+}) => {
   const router = useRouter();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<IPublishProductProps>();
-
-  const handleRedirection = (data: IPublishProductProps) => {
-    console.log(data);
-    // Redirect to FarmerCertificationsForm
-    router.push("/farmercertifications");
-  };
 
   const [filePreview, setFilePreview] = React.useState<string | null>(null);
 
@@ -34,11 +33,18 @@ const FormPublishProduct: React.FC = () => {
     }
   };
 
+  const onSubmit: SubmitHandler<IPublishProductProps> = (data) => {
+    // Aquí puedes manejar el envío del formulario
+    console.log(data);
+    // Después de procesar el formulario, llamamos a onUpdateClick para mostrar el siguiente formulario
+    onUpdateClick();
+  };
+
   return (
     <div className="max-w-2xl mx-auto p-6 font-inter">
       <h2 className="text-2xl font-bold mb-6">Publish Product</h2>
 
-      <form onSubmit={handleSubmit(handleRedirection)} className="space-y-6">
+      <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
         {/* Product Name */}
         <div className="form-group">
           <label className="block mb-2 font-semibold">Product Name</label>
@@ -346,17 +352,16 @@ const FormPublishProduct: React.FC = () => {
           </div>
         </div>
 
-        {/* Submit Button */}
         <div className="flex justify-end space-x-4">
           <button
             type="button"
-            className="px-6 py-2 border border-black  text-black hover:bg-gray-50 transition-colors"
+            className="px-6 py-2 border border-black text-black hover:bg-gray-50 transition-colors"
           >
-            Cancel
+            Come back
           </button>
           <button
             type="submit"
-            className="bg-white border border-black text-black px-6 py-2"
+            className="bg-white border border-black text-black px-6 py-2 hover:bg-gray-50 transition-colors"
           >
             Update Product
           </button>
