@@ -1,14 +1,17 @@
+
 "use client";
 import React from "react";
 import Link from "next/link";
 import styles from "../styles/Home.module.css";
 import { useEffect, useCallback } from "react";
+
 import { useSession } from "next-auth/react";
-import { registerAuthProps } from "@/helpers/signUpHelpers";
+import { registerAuthProps } from "@/server/signUpHelpers";
 import { useAuthThirdStore } from "@/store/useAuthThirdStore";
 import Swal from "sweetalert2";
 
 const HomeView: React.FC = () => {
+
   const {
     googleSession,
     createGoogleSession,
@@ -77,6 +80,7 @@ const HomeView: React.FC = () => {
     isSessionSent,
   ]);
 
+
   useEffect(() => {
     if (googleSession && !isSessionSent && hasInitialized) {
       handleBackendRegistration();
@@ -117,4 +121,8 @@ const HomeView: React.FC = () => {
     </div>
   );
 };
+
 export default HomeView;
+
+
+
