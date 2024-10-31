@@ -19,6 +19,10 @@ body {
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+  background-size: contain;
+}
+main {
+  min-height: 100%;
 }
 h2, h3, h4, h5, h6, p, span, a {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
@@ -26,6 +30,7 @@ h2, h3, h4, h5, h6, p, span, a {
 }
 h1 {
   font-family: 'Times New Roman', Times, serif;
+  color: black;
 }
 
 @layer utilities {
