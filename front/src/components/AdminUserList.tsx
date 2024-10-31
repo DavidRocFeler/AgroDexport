@@ -86,7 +86,6 @@ const AdminUserList: React.FC = () => {
     ],
   };
 
- 
   const userTypeData = users.reduce((acc: Record<string, number>, user) => {
     if (user.companies && user.companies.length > 0) {
       const roleName = user.role?.role_name || "Unknown";
@@ -136,34 +135,6 @@ const AdminUserList: React.FC = () => {
           <Doughnut data={userTypeChartData} options={pieChartOptions("User Types")} />
         </div>
       </div>
-
-      <table className={styles.UserListTable}>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Last Name</th>
-            <th>DNI</th>
-            <th>Country</th>
-            <th>Companies</th>
-            <th>Type</th>
-            <th>Profile Completed</th>
-          </tr>
-        </thead>
-        <tbody>
-  {users.map(user => (
-    <tr key={user.user_id}>
-      <td>{user.user_name || "N/A"}</td>
-      <td>{user.user_lastname || "Pending"}</td>
-      <td>{user.nDni || "Pending"}</td>
-      <td>{user.country || "Pending"}</td>
-      <td>{(user.companies && user.companies.length > 0) ? user.companies.length : "Pending"}</td>
-      <td>{user.role?.role_name || "Unknown"}</td>
-      <td>{user.country && user.user_name && user.user_lastname && user.nDni ? "Yes" : "No"}</td>
-    </tr>
-  ))}
-</tbody>
-
-      </table>
     </section>
   );
 };

@@ -192,33 +192,6 @@ const AdminProductList: React.FC = () => {
           <PolarArea data={companyChartData} options={polarAreaChartOptions} />
         </div>
       </div>
-
-      <table className={styles.ProductListTable}>
-        <thead>
-          <tr>
-            <th>Company Name</th>
-            <th>Product Name</th>
-            <th>Category</th>
-            <th>Stock</th>
-            <th>Origin</th>
-            <th>Discount</th>
-            <th>Certifications</th>
-          </tr>
-        </thead>
-        <tbody>
-          {products.map((product) => (
-            <tr key={product.company_product_id}>
-              <td>{product.company?.company_name || "Unknown"}</td>
-              <td>{product.company_product_name}</td>
-              <td>{product.category?.name_category || "Unknown"}</td>
-              <td>{product.stock}</td>
-              <td>{product.origin}</td>
-              <td>{product.discount ? "Yes" : "No"}</td>
-              <td>{product.farmer_id ? "Yes" : "Pending"}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
     </section>
   );
 };

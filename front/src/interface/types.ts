@@ -1,3 +1,4 @@
+import { DateTime } from "next-auth/providers/kakao";
 import React from "react";
 
 export interface ISignUpForm {
@@ -52,15 +53,26 @@ export interface ProductSearchProps {
 export interface IUserSession {
   token: string;
   user: {
-      id: number;
-      address: string;
-      email: string;
-      name: string;
-      phone: string;
-      role: string;
-      orders: [];
-  }
-};
+    id: number;
+    address: string;
+    email: string;
+    name: string;
+    phone: string;
+    role: string;
+    orders: [];
+  };
+}
+
+export interface IOrderCarWishProps {
+  product: any;
+}
+
+export interface ILabelComponentProps {
+  product?: IAgriProduct;
+  units: number;
+  viewType: "carShop" | "ordersView" | "wishListView";
+  orderStatus?: { status: string; date: string };
+}
 
 export interface IPropsCards {
   company_id: string;
@@ -127,8 +139,8 @@ export interface IAgriProductErrors {
 export interface ILabelComponentPropsAgri extends IAgriProduct {
   isSelected: boolean;
   onSelect: () => void;
-  onRemove: () => void; 
-  quantity?: number ; 
+  onRemove: () => void;
+  quantity?: number;
   onQuantityChange: (quantity: number) => void;
 }
 
@@ -141,7 +153,7 @@ export interface IOrder {
   status: string;
   date: Date;
   products: IAgriProduct[];
-};
+}
 
 export interface ICarProps {
   order?: IOrder;
@@ -180,7 +192,7 @@ export interface IAgroProduct {
 }
 
 export interface MyProductListProps extends IAgroProduct {
-  onDelete: (name: string) => void ; 
+  onDelete: (name: string) => void;
 }
 
 export interface ISupplyChainProps {
@@ -224,11 +236,11 @@ export interface IProvidersProps {
   children: React.ReactNode;
 }
 
-export interface  INotificationsProps {
+export interface INotificationsProps {
   isVisible: boolean;
   notifications: INotification[];
   onClose: () => void;
-  userId?: string;  // Agrega esta línea para incluir el userId
+  userId?: string; // Agrega esta línea para incluir el userId
 }
 
 export interface IAuthWrapperProps {
@@ -249,6 +261,7 @@ export interface Company {
 
 export interface ISettingsUserProps {
   user_id: string;
+
   user_name?: string;
   user_lastname?: string;
   nDni?: number | any;
@@ -293,7 +306,7 @@ export interface IPublishProductProps {
   discount: number;
   company_price_x_kg: number;
   harvest_date: string;
-  company_product_img: string;
+  company_product_img: FileList;
   calories: number;
   fat: number;
   protein: number;
@@ -315,6 +328,28 @@ export interface IFilePreview {
 
 export interface IPreviewState {
   [key: string]: IFilePreview | null;
+}
+
+export interface FarmerCertificationsFormProps {
+  onCancel: () => void;
+}
+
+// for FileInput
+export interface FileInputProps {
+  name: keyof ICertificationsProps;
+  label: string;
+  description: string;
+  register: any; // should type this correctly with the react-hook-form register type
+  errors: any; //  should type this correctly with the react-hook-form errors type
+  handleFileChange: (
+    event: React.ChangeEvent<HTMLInputElement>,
+    fieldName: keyof ICertificationsProps
+  ) => void;
+  previews: IPreviewState;
+}
+
+export interface FormPublishProductProps {
+  onUpdateClick: () => void;
 }
 
 export interface INotification {
@@ -359,5 +394,13 @@ export interface ICompany {
       role_name: string;
     };
   };
+}
+
+export interface IOrder {
+  order_date: DateTime,
+  orderDetail: {
+    status: string;
+    total: number;
+  }
 }
 
