@@ -62,6 +62,17 @@ export interface IUserSession {
   };
 }
 
+export interface IOrderCarWishProps {
+  product: any;
+}
+
+export interface ILabelComponentProps {
+  product?: IAgriProduct;
+  units: number;
+  viewType: "carShop" | "ordersView" | "wishListView";
+  orderStatus?: { status: string; date: string };
+}
+
 export interface IPropsCards {
   company_id: string;
   company_product_name: string;
@@ -127,8 +138,8 @@ export interface IAgriProductErrors {
 export interface ILabelComponentPropsAgri extends IAgriProduct {
   isSelected: boolean;
   onSelect: () => void;
-  onRemove: () => void; 
-  quantity?: number ; 
+  onRemove: () => void;
+  quantity?: number;
   onQuantityChange: (quantity: number) => void;
 }
 
@@ -247,20 +258,9 @@ export interface Company {
   status: "Active" | "Inactive";
 }
 
-
-export const companiesData: Company[] = [
-  {
-    id: 1,
-    name: "Company One",
-    role: "Admin",
-    status: "Active",
-  },
-];
-
-// /-------------------------------------------------------------------------------
-
 export interface ISettingsUserProps {
   user_id: string;
+
   user_name?: string;
   user_lastname?: string;
   nDni?: number | any;
@@ -275,18 +275,6 @@ export interface ISettingsUserProps {
     company_name?: string;
   }[];
   updatedFields?: Partial<ISettingsUserProps>;
-}
-
-// export interface ISettingsUserProps {
-//   id: string;
-//   user_name: string;
-//   user_lastname: string;
-//   phone: string;
-//   country: string;
-// }
-
-interface UserCardProps extends ISettingsUserProps {
-  onDelete: (id: string) => void;
 }
 
 export interface ISettingsPasswordProps {
@@ -317,7 +305,7 @@ export interface IPublishProductProps {
   discount: number;
   company_price_x_kg: number;
   harvest_date: string;
-  company_product_img: string;
+  company_product_img: FileList;
   calories: number;
   fat: number;
   protein: number;
@@ -341,6 +329,28 @@ export interface IPreviewState {
   [key: string]: IFilePreview | null;
 }
 
+export interface FarmerCertificationsFormProps {
+  onCancel: () => void;
+}
+
+// for FileInput
+export interface FileInputProps {
+  name: keyof ICertificationsProps;
+  label: string;
+  description: string;
+  register: any; // should type this correctly with the react-hook-form register type
+  errors: any; //  should type this correctly with the react-hook-form errors type
+  handleFileChange: (
+    event: React.ChangeEvent<HTMLInputElement>,
+    fieldName: keyof ICertificationsProps
+  ) => void;
+  previews: IPreviewState;
+}
+
+export interface FormPublishProductProps {
+  onUpdateClick: () => void;
+}
+
 export interface INotification {
   notification_id: string;
   user_id: string;
@@ -361,7 +371,6 @@ export interface IUserPanel {
   buttonSeven?: string;
   buttonEight?: string;
 }
-
 
 export interface ICompany {
   company_id: string;
@@ -385,5 +394,3 @@ export interface ICompany {
     };
   };
 }
-
-
