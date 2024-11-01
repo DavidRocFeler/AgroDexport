@@ -7,6 +7,7 @@ import { registerProps } from "@/server/signUpHelpers";
 import Swal from "sweetalert2";
 import { X } from "lucide-react";
 import CustomCheckbox from "./CustomCheckbox";
+import { useRouter } from "next/navigation";
 
 const SignUp: React.FC<ISignUpComponentProps> = ({ onCloseSignUp, onSwitchToLogin }) => {
     const initialState: ISignUpForm = {
@@ -21,6 +22,7 @@ const SignUp: React.FC<ISignUpComponentProps> = ({ onCloseSignUp, onSwitchToLogi
     const [userData, setUserData] = useState<ISignUpForm>(initialState);
     const [isButtonDisabled, setIsButtonDisabled] = useState(true);
     const [isAuthButtonDisabled, setIsAuthButtonDisabled] = useState(true);
+    const router = useRouter();
     
     const validateForm = (data: ISignUpForm): string[] => {
         const errors: string[] = [];
@@ -66,13 +68,14 @@ const SignUp: React.FC<ISignUpComponentProps> = ({ onCloseSignUp, onSwitchToLogi
                 await registerProps(userData);
                 await Swal.fire({
                     title: `Welcome!`,
-                    text: `You have successfully logged in.`,
+                    text: `You have successfully register.`,
                     icon: 'success',
                     confirmButtonText: 'OK',
                     allowOutsideClick: false
                 });
                 setUserData(initialState); // Reset form after successful submission
                 onCloseSignUp();
+                router.push("/");
             } catch (error) {
                 console.error("Registration error:", error);
             }

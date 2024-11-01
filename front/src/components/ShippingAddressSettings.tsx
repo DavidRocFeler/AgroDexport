@@ -1,62 +1,56 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { ICompany } from "@/interface/types"; // Asegúrate de importar la interfaz correcta
-import { getCompanySettings } from "@/server/getCompanyById";
-import { updateCompanySettings } from "@/server/updateCompanySettings";
+import { IShippingAddress } from "@/interface/types"; // Asegúrate de que esta ruta sea correcta
+import { getShippingAddressByCompany } from "@/server/getShippingAddressByCompany";
+import { updateShippingAddress } from "@/server/updateShippingAddress";
 import { useUserStore } from "@/store/useUserStore";
 import Swal from "sweetalert2";
-import { validateCompanySettings } from "@/helpers/validateCompanySettings";
+import { validateShippingAddress } from "@/helpers/validateShippingAddress";
 
-const CompanyForms = () => {
-  const initialState: ICompany = {
-    company_id: "",
-    company_name: "",
-    tax_identification_number: null,
+const ShippingAddressForm = () => {
+  const initialState: IShippingAddress = {
+    contact_name: "",
+    contact_lastname: "",
+    contact_email: "",
     address: "",
     postal_code: "",
     city: "",
     state: "",
     country: "",
-    industry: "",
-    website: "",
-    account_paypal: "",
-    company_description: "",
-    company_logo: "",
-    isActive: true,
   };
 
   const [isEditing, setIsEditing] = useState(false);
-  const [companyData, setCompanyData] = useState<ICompany>(initialState);
-  const [originalData, setOriginalData] = useState<ICompany>(companyData);
+  const [shippingData, setShippingData] = useState<IShippingAddress>(initialState);
+  const [originalData, setOriginalData] = useState<IShippingAddress>(shippingData);
   const { user_id, token } = useUserStore();
   const company_id = localStorage.getItem("company_id");
 
   useEffect(() => {
-    const fetchCompanySettings = async () => {
+    const fetchShippingAddressSettings = async () => {
       if (company_id && token) {
         try {
-          const data = await getCompanySettings(company_id, token);
-          setCompanyData(data);
+          const data = await getShippingAddressByCompany(company_id, token);
+          setShippingData(data);
           setOriginalData(data);
         } catch (error) {
-          console.error('Error fetching company settings:', error);
+          console.error('Error fetching shipping address settings:', error);
         }
       }
     };
 
-    fetchCompanySettings();
+    fetchShippingAddressSettings();
   }, [user_id, token]);
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    setCompanyData({
-      ...companyData,
+    setShippingData({
+      ...shippingData,
       [name]: value,
     });
   };
 
   const handleSave = async () => {
-    if (JSON.stringify(companyData) === JSON.stringify(originalData)) {
+    if (JSON.stringify(shippingData) === JSON.stringify(originalData)) {
       Swal.fire({
         title: 'No changes to save',
         text: 'There are no changes to save.',
@@ -71,7 +65,7 @@ const CompanyForms = () => {
       return;
     }
 
-    const errors = validateCompanySettings(companyData);
+    const errors = validateShippingAddress(shippingData);
     if (Object.keys(errors).length > 0) {
       const firstErrorField = Object.keys(errors)[0];
       const firstErrorMessage = errors[firstErrorField as keyof typeof errors];
@@ -88,23 +82,23 @@ const CompanyForms = () => {
 
     try {
       if (company_id) {
-        await updateCompanySettings(company_id, companyData, token);
-        setOriginalData(companyData);
+        await updateShippingAddress(company_id, shippingData, token);
+        setOriginalData(shippingData);
         setIsEditing(false);
         await Swal.fire({
           title: 'Success!',
-          text: 'Your company settings have been updated successfully.',
+          text: 'Your shipping address settings have been updated successfully.',
           icon: 'success',
           confirmButtonText: 'Ok',
         });
       } else {
-        alert("The company's ID could not be obtained.");
+        alert("The address ID could not be obtained.");
       }
     } catch (error: any) {
       Swal.fire({
         icon: 'warning',
         title: 'Error',
-        text: error,
+        text: error.message,
       });
       console.error("Error saving:", error.message);
     }
@@ -115,7 +109,7 @@ const CompanyForms = () => {
   };
 
   const handleCancel = () => {
-    setCompanyData(originalData);
+    setShippingData(originalData);
     setIsEditing(false);
   };
 
@@ -123,30 +117,42 @@ const CompanyForms = () => {
     <div className="w-[100%] p-6 bg-white rounded-lg max-h-[20rem] overflow-y-auto">
       <form className="space-y-4 flex flex-col">
         <label className="flex flex-row items-center w-[100%] text-gray-700 font-medium">
-          Company Name
+          Contact Name
           <input
             className="ml-auto w-[70%] p-2 border border-gray-300 rounded-[2px]"
             type="text"
-            name="company_name"
-            value={isEditing ? companyData.company_name : ""}
-            placeholder={isEditing ? "" : companyData.company_name}
+            name="contact_name"
+            value={isEditing ? shippingData.contact_name : ""}
+            placeholder={isEditing ? "" : shippingData.contact_name}
             onChange={handleChange}
             disabled={!isEditing}
           />
         </label>
 
         <label className="flex flex-row items-center w-[100%] text-gray-700 font-medium">
-          Tax Identification Number
+          Contact Last Name
           <input
             className="ml-auto w-[70%] p-2 border border-gray-300 rounded-[2px]"
             type="text"
-            name="tax_identification_number"
-            value={isEditing ? companyData.tax_identification_number || "" : ""}
-            placeholder={!isEditing ? String(companyData.tax_identification_number || "") : ""}
+            name="contact_lastname"
+            value={isEditing ? shippingData.contact_lastname : ""}
+            placeholder={isEditing ? "" : shippingData.contact_lastname}
             onChange={handleChange}
             disabled={!isEditing}
           />
+        </label>
 
+        <label className="flex flex-row items-center w-[100%] text-gray-700 font-medium">
+          Contact Email
+          <input
+            className="ml-auto w-[70%] p-2 border border-gray-300 rounded-[2px]"
+            type="email"
+            name="contact_email"
+            value={isEditing ? shippingData.contact_email : ""}
+            placeholder={isEditing ? "" : shippingData.contact_email}
+            onChange={handleChange}
+            disabled={!isEditing}
+          />
         </label>
 
         <label className="flex flex-row items-center w-[100%] text-gray-700 font-medium">
@@ -155,8 +161,8 @@ const CompanyForms = () => {
             className="ml-auto w-[70%] p-2 border border-gray-300 rounded-[2px]"
             type="text"
             name="address"
-            value={isEditing ? companyData.address : ""}
-            placeholder={isEditing ? "" : companyData.address}
+            value={isEditing ? shippingData.address : ""}
+            placeholder={isEditing ? "" : shippingData.address}
             onChange={handleChange}
             disabled={!isEditing}
           />
@@ -168,8 +174,8 @@ const CompanyForms = () => {
             className="ml-auto w-[70%] p-2 border border-gray-300 rounded-[2px]"
             type="text"
             name="postal_code"
-            value={isEditing ? companyData.postal_code : ""}
-            placeholder={isEditing ? "" : companyData.postal_code}
+            value={isEditing ? shippingData.postal_code : ""}
+            placeholder={isEditing ? "" : shippingData.postal_code}
             onChange={handleChange}
             disabled={!isEditing}
           />
@@ -181,8 +187,8 @@ const CompanyForms = () => {
             className="ml-auto w-[70%] p-2 border border-gray-300 rounded-[2px]"
             type="text"
             name="city"
-            value={isEditing ? companyData.city : ""}
-            placeholder={isEditing ? "" : companyData.city}
+            value={isEditing ? shippingData.city : ""}
+            placeholder={isEditing ? "" : shippingData.city}
             onChange={handleChange}
             disabled={!isEditing}
           />
@@ -194,8 +200,8 @@ const CompanyForms = () => {
             className="ml-auto w-[70%] p-2 border border-gray-300 rounded-[2px]"
             type="text"
             name="state"
-            value={isEditing ? companyData.state : ""}
-            placeholder={isEditing ? "" : companyData.state}
+            value={isEditing ? shippingData.state : ""}
+            placeholder={isEditing ? "" : shippingData.state}
             onChange={handleChange}
             disabled={!isEditing}
           />
@@ -207,59 +213,8 @@ const CompanyForms = () => {
             className="ml-auto w-[70%] p-2 border border-gray-300 rounded-[2px]"
             type="text"
             name="country"
-            value={isEditing ? companyData.country : ""}
-            placeholder={isEditing ? "" : companyData.country}
-            onChange={handleChange}
-            disabled={!isEditing}
-          />
-        </label>
-
-        <label className="flex flex-row items-center w-[100%] text-gray-700 font-medium">
-          Industry
-          <input
-            className="ml-auto w-[70%] p-2 border border-gray-300 rounded-[2px]"
-            type="text"
-            name="industry"
-            value={isEditing ? companyData.industry : ""}
-            placeholder={isEditing ? "" : companyData.industry}
-            onChange={handleChange}
-            disabled={!isEditing}
-          />
-        </label>
-
-        <label className="flex flex-row items-center w-[100%] text-gray-700 font-medium">
-          Website
-          <input
-            className="ml-auto w-[70%] p-2 border border-gray-300 rounded-[2px]"
-            type="text"
-            name="website"
-            value={isEditing ? companyData.website : ""}
-            placeholder={isEditing ? "" : companyData.website}
-            onChange={handleChange}
-            disabled={!isEditing}
-          />
-        </label>
-
-        <label className="flex flex-row items-center w-[100%] text-gray-700 font-medium">
-          PayPal Account
-          <input
-            className="ml-auto w-[70%] p-2 border border-gray-300 rounded-[2px]"
-            type="text"
-            name="account_paypal"
-            value={isEditing ? companyData.account_paypal : ""}
-            placeholder={isEditing ? "" : companyData.account_paypal}
-            onChange={handleChange}
-            disabled={!isEditing}
-          />
-        </label>
-
-        <label className="flex flex-row items-center w-[100%] text-gray-700 font-medium">
-          Company Description
-          <textarea
-            className="ml-auto w-[70%] p-2 border border-gray-300 rounded-[2px]"
-            name="company_description"
-            value={isEditing ? companyData.company_description : ""}
-            placeholder={isEditing ? "" : companyData.company_description}
+            value={isEditing ? shippingData.country : ""}
+            placeholder={isEditing ? "" : shippingData.country}
             onChange={handleChange}
             disabled={!isEditing}
           />
@@ -293,9 +248,9 @@ const CompanyForms = () => {
             </button>
           )}
         </div>
-</form>
+      </form>
     </div>
-  );  
+  );
 };
 
-export default CompanyForms;
+export default ShippingAddressForm;

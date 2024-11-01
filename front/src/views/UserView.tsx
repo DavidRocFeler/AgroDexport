@@ -65,7 +65,7 @@ const UserView: React.FC = () => {
           <p className="text-gray-500">There are no registered users</p>
         ) : (
           users.map((user) => (
-            <UserCard key={user.id} {...user} onDelete={handleDelete} />
+            <UserCard key={user.user_id} {...user} onDelete={handleDelete} />
           ))
         )}
       </div>

@@ -105,16 +105,7 @@ const PanelUserView: React.FC = () => {
   if (!isHydrated) {
     return (
       <section>
-        <div style={{ backgroundColor: "#C4E2FF", paddingTop: "2rem", paddingBottom: "4rem" }}>
-          <aside className='w-fit ml-auto mb-[4rem] mr-[2rem]'>
-            <button>
-              <MessageCircle />
-            </button>
-            <button onClick={handleOpenModal} className='BellButton'>
-              <Bell className='BellIcon' />
-                  {unreadCount > 0 && <span className='NotificationCount'>{unreadCount}</span>}
-            </button>
-          </aside>
+        <div style={{ backgroundColor: "#C4E2FF", paddingTop: "8.45rem", paddingBottom: "4rem" }}>
           <h1 className={styles.UserPanel}>User Panel</h1>
           <aside className='flex flex-row justify-center mb-[4.3rem]'>
             <button className={styles.ButtonProfile}>Profile</button>
@@ -135,40 +126,42 @@ const PanelUserView: React.FC = () => {
       <div style={{ backgroundColor: "#C4E2FF", paddingTop: "2rem", paddingBottom: "4rem" }}>
         {role_name === "admin" && (
           <aside className='flex flex-row relative'>
-            <button onClick={handleViewAsBuyer} className={styles.ButtonSupplier}>View as Supplier</button>
-            <button onClick={handleViewAsSupplier} className={styles.ButtonBuyer}>View as Buyer</button>
+            <button onClick={handleViewAsSupplier} className={styles.ButtonSupplier}>View as Supplier</button>
+            <button onClick={handleViewAsBuyer} className={styles.ButtonBuyer}>View as Buyer</button>
           </aside>
         )}
         <aside className='w-fit ml-auto mb-[4rem] mr-[2rem]'>
-          <button>
+          {/* <button>
             <MessageCircle />
-          </button>
-          <button onClick={handleOpenModal} className='ml-[1rem]'>
+          </button> */}
+          <button onClick={handleOpenModal} className='ml-[1rem] w-[2rem] h-[2rem] relative z-10'>
             <Bell />
-            {unreadCount > 0 && <span>{unreadCount}</span>}
+            {unreadCount > 0 && <span className='text-[0.7rem] text-white z-20 absolute bottom-5 right-0 bg-red-700 rounded-full pt-[0.1rem] pb-[0.05rem] pl-[0.5rem] pr-[0.5rem] font-bold '>{unreadCount}</span>}
           </button>
         </aside>
         <h1 className={styles.UserPanel}>User Panel</h1>
         <aside className='flex flex-row justify-center mb-[1rem]'>
           <button onClick={handleRedirectProfile} className={styles.ButtonProfile}>Profile</button>
-          {viewMode === "buyer" && (
+          {viewMode === "supplier" && (
             <button onClick={handleRedirectHistorySales} className={styles.ButtonHistory}>History</button>
           )}
-          {viewMode === "supplier" && (
+          {viewMode === "buyer" && (
             <button onClick={handleRedirectPurchaseHistory} className={styles.ButtonHistory}>History</button>
           )}
         </aside>
 
         <nav className='flex flex-row justify-center'>
           <Link className={styles.RedirectPanel} href="/orderstatus">Order Status</Link>
-          {viewMode === "buyer" ? (
+          {viewMode === "supplier" && (
             <Link className={styles.RedirectPanel} href="/myproducts">My products</Link>
-          ) : (
+          )} 
+          {viewMode === "buyer" && (
             <Link className={styles.RedirectPanel} href="/cartshop">Cart Shop</Link>
+          )}             
+          {viewMode === 'supplier' && (
+            <Link className={styles.RedirectPanel} href="/publishproducts">Publish Product</Link>
           )}
-          {viewMode === 'buyer' ? (
-            <Link className={styles.RedirectPanel} href="/publishproduct">Publish Product</Link>
-          ) : (
+          {viewMode === 'buyer' && (
             <Link className={styles.RedirectPanel} href="/market">See Market</Link>
           )}
           <Link className={styles.RedirectPanel} href="/payments">Payments</Link>
