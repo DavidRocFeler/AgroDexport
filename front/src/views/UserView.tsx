@@ -30,8 +30,8 @@ const UserView: React.FC = () => {
     fetchUsers();
   }, [role_name]);
 
-  const handleDelete = (id: string) => {
-    console.log(`Deleting user with id: ${id}`);
+  const handleDelete = (user_id: string) => {
+    console.log(`Deleting user with id: ${user_id}`);
     // Logic to delete the user
   };
 
@@ -65,7 +65,7 @@ const UserView: React.FC = () => {
           <p className="text-gray-500">There are no registered users</p>
         ) : (
           users.map((user) => (
-            <UserCard key={user.id} {...user} onDelete={handleDelete} />
+            <UserCard key={user.user_id} {...user} onDelete={handleDelete} />
           ))
         )}
       </div>
