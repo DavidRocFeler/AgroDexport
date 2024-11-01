@@ -135,6 +135,17 @@ export class AddressesController {
     }
 
     @ApiBearerAuth()
+@HttpCode(200)
+@Get('address/:companyId') 
+@UseGuards(AuthGuard, RolesGuard)
+@Roles('admin', 'supplier', 'buyer') 
+async getAddressByCompanyId(@Param('companyId') companyId: string) {
+    const address = await this.addressesService.getAddressByCompanyIdService(companyId);
+    return address;
+}
+
+
+    @ApiBearerAuth()
     @HttpCode(200)
     @Get(':id') 
     @UseGuards(AuthGuard, RolesGuard)
@@ -148,7 +159,7 @@ export class AddressesController {
     @HttpCode(200)
     @Post()
     @UseGuards(AuthGuard, RolesGuard)
-    @Roles('buyer')
+    @Roles('admin', 'supplier', 'buyer')
     async createAddress(@Body() shippingAddressData: CreateShippingAddressDto) {
     const newAddress = await this.addressesService.createAddressService(shippingAddressData);
     return {
@@ -161,17 +172,22 @@ export class AddressesController {
     @HttpCode(200)
     @Put(':id') 
     @UseGuards(AuthGuard, RolesGuard)
-    @Roles('buyer')
-    async updateAddress(@Param('id') addressId: string, @Body()addressData: UpdateShippingAddressDto) {
-    const updatedAddress = await this.addressesService.updateAddressService(addressId, addressData);
-    return updatedAddress;
+    @Roles('admin', 'supplier', 'buyer')
+    async updateAddress(
+        @Param('id') companyId: string, 
+        @Body() addressData: UpdateShippingAddressDto
+    ) {
+        const updatedAddress = await this.addressesService.updateAddressService(companyId, addressData);
+        return updatedAddress;
     }
+    
+    
 
     @ApiBearerAuth()
     @HttpCode(200)
     @Delete(':id')
     @UseGuards(AuthGuard, RolesGuard)
-    @Roles('admin', 'buyer') 
+    @Roles('admin', 'buyer', 'supplier') 
   async softDeleteAddress(@Param('id') addressId: string) {
     const deletedAddress = await this.addressesService.softDeleteAddressService(addressId);
     return {
