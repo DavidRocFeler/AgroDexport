@@ -7,6 +7,8 @@ import Paypal from "@/components/Paypal";
 import { useUserStore } from "@/store/useUserStore";
 import { uploadImageToCloudinary } from "@/server/cloudinarySetting"
 import { getUserSettings } from "@/server/getUserSettings"
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
 
 
 const ProfileView: React.FC = () => {
@@ -35,6 +37,7 @@ const ProfileView: React.FC = () => {
     setIsHydrated(true);
   }, [user_id, token]);
 
+  const MySwal = withReactContent(Swal);
 
   const handleImageUpload = async (file: File, type: string, id: string) => {
     if (!token || !user_id) {
@@ -47,12 +50,23 @@ const ProfileView: React.FC = () => {
   
       if (response.secure_url) {
         setProfileImage(response.secure_url);
-        console.log("Uploaded image URL:", response.secure_url);
+        MySwal.fire({
+          icon: 'success',
+          title: 'Image Uploaded',
+          text: 'Your image has been uploaded successfully!',
+        });
       } else {
         console.error("No secure URL in response:", response);
       }
-    } catch (error) {
-      console.error("Error uploading image:", error);
+    } catch (error: any) {
+      
+      const errorMessage = error.response?.data?.message || error.message || "An error occurred";
+      
+      MySwal.fire({
+        icon: 'error',
+        title: 'Upload Failed',
+        text: errorMessage,
+      });
     }
   };
   
