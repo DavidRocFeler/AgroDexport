@@ -25,8 +25,17 @@ const AdminUserList: React.FC = () => {
   };
 
   useEffect(() => {
-    loadUsers();
+    const fetchData = async () => {
+      loadUsers();
+    };
+    fetchData();
+    const interval = setInterval(() => {
+      fetchData();
+    }, 5000); 
+  
+    return () => clearInterval(interval);
   }, []);
+
 
   const countriesData = users.reduce((acc: Record<string, number>, user) => {
     if (user.country) {

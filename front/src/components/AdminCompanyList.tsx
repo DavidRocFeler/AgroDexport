@@ -25,7 +25,15 @@ const AdminCompanyList: React.FC = () => {
   };
 
   useEffect(() => {
-    loadCompanies();
+    const fetchData = async () => {
+      loadCompanies();
+    };
+    fetchData();
+    const interval = setInterval(() => {
+      fetchData();
+    }, 5000); 
+  
+    return () => clearInterval(interval);
   }, []);
 
   const countriesData = companies.reduce((acc: Record<string, number>, company) => {

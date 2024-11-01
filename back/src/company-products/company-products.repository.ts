@@ -111,12 +111,16 @@ export class CompanyProductsRepository {
       },
     });
   }
-
+ 
   async findAllByCompanyId(companyId: string) {
     return this.prisma.companyProduct.findMany({
       where: { company_id: companyId },
+      include: {
+        category: true, 
+      },
     });
   }
+  
 
   async findProductByIdRepository(companyId: string, productId: string) {
     const product = await this.prisma.companyProduct.findUnique({
