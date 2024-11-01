@@ -86,7 +86,7 @@ export class OrderRepository {
             throw new ConflictException(`Payment with ID not found.`);
         }
 
-        const shippingAddressId = await this.addressesRepository.findAdressIdByCompanyId(createOrderProductsDto.company_buyer_id);
+        const shippingAddressId = await this.addressesRepository.findAddressByCompanyId(createOrderProductsDto.company_buyer_id);
         if (!shippingAddressId) {
             throw new ConflictException(`Shipping address with ID not found.`);
         }
