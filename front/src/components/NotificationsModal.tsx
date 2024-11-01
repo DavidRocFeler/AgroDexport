@@ -1,9 +1,13 @@
 "use client";
-import React, { useEffect, useState } from 'react';
-import styles from '../styles/Notifications.module.css';
-import { INotificationsProps, INotification } from '@/interface/types';
+import React, { useEffect, useState } from "react";
+import styles from "../styles/Notifications.module.css";
+import { INotificationsProps, INotification } from "@/interface/types";
 
-const NotificationsModal: React.FC<INotificationsProps> = ({ isVisible, notifications, onClose }) => {
+const NotificationsModal: React.FC<INotificationsProps> = ({
+  isVisible,
+  notifications,
+  onClose,
+}) => {
   const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
@@ -18,28 +22,30 @@ const NotificationsModal: React.FC<INotificationsProps> = ({ isVisible, notifica
   return (
     <>
       {/* Overlay/Fondo oscuro */}
-      <div 
+      <div
         style={{
-          position: 'fixed',
+          position: "fixed",
           top: 0,
           left: 0,
-          width: '100%',
-          height: '100%',
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          width: "100%",
+          height: "100%",
+          backgroundColor: "rgba(0, 0, 0, 0.5)",
           opacity: modalVisible ? 1 : 0,
-          transition: 'opacity 0.3s ease',
-          visibility: modalVisible ? 'visible' : 'hidden',
+          transition: "opacity 0.3s ease",
+          visibility: modalVisible ? "visible" : "hidden",
           zIndex: 999,
         }}
         onClick={handleCloseModal}
       />
-      
+
       {/* Modal */}
-      <div className={`${styles.modal} ${modalVisible ? styles.modalVisible : ''}`}>
+      <div
+        className={`${styles.modal} ${modalVisible ? styles.modalVisible : ""}`}
+      >
         <div className={styles.modalHeader}>
           <h2 className={styles.modalTitle}>Notifications</h2>
           {/* Botón de cierre del modal */}
-          <button 
+          <button
             onClick={handleCloseModal}
             className={styles.modalCloseButton}
           >
@@ -50,18 +56,20 @@ const NotificationsModal: React.FC<INotificationsProps> = ({ isVisible, notifica
           {/* Mostrar notificaciones recibidas */}
           {notifications.length > 0 ? (
             <ul className={styles.notificationsList}>
-              {notifications.map((notification: INotification, index: number) => (
-                <li 
-                  key={index} 
-                  className={`
-                    ${styles.notificationItem} 
-                    ${notification.isRead ? styles.read : styles.unread} 
-                    ${styles[notification.type]}  
+              {notifications.map(
+                (notification: INotification, index: number) => (
+                  <li
+                    key={index}
+                    className={`
+                    ${styles.notificationItem}
+                    ${notification.isRead ? styles.read : styles.unread}
+                    ${styles[notification.type]}
                   `}
-                >
-                  {notification.message}
-                </li>
-              ))}
+                  >
+                    {notification.message}
+                  </li>
+                )
+              )}
             </ul>
           ) : (
             <p className="p-4">No hay notificaciones nuevas</p>

@@ -9,29 +9,30 @@ import GoogleWrapper from "./GoogleWrapers";
 
 export const metadata: Metadata = {
   title: "Agro-Dexports",
-  description: "App with Next"
+  description: "App with Next",
 };
 
-export default function RootLayout({children}: Readonly<{children: React.ReactNode}>) {
-
-  return(
+export default function RootLayout({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
+  return (
     <html lang="en">
-      <body>
-        <main>
+      <body className="min-h-screen flex flex-col ">
+        <main className="min-h-screen">
           <GoogleProviders>
-              <Header/>
+            <Header />
             <GoogleWrapper>
-            <AuthWrapper>
-              <AuthWrapperLoggin>
-              <hr className="border-black border-1 "/>
+              <AuthWrapper>
+                <AuthWrapperLoggin>
+                  <hr className="border-black border-1 " />
                   {children}
-              </AuthWrapperLoggin>
-            </AuthWrapper>
+                </AuthWrapperLoggin>
+              </AuthWrapper>
             </GoogleWrapper>
-            <ClientWrapers/>
-            </GoogleProviders>
-          </main>
+            <ClientWrapers />
+          </GoogleProviders>
+        </main>
       </body>
     </html>
-  )
+  );
 }
