@@ -49,10 +49,22 @@ const AdminDashboardRow: React.FC = () => {
   };
 
   useEffect(() => {
-    loadUsers();
-    loadProducts();
-    loadOrders();
+    const fetchData = async () => {
+      await loadUsers();
+      await loadProducts();
+      await loadOrders();
+    };
+    fetchData();
+  
+    const interval = setInterval(() => {
+      fetchData();
+    }, 5000); 
+  
+
+    return () => clearInterval(interval);
   }, []);
+  
+  
 
   const usersWithCompanies = users.filter(user => user.companies && user.companies.length > 0).length;
   const percentageWithCompanies = users.length > 0 ? ((usersWithCompanies / users.length) * 100).toFixed(1) : "0";

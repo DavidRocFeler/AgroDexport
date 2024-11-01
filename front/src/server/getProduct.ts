@@ -31,6 +31,83 @@ export async function getProductDB(filters: any = {}): Promise<IAgriProduct[]> {
   }
 }
 
+export const getCategories = async (): Promise<any[]> => {
+  try {
+      const res = await fetch(`${APIURL}/categories`, {
+          method: "GET",
+          headers: {
+              "Content-type": "application/json",
+          },
+      });
+
+      if (!res.ok) {
+          throw new Error("Error fetching categories");
+      }
+
+      return await res.json();
+  } catch (error: any) {
+      throw new Error(error.message || "Unexpected error");
+  }
+};
+
+export const getCompanyProducts = async (companyId: string): Promise<any[]> => {
+  try {
+    const res = await fetch(`${APIURL}/company-products/company/${companyId}`, {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
+      },
+    });
+
+    if (!res.ok) {
+      throw new Error("You currently have no products loaded for this company.");
+    }
+
+    return await res.json();
+  } catch (error: any) {
+    throw new Error(error.message || "Unexpected error fetching company products");
+  }
+};
+
+
+export const deleteCompanyProduct = async (productId: string, token: string): Promise<void> => {
+  try {
+    const res = await fetch(`${APIURL}/company-products/${productId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-type": "application/json",
+        "Authorization": `Bearer ${token}`,
+      },
+    });
+
+    if (!res.ok) {
+      throw new Error("Error deleting company product");
+    }
+  } catch (error: any) {
+    throw new Error(error.message || "Unexpected error deleting company product");
+  }
+};
+
+export const updateCompanyProduct = async (productId: string, productData: Record<string, any>, token: string): Promise<void> => {
+  try {
+    const res = await fetch(`${APIURL}/company-products/${productId}`, {
+      method: "PUT",
+      headers: {
+        "Content-type": "application/json",
+        "Authorization": `Bearer ${token}`,
+      },
+      body: JSON.stringify(productData),
+    });
+
+    if (!res.ok) {
+      throw new Error("Error updating company product");
+    }
+  } catch (error: any) {
+    throw new Error(error.message || "Unexpected error updating company product");
+  }
+};
+
+
 
 
 // export async function getProductByCategorieId(categoryId: string): Promise<IAgroProduct[]> {

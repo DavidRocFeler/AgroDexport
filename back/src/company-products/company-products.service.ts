@@ -80,10 +80,6 @@ export class CompanyProductsService {
       throw new NotFoundException('Product not found.');
     }
 
-    if (existingProduct.isActive === false){
-      throw new ConflictException('Product is not active')
-    }
-
     return this.companyProductsRepository.updateProductRepository(productId, productData);
   }
 

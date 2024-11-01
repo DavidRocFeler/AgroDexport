@@ -100,6 +100,7 @@ export interface IAgriProduct {
   carbs: number;
   discount?: number;
   farmer_id?: string;
+  isActive?: boolean;
   category?: {
     name_category?: string;
   };
@@ -281,6 +282,7 @@ export interface ISettingsUserProps {
     role_name?: string;
   };
   companies?: {
+    company_id?: string;
     company_name?: string;
   }[];
   updatedFields?: Partial<ISettingsUserProps>;
