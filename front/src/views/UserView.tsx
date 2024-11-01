@@ -30,8 +30,8 @@ const UserView: React.FC = () => {
     fetchUsers();
   }, [role_name]);
 
-  const handleDelete = (id: string) => {
-    console.log(`Deleting user with id: ${id}`);
+  const handleDelete = (user_id: string) => {
+    console.log(`Deleting user with id: ${user_id}`);
     // Logic to delete the user
   };
 
