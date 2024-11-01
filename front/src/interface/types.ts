@@ -269,7 +269,6 @@ export interface ICompanyRegister {
 }
 export interface ISettingsUserProps {
   user_id: string;
-
   user_name?: string;
   user_lastname?: string;
   nDni?: number | any;
