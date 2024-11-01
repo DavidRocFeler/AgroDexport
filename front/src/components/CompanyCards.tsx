@@ -12,6 +12,11 @@ const StackedCompanyCards: React.FC = () => {
 
   const { user_id, token, role_name } = useUserStore();
 
+  const capitalizeFirstLetter = (role_name: string | null) => {
+    if (!role_name) return ""; 
+    return role_name.charAt(0).toUpperCase() + role_name.slice(1);
+  };
+
   useEffect(() => {
     // Guardar user_id en localStorage al montar el componente
     if (user_id) {
@@ -112,7 +117,7 @@ const StackedCompanyCards: React.FC = () => {
               <div className="flex justify-between items-start">
                 <div className="space-y-1">
                   <h5 className="font-medium text-gray-900">{selectedCompanyData.company_name}</h5>
-                  <p className="text-sm text-gray-600">{role_name}</p>
+                  <p className="text-sm text-gray-600">{capitalizeFirstLetter(role_name)}</p>
                 </div>
               </div>
               <div className="mt-3 flex gap-2">

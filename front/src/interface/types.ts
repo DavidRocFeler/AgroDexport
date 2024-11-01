@@ -224,9 +224,23 @@ export interface IProtectedRouteProps {
   allowedRoles?: string[];
 }
 
+export interface IShippingAddress {
+  contact_name: string;
+  contact_lastname: string;
+  contact_email: string;
+  address: string;
+  postal_code: string;
+  city: string;
+  state: string;
+  country: string;
+}
+
 export interface ICompany {
   company_id: string;
   company_name: string;
+  shippingAddresses?: {
+    shipping_address_id?: string;
+  }
   tax_identification_number?: number;
   address?: string;
   postal_code?: string;
