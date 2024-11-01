@@ -11,7 +11,7 @@ const CompanyForms = () => {
   const initialState: ICompany = {
     company_id: "",
     company_name: "",
-    tax_identification_number: undefined,
+    tax_identification_number: null,
     address: "",
     postal_code: "",
     city: "",

@@ -383,9 +383,9 @@ export interface IUserPanel {
 
 export interface ICompany {
   company_id: string;
-  user_id: string;
+  user_id?: string;
   company_name: string;
-  tax_identification_number: number;
+  tax_identification_number: number | null;
   address: string;
   postal_code: string;
   city: string;

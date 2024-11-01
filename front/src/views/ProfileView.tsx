@@ -42,14 +42,15 @@ const ProfileView: React.FC = () => {
     fetchUserProfile();
   }, [user_id, token]);
 
-  const handleImageUpload = async (file: File, type: string, user_id: string) => {
+
+  const handleImageUpload = async (file: File, type: string, id: string) => {
     if (!token || !user_id) {
       console.error("Token or user ID not found");
       return;
     }
   
     try {
-      const response = await uploadImageToCloudinary(file, type, user_id, token);
+      const response = await uploadImageToCloudinary(file, type, id, token);
   
       if (response.secure_url) {
         setProfileImage(response.secure_url);

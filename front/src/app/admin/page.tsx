@@ -7,7 +7,7 @@ import AdminDashboardRow from "@/components/AdminDashboardRow";
 const Admin: React.FC = () => {
   return (
     <>
-      <AdminDashboardRow />
+      <AdminProductList/>
     </>
   );
 };
