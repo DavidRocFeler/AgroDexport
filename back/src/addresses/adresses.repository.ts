@@ -65,7 +65,6 @@ export class AddressesRepository {
           throw new NotFoundException('Address not found');
         }
       
-        // Extract user_id from the nested relationship
         const userId = address.company?.user?.user_id;
       
         return { ...address, userId };
@@ -87,40 +86,52 @@ export class AddressesRepository {
         return shippingAddress;
       }
       
-      async updateAddress(addressId: string, addressData: UpdateShippingAddressDto) {
-        const address = await this.findById(addressId);
+      async updateAddressByCompanyId(companyId: string, addressData: UpdateShippingAddressDto) {
+        const address = await this.findAddressByCompanyId(companyId);
+        
+        if (!address) {
+            throw new NotFoundException('Address not found for the given company.');
+        }
+    
         const userId = address.company?.user?.user_id;
-      
+    
         if (!userId) {
-          throw new NotFoundException('User not found for the given address.');
+            throw new NotFoundException('User not found for the given address.');
         }
-
+    
         const updatedAddress = await this.prisma.shippingAddress.update({
-          where: { shipping_address_id: addressId },
-          data: addressData,
+            where: { shipping_address_id: address.shipping_address_id },
+            data: addressData,
         });
-      
+    
         if (updatedAddress) {
-          await this.notificationService.createAndNotifyUser(
-            userId, 
-            'Your address has been updated.',
-            'ShippingAddressUpdate'
-          );
+            await this.notificationService.createAndNotifyUser(
+                userId,
+                'Your address has been updated.',
+                'ShippingAddressUpdate'
+            );
         }
-      
+    
         return updatedAddress;
-      }
+    }
+    
       
 
       async create(shippingAddressData: CreateShippingAddressDto): Promise<ShippingAddress> {
+        const { company_id, ...addressData } = shippingAddressData; // Extraemos company_id del objeto
     
-        const data: Prisma.ShippingAddressUncheckedCreateInput = {
-            ...shippingAddressData,
+        const data: Prisma.ShippingAddressCreateInput = {
+            ...addressData,
             isActive: true,
-          };
-        
-          return this.prisma.shippingAddress.create({ data });
-        }
+            company: {
+                connect: { company_id } 
+            }
+        };
+    
+        return this.prisma.shippingAddress.create({ data });
+    }
+    
+    
 
       async softDelete(addressId: string) {
         await this.findById(addressId);
@@ -131,11 +142,28 @@ export class AddressesRepository {
         });
       }
 
-      async findAdressIdByCompanyId(company_buyer_id: string) {
-        const shippingAddress = await this.prisma.shippingAddress.findFirst({
-          where: { company_id: company_buyer_id },
-          select: { shipping_address_id: true}
-        })
-        return shippingAddress?.shipping_address_id;
+      async findAddressByCompanyId(company_id: string): Promise<any | null> {
+        if (!company_id) {
+            throw new Error("Company ID is required");
+        }
+    
+        const shippingAddress = await this.prisma.shippingAddress.findUnique({
+            where: { company_id },
+            include: {
+                company: {
+                    select: {
+                        user: {
+                            select: {
+                                user_id: true,
+                            },
+                        },
+                    },
+                },
+            },
+        });
+    
+        return shippingAddress || null;
     }
+    
+    
 }

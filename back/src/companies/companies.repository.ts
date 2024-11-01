@@ -20,14 +20,16 @@ export class CompanyRepository {
             select: {
               role: {
                 select: {
-                  role_name: true, // Selecciona solo el campo role_name
+                  role_name: true, 
                 },
               },
             },
           },
+          shippingAddress: true, 
         },
       });
     }
+    
     
     
   
