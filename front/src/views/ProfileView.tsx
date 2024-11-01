@@ -9,6 +9,8 @@ import { getUserSettings } from "@/server/getUserSettings"
 import StackedCompanyCards from "@/components/CompanyCards";
 import CompanyForms from "@/components/CompanyProfileSettings";
 import ShippingAddressForm from "@/components/ShippingAddressSettings";
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
 
 const ProfileView: React.FC = () => {
   const [activeSection, setActiveSection] = useState<string>("Information contact");
@@ -42,6 +44,7 @@ const ProfileView: React.FC = () => {
     fetchUserProfile();
   }, [user_id, token]);
 
+  const MySwal = withReactContent(Swal);
 
   const handleImageUpload = async (file: File, type: string, id: string) => {
     if (!token || !user_id) {
@@ -54,12 +57,23 @@ const ProfileView: React.FC = () => {
   
       if (response.secure_url) {
         setProfileImage(response.secure_url);
-        console.log("Uploaded image URL:", response.secure_url);
+        MySwal.fire({
+          icon: 'success',
+          title: 'Image Uploaded',
+          text: 'Your image has been uploaded successfully!',
+        });
       } else {
         console.error("No secure URL in response:", response);
       }
-    } catch (error) {
-      console.error("Error uploading image:", error);
+    } catch (error: any) {
+      
+      const errorMessage = error.response?.data?.message || error.message || "An error occurred";
+      
+      MySwal.fire({
+        icon: 'error',
+        title: 'Upload Failed',
+        text: errorMessage,
+      });
     }
   };
 
