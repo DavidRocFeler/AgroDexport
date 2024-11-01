@@ -36,14 +36,14 @@ const ProfileView: React.FC = () => {
   }, [user_id, token]);
 
 
-  const handleImageUpload = async (file: File, type: string, user_id: string) => {
+  const handleImageUpload = async (file: File, type: string, id: string) => {
     if (!token || !user_id) {
       console.error("Token or user ID not found");
       return;
     }
   
     try {
-      const response = await uploadImageToCloudinary(file, type, user_id, token);
+      const response = await uploadImageToCloudinary(file, type, id, token);
   
       if (response.secure_url) {
         setProfileImage(response.secure_url);
@@ -226,10 +226,18 @@ const ProfileView: React.FC = () => {
                     className="hidden"
                     onChange={(e) => {
                       const file = e.target.files?.[0];
-                      if (file && user_id) {
-                        handleImageUpload(file, "user", user_id); 
+                      
+                      if (file) {
+                        if (user_id) {
+                          handleImageUpload(file, "user", user_id); 
+                        // } else if (company_id) {
+                        //   handleImageUpload(file, "company", company_id); 
+                        } else {
+                          console.error("No valid ID (user_id or company_id) found.");
+                        }
                       }
                     }}
+                    
                   />
                 </label>
               </div>
