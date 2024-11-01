@@ -128,17 +128,17 @@ const Header: React.FC = () => {
           </Link>
           {isAuthenticated ? (
             <>
-              <span className="text-[1rem] font-bold rounded-full py-2 px-3 bg-white text-center flex items-center justify-center">
-                {userSettings?.user_name
-                  ? `${userSettings.user_name.split(" ")[0]}`
-                  : "Loading..."}
-              </span>
-
               <span
                 className="mr-[1rem] ml-[1rem] text-[0.9rem]"
                 style={{ color: textColor }}
               >
                 {capitalizeFirstLetter(role_name)}
+              </span>
+              <span className="text-[1rem] font-bold rounded-full py-2 px-3 text-center flex items-center justify-center">
+                {/* <span className="text-[1rem] font-bold rounded-full py-2 px-3 bg-white text-center flex items-center justify-center"> */}
+                {userSettings?.user_name
+                  ? `${userSettings.user_name.split(" ")[0]}`
+                  : "Loading..."}
               </span>
 
               <button
