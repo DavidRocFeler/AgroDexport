@@ -106,7 +106,8 @@ export interface IAgriProduct {
   company?: {
     company_name?: string;
   };
-  quantity?: number; // Agrega esta línea
+  quantity?: number; 
+  onDelete?: (name: string) => void;
 }
 
 export interface IAgriProductErrors {
