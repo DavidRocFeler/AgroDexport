@@ -15,7 +15,6 @@ interface PayPalComponentProps {
   onError?: (error: any) => void;
 }
 
-// fixed 
 const PayPalButtonsComponent: React.FC<PayPalComponentProps> = ({ amount, companyId, onSuccess, onError }) => {
   return (
     <div className="bg-white p-6 rounded-lg">
@@ -55,7 +54,6 @@ const PayPalButtonsComponent: React.FC<PayPalComponentProps> = ({ amount, compan
     </div>
   );
 };
-
 
 const CarShopComponent: React.FC<ILabelComponentProps> = ({ products }) => {
   const [productList, setProductList] = useState<IAgriProduct[]>(products); 
@@ -112,9 +110,6 @@ const CarShopComponent: React.FC<ILabelComponentProps> = ({ products }) => {
       return updatedProducts;
     });
   };
-
-
-
  
   const calculateTotals = () => {
     if (!selectedProduct || !selectedProduct.company_price_x_kg || !selectedProduct.quantity) {
