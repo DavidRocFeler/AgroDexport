@@ -29,10 +29,7 @@ export class OrderRepository {
         })
     }
     async createOrderProductsRepository(createOrderProductsDto: CreateOrderProductsDto) {
-        let subtotal = 0;
-        const ivaPercentage = 0.19;
-        let iva = 0;
-        let total = 0;
+        let {subtotal, logistic_cost, tariff, tax, discount, total } = createOrderProductsDto
         const orderStatus = OrderStatus.Pending;
         const productQuantities: { productId: string; quantity: number }[] = [];
 
@@ -54,48 +51,51 @@ export class OrderRepository {
 
         if (createOrderProductsDto.product_one_id) {
             const quantity = createOrderProductsDto.quantity_product_one;
-            subtotal += await calculateProductTotal(createOrderProductsDto.product_one_id, quantity);
             productQuantities.push({ productId: createOrderProductsDto.product_one_id, quantity });
         }
         if (createOrderProductsDto.product_two_id) {
             const quantity = createOrderProductsDto.quantity_product_two;
-            subtotal += await calculateProductTotal(createOrderProductsDto.product_two_id, quantity);
             productQuantities.push({ productId: createOrderProductsDto.product_two_id, quantity });
         }
         if (createOrderProductsDto.product_three_id) {
             const quantity = createOrderProductsDto.quantity_product_three;
-            subtotal += await calculateProductTotal(createOrderProductsDto.product_three_id, quantity);
             productQuantities.push({ productId: createOrderProductsDto.product_three_id, quantity });
         }
         if (createOrderProductsDto.product_four_id) {
             const quantity = createOrderProductsDto.quantity_product_four;
-            subtotal += await calculateProductTotal(createOrderProductsDto.product_four_id, quantity);
             productQuantities.push({ productId: createOrderProductsDto.product_four_id, quantity });
         }
         if (createOrderProductsDto.product_five_id) {
             const quantity = createOrderProductsDto.quantity_product_five;
-            subtotal += await calculateProductTotal(createOrderProductsDto.product_five_id, quantity);
             productQuantities.push({ productId: createOrderProductsDto.product_five_id, quantity });
         }
 
-        iva = roundToTwoDecimals(subtotal * ivaPercentage);
-        total = roundToTwoDecimals(subtotal + iva);
+        subtotal = roundToTwoDecimals(subtotal);
+        logistic_cost = roundToTwoDecimals(logistic_cost);
+        tariff = roundToTwoDecimals(tariff);
+        tax = roundToTwoDecimals(tax);
+        discount = roundToTwoDecimals(discount);
+        total = roundToTwoDecimals(total);        
 
         const paymentsAccount = await this.companyRepository.findByAcoountPaypalById(createOrderProductsDto.company_supplier_id);
         if (!paymentsAccount) {
             throw new ConflictException(`Payment with ID not found.`);
         }
 
-        const shippingAddressId = await this.addressesRepository.findAddressByCompanyId(createOrderProductsDto.company_buyer_id);
-        if (!shippingAddressId) {
-            throw new ConflictException(`Shipping address with ID not found.`);
-        }
+        // const shippingAddressId = await this.addressesRepository.findAdressIdByCompanyId(createOrderProductsDto.company_buyer_id);
+        // if (!shippingAddressId) {
+        //     throw new ConflictException(`Shipping address with ID not found.`);
+        // }
 
         try {
             
             const orderDetail = await this.prisma.orderDetail.create({
                 data: {
-                    iva: iva,
+                    subtotal: subtotal,
+                    logistic_cost: logistic_cost,
+                    tariff: tariff,
+                    tax: tax,
+                    discount: discount,
                     total: total,
                     order_status: orderStatus,
                 },
@@ -106,7 +106,7 @@ export class OrderRepository {
                     id_company_sell: createOrderProductsDto.company_supplier_id,
                     id_company_buy: createOrderProductsDto.company_buyer_id,
                     account_paypal: paymentsAccount,
-                    shipping_address_id: shippingAddressId,
+                    // shipping_address_id: shippingAddressId,
                     order_details_id: orderDetail.order_details_id,
                     order_date: new Date(),
                 },

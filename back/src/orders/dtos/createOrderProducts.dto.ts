@@ -40,6 +40,59 @@ export class CreateOrderProductsDto {
     @IsPositive({ message: 'Quantity of product_one must be a positive integer.' })
     quantity_product_one: number;
 
+    @ApiProperty({
+        description: 'Subtotal the order',
+        example: 1000.00,
+
+    })
+    @IsNotEmpty({ message: 'subtotal is required.' })
+    @IsPositive({ message: 'Subtotal must be a positive number.' })
+    subtotal: number;
+
+    @ApiProperty({
+        description: 'Logistic cost the order',
+        example: 900.00,
+
+    })
+    @IsNotEmpty({ message: 'Logistic cost is required.' })
+    @IsPositive({ message: 'Logistic cost must be a positive number.' })
+    logistic_cost: number;
+
+    @ApiProperty({
+        description: 'Tarrif the order',
+        example: 800.00,
+
+    })
+    @IsNotEmpty({ message: 'Tarrif cost is required.' })
+    @IsPositive({ message: 'Tarrif cost must be a positive number.' })
+    tariff: number;
+
+    @ApiProperty({
+        description: 'Tax the order',
+        example: 1200.00,
+
+    })
+    @IsNotEmpty({ message: 'Tax cost is required.' })
+    @IsPositive({ message: 'Tax cost must be a positive number.' })
+    tax: number;
+
+    @ApiProperty({
+        description: 'Discount the order',
+        example: 1500.00,
+
+    })
+    @IsNotEmpty({ message: 'Discount cost is required.' })
+    discount: number;
+    
+    @ApiProperty({
+        description: 'Discount the order',
+        example: 4000.00,
+
+    })
+    @IsNotEmpty({ message: 'Discount cost is required.' })
+    @IsPositive({ message: 'Discount cost must be a positive number.' })
+    total: number;
+
     // Opcionales
     @ApiProperty({
         description: 'ID of the product two (optional)',

@@ -69,8 +69,8 @@ export interface IOrderCarWishProps {
 
 export interface ILabelComponentProps {
   product?: IAgriProduct;
-  units: number;
-  viewType: "carShop" | "ordersView" | "wishListView";
+  units?: number;
+  viewType?: "carShop" | "ordersView" | "wishListView";
   orderStatus?: { status: string; date: string };
 }
 
@@ -98,7 +98,7 @@ export interface IAgriProduct {
   fat: number;
   protein: number;
   carbs: number;
-  discount?: number;
+  discount: number;
   farmer_id?: string;
   isActive?: boolean;
   category?: {
@@ -416,4 +416,19 @@ export interface IOrder {
     total: number;
   }
 }
+
+export interface IOrderDetail {
+
+  company_buyer_id: string | null;
+  company_supplier_id: string;
+  product_one_id: string;
+  quantity_product_one: number | undefined;
+  subtotal: number;
+  logistic_cost: number;
+  tariff: number;
+  tax: number;
+  discount: number;
+  total: number;
+}
+
 
