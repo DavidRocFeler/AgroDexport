@@ -96,6 +96,8 @@ export class CompanyProductsController {
   async create(@Body() createCompanyProductDto: CreateCompanyProductDto) {
       return this.companyProductsService.createProductServices(createCompanyProductDto);
   }
+
+  
   @ApiBearerAuth()
   @UseGuards(AuthGuard, RolesGuard)
   @Roles('admin', 'supplier') 
@@ -103,6 +105,8 @@ export class CompanyProductsController {
   async updateProduct(@Param("id") productId: string, @Body() productData: UpdateCompanyProductDto){
     return this.companyProductsService.updateProductServices(productId, productData) 
   }
+
+
   @ApiBearerAuth()
   @UseGuards(AuthGuard, RolesGuard)
   @Roles('admin', 'supplier') 
