@@ -78,7 +78,7 @@ export class CloudinaryController {
   @HttpCode(200)
   @UseGuards(AuthGuard, RolesGuard)
   @Roles('admin', 'supplier')
-@Post(':companyId/:companyProductId')
+@Post('/uploadDocuments/:companyId/:companyProductId')
 @UseInterceptors(FileFieldsInterceptor([
   { name: 'phytosanitary_certificate', maxCount: 1 },
   { name: 'agricultural_producer_cert', maxCount: 1 },
@@ -114,7 +114,8 @@ async uploadDocuments(
     certificate_of_origin?: Express.Multer.File[],
   },
 ) {
-  // Verificar si se ha subido al menos un archivo
+  // console.log("Archivos recibidos:", files);
+
   const uploadedFiles = Object.values(files).flat().filter(file => file);
   if (uploadedFiles.length === 0) {
     throw new BadRequestException('No files were uploaded.');

@@ -149,7 +149,7 @@ model CompanyProduct {
   company_price_x_kg          Float
   total_price                 Float
   harvest_date                DateTime
-  company_product_img         String
+  company_product_img         String?
   calories                    Float?
   fat                         Float?
   protein                     Float?

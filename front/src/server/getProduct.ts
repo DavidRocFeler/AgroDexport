@@ -107,6 +107,50 @@ export const updateCompanyProduct = async (productId: string, productData: Recor
   }
 };
 
+// Suponiendo que el tipo devuelto es un objeto con company_product_id
+export const createCompanyProduct = async (
+  productData: any,
+  token: string
+): Promise<{ company_product_id: string }> => {
+  try {
+    const res = await fetch(`${APIURL}/company-products`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
+      },
+      body: JSON.stringify(productData),
+    });
+
+    if (!res.ok) {
+      throw new Error("Error creating company product");
+    }
+
+    const data = await res.json();
+    return { company_product_id: data.company_product_id }; // Devuelve el ID en la estructura correcta
+  } catch (error) {
+    throw new Error("Unexpected error creating company product");
+  }
+};
+
+export const getProductById = async (companyId: string, productId: string): Promise<IAgriProduct> => {
+  try {
+    const url = `${APIURL}/company-products/company/${companyId}/product/${productId}`;
+    const res = await fetch(url, {
+      method: "GET",
+      headers: { "Content-type": "application/json" },
+    });
+
+    if (!res.ok) throw new Error("Error fetching product by ID");
+
+    const product: IAgriProduct = await res.json();
+    return product;
+  } catch (error: any) {
+    throw new Error(error.message || "Unexpected error fetching product by ID");
+  }
+};
+
+
 
 
 
