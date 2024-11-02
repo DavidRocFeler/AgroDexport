@@ -174,12 +174,26 @@ export class CompanyProductsRepository {
     return product;
   }
   
-    async updateProductRepository(productId: string, productData: UpdateCompanyProductDto) {
-      return await this.prisma.companyProduct.update({
-        where: { company_product_id : productId },
-        data: productData,
-      })
+  async updateProductRepository(productId: string, productData: UpdateCompanyProductDto) {
+    const { harvest_date, ...rest } = productData;
+    
+    let parsedHarvestDate;
+    if (harvest_date) {
+      parsedHarvestDate = new Date(harvest_date);
+      if (isNaN(parsedHarvestDate.getTime())) {
+        throw new Error('Invalid harvest date format. Please provide a valid ISO-8601 date string.');
+      }
     }
+  
+    return await this.prisma.companyProduct.update({
+      where: { company_product_id: productId },
+      data: {
+        ...rest,
+        harvest_date: parsedHarvestDate, // solo se asigna si harvest_date fue proporcionado
+      },
+    });
+  }
+  
 
     async findByProductNameAndCompanyId(productName: string, companyId: string): Promise<(CompanyProduct & { company: Company }) | null> {
       const product = await this.prisma.companyProduct.findFirst({

@@ -50,7 +50,7 @@ export class CloudinaryService {
         return 'users';
       case 'companyLogo':
         return 'companyLogos';
-      case 'product':
+      case 'companyProduct':
         return 'products';
       default:
         throw new BadRequestException('Invalid type for file upload');
@@ -71,7 +71,7 @@ export class CloudinaryService {
             await this.companiesRepository.update(id, updateData);
             break;
 
-        case 'product':
+        case 'companyProduct':
             updateData = { company_product_img: url };
             await this.productsRepository.updateProductRepository(id, updateData);
             break;

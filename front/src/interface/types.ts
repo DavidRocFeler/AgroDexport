@@ -101,6 +101,13 @@ export interface IAgriProduct {
   discount?: number;
   farmer_id?: string;
   isActive?: boolean;
+  farmerCertification?:{
+    phytosanitary_certificate?: string;
+    agricultural_producer_cert?: string;
+    organic_certification?:      string;
+    quality_certificate?:        string;
+    certificate_of_origin?:     string; 
+}
   category?: {
     name_category?: string;
   };
@@ -308,20 +315,24 @@ export interface ISettingsCompanyProps {
 }
 
 export interface IPublishProductProps {
+  company_id?: string;
+  category_id: string;
   company_product_name: string;
   company_product_description: string;
   stock: number;
   minimum_order: number;
   origin: string;
-  discount: number;
+  discount?: number;
   company_price_x_kg: number;
   harvest_date: string;
-  company_product_img: FileList;
-  calories: number;
-  fat: number;
-  protein: number;
-  carbs: number;
+  company_product_img?: string;
+  calories?: number;
+  fat?: number;
+  protein?: number;
+  carbs?: number;
 }
+
+
 
 export interface ICertificationsProps {
   phytosanitary_certificate: FileList;
@@ -342,7 +353,10 @@ export interface IPreviewState {
 
 export interface FarmerCertificationsFormProps {
   onCancel: () => void;
+  companyId: string;
+  productId: string;
 }
+
 
 // for FileInput
 export interface FileInputProps {
@@ -358,9 +372,15 @@ export interface FileInputProps {
   previews: IPreviewState;
 }
 
+
+
 export interface FormPublishProductProps {
-  onUpdateClick: () => void;
+  onUpdateClick: (productId: string, companyId: string) => void;
+  selectedCompany: string | null;  
+  categories: { category_id: string; name_category: string }[];  
 }
+
+
 
 export interface INotification {
   notification_id: string;

@@ -92,9 +92,9 @@ export class CreateCompanyProductDto {
         example: 'https://example.com/tomato.jpg',
     })
     @IsString({ message: 'company_product_img must be a string.' }) 
-    @IsNotEmpty({ message: 'company_product_img cannot be empty.' }) 
+    @IsOptional()
     @IsUrl({}, { message: 'company_product_img must be a valid URL.' }) 
-    company_product_img: string;
+    company_product_img?: string;
 
     @ApiProperty({
         description: 'Calories per serving of the product, if applicable',
