@@ -43,8 +43,17 @@ const AdminProductList: React.FC = () => {
     }
   };
 
+
   useEffect(() => {
-    loadProducts();
+    const fetchData = async () => {
+      loadProducts();
+    };
+    fetchData();
+    const interval = setInterval(() => {
+      fetchData();
+    }, 5000); 
+  
+    return () => clearInterval(interval);
   }, []);
 
   const harvestData = products.reduce((acc: Record<string, number>, product) => {

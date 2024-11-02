@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect } from "react";
+import React from "react";
 import styles from "../styles/ProductDetail.module.css"
 import { IAgriProduct } from "@/interface/types";
 import { exampleProduct } from "@/helpers/Product.helpers";

@@ -1,39 +1,112 @@
-// MyProductList.tsx
 "use client";
-import React from "react";
-import { Trash2 } from "lucide-react"; // Importando el ícono de trash
-import { MyProductListProps } from "@/interface/types";
+import React, { useEffect } from "react";
+import { Trash2, RefreshCw } from "lucide-react";
+import { IAgriProduct } from "@/interface/types";
+import { useUserStore } from "@/store/useUserStore";
+import { deleteCompanyProduct, updateCompanyProduct } from "@/server/getProduct";
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+
+interface MyProductListProps extends IAgriProduct {
+  onDeleteSuccess: (productId: string, newActiveStatus: boolean) => void;
+}
 
 const MyProductList: React.FC<MyProductListProps> = ({
-  name,
-  variety,
+  company_product_id,
+  company_product_name,
+  company_product_description,
   origin,
-  harvestDate,
-  images,
-  onDelete,
+  harvest_date,
+  company_product_img,
+  isActive,
+  stock,
+  company_price_x_kg,
+  minimum_order,
+  category,
+  onDeleteSuccess,
 }) => {
-  return (
-    <div className="bg-white rounded-lg shadow-md p-4 mb-4 hover:shadow-lg transition-shadow duration-300 mx-4">
-      <div className="flex items-center gap-4">
-        {/* Imagen del producto */}
-        <div className="flex-shrink-0">
-          <img
-            src={images?.[0] || "/api/placeholder/120/120"}
-            alt={`${name} product`}
-            className="w-24 h-24 rounded-lg object-cover"
-          />
-        </div>
+  const { token } = useUserStore();
+  const MySwal = withReactContent(Swal);
 
-        {/* Información del producto */}
+  useEffect(() => {
+    console.log("Image received:", company_product_img);
+  }, [company_product_img]);
+
+  const renderImage = () => {
+    if (company_product_img) {
+      return (
+        <img
+          src={company_product_img}
+          alt={company_product_name}
+          className="w-24 h-24 object-cover rounded-lg"
+        />
+      );
+    }
+
+    return (
+      <div className="w-24 h-24 rounded-lg bg-gray-200 flex items-center justify-center">
+        <span className="text-gray-400">No image</span>
+      </div>
+    );
+  };
+
+  const handleDeleteOrReactivate = async () => {
+    if (!token) return;
+
+    const confirmResult = await MySwal.fire({
+      title: isActive ? "Confirm Deletion" : "Confirm Reactivation",
+      text: isActive
+        ? "Are you sure you want to delete this product?"
+        : "Do you want to reactivate this product?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: isActive ? "Yes, delete it!" : "Yes, reactivate it!",
+      cancelButtonText: "Cancel",
+    });
+
+    if (confirmResult.isConfirmed) {
+      try {
+        if (isActive) {
+          await deleteCompanyProduct(company_product_id, token);
+          onDeleteSuccess(company_product_id, false);
+          MySwal.fire("Deleted!", "The product has been deleted.", "success");
+        } else {
+          await updateCompanyProduct(company_product_id, { isActive: true }, token);
+          onDeleteSuccess(company_product_id, true);
+          MySwal.fire("Reactivated!", "The product is now active.", "success");
+        }
+      } catch (error) {
+        console.error("Error updating product:", error);
+        MySwal.fire("Error", "An error occurred while updating the product.", "error");
+      }
+    }
+  };
+
+  const formattedStock = `${(stock)} Tons`;
+  const formattedHarvestDate = new Date(harvest_date).toLocaleDateString("en-GB");
+
+  return (
+    <div
+      className={`bg-white rounded-lg shadow-md p-4 mb-4 hover:shadow-lg transition-shadow duration-300 mx-4 ${
+        !isActive ? "opacity-50" : ""
+      }`}
+    >
+      <div className="flex items-center gap-4">
+        <div className="flex-shrink-0 overflow-hidden">{renderImage()}</div>
+
         <div className="flex-grow">
           <div className="grid grid-cols-2 gap-2">
             <div>
               <h3 className="font-semibold text-gray-700">Name:</h3>
-              <p className="text-gray-600">{name}</p>
+              <p className="text-gray-600">{company_product_name}</p>
             </div>
             <div>
-              <h3 className="font-semibold text-gray-700">Variety:</h3>
-              <p className="text-gray-600">{variety}</p>
+              <h3 className="font-semibold text-gray-700">Description:</h3>
+              <p className="text-gray-600">{company_product_description}</p>
+            </div>
+            <div>
+              <h3 className="font-semibold text-gray-700">Category:</h3>
+              <p className="text-gray-600">{category?.name_category}</p>
             </div>
             <div>
               <h3 className="font-semibold text-gray-700">Origin:</h3>
@@ -41,18 +114,29 @@ const MyProductList: React.FC<MyProductListProps> = ({
             </div>
             <div>
               <h3 className="font-semibold text-gray-700">Harvest Date:</h3>
-              <p className="text-gray-600">{harvestDate}</p>
+              <p className="text-gray-600">{formattedHarvestDate}</p>
+            </div>
+            <div>
+              <h3 className="font-semibold text-gray-700">Stock:</h3>
+              <p className="text-gray-600">{formattedStock}</p>
+            </div>
+            <div>
+              <h3 className="font-semibold text-gray-700">Price per Kg:</h3>
+              <p className="text-gray-600">${company_price_x_kg}</p>
+            </div>
+            <div>
+              <h3 className="font-semibold text-gray-700">Minimum Order:</h3>
+              <p className="text-gray-600">{minimum_order} kg</p>
             </div>
           </div>
         </div>
 
-        {/* Botón de eliminar */}
         <button
-          onClick={() => onDelete(name)}
-          className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-full transition-colors duration-200"
-          aria-label="Delete product"
+          onClick={handleDeleteOrReactivate}
+          className="p-2 text-blue-500 hover:text-blue-700 hover:bg-blue-50 rounded-full transition-colors duration-200"
+          aria-label={isActive ? "Delete product" : "Reactivate product"}
         >
-          <Trash2 size={24} />
+          {isActive ? <Trash2 size={24} /> : <RefreshCw size={24} />}
         </button>
       </div>
     </div>

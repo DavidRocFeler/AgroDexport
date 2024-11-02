@@ -7,6 +7,8 @@ import CarShopComponent from "@/components/CarShopComponent";
 const CarShopView: React.FC = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [products, setProducts] = useState([]);
+    const [units, setUnits] = useState<number>(1); 
+    const [viewType, setViewType] = useState<"carShop" | "ordersView" | "wishListView">("carShop");
 
     useEffect(() => {
         // Función para recuperar CartProduct de localStorage
@@ -28,7 +30,7 @@ const CarShopView: React.FC = () => {
 
     return (
         <>
-            <CarShopComponent products={products} />
+            <CarShopComponent products={products} units={units} viewType={viewType} />
         </>
     );
 }

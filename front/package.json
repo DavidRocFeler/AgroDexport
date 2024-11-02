@@ -11,7 +11,11 @@
   "dependencies": {
     "@next-auth/prisma-adapter": "^1.0.7",
     "@paypal/react-paypal-js": "^8.7.0",
+    "@radix-ui/react-select": "^2.1.2",
+    "@radix-ui/react-slot": "^1.1.0",
     "axios": "^1.7.7",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
     "chart.js": "^4.4.6",
     "crypto-js": "^4.2.0",
     "cx": "^24.10.11",
@@ -31,9 +35,12 @@
     "socket.io-client": "^4.8.1",
     "sweetalert2": "^11.14.3",
     "sweetalert2-react-content": "^5.0.7",
+    "tailwind-merge": "^2.5.4",
+    "tailwindcss-animate": "^1.0.7",
     "zustand": "^5.0.0"
   },
   "devDependencies": {
+    "@shadcn/ui": "^0.0.4",
     "@types/crypto-js": "^4.2.2",
     "@types/js-cookie": "^3.0.6",
     "@types/node": "20.16.12",

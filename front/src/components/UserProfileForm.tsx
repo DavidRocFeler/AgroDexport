@@ -7,7 +7,6 @@ import { useUserStore } from "@/store/useUserStore";
 import Swal from "sweetalert2";
 import { validateUserSettings } from "@/helpers/validateUserSettings";
 import 'react-datepicker/dist/react-datepicker.css';
-import DatePicker from 'react-datepicker';
 
 const UserProfileForm = () => {
   const initialState: ISettingsUserProps = {
@@ -24,7 +23,7 @@ const UserProfileForm = () => {
   const [userData, setUserData] = useState(initialState);
   const [error, setError] = useState<Partial<Record<keyof ISettingsUserProps, string>>>({});
   const [originalData, setOriginalData] = useState<ISettingsUserProps>(userData);
-  const [resetFlag, setResetFlag] = useState(false); // Estado para reiniciar el ciclo de vida
+  const [resetFlag, setResetFlag] = useState(false); 
   const { user_id, token } = useUserStore();
 
   useEffect(() => {
@@ -122,7 +121,7 @@ const UserProfileForm = () => {
   };
 
   const handleCancel = () => {
-    setResetFlag(prev => !prev); // Cambiar el estado para reiniciar el ciclo de vida
+    setResetFlag(prev => !prev);
     setIsEditing(false); 
   };
 

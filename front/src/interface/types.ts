@@ -100,13 +100,15 @@ export interface IAgriProduct {
   carbs: number;
   discount: number;
   farmer_id?: string;
+  isActive?: boolean;
   category?: {
     name_category?: string;
   };
   company?: {
     company_name?: string;
   };
-  quantity?: number; // Agrega esta línea
+  quantity?: number; 
+  onDelete?: (name: string) => void;
 }
 
 export interface IAgriProductErrors {
@@ -252,16 +254,23 @@ export interface IProtectedRouteProps {
   allowedRoles?: string[];
 }
 
-export interface Company {
-  id: number;
-  name: string;
-  role: "Admin" | "User";
-  status: "Active" | "Inactive";
+export interface IShippingAddress {
+  contact_name: string;
+  contact_lastname: string;
+  contact_email: string;
+  address: string;
+  postal_code: string;
+  city: string;
+  state: string;
+  country: string;
 }
 
+export interface ICompanyRegister {
+  user_id: string;
+  company_name: string;
+}
 export interface ISettingsUserProps {
   user_id: string;
-
   user_name?: string;
   user_lastname?: string;
   nDni?: number | any;
@@ -273,6 +282,7 @@ export interface ISettingsUserProps {
     role_name?: string;
   };
   companies?: {
+    company_id?: string;
     company_name?: string;
   }[];
   updatedFields?: Partial<ISettingsUserProps>;
@@ -375,9 +385,9 @@ export interface IUserPanel {
 
 export interface ICompany {
   company_id: string;
-  user_id: string;
+  user_id?: string;
   company_name: string;
-  tax_identification_number: number;
+  tax_identification_number: number | null;
   address: string;
   postal_code: string;
   city: string;
@@ -389,6 +399,9 @@ export interface ICompany {
   company_description?: string;
   company_logo?: string;
   isActive: boolean;
+  shippingAddresses?: {
+    shipping_address_id?: string;
+  }
   user?: {
     role?: {
       role_name: string;

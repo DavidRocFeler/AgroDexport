@@ -61,7 +61,6 @@ const PayPalButtonsComponent: React.FC<PayPalComponentProps> = ({ amount, compan
   );
 };
 
-
 const CarShopComponent: React.FC<ILabelComponentProps> = ({ products }) => {
   const [productList, setProductList] = useState<IAgriProduct[]>(products); 
   const [selectedProduct, setSelectedProduct] = useState<IAgriProduct | null>(null);
@@ -125,9 +124,6 @@ const CarShopComponent: React.FC<ILabelComponentProps> = ({ products }) => {
       return updatedProducts;
     });
   };
-
-
-
  
   const calculateTotals = () => {
     if (!selectedProduct || !selectedProduct.company_price_x_kg || !selectedProduct.quantity) {

@@ -67,12 +67,12 @@ model RolePermission {
 }
 
 model Company {
-  company_id                String                @id @default(uuid())
+  company_id                String              @id @default(uuid())
   user_id                   String
-  company_name              String                @unique @db.VarChar(50)
+  company_name              String              @unique @db.VarChar(50)
   tax_identification_number Int?
-  address                   String?                @db.VarChar(255)
-  postal_code               String?               @db.VarChar(20)
+  address                   String?             @db.VarChar(255)
+  postal_code               String?             @db.VarChar(20)
   city                      String?
   state                     String?
   country                   String?
@@ -81,15 +81,15 @@ model Company {
   account_paypal            String?
   company_description       String?
   company_logo              String?
-  isActive                  Boolean?               @default(true)
-  user                      User                  @relation(fields: [user_id], references: [user_id])
+  isActive                  Boolean?            @default(true)
+  user                      User                @relation(fields: [user_id], references: [user_id])
   products                  CompanyProduct[]
   farmer_certifications     FarmerCertification[]
-  orders_buyer              Order[]               @relation("orderBuyer")
-  orders_supplier           Order[]               @relation("orderSupplier")
+  orders_buyer              Order[]             @relation("orderBuyer")
+  orders_supplier           Order[]             @relation("orderSupplier")
   payment                   Payment?
-  shippingAddresses         ShippingAddress[]
-  supply_chain              SupplyChain?
+  shippingAddress           ShippingAddress?   
+  supply_chain              SupplyChain? 
 
   @@map("companies")
 }
@@ -167,20 +167,20 @@ model CompanyProduct {
 
 model ShippingAddress {
   shipping_address_id String  @id @default(uuid())
-  company_id          String
-  contact_name        String
-  contact_lastname    String
+  company_id          String  @unique
+  contact_name        String?
+  contact_lastname    String?
   contact_phone       String?
-  contact_email       String
+  contact_email       String?
   delivery_hours      String?
-  address             String  @db.VarChar(255)
-  postal_code         String  @db.VarChar(20)
-  city                String
-  state               String
-  country             String
-  isActive            Boolean @default(true)
+  address             String?  @db.VarChar(255)
+  postal_code         String?  @db.VarChar(20)
+  city                String?
+  state               String?
+  country             String?
+  isActive            Boolean  @default(true)
   orders              Order[]
-  company             Company @relation(fields: [company_id], references: [company_id])
+  company             Company?  @relation(fields: [company_id], references: [company_id])
 
   @@map("shipping_addresses")
 }

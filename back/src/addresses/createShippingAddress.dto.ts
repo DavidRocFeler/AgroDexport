@@ -9,19 +9,19 @@ export class CreateShippingAddressDto {
     company_id: string; 
 
     @ApiProperty({ description: 'User first name', example: "Juan", maxLength: 50 })
-    @IsNotEmpty()
+    @IsOptional()
     @Matches(/^[a-zA-ZÀ-ÿÑñ]+$/, { message: 'The first name should only contain letters and no spaces' })
     @Length(1, 50)
     contact_name: string;
   
     @ApiProperty({ description: 'User last name',  example: "Perez", maxLength: 50 })
-    @IsNotEmpty()
+    @IsOptional()
     @Matches(/^[a-zA-ZÀ-ÿÑñ]+$/, { message: 'The last name should only contain letters and no spaces' })
     @Length(1, 50)
     contact_lastname: string;
 
     @ApiProperty({ description: 'User email', example: "luis@example.com", maxLength: 255 })
-    @IsNotEmpty()
+    @IsOptional()
     @IsEmail()
     @Length(1, 255)
     contact_email: string;
@@ -35,7 +35,7 @@ export class CreateShippingAddressDto {
     delivery_hours?: string;
 
     @ApiProperty({ description: 'Address of the company', example: "Camino del Sol 123", maxLength: 255 })
-    @IsNotEmpty({ message: 'The address cannot be empty.' })
+    @IsOptional()
     @IsString({ message: 'The address must be a string.' })
     @Length(1, 255, { message: 'The address must be between 1 and 255 characters.' })
     @Matches(/^[a-zA-Z0-9\s\-,.#/]+$/, { message: 'The address can only contain letters, numbers, spaces, commas, periods, hyphens, and slashes.' })
@@ -43,7 +43,7 @@ export class CreateShippingAddressDto {
     address: string;
 
     @ApiProperty({ description: 'Postal code of the company', example: "111112", maxLength: 20 })
-    @IsNotEmpty({ message: 'The postal code cannot be empty.' })
+    @IsOptional()
     @IsString({ message: 'The postal code must be a string.' })
     @MinLength(1, { message: 'The postal code must have at least 1 character.' })
     @MaxLength(20, { message: 'The postal code cannot exceed 20 characters.' })
@@ -52,7 +52,7 @@ export class CreateShippingAddressDto {
     postal_code: string;
 
     @ApiProperty({ description: 'City where the company is located', example: "Zipaquira" })
-    @IsNotEmpty({ message: 'The city cannot be empty.' })
+    @IsOptional()
     @IsString({ message: 'The city must be a string.' })
     @Length(1, 100, { message: 'The city name must be between 1 and 100 characters.' })
     @Matches(/^[a-zA-Z\s\-\'\.]+$/, { message: 'The city can only contain letters, spaces, hyphens, apostrophes, and periods.' })
@@ -60,7 +60,7 @@ export class CreateShippingAddressDto {
     city: string;
 
     @ApiProperty({ description: 'State where the company is located', example: "Cundinamarca" })
-    @IsNotEmpty({ message: 'The state cannot be empty.' })
+    @IsOptional()
     @IsString({ message: 'The state must be a string.' })
     @Length(1, 100, { message: 'The state name must be between 1 and 100 characters.' })
     @Matches(/^[a-zA-Z\s\-\'\.]+$/, { message: 'The state can only contain letters, spaces, hyphens, apostrophes, and periods.' })
@@ -68,7 +68,7 @@ export class CreateShippingAddressDto {
     state: string;
 
     @ApiProperty({ description: 'Country where the company is located', example: "Colombia" })
-    @IsNotEmpty({ message: 'The country cannot be empty.' }) 
+    @IsOptional()
     @IsString({ message: 'The country must be a string.' })
     @Length(1, 100, { message: 'The country name must be between 1 and 100 characters.' })
     @Matches(/^[a-zA-Z\s\-\'\.]+$/, { message: 'The country can only contain letters, spaces, hyphens, apostrophes, and periods.' })

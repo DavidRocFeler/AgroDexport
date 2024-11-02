@@ -4,7 +4,7 @@ import { Trash2 } from "lucide-react";
 import { ISettingsUserProps } from "@/interface/types";
 
 interface UserCardProps extends ISettingsUserProps {
-  onDelete: (id: string) => void;
+  onDelete: (user_id: string) => void;
 }
 
 const UserCard: React.FC<UserCardProps> = ({

@@ -63,13 +63,19 @@ export class UsersRepository {
   
 
   async getUserById(user_id: string): Promise<User> {
-    const user = await this.prisma.user.findUnique( { where: { user_id } });
+    const user = await this.prisma.user.findUnique({
+        where: { user_id },
+        include: {
+            companies: true, 
+        },
+    });
 
     if (!user) {
-      throw new NotFoundException('User not found'); 
+        throw new NotFoundException('User not found');
     }
     return user;
-  }
+}
+
 
   async createUser(userData: Partial<CreateUserDto>): Promise<User> {
     const { user_name, user_lastname, role_name, isOlder, email, password } = userData;
