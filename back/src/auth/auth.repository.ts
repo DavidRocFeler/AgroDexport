@@ -52,32 +52,37 @@ export class AuthRepository {
     
 
     async thirdSingIn(userData: thirdAuthDto): Promise<{ user_id: string, role_name: string, token: string }> {
-        const { email } = userData;
+      const { email } = userData;
       
-        const credential = await this.userRepository.findCredentialByEmail(email);
+      const credential = await this.userRepository.findCredentialByEmail(email);
       
-        if (credential && credential.user) {
-          const { user_id, role } = credential.user;
-      
-          const userPayload = {
-            sub: user_id,
-            user_id,
-            role: role ? role.role_name : 'No role',
-          };
-          
-          console.log(userPayload);
-      
-          const token = this.jwtService.sign(userPayload);
-          return {
-            token,
-            user_id,
-            role_name: role ? role.role_name : 'No role',
-          };
-
-        } else {
-            throw new UnauthorizedException('User not found. Please register first.');
+      if (credential && credential.user) {
+        // Verificación de si el usuario está activo
+        if (!credential.user.isActive) {
+          throw new UnauthorizedException("Account is inactive. Please contact support.");
         }
+        
+        const { user_id, role } = credential.user;
+    
+        const userPayload = {
+          sub: user_id,
+          user_id,
+          role: role ? role.role_name : 'No role',
+        };
+        
+        console.log(userPayload);
+    
+        const token = this.jwtService.sign(userPayload);
+        return {
+          token,
+          user_id,
+          role_name: role ? role.role_name : 'No role',
+        };
+    
+      } else {
+        throw new UnauthorizedException('User not found. Please register first.');
       }
+    }
       
     
 }

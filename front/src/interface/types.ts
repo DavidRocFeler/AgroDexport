@@ -285,15 +285,35 @@ export interface ISettingsUserProps {
   phone?: string;
   country?: string;
   profile_picture?: string;
+  isActive?: boolean;
   role?: {
     role_name?: string;
   };
+  credential?:{
+    email?: string;
+  }
   companies?: {
-    company_id?: string;
+    company_id: string;
     company_name?: string;
+    country?: string;
+    products?: {
+      company_product_name?: string;
+    }[];
+    orders_buyer?: {
+      orderDetail?: {
+        total?: number;
+        order_status?: string;
+      } | null;
+    }[];
+    orders_supplier?: {
+      orderDetail?: {
+        total?: number;
+        order_status?: string;
+      } | null;
+    }[];
   }[];
   updatedFields?: Partial<ISettingsUserProps>;
-}
+} 
 
 export interface ISettingsPasswordProps {
   password: string;
