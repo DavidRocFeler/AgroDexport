@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, Param, ParseUUIDPipe, Post, Put, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, ParseUUIDPipe, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UsersRepository } from './users.repository';
 import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
@@ -65,5 +65,15 @@ export class UsersController {
         @Param('id', new ParseUUIDPipe()) id: string,
         @Body() updateData: UpdateUserDto) {
         return await this.userServices.updateUserService(id, updateData);
+      }
+
+      @ApiBearerAuth()
+      @HttpCode(200)
+      @Delete(':user_id')
+      @UseGuards(AuthGuard, RolesGuard)
+      @Roles('buyer', 'supplier')
+      async deleteUser(@Param('user_id', new ParseUUIDPipe()) user_id: string): Promise<{ message: string }> {
+          await this.userServices.deleteUserService(user_id);
+          return { message: 'User and related data deleted successfully' };
       }
 }
