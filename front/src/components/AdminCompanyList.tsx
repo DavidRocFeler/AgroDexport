@@ -1,13 +1,30 @@
 "use client";
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import { Bar, Pie } from "react-chartjs-2";
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement } from "chart.js";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  ArcElement,
+} from "chart.js";
 import { getCompanies } from "@/server/adminData";
 import { ICompany } from "@/interface/types";
-import { useUserStore } from '@/store/useUserStore';
-import styles from '../styles/AdminCompanyList.module.css';
+import { useUserStore } from "@/store/useUserStore";
+import styles from "../styles/AdminCompanyList.module.css";
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  ArcElement
+);
 
 const AdminCompanyList: React.FC = () => {
   const [companies, setCompanies] = useState<ICompany[]>([]);
@@ -25,21 +42,16 @@ const AdminCompanyList: React.FC = () => {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      loadCompanies();
-    };
-    fetchData();
-    const interval = setInterval(() => {
-      fetchData();
-    }, 5000); 
-  
-    return () => clearInterval(interval);
+    loadCompanies();
   }, []);
 
-  const countriesData = companies.reduce((acc: Record<string, number>, company) => {
-    acc[company.country] = (acc[company.country] || 0) + 1;
-    return acc;
-  }, {});
+  const countriesData = companies.reduce(
+    (acc: Record<string, number>, company) => {
+      acc[company.country] = (acc[company.country] || 0) + 1;
+      return acc;
+    },
+    {}
+  );
 
   const countryChartData = {
     labels: Object.keys(countriesData),
@@ -65,13 +77,13 @@ const AdminCompanyList: React.FC = () => {
       },
       legend: {
         display: true,
-        position: 'top' as const,
+        position: "top" as const,
       },
     },
     scales: {
       y: {
         beginAtZero: true,
-        suggestedMax: Math.max(...Object.values(countriesData)) + 2, 
+        suggestedMax: Math.max(...Object.values(countriesData)) + 2,
         ticks: {
           stepSize: 1,
         },
@@ -79,7 +91,9 @@ const AdminCompanyList: React.FC = () => {
     },
   };
 
-  const activeCompanies = companies.filter(company => company.isActive).length;
+  const activeCompanies = companies.filter(
+    (company) => company.isActive
+  ).length;
   const inactiveCompanies = companies.length - activeCompanies;
 
   const activityChartData = {
@@ -103,7 +117,11 @@ const AdminCompanyList: React.FC = () => {
     datasets: [
       {
         data: Object.values(roleData),
-        backgroundColor: ["rgba(153, 102, 255, 0.6)", "rgba(255, 159, 64, 0.6)", "rgba(255, 205, 86, 0.6)"],
+        backgroundColor: [
+          "rgba(153, 102, 255, 0.6)",
+          "rgba(255, 159, 64, 0.6)",
+          "rgba(255, 205, 86, 0.6)",
+        ],
       },
     ],
   };
@@ -112,7 +130,7 @@ const AdminCompanyList: React.FC = () => {
     plugins: {
       legend: {
         display: true,
-        position: 'top' as const,
+        position: "top" as const,
       },
       title: {
         display: true,
@@ -125,16 +143,24 @@ const AdminCompanyList: React.FC = () => {
   });
 
   return (
-    <section className={styles.AdminCompanyList}>
+    <section
+      className={`${styles.AdminCompanyList} max-h-[150px] overflow-hidden`}
+    >
       <div className={styles.ChartContainer}>
         <div className={styles.BarChart}>
           <Bar data={countryChartData} options={barChartOptions} />
         </div>
         <div className={styles.PieChart}>
-          <Pie data={activityChartData} options={pieChartOptions("Company Activity Status")} />
+          <Pie
+            data={activityChartData}
+            options={pieChartOptions("Company Activity Status")}
+          />
         </div>
         <div className={styles.PieChart}>
-          <Pie data={roleChartData} options={pieChartOptions("Company Types")} />
+          <Pie
+            data={roleChartData}
+            options={pieChartOptions("Company Types")}
+          />
         </div>
       </div>
     </section>
