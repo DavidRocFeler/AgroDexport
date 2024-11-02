@@ -317,4 +317,76 @@ export class UsersRepository {
       throw error;
     }
   }
+
+      async deleteUser(user_id: string): Promise<void> {
+          await this.prisma.$transaction(async (prisma) => {
+              // Eliminar productos de las compañías del usuario
+              await prisma.companyProduct.deleteMany({
+                  where: {
+                      company: {
+                          user_id,
+                      },
+                  },
+              });
+  
+              // Eliminar direcciones de envío de las compañías del usuario
+              await prisma.shippingAddress.deleteMany({
+                  where: {
+                      company: {
+                          user_id,
+                      },
+                  },
+              });
+  
+              // Eliminar pedidos (Order) asociados a las compañías del usuario como comprador o vendedor
+              await prisma.order.deleteMany({
+                  where: {
+                      OR: [
+                          { id_company_buy: user_id },
+                          { id_company_sell: user_id },
+                      ],
+                  },
+              });
+  
+              // Eliminar las compañías del usuario
+              await prisma.company.deleteMany({
+                  where: {
+                      user_id,
+                  },
+              });
+  
+              // Eliminar notificaciones asociadas al usuario
+              await prisma.notification.deleteMany({
+                  where: {
+                      user_id,
+                  },
+              });
+  
+              // Eliminar la comisión asociada al usuario (si existe)
+              await prisma.commission.delete({
+                  where: {
+                      user_id,
+                  },
+              }).catch(() => {
+                  // Si la comisión no existe, ignora el error
+              });
+  
+              // Eliminar las credenciales del usuario
+              await prisma.credential.delete({
+                  where: {
+                      credential_id: user_id,
+                  },
+              }).catch(() => {
+                  // Si las credenciales no existen, ignora el error
+              });
+  
+              // Finalmente, eliminar el usuario
+              await prisma.user.delete({
+                  where: {
+                      user_id,
+                  },
+              });
+          });
+      }
+  
 }

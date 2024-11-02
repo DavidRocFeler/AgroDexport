@@ -79,7 +79,7 @@ model Company {
   country                   String?
   industry                  String?
   website                   String?
-  account_paypal            String?
+  account_paypal            String?             @default("ATUWOIjpu_gq_k6k28V2zGm2DRCGdv_5PfrJ_J1H38xze2IGLtMXhDMUJWLqsYwAqSxfJkyzqODmKBCx")
   company_description       String?
   company_logo              String?
   isActive                  Boolean?            @default(true)

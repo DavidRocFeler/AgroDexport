@@ -28,4 +28,8 @@ export class UsersService {
         validateRequestBodyNotEmpty(updateData);
             return await this.userRepository.updateUser(id, updateData);
         }      
+
+        async deleteUserService(user_id: string): Promise<void> {
+          await this.userRepository.deleteUser(user_id);
+      }
 }
