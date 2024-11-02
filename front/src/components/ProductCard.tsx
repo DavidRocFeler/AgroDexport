@@ -4,7 +4,7 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
-const ProductCard: React.FC<IAgriProduct> = ({company_product_id ,company_id, carbs, fat, calories, protein, category_id, stock, minimum_order, harvest_date, company_product_name, company_product_img, company_product_description, company_price_x_kg}) => {
+const ProductCard: React.FC<IAgriProduct> = ({company_product_id ,company_id, carbs, fat, calories, protein, category_id, stock, minimum_order, harvest_date, company_product_name, company_product_img, company_product_description, company_price_x_kg, discount}) => {
   
   const router = useRouter();
     const handleButtonProduct = () => {
@@ -25,10 +25,11 @@ const ProductCard: React.FC<IAgriProduct> = ({company_product_id ,company_id, ca
           fat,
           protein,
           carbs,
+          discount
         };
         localStorage.setItem("selectedProduct", JSON.stringify(product));
 
-        //guardar category por separado
+        //guardar company por separado
         localStorage.setItem("companyId", company_id);
 
          //guardar product ID por separado

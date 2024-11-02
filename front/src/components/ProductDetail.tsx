@@ -6,7 +6,7 @@ import { exampleProduct } from "@/helpers/Product.helpers";
 import { useRouter } from "next/navigation";
 
 const ProductDetail: React.FC<IAgriProduct> = ({
-  carbs, fat, calories, protein, category_id, stock, minimum_order, harvest_date, company_product_name, company_product_img, company_product_description, company_price_x_kg, origin
+  carbs, fat, calories, protein, category_id, stock, minimum_order, harvest_date, company_product_name, company_product_img, company_product_description, company_price_x_kg, origin, discount
 }) => {
   const { shippingOptions, certifications } = exampleProduct;
   const { method, deliveryTime, seaFreight } = shippingOptions

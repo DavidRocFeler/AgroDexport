@@ -2,11 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
-import { ILabelComponentProps, IAgriProduct } from '@/interface/types';
+import { ILabelComponentProps, IAgriProduct, IOrderDetail } from '@/interface/types';
 import { LabelComponent } from './LabelComponent';
 import ResumeShopComponent from './ResumeShopComponent';
+import { useUserStore } from "@/store/useUserStore";
+import { cancelOrder, createOrder, fetchCompanyData, finishedOrder } from '@/server/postOrder';
+import { useRouter } from 'next/navigation'; 
+
 
 const MySwal = withReactContent(Swal);
+
 
 interface PayPalComponentProps {
   amount: number;
@@ -62,6 +67,14 @@ const CarShopComponent: React.FC<ILabelComponentProps> = ({ products }) => {
   const [selectedProduct, setSelectedProduct] = useState<IAgriProduct | null>(null);
   const [companyData, setCompanyData] = useState<any>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const { role_name, token, user_id } = useUserStore();
+  const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(null);
+  const handleCompanySelect = (companyId: string) => {
+    setSelectedCompanyId(companyId); // Actualiza el estado con el ID de la compañía seleccionada
+  };
+  const router = useRouter();
+ 
+  
 
   const handleQuantityChange = (productId: string, quantity: number) => {
     setProductList((prevProducts) => {
@@ -122,7 +135,8 @@ const CarShopComponent: React.FC<ILabelComponentProps> = ({ products }) => {
         subtotal: 0, 
         logisticsCost: 0, 
         tariff: 0, 
-        tax: 0, 
+        tax: 0,
+        discount: 0, 
         total: 0,
         productData: null 
       };
@@ -132,14 +146,18 @@ const CarShopComponent: React.FC<ILabelComponentProps> = ({ products }) => {
     const logisticsCost = subtotal * 0.2;
     const tariff = (subtotal + logisticsCost) * 0.1;
     const tax = logisticsCost + (logisticsCost * 0.18);
-    const suma = subtotal + logisticsCost + tariff + tax;
+    const discount = (selectedProduct.discount / 100) * subtotal; 
+    const suma = subtotal + logisticsCost + tariff + tax - discount ;
     const total = parseFloat(suma.toFixed(2))
+   
+    
 
     return {
       subtotal,
       logisticsCost,
       tariff,
       tax,
+      discount,
       total,
       productData: {
         company_id: selectedProduct.company_id,
@@ -149,60 +167,93 @@ const CarShopComponent: React.FC<ILabelComponentProps> = ({ products }) => {
 
   const fetchCreateOrder = async () => {
 
-      
+    if (!selectedProduct) return;
 
-  }
+    const totals = calculateTotals();
+   
+  
+    const orderDetail: IOrderDetail = {
+      company_buyer_id: selectedCompanyId,
+      company_supplier_id: selectedProduct.company_id,
+      product_one_id: selectedProduct.company_product_id,
+      quantity_product_one: selectedProduct.quantity,
+      subtotal: totals.subtotal,
+      logistic_cost: totals.logisticsCost,
+      tariff: totals.tariff,
+      tax: totals.tax,
+      discount: totals.discount,
+      total: totals.total,
+    };
 
-  const fetchCompanyData = async (companyId: string) => {
     try {
-      const response = await fetch(`http://localhost:3002/companies/user/accountPaypal/${companyId}`);
-      const data = await response.json()
-      setCompanyData(data); 
+      const createdOrder = await createOrder (orderDetail, token);
+      console.log('Order created successfully:', createdOrder);
+
+      const orderId = createdOrder.order.order_id
+      console.log('Order ID:', orderId);
+
+      await MySwal.fire({
+        icon: 'success',
+        title: 'Order Successful',
+        text: 'Your order has been created successfully.',
+      });
+      handlePaymentProcess(orderId, token);
     } catch (error) {
-      console.error("Error fetching company data:", error);
+      console.error('Error creating order:', error);
       MySwal.fire({
         icon: 'error',
-        title: 'Error loading company data',
-        text: 'Could not load company information. Please try again later.',
+        title: 'Order Error',
+        text: 'There was an error creating your order. Please try again later.',
       });
     }
-  };
+    
+  }
 
-
-  const handlePaymentProcess = async () => {
+      
+  const handlePaymentProcess = async (orderId: string, token: any ) => {
     if (!selectedProduct || isProcessing) return;
   
     setIsProcessing(true);
+    let isPaymentSuccessful = false;
     try {
       
-      await fetchCompanyData(selectedProduct.company_id);
-      const companyId = selectedProduct.company_id; 
-      const companyAccount = companyData.account_paypal
-  
+      const paypal = await fetchCompanyData(selectedProduct.company_id);
+      const companyAccount = paypal;
   
       if (!companyAccount) {
         throw new Error('PayPal account not found for this company');
       }
   
-      const totals = calculateTotals();
       
+      const totals = calculateTotals();
+  
       if (totals.productData) {
+        // Mostrar el modal de SweetAlert con solo el botón de cancelar
         MySwal.fire({
           title: 'Complete Your Payment',
           html: (
             <PayPalScriptProvider
               options={{
-                clientId: companyAccount, 
+                clientId: companyAccount,
                 currency: "USD",
                 intent: "capture",
               }}
             >
               <PayPalButtonsComponent
                 amount={totals.total}
-                companyId={totals.productData.company_id} 
-                onSuccess={(details) => {
-                  console.log('Payment successful:', details);
+                companyId={totals.productData.company_id}
+                onSuccess={async (details) => {
+                  console.log(details)
+                  isPaymentSuccessful = true; // Marcar el pago como exitoso
+                  await finishedOrder(orderId, token);
+                  handleRemoveProduct(selectedProduct.company_product_id);
+                  await MySwal.fire({
+                    icon: 'success',
+                    title: 'Pago exitoso',
+                    text: 'El pago se completó con éxito.',
+                  });
                   MySwal.close();
+                  router.push("/orderstatus")
                 }}
                 onError={(error) => {
                   console.error('Payment failed:', error);
@@ -215,16 +266,35 @@ const CarShopComponent: React.FC<ILabelComponentProps> = ({ products }) => {
               />
             </PayPalScriptProvider>
           ),
-          showConfirmButton: false,
+          showCancelButton: true, // Solo botón de cancelar
+          cancelButtonText: 'Cancelar Pago',
+          showConfirmButton: false, // Ocultar botón de confirmación
           showCloseButton: true,
           customClass: {
             popup: 'paypal-popup-class',
           },
+          didClose: async () => {
+            if (!isPaymentSuccessful) {
+              await cancelOrder(orderId, token);
+            }
+            setIsProcessing(false);
+          }
+        }).then(async (result) => {
+          if (result.isDismissed && !isPaymentSuccessful) {
+            await cancelOrder(orderId, token);
+            MySwal.fire({
+              icon: 'info',
+              title: 'Pago Cancelado',
+              text: 'El proceso de pago fue cancelado.',
+            });
+            setIsProcessing(false); // Restaurar el estado de procesamiento
+          }
         });
       } else {
         throw new Error('Product data is not available.');
       }
     } catch (error) {
+      // Mostrar mensaje de error
       MySwal.fire({
         icon: 'error',
         title: 'Payment Error',
@@ -234,6 +304,7 @@ const CarShopComponent: React.FC<ILabelComponentProps> = ({ products }) => {
       setIsProcessing(false);
     }
   };
+  
   
 
   useEffect(() => {
@@ -268,8 +339,9 @@ const CarShopComponent: React.FC<ILabelComponentProps> = ({ products }) => {
       <div className="ml-auto w-[30%] flex flex-row justify-center">
         <ResumeShopComponent 
           totals={calculateTotals()} 
-          onOrderClick={handlePaymentProcess}
+          onOrderClick={fetchCreateOrder}
           isProductSelected={!!selectedProduct}
+          onCompanySelect={handleCompanySelect}
         />
       </div>
     </div>

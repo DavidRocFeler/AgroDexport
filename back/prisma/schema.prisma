@@ -230,7 +230,11 @@ model Order {
 
 model OrderDetail {
   order_details_id      String                  @id @default(uuid())
-  iva                   Float
+  subtotal              Float
+  logistic_cost         Float
+  tariff                Float
+  tax                   Float
+  discount              Float    
   total                 Float
   order_status          String
   order                 Order?
