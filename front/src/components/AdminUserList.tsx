@@ -1,13 +1,30 @@
 "use client";
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import { Bar, Pie, Doughnut } from "react-chartjs-2";
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement } from "chart.js";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  ArcElement,
+} from "chart.js";
 import { getUsers } from "@/server/adminData";
 import { ISettingsUserProps } from "@/interface/types";
-import { useUserStore } from '@/store/useUserStore';
-import styles from '../styles/AdminUserList.module.css';
+import { useUserStore } from "@/store/useUserStore";
+import styles from "../styles/AdminUserList.module.css";
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  ArcElement
+);
 
 const AdminUserList: React.FC = () => {
   const [users, setUsers] = useState<ISettingsUserProps[]>([]);
@@ -25,17 +42,8 @@ const AdminUserList: React.FC = () => {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      loadUsers();
-    };
-    fetchData();
-    const interval = setInterval(() => {
-      fetchData();
-    }, 5000); 
-  
-    return () => clearInterval(interval);
+    loadUsers();
   }, []);
-
 
   const countriesData = users.reduce((acc: Record<string, number>, user) => {
     if (user.country) {
@@ -68,7 +76,7 @@ const AdminUserList: React.FC = () => {
       },
       legend: {
         display: true,
-        position: 'top' as const,
+        position: "top" as const,
       },
     },
     scales: {
@@ -82,7 +90,9 @@ const AdminUserList: React.FC = () => {
     },
   };
 
-  const completedProfiles = users.filter(user => user.country && user.user_name && user.user_lastname && user.nDni).length;
+  const completedProfiles = users.filter(
+    (user) => user.country && user.user_name && user.user_lastname && user.nDni
+  ).length;
   const incompleteProfiles = users.length - completedProfiles;
 
   const profileChartData = {
@@ -109,8 +119,16 @@ const AdminUserList: React.FC = () => {
     labels: ["Buyer", "Supplier", "No Company"],
     datasets: [
       {
-        data: [userTypeData["buyer"] || 0, userTypeData["supplier"] || 0, userTypeData["No Company"] || 0],
-        backgroundColor: ["rgba(153, 102, 255, 0.6)", "rgba(255, 159, 64, 0.6)", "rgba(255, 205, 86, 0.6)"],
+        data: [
+          userTypeData["buyer"] || 0,
+          userTypeData["supplier"] || 0,
+          userTypeData["No Company"] || 0,
+        ],
+        backgroundColor: [
+          "rgba(153, 102, 255, 0.6)",
+          "rgba(255, 159, 64, 0.6)",
+          "rgba(255, 205, 86, 0.6)",
+        ],
       },
     ],
   };
@@ -119,7 +137,7 @@ const AdminUserList: React.FC = () => {
     plugins: {
       legend: {
         display: true,
-        position: 'top' as const,
+        position: "top" as const,
       },
       title: {
         display: true,
@@ -132,16 +150,25 @@ const AdminUserList: React.FC = () => {
   });
 
   return (
-    <section className={styles.AdminUserList}>
+    <section
+      className={`${styles.AdminUserList} max-h-[150px] overflow-hidden`}
+    >
+      {/* // <section className={styles.AdminUserList}> */}
       <div className={styles.ChartContainer}>
         <div className={styles.BarChart}>
           <Bar data={countryChartData} options={barChartOptions} />
         </div>
         <div className={styles.PieChart}>
-          <Pie data={profileChartData} options={pieChartOptions("Profile Completion Status")} />
+          <Pie
+            data={profileChartData}
+            options={pieChartOptions("Profile Completion Status")}
+          />
         </div>
         <div className={styles.PieChart}>
-          <Doughnut data={userTypeChartData} options={pieChartOptions("User Types")} />
+          <Doughnut
+            data={userTypeChartData}
+            options={pieChartOptions("User Types")}
+          />
         </div>
       </div>
     </section>
