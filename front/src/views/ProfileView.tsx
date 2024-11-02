@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import UserProfileForm from "../components/UserProfileForm";
 import PasswordProfileForm from "@/components/PasswordSettingConfig";
 import Paypal from "@/components/Paypal";
+import { usePathname } from "next/navigation";
 import { useUserStore } from "@/store/useUserStore";
 import { uploadImageToCloudinary } from "@/server/cloudinarySetting"
 import { getUserSettings } from "@/server/getUserSettings"
@@ -20,6 +21,7 @@ const ProfileView: React.FC = () => {
   const [userIdExists, setUserIdExists] = useState(false);
   const [companyIdExists, setCompanyIdExists] = useState(false);
   const [ company_id, setCompany_id ] = useState<string | null>(null);
+  const pathname = usePathname();
   
   useEffect(() => {
     const storageCompanyId = localStorage.getItem("company_id");
@@ -154,6 +156,14 @@ const ProfileView: React.FC = () => {
     }
   };
 
+    useEffect(() => {
+      return () => {
+          // Eliminar user_id y company_id de localStorage
+          localStorage.removeItem("user_id");
+          localStorage.removeItem("company_id");
+      };
+    }, [pathname]);
+
     React.useEffect(() => {
     setIsHydrated(true);
     }, []);
@@ -222,94 +232,94 @@ const ProfileView: React.FC = () => {
         );
       }
 
-  return (
-    <div className="min-h-screen bg-gradient-to-b pb-[2rem] from-blue-100 to-blue-200">
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Header Section with Profile and Companies */}
-        <div className="mb-[2rem] mt-[2rem] flex flex-row">
-          {/* Companies List Section */}
-          <div className="bg-white h-[15rem] rounded-2xl shadow-lg w-[23%]">
-            <StackedCompanyCards/>
-          </div>
-
-          {/* Profile Section */}
-          <div className="m-auto mb-[2.1rem] w-fit flex flex-col items-center space-y-4 relative">
-            <img
-              className="w-60 h-60 rounded-full object-cover border-4"
-              src={profileImage}
-              alt="Profile"
-            />
-            {/* Pencil Icon Button */}
-            <div className="absolute bottom-0 right-0 mb-4 mr-4">
-              <label htmlFor="profile-upload" className="cursor-pointer">
-                <div className="bg-white p-2 rounded-full shadow-md">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    className="w-6 h-6 text-gray-600"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M15.232 5.232l3.536 3.536M9 13.5l3.535-3.535m0 0L6.5 21.5H3v-3.5L15.232 5.232z"
-                    />
-                  </svg>
-                </div>
-                <input
-                  id="profile-upload"
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file && user_id) {
-                      handleImageUpload(file, "user", user_id); 
-                    }
-                  }}
-                />
-              </label>
+    return (
+      <div className="min-h-screen bg-gradient-to-b pb-[2rem] from-blue-100 to-blue-200">
+        <div className="max-w-7xl mx-auto px-4 py-8">
+          {/* Header Section with Profile and Companies */}
+          <div className="mb-[2rem] mt-[2rem] flex flex-row">
+            {/* Companies List Section */}
+            <div className="bg-white h-[15rem] rounded-2xl shadow-lg w-[23%]">
+              <StackedCompanyCards/>
             </div>
-          </div>
-        </div>
 
-        {/* Main Content Section */}
-        <div className="grid grid-cols-12 gap-8">
-          {/* Navigation Menu */}
-          <div className="col-span-3">
-            <div className="bg-white rounded-2xl shadow-lg p-4 h-[500px] relative">
-              <div className="space-y-10 mt-1 w-full">
-                {renderButtons()}
-                <img
-                  src="/LogoTypographic.png"
-                  alt="Logo"
-                  className="absolute bottom-5 left-0 items-center flex flex-row justify-center text-white font-medium py-2 px-6 rounded-lg transition-colors"
-                />
+            {/* Profile Section */}
+            <div className="m-auto mb-[2.1rem] w-fit flex flex-col items-center space-y-4 relative">
+              <img
+                className="w-60 h-60 rounded-full object-cover border-4"
+                src={profileImage}
+                alt="Profile"
+              />
+              {/* Pencil Icon Button */}
+              <div className="absolute bottom-0 right-0 mb-4 mr-4">
+                <label htmlFor="profile-upload" className="cursor-pointer">
+                  <div className="bg-white p-2 rounded-full shadow-md">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      className="w-6 h-6 text-gray-600"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M15.232 5.232l3.536 3.536M9 13.5l3.535-3.535m0 0L6.5 21.5H3v-3.5L15.232 5.232z"
+                      />
+                    </svg>
+                  </div>
+                  <input
+                    id="profile-upload"
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file && user_id) {
+                        handleImageUpload(file, "user", user_id); 
+                      }
+                    }}
+                  />
+                </label>
               </div>
             </div>
           </div>
 
-          {/* Content Area */}
-          <div className="col-span-9">
-            <div className="bg-white rounded-2xl shadow-lg p-8 h-[500px]">
-              <div className="h-full flex flex-col justify-between">
-                <div className="flex-1 flex items-center justify-center text-gray-500">
-                  {activeSection === "Information contact" && <UserProfileForm />}
-                  {activeSection === "Security settings" && <PasswordProfileForm />}
-                  {activeSection === "Payments method" && <Paypal />}
-                  {activeSection === "Company information" && <CompanyForms />}
-                  {activeSection === "Warehouse address" && <ShippingAddressForm />}
+          {/* Main Content Section */}
+          <div className="grid grid-cols-12 gap-8">
+            {/* Navigation Menu */}
+            <div className="col-span-3">
+              <div className="bg-white rounded-2xl shadow-lg p-4 h-[500px] relative">
+                <div className="space-y-10 mt-1 w-full">
+                  {renderButtons()}
+                  <img
+                    src="/LogoTypographic.png"
+                    alt="Logo"
+                    className="absolute bottom-5 left-0 items-center flex flex-row justify-center text-white font-medium py-2 px-6 rounded-lg transition-colors"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Content Area */}
+            <div className="col-span-9">
+              <div className="bg-white rounded-2xl shadow-lg p-8 h-[500px]">
+                <div className="h-full flex flex-col justify-between">
+                  <div className="flex-1 flex items-center justify-center text-gray-500">
+                    {activeSection === "Information contact" && <UserProfileForm />}
+                    {activeSection === "Security settings" && <PasswordProfileForm />}
+                    {activeSection === "Payments method" && <Paypal />}
+                    {activeSection === "Company information" && <CompanyForms />}
+                    {activeSection === "Warehouse address" && <ShippingAddressForm />}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  );
-};
+    );
+  };
 
 export default ProfileView;
 

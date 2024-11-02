@@ -6,6 +6,8 @@ import { updateShippingAddress } from "@/server/updateShippingAddress";
 import { useUserStore } from "@/store/useUserStore";
 import Swal from "sweetalert2";
 import { validateShippingAddress } from "@/helpers/validateShippingAddress";
+import { getCompanyByUser } from "@/server/getCompanyByUser";
+import { getCompanySettings } from "@/server/getCompanyById";
 
 const ShippingAddressForm = () => {
   const initialState: IShippingAddress = {
@@ -26,20 +28,35 @@ const ShippingAddressForm = () => {
   const company_id = localStorage.getItem("company_id");
 
   useEffect(() => {
-    const fetchShippingAddressSettings = async () => {
-      if (company_id && token) {
-        try {
-          const data = await getShippingAddressByCompany(company_id, token);
-          setShippingData(data);
-          setOriginalData(data);
-        } catch (error) {
-          console.error('Error fetching shipping address settings:', error);
+      const fetchingCompanyByUser = async () => {
+        console.log("Fetching company by user...");
+        if ( company_id && token ) {
+          try {
+            await getCompanySettings(company_id, token)
+           
+          } catch (error) {
+            console.error("failed fetchibg objet company", error)
+          }
         }
       }
-    };
+      fetchingCompanyByUser();
+  }, [company_id, token])
 
-    fetchShippingAddressSettings();
-  }, [user_id, token]);
+  // useEffect(() => {
+  //   const fetchShippingAddressSettings = async () => {
+  //     if (company_id && token) {
+  //       try {
+  //         const data = await getShippingAddressByCompany(company_id, token);
+  //         setShippingData(data);
+  //         setOriginalData(data);
+  //       } catch (error) {
+  //         console.error('Error fetching shipping address settings:', error);
+  //       }
+  //     }
+  //   };
+
+  //   fetchShippingAddressSettings();
+  // }, [user_id, token]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;

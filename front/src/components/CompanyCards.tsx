@@ -6,6 +6,8 @@ import { getCompanyByUser } from '@/server/getCompanyByUser';
 import { ICompany } from '@/interface/types';
 
 const StackedCompanyCards: React.FC = () => {
+  // Agregamos un nuevo estado para controlar la vista
+  const [showInitialView, setShowInitialView] = useState<boolean>(true);
   const [selectedCompany, setSelectedCompany] = useState<string>("");
   const [companiesData, setCompaniesData] = useState<ICompany[]>([]);
   const [message, setMessage] = useState<string>("Select a company to see details");
@@ -18,7 +20,6 @@ const StackedCompanyCards: React.FC = () => {
   };
 
   useEffect(() => {
-    // Guardar user_id en localStorage al montar el componente
     if (user_id) {
       localStorage.setItem("user_id", user_id);
     }
@@ -72,25 +73,70 @@ const StackedCompanyCards: React.FC = () => {
     }
   };
 
-  // Actualiza el localStorage cuando se selecciona una compañía
   useEffect(() => {
     if (selectedCompany) {
-      // Elimina el user_id si existe y añade el company_id
+      setShowInitialView(false); // Ocultar la vista inicial cuando se selecciona una compañía
       localStorage.removeItem("user_id");
       localStorage.setItem("company_id", selectedCompany);
     }
   }, [selectedCompany]);
 
-  // Maneja el clic en el botón User
   const handleUserButtonClick = () => {
-    // Elimina el company_id si existe y establece el user_id
     localStorage.removeItem("company_id");
     localStorage.setItem("user_id", user_id!);
-    
-    // Resetea la selección de compañía y el mensaje
-    setSelectedCompany(""); // Limpia la selección de compañía
-    setMessage("Select a company to see details"); // Resetea el mensaje
+    setSelectedCompany("");
+    setMessage("Select a company to see details");
+    setShowInitialView(true); // Mostrar la vista inicial al hacer clic en User
   };
+
+  // Extraemos la vista inicial a un componente separado para mejor organización
+  const InitialView = () => (
+    <div>
+      <p className="text-gray-500">{message}</p> 
+      <button
+        onClick={handleAddCompany}
+        className="text-sm text-blue-600 hover:text-blue-800 font-medium"
+      >
+        Add
+      </button>
+      <span className="text-gray-300">|</span>
+      <button
+        onClick={handleRemoveCompany}
+        className="text-sm text-red-600 hover:text-red-800 font-medium"
+      >
+        Remove
+      </button>    
+    </div>
+  );
+
+  // Extraemos la vista de la compañía seleccionada a un componente separado
+  const CompanyView = () => (
+    <div className="absolute w-full transition-all duration-300 ease-in-out z-30 translate-y-0 opacity-100 hover:translate-y-0 hover:z-40">
+      <div className="bg-white rounded-lg p-4 border border-gray-200 hover:border-gray-300 shadow-md">
+        <div className="flex justify-between items-start">
+          <div className="space-y-1">
+            <h5 className="font-medium text-gray-900">{selectedCompanyData?.company_name}</h5>
+            <p className="text-sm text-gray-600">{capitalizeFirstLetter(role_name)}</p>
+          </div>
+        </div>
+        <div className="mt-3 flex gap-2">
+          <button
+            onClick={handleAddCompany}
+            className="text-sm text-blue-600 hover:text-blue-800 font-medium"
+          >
+            Add
+          </button>
+          <span className="text-gray-300">|</span>
+          <button
+            onClick={handleRemoveCompany}
+            className="text-sm text-red-600 hover:text-red-800 font-medium"
+          >
+            Remove
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <div className="relative w-full max-w-md p-6">
@@ -111,35 +157,7 @@ const StackedCompanyCards: React.FC = () => {
       </div>
 
       <div className="relative h-72">
-        {selectedCompanyData ? (
-          <div className="absolute w-full transition-all duration-300 ease-in-out z-30 translate-y-0 opacity-100 hover:translate-y-0 hover:z-40">
-            <div className="bg-white rounded-lg p-4 border border-gray-200 hover:border-gray-300 shadow-md">
-              <div className="flex justify-between items-start">
-                <div className="space-y-1">
-                  <h5 className="font-medium text-gray-900">{selectedCompanyData.company_name}</h5>
-                  <p className="text-sm text-gray-600">{capitalizeFirstLetter(role_name)}</p>
-                </div>
-              </div>
-              <div className="mt-3 flex gap-2">
-                <button
-                  onClick={handleAddCompany}
-                  className="text-sm text-blue-600 hover:text-blue-800 font-medium"
-                >
-                  Add
-                </button>
-                <span className="text-gray-300">|</span>
-                <button
-                  onClick={handleRemoveCompany}
-                  className="text-sm text-red-600 hover:text-red-800 font-medium"
-                >
-                  Remove
-                </button>
-              </div>
-            </div>
-          </div>
-        ) : (
-          <p className="text-gray-500">{message}</p> // Muestra el mensaje de selección
-        )}
+        {showInitialView ? <InitialView /> : <CompanyView />}
       </div>
     </div>
   );
