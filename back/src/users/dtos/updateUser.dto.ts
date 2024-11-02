@@ -1,5 +1,5 @@
 import { ApiProperty, PartialType } from "@nestjs/swagger";
-import { IsInt, IsOptional, IsString } from "class-validator";
+import { IsBoolean, IsInt, IsOptional, IsString } from "class-validator";
 import { CreateUserDto } from "./createUser.dto";
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {
@@ -43,4 +43,9 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
     @IsOptional()
     @IsString()
     profile_picture?: string;
+
+    @ApiProperty({ description: 'Indicates whether the User is active or inactive'})
+    @IsOptional() 
+    @IsBoolean({ message: 'The isActive field must be a boolean value.' }) 
+    isActive?: boolean; 
 }  
