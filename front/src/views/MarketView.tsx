@@ -5,6 +5,7 @@ import Image from 'next/image';
 import ProductCard from '@/components/ProductCard';
 import { getProductDB } from '@/server/getProduct';
 import { IAgriProduct } from '@/interface/types';
+import { ArrowRight, ArrowLeft } from 'lucide-react';
 
 const MarketView: React.FC = () => {
   const [products, setProducts] = useState<IAgriProduct[]>([]);
@@ -53,7 +54,10 @@ const MarketView: React.FC = () => {
 
   return (
     <div className='pb-[3rem]' style={{ background: "white" }}>
-      <Image src="/ImgMarketView.png" alt="Market View" layout="responsive" width={500} height={300} />
+      <div className='relative'>
+        <Image src="https://res.cloudinary.com/deflfnoba/image/upload/v1730597274/Front/zacjtoy7yhx5bbms8ckg.png" alt="Market View" layout="responsive" width={500} height={300} />
+        <p className='text-[5rem] text-white w-[30rem] leading-[5rem] absolute top-[5rem] left-[4rem] ' style={{fontFamily: 'Times New Roman'}}> Track your product in real time </p>
+      </div>
       <ProductSearch onFilterChange={handleFilterChange} />
       
       <div className='w-[95%] m-auto'>
@@ -62,7 +66,7 @@ const MarketView: React.FC = () => {
         ) : (
           <>
             {products.length > 0 ? (
-              <div className='border-black border-[1px] border-solid relative overflow-hidden'>
+              <div className='relative overflow-hidden'>
                 <div className='flex transition-transform duration-500 ease-in-out' 
                      style={{ transform: `translateX(-${currentPage * 100}%)` }}>
                   {Array.from({ length: Math.ceil(products.length / PRODUCTS_PER_PAGE) }).map((_, pageIndex) => (
@@ -71,7 +75,7 @@ const MarketView: React.FC = () => {
                       className='w-full flex-shrink-0'
                       style={{ minWidth: '100%' }}
                     >
-                      <div className='grid grid-cols-4 gap-y-[3rem] gap-x-[3rem] p-6'>
+                      <div className='grid grid-cols-4 gap-y-[3rem] gap-x-[3rem]'>
                         {products
                           .slice(pageIndex * PRODUCTS_PER_PAGE, (pageIndex + 1) * PRODUCTS_PER_PAGE)
                           .map((product) => (
@@ -85,13 +89,13 @@ const MarketView: React.FC = () => {
                   ))}
                 </div>
 
-                <div className="flex justify-between px-8 mt-6">
+                <div className="flex justify-between px-8 mt-[4rem] ">
                   <button 
                     onClick={goLeft} 
                     disabled={!canGoLeft}
-                    className={`px-4 py-2 rounded bg-green-500 text-white ${!canGoLeft ? 'opacity-50 cursor-not-allowed' : 'hover:bg-green-600'}`}
+                    className={`px-4 py-2 rounded flex flex-row bg-[#5c8b1b] text-white ${!canGoLeft ? 'opacity-50' : 'hover:bg-[#6ea520]'}`}
                   >
-                    ← Prev
+                    <ArrowLeft/> Prev
                   </button>
                   <span className="py-2">
                     {currentPage + 1} - {Math.ceil(products.length / PRODUCTS_PER_PAGE)}
@@ -99,9 +103,9 @@ const MarketView: React.FC = () => {
                   <button 
                     onClick={goRight} 
                     disabled={!canGoRight}
-                    className={`px-4 py-2 rounded bg-green-500 text-white ${!canGoRight ? 'opacity-50 cursor-not-allowed' : 'hover:bg-green-600'}`}
+                    className={`px-4 py-2 rounded flex flex-row bg-[#5c8b1b] text-white ${!canGoRight ? 'opacity-50' : 'hover:bg-[#6ea520]'}`}
                   >
-                    Next →
+                    Next <ArrowRight/>
                   </button>
                 </div>
               </div>

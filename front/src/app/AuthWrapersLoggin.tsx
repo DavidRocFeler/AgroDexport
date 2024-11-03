@@ -7,7 +7,7 @@ import { logginAuthProps } from "@/server/loginHelpers";
 import { IAuthWrapperProps } from "@/interface/types";
 import { useAuthThirdStore } from "@/store/useAuthThirdStore";
 import { useUserStore } from "@/store/useUserStore";
-import { useSessionStore } from "@/store/useSessionStore"; // Importa el store para la sesión de Google
+import { useSessionStore } from "@/store/useSessionStore";
 
 const AuthWrapperLoggin: React.FC<IAuthWrapperProps> = ({ children }) => {
     const router = useRouter();
@@ -69,6 +69,7 @@ const AuthWrapperLoggin: React.FC<IAuthWrapperProps> = ({ children }) => {
         }
     }, [authSession, router, clearAllSessions, resetInitialization, setUserData, isLoggedIn]);
 
+    
     return <>{children}</>;
 };
 

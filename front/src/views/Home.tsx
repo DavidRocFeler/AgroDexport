@@ -3,11 +3,13 @@ import React from "react";
 import Link from "next/link";
 import styles from "../styles/Home.module.css";
 import { useEffect, useCallback } from "react";
-
 import { useSession } from "next-auth/react";
 import { registerAuthProps } from "@/server/signUpHelpers";
 import { useAuthThirdStore } from "@/store/useAuthThirdStore";
 import Swal from "sweetalert2";
+import useUserSettingsStore from "@/store/useUserSettingsStore";
+import { getUserSettings } from "@/server/getUserSettings";
+import { useUserStore } from "@/store/useUserStore";
 
 const HomeView: React.FC = () => {
   const {
@@ -21,6 +23,8 @@ const HomeView: React.FC = () => {
   } = useAuthThirdStore();
   // const { setUserData } = useUserStore();
   const { data: session, status: sessionStatus } = useSession();
+  const setGlobalUserSettings = useUserSettingsStore((state) => state.setUserSettings);
+  const { user_id, token } = useUserStore();
 
   const handleBackendRegistration = useCallback(async () => {
     if (googleSession && !isSessionSent && hasInitialized) {
@@ -93,6 +97,22 @@ const HomeView: React.FC = () => {
       role: localStorage.getItem("userRole"),
     });
   }, [sessionStatus, googleSession, isSessionSent, hasInitialized]);
+
+  useEffect(() => {
+    const fetchUserSettings = async () => {
+      if (user_id && token) {
+        try {
+          const settings = await getUserSettings(user_id, token);
+          setGlobalUserSettings(settings);
+        } catch (error) {
+          console.error("Error getting user data:", error);
+        }
+      }
+    };
+
+    fetchUserSettings();
+  }, [user_id, token])
+
 
   return (
     <div

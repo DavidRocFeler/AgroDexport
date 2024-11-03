@@ -21,6 +21,7 @@ const ProfileView: React.FC = () => {
   const [userIdExists, setUserIdExists] = useState(false);
   const [companyIdExists, setCompanyIdExists] = useState(false);
   const [ company_id, setCompany_id ] = useState<string | null>(null);
+  const [showUserProfile, setShowUserProfile] = useState(false);
   const pathname = usePathname();
   
   useEffect(() => {
@@ -123,6 +124,13 @@ const ProfileView: React.FC = () => {
     };
   }, [companyIdExists]);
 
+  useEffect(() => {
+    const storedUserId = localStorage.getItem("user_id");
+    if (storedUserId) {
+      setShowUserProfile(true); // Cambiar el estado para mostrar el componente
+    }
+  }, []);
+
   const renderButtons = () => {
     if (userIdExists && !companyIdExists) {
       // Mostrar botones si solo hay user_id
@@ -170,7 +178,7 @@ const ProfileView: React.FC = () => {
 
       if (!isHydrated) {
         return (
-          <div className="min-h-screen bg-gradient-to-b pb-[2rem] from-blue-100 to-blue-200">
+          <div className="min-h-screen bg-gradient-to-b pb-[2rem]  bg-[#C4E2FF]">
           <div className="max-w-7xl mx-auto px-4 py-8">
             {/* Header Section with Profile and Companies */}
             <div className="mb-[2rem] mt-[2rem] flex flex-row">
@@ -233,7 +241,7 @@ const ProfileView: React.FC = () => {
       }
 
     return (
-      <div className="min-h-screen bg-gradient-to-b pb-[2rem] from-blue-100 to-blue-200">
+      <div className="min-h-screen bg-gradient-to-b pb-[2rem] bg-[#C4E2FF]">
         <div className="max-w-7xl mx-auto px-4 py-8">
           {/* Header Section with Profile and Companies */}
           <div className="mb-[2rem] mt-[2rem] flex flex-row">

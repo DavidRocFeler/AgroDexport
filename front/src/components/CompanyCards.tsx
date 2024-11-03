@@ -4,19 +4,27 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useUserStore } from '@/store/useUserStore';
 import { getCompanyByUser } from '@/server/getCompanyByUser';
 import { ICompany } from '@/interface/types';
+import { updateNewCompany } from '@/server/updateNewCompany';
+import useUserSettingsStore from '@/store/useUserSettingsStore';
 
 const StackedCompanyCards: React.FC = () => {
-  // Agregamos un nuevo estado para controlar la vista
+
   const [showInitialView, setShowInitialView] = useState<boolean>(true);
   const [selectedCompany, setSelectedCompany] = useState<string>("");
   const [companiesData, setCompaniesData] = useState<ICompany[]>([]);
   const [message, setMessage] = useState<string>("Select a company to see details");
-
   const { user_id, token, role_name } = useUserStore();
+  const userSettingsStore = useUserSettingsStore((state) => state.userSettings);
+  const [isClient, setIsClient] = useState(false);
 
   const capitalizeFirstLetter = (role_name: string | null) => {
     if (!role_name) return ""; 
     return role_name.charAt(0).toUpperCase() + role_name.slice(1);
+  };
+
+  const getFirstName = (fullName: string | undefined) => {
+    if (!fullName) return ''; 
+    return fullName.split(' ')[0];
   };
 
   useEffect(() => {
@@ -42,6 +50,11 @@ const StackedCompanyCards: React.FC = () => {
   const selectedCompanyData = companiesData.find(company => company.company_id.toString() === selectedCompany);
 
   const handleAddCompany = async () => {
+    if (!user_id || !token) {
+      await Swal.fire('Error', 'User ID is required', 'error');
+      return;
+    }
+  
     const result = await Swal.fire({
       title: 'Do you want to add a new company?',
       input: 'text',
@@ -51,10 +64,30 @@ const StackedCompanyCards: React.FC = () => {
       confirmButtonText: 'Add',
       cancelButtonText: 'Cancel'
     });
-
+  
     if (result.isConfirmed && result.value) {
-      const newCompanyName = result.value;
-      Swal.fire(`Company "${newCompanyName}" added successfully!`, '', 'success');
+      try {
+        const newCompanyData: Partial<ICompany> = {
+          user_id: user_id, // Ahora sabemos que user_id no es null
+          company_name: result.value
+        };
+  
+        const response = await updateNewCompany(newCompanyData, token);
+        console.log('Nueva compañía creada:', response);
+  
+        await Swal.fire(
+          `Company "${result.value}" added successfully!`,
+          '',
+          'success'
+        );
+      } catch (error) {
+        console.error('Error al crear la compañía:', error);
+        await Swal.fire(
+          'Error',
+          'There was an error creating the company',
+          'error'
+        );
+      }
     }
   };
 
@@ -88,24 +121,30 @@ const StackedCompanyCards: React.FC = () => {
     setMessage("Select a company to see details");
     setShowInitialView(true); // Mostrar la vista inicial al hacer clic en User
   };
+  
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   // Extraemos la vista inicial a un componente separado para mejor organización
   const InitialView = () => (
-    <div>
-      <p className="text-gray-500">{message}</p> 
-      <button
-        onClick={handleAddCompany}
-        className="text-sm text-blue-600 hover:text-blue-800 font-medium"
-      >
-        Add
-      </button>
-      <span className="text-gray-300">|</span>
-      <button
-        onClick={handleRemoveCompany}
-        className="text-sm text-red-600 hover:text-red-800 font-medium"
-      >
-        Remove
-      </button>    
+    <div>  
+      <div className="border-solid border-black border-[1px] ">
+        <p className="text-gray-500">{message}</p>
+        {isClient && (
+          <>
+            <p>{getFirstName(userSettingsStore?.user_name)}</p>
+            <p>{getFirstName(userSettingsStore?.user_lastname)}</p>
+          </>
+        )}
+        <button
+          onClick={handleAddCompany}
+          className="text-sm text-blue-600 hover:text-blue-800 font-medium"
+        >
+          Add
+        </button>
+        <span className="text-gray-300">|</span>
+      </div>
     </div>
   );
 

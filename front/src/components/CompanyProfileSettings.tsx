@@ -28,24 +28,31 @@ const CompanyForms = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [companyData, setCompanyData] = useState<ICompany>(initialState);
   const [originalData, setOriginalData] = useState<ICompany>(companyData);
-  const { user_id, token } = useUserStore();
-  const company_id = localStorage.getItem("company_id");
-
+  const { token } = useUserStore();
+  const [companyId, setCompanyId] = useState<string | null>(null);
+ 
   useEffect(() => {
     const fetchCompanySettings = async () => {
-      if (company_id && token) {
-        try {
-          const data = await getCompanySettings(company_id, token);
-          setCompanyData(data);
-          setOriginalData(data);
-        } catch (error) {
-          console.error('Error fetching company settings:', error);
+      const currentCompanyId = localStorage.getItem("company_id");
+      if (currentCompanyId && token) {
+        if (currentCompanyId !== companyId) {
+          setCompanyId(currentCompanyId);
+          try {
+            const data = await getCompanySettings(currentCompanyId, token);
+            setCompanyData(data);
+            setOriginalData(data);
+          } catch (error) {
+            console.error('Error fetching company settings:', error);
+          }
         }
       }
     };
-
-    fetchCompanySettings();
-  }, [user_id, token]);
+  
+    const interval = setInterval(fetchCompanySettings, 1000); // Comprueba cada segundo
+    fetchCompanySettings(); // Ejecuta inmediatamente al montar
+  
+    return () => clearInterval(interval);
+  }, [token, companyId]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = event.target;
@@ -56,6 +63,7 @@ const CompanyForms = () => {
   };
 
   const handleSave = async () => {
+    const company_id = localStorage.getItem("company_id");
     if (JSON.stringify(companyData) === JSON.stringify(originalData)) {
       Swal.fire({
         title: 'No changes to save',
@@ -270,7 +278,7 @@ const CompanyForms = () => {
             <>
               <button
                 type="button"
-                className="ml-auto bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+                className="ml-auto bg-[#5c8b1b] text-white py-2 px-4 rounded hover:bg-[#6ea520]"
                 onClick={handleSave}
               >
                 Save
@@ -286,7 +294,7 @@ const CompanyForms = () => {
           ) : (
             <button
               type="button"
-              className="ml-auto bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600"
+              className="ml-auto bg-[#5c8b1b] text-white py-2 px-4 rounded hover:bg-[#6ea520]"
               onClick={handleEdit}
             >
               Edit

@@ -13,40 +13,40 @@ const FooterSecond = () => {
           <a href="#" className="hover:underline text-[#E9E9E9] text-[0.9rem] ">Support</a>
         </div>
 
-        <div className="flex flex-row justify-evenly w-[15%] ml-auto">
-          <div className="w-9 h-9 rounded-full border border-gray-700 flex justify-center items-center hover:border-green-600">
+        <div className="flex flex-row justify-evenly w-[15%] ml-auto items-center">
+          <div>
             <Image 
-              src="/logoFacebook.png" 
+              src="https://res.cloudinary.com/deflfnoba/image/upload/v1730596583/Front/m4inibtrzm5dmymjuduz.png" 
               alt="Facebook" 
-              width={36} 
-              height={36} 
+              width={30} 
+              height={30} 
               objectFit="contain"
             />
           </div>
-          <div className="w-9 h-9 rounded-full border border-gray-700 flex justify-center items-center hover:border-green-600">
+          <div >
             <Image 
-              src="/logoInstagram.png" 
+              src="https://res.cloudinary.com/deflfnoba/image/upload/v1730596724/Front/diwitmzms7qc0m2oo4pt.png" 
               alt="Instagram" 
-              width={36} 
-              height={36} 
+              width={30} 
+              height={30} 
               objectFit="contain"
             />
           </div>
-          <div className="w-9 h-9 rounded-full border border-gray-700 flex justify-center items-center hover:border-green-600">
+          <div >
             <Image 
-              src="/logoX.png" 
+              src="https://res.cloudinary.com/deflfnoba/image/upload/v1730596995/Front/m2qxkogdaxvqif3xkvzh.png" 
               alt="X" 
-              width={36} 
-              height={36} 
+              width={30} 
+              height={30} 
               objectFit="contain"
             />
           </div>
-          <div className="w-9 h-9 rounded-full border border-gray-700 flex justify-center items-center hover:border-green-600">
+          <div >
             <Image 
-              src="/logoTikTok.png" 
+              src="https://res.cloudinary.com/deflfnoba/image/upload/v1730596939/Front/ayqrvh7t7xcotqtsu39c.png" 
               alt="TikTok" 
-              width={36} 
-              height={36} 
+              width={30} 
+              height={30} 
               objectFit="contain"
             />
           </div>

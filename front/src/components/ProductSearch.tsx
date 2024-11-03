@@ -62,7 +62,7 @@ const ProductSearch: React.FC<ProductSearchProps> = ({ onFilterChange }) => {
         {/* Campo de búsqueda por nombre de producto */}
         <input
           placeholder="Search for products by name..."
-          className="form-input flex w-full h-12 px-4 rounded-xl text-black border border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          className="form-input flex w-full h-10 px-4 rounded-xl text-[#9CA3C0] border border-gray-300 focus:outline-none focus:ring-1 focus:ring-[#6ea520]"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           type="text"
@@ -70,7 +70,7 @@ const ProductSearch: React.FC<ProductSearchProps> = ({ onFilterChange }) => {
 
         {/* Filtro por categoría */}
         <select
-          className="rounded-xl px-3 py-2 h-12 text-black border border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          className="rounded-xl px-3 py-2 h-10 text-[#9CA3C0] border border-gray-300 focus:outline-none focus:ring-1 focus:ring-[#6ea520]"
           value={category}
           onChange={handleCategoryChange}
         >
@@ -86,7 +86,7 @@ const ProductSearch: React.FC<ProductSearchProps> = ({ onFilterChange }) => {
 
         {/* Filtro por origen */}
         <select
-          className="rounded-xl px-3 py-2 h-12 text-black border border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          className="rounded-xl px-3 py-2 h-10 text-[#9CA3C0] border border-gray-300 focus:outline-none focus:ring-1 focus:ring-[#6ea520]"
           value={origin}
           onChange={handleOriginChange}
         >
@@ -104,7 +104,7 @@ const ProductSearch: React.FC<ProductSearchProps> = ({ onFilterChange }) => {
         <input
           type="number"
           placeholder="Min Price"
-          className="form-input w-24 h-12 px-4 rounded-xl text-black border border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          className="form-input w-24 h-10 px-4 rounded-xl text-[#9CA3C0] border border-gray-300 focus:outline-none focus:ring-1 focus:ring-[#6ea520]"
           value={minPrice}
           onChange={handleMinPriceChange}
         />
@@ -113,7 +113,7 @@ const ProductSearch: React.FC<ProductSearchProps> = ({ onFilterChange }) => {
         <input
           type="number"
           placeholder="Max Price"
-          className="form-input w-24 h-12 px-4 rounded-xl text-black border border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          className="form-input w-24 h-10 px-4 rounded-xl text-[#9CA3C0] border border-gray-300 focus:outline-none focus:ring-1 focus:ring-[#6ea520]"
           value={maxPrice}
           onChange={handleMaxPriceChange}
         />
@@ -121,7 +121,7 @@ const ProductSearch: React.FC<ProductSearchProps> = ({ onFilterChange }) => {
         {/* Filtro por nombre de compañía */}
         <input
           placeholder="Company Name"
-          className="form-input w-48 h-12 px-4 rounded-xl text-black border border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          className="form-input w-48 h-10 px-4 rounded-xl text-[#9CA3C0] border border-gray-300 focus:outline-none focus:ring-1 focus:ring-[#6ea520]"
           value={companyName}
           onChange={handleCompanyNameChange}
         />
@@ -129,7 +129,7 @@ const ProductSearch: React.FC<ProductSearchProps> = ({ onFilterChange }) => {
         {/* Botón para realizar la búsqueda */}
         <button
           type="submit"
-          className="px-4 py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-600"
+          className="px-4 py-2 bg-[#5c8b1b] text-white rounded-xl  hover:bg-[#6ea520]"
         >
           Search
         </button>

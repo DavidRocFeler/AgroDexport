@@ -255,14 +255,18 @@ export interface IProtectedRouteProps {
 }
 
 export interface IShippingAddress {
-  contact_name: string;
-  contact_lastname: string;
-  contact_email: string;
-  address: string;
-  postal_code: string;
-  city: string;
-  state: string;
-  country: string;
+  shipping_address_id?: string;
+  company_id?: string;
+  contact_name?: string;
+  contact_lastname?: string;
+  contact_phone?: string;
+  contact_email?: string;
+  delivery_hours?: string;
+  address?: string;
+  postal_code?: string;
+  city?: string;
+  state?: string;
+  country?: string;
 }
 
 export interface ICompanyRegister {
@@ -344,13 +348,12 @@ export interface FarmerCertificationsFormProps {
   onCancel: () => void;
 }
 
-// for FileInput
 export interface FileInputProps {
   name: keyof ICertificationsProps;
   label: string;
   description: string;
-  register: any; // should type this correctly with the react-hook-form register type
-  errors: any; //  should type this correctly with the react-hook-form errors type
+  register: any; 
+  errors: any; 
   handleFileChange: (
     event: React.ChangeEvent<HTMLInputElement>,
     fieldName: keyof ICertificationsProps
@@ -386,7 +389,7 @@ export interface IUserPanel {
 export interface ICompany {
   company_id: string;
   user_id?: string;
-  company_name: string;
+  company_name: string | any;
   tax_identification_number: number | null;
   address: string;
   postal_code: string;

@@ -1,6 +1,4 @@
 "use client";
-import { getUserSettings } from "@/server/getUserSettings";
-import { ISettingsUserProps } from "@/interface/types";
 import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
@@ -10,15 +8,14 @@ import LogIn from "./LogIn";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/store/useUserStore";
 import { signOut } from "next-auth/react";
+import useUserSettingsStore from "@/store/useUserSettingsStore";
 
 const Header: React.FC = () => {
   const pathname = usePathname();
   const isHomePage = pathname === "/";
   const router = useRouter();
   const [isHydrated, setIsHydrated] = React.useState(false);
-  //add user_id, token
-  const { clearUser, role_name, isAuthenticated, user_id, token } =
-    useUserStore();
+  const { clearUser, role_name, isAuthenticated } = useUserStore();
 
   const backgroundColor = isHomePage ? "#D8FBA7" : "#242424";
   const textColor = isHomePage ? "#000000" : "#D6D6D6";
@@ -28,13 +25,9 @@ const Header: React.FC = () => {
     ? "/LogoTypographic.png"
     : "/LogoTypographicWhite.png";
 
-  const [modalType, setModalType] = React.useState<"login" | "signup" | null>(
-    null
-  );
-
-  const [userSettings, setUserSettings] = useState<ISettingsUserProps | null>(
-    null
-  );
+  const [modalType, setModalType] = React.useState<"login" | "signup" | null>(null);
+  const { clearUserSettings } = useUserSettingsStore();
+  const userSettingsStore = useUserSettingsStore((state) => state.userSettings);
 
   const handleShowLogIn = () => setModalType("login");
   const handleShowSignUp = () => {
@@ -47,7 +40,13 @@ const Header: React.FC = () => {
   const handleLogout = async () => {
     clearUser();
     localStorage.removeItem("CartProduct");
+    clearUserSettings();
     router.push("/");
+  };
+
+  const getFirstName = (fullName: string | undefined) => {
+    if (!fullName) return ''; 
+    return fullName.split(' ')[0];
   };
 
   const handleUserPanelClick = () => {
@@ -59,21 +58,8 @@ const Header: React.FC = () => {
   };
 
   React.useEffect(() => {
-    setIsHydrated(true);
-
-    const fetchUserSettings = async () => {
-      if (isAuthenticated && user_id && token) {
-        try {
-          const settings = await getUserSettings(user_id, token);
-          setUserSettings(settings);
-        } catch (error) {
-          console.error("Error getting user data:", error);
-        }
-      }
-    };
-
-    fetchUserSettings();
-  }, [isAuthenticated, user_id, token]);
+    setIsHydrated(true);    
+  }, []);
 
   if (!isHydrated) {
     return (
@@ -134,11 +120,8 @@ const Header: React.FC = () => {
               >
                 {capitalizeFirstLetter(role_name)}
               </span>
-              <span className="text-[1rem] font-bold rounded-full py-2 px-3 text-center flex items-center justify-center">
-                {/* <span className="text-[1rem] font-bold rounded-full py-2 px-3 bg-white text-center flex items-center justify-center"> */}
-                {userSettings?.user_name
-                  ? `${userSettings.user_name.split(" ")[0]}`
-                  : "Loading..."}
+              <span className="text-[0.9rem] text-center flex items-center justify-center" style={{ color: textColor}}>
+                {getFirstName(userSettingsStore?.user_name)} 
               </span>
 
               <button
