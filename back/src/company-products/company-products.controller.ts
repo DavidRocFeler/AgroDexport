@@ -94,6 +94,8 @@ export class CompanyProductsController {
   @Roles('admin', 'supplier') 
   @Post()
   async create(@Body() createCompanyProductDto: CreateCompanyProductDto) {
+    console.log("Received product data:", createCompanyProductDto);
+
       return this.companyProductsService.createProductServices(createCompanyProductDto);
   }
 

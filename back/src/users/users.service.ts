@@ -15,8 +15,8 @@ export class UsersService {
       return this.userRepository.getAllUsers();
     }
 
-    async getAllWithFiltersService(filters: any[]): Promise<User[]> {
-      return this.userRepository.getAllWithFilters(filters);
+    async getAllWithFiltersAndSorting(filters: any[], sortBy?: string, order: 'asc' | 'desc' = 'asc'): Promise<User[]> {
+      return this.userRepository.getAllWithFiltersAndSorting(filters, sortBy, order);
     }
 
     async getUserById(user_id: string): Promise<User> {
@@ -28,4 +28,8 @@ export class UsersService {
         validateRequestBodyNotEmpty(updateData);
             return await this.userRepository.updateUser(id, updateData);
         }      
+
+        async deleteUserService(user_id: string): Promise<void> {
+          await this.userRepository.deleteUser(user_id);
+      }
 }

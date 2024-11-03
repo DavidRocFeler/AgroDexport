@@ -81,7 +81,7 @@ export class CreateCompanyProductDto {
 
     @ApiProperty({
         description: 'Harvest date of the product',
-        example: '2024-10-19', // Asegúrate de que el ejemplo incluya 'Z' si es UTC
+        example: '2024-10-19', 
     })
     @IsString({ message: 'harvest_date must be a string.' })
     @IsNotEmpty({ message: 'harvest_date cannot be empty.' })
@@ -92,9 +92,9 @@ export class CreateCompanyProductDto {
         example: 'https://example.com/tomato.jpg',
     })
     @IsString({ message: 'company_product_img must be a string.' }) 
-    @IsNotEmpty({ message: 'company_product_img cannot be empty.' }) 
+    @IsOptional()
     @IsUrl({}, { message: 'company_product_img must be a valid URL.' }) 
-    company_product_img: string;
+    company_product_img?: string;
 
     @ApiProperty({
         description: 'Calories per serving of the product, if applicable',

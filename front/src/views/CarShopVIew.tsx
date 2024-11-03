@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import Loading from "@/components/Loading";
 import CarShopComponent from "@/components/CarShopComponent";
 
+
 const CarShopView: React.FC = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [products, setProducts] = useState([]);

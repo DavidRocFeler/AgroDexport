@@ -15,10 +15,11 @@ model User {
   birthday        String?
   phone           String?
   country         String?
-  profile_picture String?
+  profile_picture String?        
   isOlder         Boolean
   role_id         String
   credential_id   String?        @unique
+  isActive        Boolean?        @default(true)
   commission      Commission?
   companies       Company[]
   notifications   Notification[]
@@ -78,9 +79,9 @@ model Company {
   country                   String?
   industry                  String?
   website                   String?
-  account_paypal            String?
+  account_paypal            String?             @default("ATUWOIjpu_gq_k6k28V2zGm2DRCGdv_5PfrJ_J1H38xze2IGLtMXhDMUJWLqsYwAqSxfJkyzqODmKBCx")
   company_description       String?
-  company_logo              String?
+  company_logo              String?             @default("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYc3Fkk0tLl5MMO0rUaiO5qUfdLzbaPhb07g&s")
   isActive                  Boolean?            @default(true)
   user                      User                @relation(fields: [user_id], references: [user_id])
   products                  CompanyProduct[]
@@ -149,7 +150,7 @@ model CompanyProduct {
   company_price_x_kg          Float
   total_price                 Float
   harvest_date                DateTime
-  company_product_img         String
+  company_product_img         String?
   calories                    Float?
   fat                         Float?
   protein                     Float?
@@ -230,7 +231,11 @@ model Order {
 
 model OrderDetail {
   order_details_id      String                  @id @default(uuid())
-  iva                   Float
+  subtotal              Float
+  logistic_cost         Float
+  tariff                Float
+  tax                   Float
+  discount              Float    
   total                 Float
   order_status          String
   order                 Order?

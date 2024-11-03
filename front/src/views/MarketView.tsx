@@ -19,7 +19,7 @@ const MarketView: React.FC = () => {
   const loadProducts = async (filters = {}) => {
     try {
       const data: IAgriProduct[] = await getProductDB(filters);
-      setProducts(data);
+      setProducts(data.filter(product => product.isActive));
     } catch (err) {
       console.error("Error loading products:", err);
       setError("No se pudieron cargar los productos");

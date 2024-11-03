@@ -109,31 +109,38 @@ export class CompanyRepository {
   
 
   async create(companyData: CreateCompanyDto) {
-    const existingCompany = await this.prisma.company.findFirst({
-      where: {
-        tax_identification_number: companyData.tax_identification_number,
-        country: companyData.country,
-        isActive: true,
-      },
-    });
+    if (companyData.tax_identification_number && companyData.country) {
+        const existingCompany = await this.prisma.company.findFirst({
+            where: {
+                tax_identification_number: companyData.tax_identification_number,
+                country: companyData.country,
+                isActive: true,
+            },
+        });
 
-    if (existingCompany) {
-      throw new ConflictException('A company with this tax identification number already exists in the same country.');
+        if (existingCompany) {
+            throw new ConflictException('A company with this tax identification number already exists in the same country.');
+        }
     }
 
-    
     const company = await this.prisma.company.create({
-      data: { ...companyData, isActive: true }
+        data: {
+            ...companyData,
+            isActive: true,
+            account_paypal: companyData.account_paypal || 'ATUWOIjpu_gq_k6k28V2zGm2DRCGdv_5PfrJ_J1H38xze2IGLtMXhDMUJWLqsYwAqSxfJkyzqODmKBCx',
+            company_logo: companyData.company_logo || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYc3Fkk0tLl5MMO0rUaiO5qUfdLzbaPhb07g&s',
+        },
     });
 
+    // Notificación para usuarios admin
     await this.notificationsService.createAndNotifyUsers(
-      'admin',
-      `New company created: ${company.company_name}`,
-      'company_created'
+        'admin',
+        `New company created: ${company.company_name}`,
+        'company_created',
     );
 
     return company;
-  }
+}
 
   async update(companyId: string, companyData: UpdateCompanyDto) {
     const company = await this.prisma.company.findUnique({

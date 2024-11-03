@@ -1,5 +1,5 @@
 
-import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { User, Credential } from '@prisma/client';
 import { validateExists } from '../helpers/validation.helper';
@@ -25,27 +25,64 @@ export class UsersRepository {
   async getAllUsers(): Promise<User[]> {
     return this.prisma.user.findMany({
       include: {
-        role: true,
-        companies: { // Asumiendo que el campo de relación es 'company'
+        role: { select: { role_name: true } },
+        credential: { select: { email: true } },
+        companies: {
           select: {
+            company_id: true,
             company_name: true,
+            country: true,
+            products: { select: { company_product_name: true } },
+            orders_buyer: { select: { orderDetail: { select: { total: true, order_status: true } } } },
+            orders_supplier: { select: { orderDetail: { select: { total: true, order_status: true } } } },
           },
         },
       },
     });
   }
-  
 
-  async getAllWithFilters(filters: any[]): Promise<User[]> {
-    return this.prisma.user.findMany({
+  async getAllWithFiltersAndSorting(filters: any[], sortBy?: string, order: 'asc' | 'desc' = 'asc'): Promise<User[]> {
+    // Obtener los usuarios sin aplicar el orden en la consulta
+    const users = await this.prisma.user.findMany({
       where: {
         AND: filters,
       },
       include: {
-        role: true,
+        role: { select: { role_name: true } },
+        credential: { select: { email: true } },
+        companies: {
+          select: {
+            company_id: true,
+            company_name: true,
+            country: true,
+            products: { select: { company_product_name: true } },
+            orders_buyer: { select: { orderDetail: { select: { total: true, order_status: true } } } },
+            orders_supplier: { select: { orderDetail: { select: { total: true, order_status: true } } } },
+          },
+        },
       },
     });
+  
+    // Ordenar en memoria según el campo `sortBy`
+    if (sortBy === 'products') {
+      return users.sort((a, b) => {
+        const countA = a.companies.reduce((acc, company) => acc + company.products.length, 0);
+        const countB = b.companies.reduce((acc, company) => acc + company.products.length, 0);
+        return order === 'asc' ? countA - countB : countB - countA;
+      });
+    } else if (sortBy === 'totalOrders') {
+      return users.sort((a, b) => {
+        const totalOrdersA = a.companies.reduce((acc, company) => acc + (company.orders_buyer.length + company.orders_supplier.length), 0);
+        const totalOrdersB = b.companies.reduce((acc, company) => acc + (company.orders_buyer.length + company.orders_supplier.length), 0);
+        return order === 'asc' ? totalOrdersA - totalOrdersB : totalOrdersB - totalOrdersA;
+      });
+    }
+  
+    // Si no se especifica `sortBy`, retornar los usuarios sin ordenar en memoria
+    return users;
   }
+  
+  
 
   async findUsersWithIncompleteProfiles(): Promise<User[]> {
     return this.prisma.user.findMany({
@@ -170,38 +207,40 @@ export class UsersRepository {
   
 
   async singIn(credentials: LoginUserDto) {
-    console.log(credentials)
-    const { email, password } = credentials
-    const account = await this.findCredentialByEmail(email)
-    if ( account ) {
+    const { email, password } = credentials;
+    const account = await this.findCredentialByEmail(email);
+    
+    if (account) {
+      if (!account.user.isActive) {
+        throw new UnauthorizedException("Account is inactive. Please contact support.");
+      }
+  
       const user = await this.prisma.user.findUnique({
-        where: { credential_id: account.credential_id },  // Usar la credencial para encontrar el usuario
-        include: { role: true },  // Incluir la relación con `role` para obtener `role_name`
+        where: { credential_id: account.credential_id },
+        include: { role: true },
       });
-
-      const userId = user.user_id
-      const accountPassword = account.password
-
-      const isPasswordValid = await bcrypt.compare(password, accountPassword)
-
-      if ( isPasswordValid ) {
+  
+      const userId = user.user_id;
+      const accountPassword = account.password;
+      const isPasswordValid = await bcrypt.compare(password, accountPassword);
+  
+      if (isPasswordValid) {
         const userPayload = {
           sub: userId,
           user_id: userId,
           user_name: user.user_name,
           role: user.role.role_name,
-        }
-
-        const token = this.jwtService.sign(userPayload)
+        };
+  
+        const token = this.jwtService.sign(userPayload);
         return {
           token,
           user_id: userId,
           role_name: user.role.role_name,
         };
       }
-    }
-    else {
-      throw new BadRequestException("Your password or Email is incorrect")
+    } else {
+      throw new BadRequestException("Your password or Email is incorrect");
     }
   }
 
@@ -211,7 +250,8 @@ export class UsersRepository {
       include: {
         user: {
           select: {
-            user_id: true,  
+            user_id: true,
+            isActive: true,  
             role: {
               select: {
                 role_name: true,
@@ -277,4 +317,76 @@ export class UsersRepository {
       throw error;
     }
   }
+
+      async deleteUser(user_id: string): Promise<void> {
+          await this.prisma.$transaction(async (prisma) => {
+              // Eliminar productos de las compañías del usuario
+              await prisma.companyProduct.deleteMany({
+                  where: {
+                      company: {
+                          user_id,
+                      },
+                  },
+              });
+  
+              // Eliminar direcciones de envío de las compañías del usuario
+              await prisma.shippingAddress.deleteMany({
+                  where: {
+                      company: {
+                          user_id,
+                      },
+                  },
+              });
+  
+              // Eliminar pedidos (Order) asociados a las compañías del usuario como comprador o vendedor
+              await prisma.order.deleteMany({
+                  where: {
+                      OR: [
+                          { id_company_buy: user_id },
+                          { id_company_sell: user_id },
+                      ],
+                  },
+              });
+  
+              // Eliminar las compañías del usuario
+              await prisma.company.deleteMany({
+                  where: {
+                      user_id,
+                  },
+              });
+  
+              // Eliminar notificaciones asociadas al usuario
+              await prisma.notification.deleteMany({
+                  where: {
+                      user_id,
+                  },
+              });
+  
+              // Eliminar la comisión asociada al usuario (si existe)
+              await prisma.commission.delete({
+                  where: {
+                      user_id,
+                  },
+              }).catch(() => {
+                  // Si la comisión no existe, ignora el error
+              });
+  
+              // Eliminar las credenciales del usuario
+              await prisma.credential.delete({
+                  where: {
+                      credential_id: user_id,
+                  },
+              }).catch(() => {
+                  // Si las credenciales no existen, ignora el error
+              });
+  
+              // Finalmente, eliminar el usuario
+              await prisma.user.delete({
+                  where: {
+                      user_id,
+                  },
+              });
+          });
+      }
+  
 }

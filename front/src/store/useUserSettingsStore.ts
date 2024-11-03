@@ -65,7 +65,6 @@ const useUserSettingsStore = create<IUserSettingsState>((set) => ({
     }
 
     set(userSettingsData);
-    console.log("Settings guardados:", settings);
   },
 
   clearUserSettings: () => {

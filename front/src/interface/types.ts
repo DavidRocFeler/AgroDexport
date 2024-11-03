@@ -69,8 +69,8 @@ export interface IOrderCarWishProps {
 
 export interface ILabelComponentProps {
   product?: IAgriProduct;
-  units: number;
-  viewType: "carShop" | "ordersView" | "wishListView";
+  units?: number;
+  viewType?: "carShop" | "ordersView" | "wishListView";
   orderStatus?: { status: string; date: string };
 }
 
@@ -98,9 +98,16 @@ export interface IAgriProduct {
   fat: number;
   protein: number;
   carbs: number;
-  discount?: number;
+  discount: number;
   farmer_id?: string;
   isActive?: boolean;
+  farmerCertification?:{
+    phytosanitary_certificate?: string;
+    agricultural_producer_cert?: string;
+    organic_certification?:      string;
+    quality_certificate?:        string;
+    certificate_of_origin?:     string; 
+}
   category?: {
     name_category?: string;
   };
@@ -282,15 +289,35 @@ export interface ISettingsUserProps {
   phone?: string;
   country?: string;
   profile_picture?: string;
+  isActive?: boolean;
   role?: {
     role_name?: string;
   };
+  credential?:{
+    email?: string;
+  }
   companies?: {
-    company_id?: string;
+    company_id: string;
     company_name?: string;
+    country?: string;
+    products?: {
+      company_product_name?: string;
+    }[];
+    orders_buyer?: {
+      orderDetail?: {
+        total?: number;
+        order_status?: string;
+      } | null;
+    }[];
+    orders_supplier?: {
+      orderDetail?: {
+        total?: number;
+        order_status?: string;
+      } | null;
+    }[];
   }[];
   updatedFields?: Partial<ISettingsUserProps>;
-}
+} 
 
 export interface ISettingsPasswordProps {
   password: string;
@@ -312,20 +339,24 @@ export interface ISettingsCompanyProps {
 }
 
 export interface IPublishProductProps {
+  company_id?: string;
+  category_id: string;
   company_product_name: string;
   company_product_description: string;
   stock: number;
   minimum_order: number;
   origin: string;
-  discount: number;
+  discount?: number;
   company_price_x_kg: number;
   harvest_date: string;
-  company_product_img: FileList;
-  calories: number;
-  fat: number;
-  protein: number;
-  carbs: number;
+  company_product_img?: string;
+  calories?: number;
+  fat?: number;
+  protein?: number;
+  carbs?: number;
 }
+
+
 
 export interface ICertificationsProps {
   phytosanitary_certificate: FileList;
@@ -346,8 +377,15 @@ export interface IPreviewState {
 
 export interface FarmerCertificationsFormProps {
   onCancel: () => void;
+  companyId: string;
+  productId: string;
 }
 
+<<<<<<< HEAD
+=======
+
+// for FileInput
+>>>>>>> 7f0519376cc0279e0d4f6d1fb81e1cdf23cc281f
 export interface FileInputProps {
   name: keyof ICertificationsProps;
   label: string;
@@ -361,9 +399,15 @@ export interface FileInputProps {
   previews: IPreviewState;
 }
 
+
+
 export interface FormPublishProductProps {
-  onUpdateClick: () => void;
+  onUpdateClick: (productId: string, companyId: string) => void;
+  selectedCompany: string | null;  
+  categories: { category_id: string; name_category: string }[];  
 }
+
+
 
 export interface INotification {
   notification_id: string;
@@ -419,4 +463,19 @@ export interface IOrder {
     total: number;
   }
 }
+
+export interface IOrderDetail {
+
+  company_buyer_id: string | null;
+  company_supplier_id: string;
+  product_one_id: string;
+  quantity_product_one: number | undefined;
+  subtotal: number;
+  logistic_cost: number;
+  tariff: number;
+  tax: number;
+  discount: number;
+  total: number;
+}
+
 

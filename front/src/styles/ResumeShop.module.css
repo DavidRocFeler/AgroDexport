@@ -18,6 +18,11 @@
     display: flex;
     flex-direction: row;
   }
+  .Resumen .Discount {
+    padding: 0.5rem 1rem 0.5rem 1rem; 
+    display: flex;
+    flex-direction: row;
+  }
   .Resumen .SubTotal p {
     margin-left: auto;
     margin-right: 1rem;
