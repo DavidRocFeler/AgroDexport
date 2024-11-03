@@ -134,7 +134,10 @@ const Header: React.FC = () => {
               >
                 {capitalizeFirstLetter(role_name)}
               </span>
-              <span className="text-[1rem] font-bold rounded-full py-2 px-3 text-center flex items-center justify-center">
+              <span
+                className="text-[1rem] font-bold rounded-full py-2 px-3 text-center flex items-center justify-center"
+                style={{ color: textColor }}
+              >
                 {/* <span className="text-[1rem] font-bold rounded-full py-2 px-3 bg-white text-center flex items-center justify-center"> */}
                 {userSettings?.user_name
                   ? `${userSettings.user_name.split(" ")[0]}`

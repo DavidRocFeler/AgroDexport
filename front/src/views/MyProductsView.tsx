@@ -5,10 +5,13 @@ import { IAgriProduct, ISettingsUserProps } from "@/interface/types";
 import { getCategories, getCompanyProducts } from "@/server/getProduct";
 import { useUserStore } from "@/store/useUserStore";
 import { getUserSettings } from "@/server/getUserSettings";
+import { Fullscreen } from "lucide-react";
 
 const MyProductsView: React.FC = () => {
   const [productsArray, setProductsArray] = useState<IAgriProduct[]>([]);
-  const [userCompanies, setUserCompanies] = useState<{ company_id: string; company_name: string }[]>([]);
+  const [userCompanies, setUserCompanies] = useState<
+    { company_id: string; company_name: string }[]
+  >([]);
   const [selectedCompany, setSelectedCompany] = useState<string | null>(null);
   const [categories, setCategories] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -19,11 +22,18 @@ const MyProductsView: React.FC = () => {
     const fetchUserSettings = async () => {
       try {
         if (token && user_id) {
-          const userData: ISettingsUserProps = await getUserSettings(user_id, token);
+          const userData: ISettingsUserProps = await getUserSettings(
+            user_id,
+            token
+          );
 
           const validCompanies = (userData.companies || [])
-            .filter((company): company is { company_id: string; company_name: string } =>
-              company.company_id !== undefined && company.company_name !== undefined
+            .filter(
+              (
+                company
+              ): company is { company_id: string; company_name: string } =>
+                company.company_id !== undefined &&
+                company.company_name !== undefined
             )
             .map((company) => ({
               company_id: company.company_id as string,
@@ -34,9 +44,13 @@ const MyProductsView: React.FC = () => {
 
           if (validCompanies.length > 0) {
             setSelectedCompany(validCompanies[0].company_id);
-            const products = await getCompanyProducts(validCompanies[0].company_id);
+            const products = await getCompanyProducts(
+              validCompanies[0].company_id
+            );
             if (products.length === 0) {
-              setError("You currently have no products loaded for this company.");
+              setError(
+                "You currently have no products loaded for this company."
+              );
               setProductsArray([]); // Clear products array explicitly
             } else {
               setProductsArray(products);
@@ -74,7 +88,9 @@ const MyProductsView: React.FC = () => {
     );
   };
 
-  const handleCompanyChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleCompanyChange = async (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
     const companyId = event.target.value;
     setSelectedCompany(companyId);
 
@@ -97,27 +113,45 @@ const MyProductsView: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto py-8 font-inter">
-        <h1 className="text-[96px] text-center mb-12 font-inter">My Products</h1>
+      <div className="container mx-auto py-1 font-inter">
+        <h1 className="text-[96px] text-center mb-12 ">My Products</h1>
         <div className="text-center">Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto py-8 font-inter">
-      <h1 className="text-[96px] text-center mb-12 font-inter">My Products</h1>
+    <div
+      className="min-h-screen mx-auto py-4  items-center "
+      // className="container mx-auto py-8 "
+      style={{
+        fontFamily: "'Roboto','sans-serif', serif",
+        backgroundColor: "#C4E2FF",
+        paddingTop: "2rem",
+        paddingBottom: "4rem",
+      }}
+    >
+      <h1
+        className="text-[42px] text-center mb-1"
+        style={{ fontFamily: "'Roboto','sans-serif', serif" }}
+      >
+        My Products
+      </h1>
 
       {userCompanies.length === 0 ? (
-        <div className="text-center text-gray-500">No companies registered</div>
+        <div className="text-center  text-gray-500">
+          No companies registered
+        </div>
       ) : (
-        <div className="mb-4 text-center">
-          <label htmlFor="companySelect" className="mr-2">Select Company:</label>
+        <div className="mb-4 text-center ">
+          <label htmlFor="companySelect" className="mr-2">
+            Select Company:
+          </label>
           <select
             id="companySelect"
             value={selectedCompany || ""}
             onChange={handleCompanyChange}
-            className="border border-black px-4 py-2"
+            className="border border-grey-500  px-4 py-2 rounded-lg"
           >
             {userCompanies.map((company) => (
               <option key={company.company_id} value={company.company_id}>
@@ -128,15 +162,21 @@ const MyProductsView: React.FC = () => {
         </div>
       )}
 
-      <div className={`${productsArray.length === 0 ? "border border-black w-full h-64" : ""}`}>
+      <div
+        className={`${
+          productsArray.length === 0 ? "border border-gray-500 m-auto" : ""
+        }grid grid-cols-2 gap-4 max-w-screen-lg mx-auto`}
+      >
         {error ? (
-          <div className="text-center text-gray-500">{error}</div>
+          <div className=" text-center text-gray-500">{error}</div>
         ) : (
           productsArray.map((product) => (
             <MyProductList
               key={product.company_product_id}
               {...product}
-              onDeleteSuccess={(productId, newActiveStatus) => updateProductsArray(productId, newActiveStatus)}
+              onDeleteSuccess={(productId, newActiveStatus) =>
+                updateProductsArray(productId, newActiveStatus)
+              }
             />
           ))
         )}

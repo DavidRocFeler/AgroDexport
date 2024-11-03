@@ -3,9 +3,12 @@ import React, { useEffect } from "react";
 import { Trash2, RefreshCw } from "lucide-react";
 import { IAgriProduct } from "@/interface/types";
 import { useUserStore } from "@/store/useUserStore";
-import { deleteCompanyProduct, updateCompanyProduct } from "@/server/getProduct";
-import Swal from 'sweetalert2';
-import withReactContent from 'sweetalert2-react-content';
+import {
+  deleteCompanyProduct,
+  updateCompanyProduct,
+} from "@/server/getProduct";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
 interface MyProductListProps extends IAgriProduct {
   onDeleteSuccess: (productId: string, newActiveStatus: boolean) => void;
@@ -71,23 +74,33 @@ const MyProductList: React.FC<MyProductListProps> = ({
           onDeleteSuccess(company_product_id, false);
           MySwal.fire("Deleted!", "The product has been deleted.", "success");
         } else {
-          await updateCompanyProduct(company_product_id, { isActive: true }, token);
+          await updateCompanyProduct(
+            company_product_id,
+            { isActive: true },
+            token
+          );
           onDeleteSuccess(company_product_id, true);
           MySwal.fire("Reactivated!", "The product is now active.", "success");
         }
       } catch (error) {
         console.error("Error updating product:", error);
-        MySwal.fire("Error", "An error occurred while updating the product.", "error");
+        MySwal.fire(
+          "Error",
+          "An error occurred while updating the product.",
+          "error"
+        );
       }
     }
   };
 
-  const formattedStock = `${(stock)} Tons`;
-  const formattedHarvestDate = new Date(harvest_date).toLocaleDateString("en-GB");
+  const formattedStock = `${stock} Tons`;
+  const formattedHarvestDate = new Date(harvest_date).toLocaleDateString(
+    "en-GB"
+  );
 
   return (
     <div
-      className={`bg-white rounded-lg shadow-md p-4 mb-4 hover:shadow-lg transition-shadow duration-300 mx-4 ${
+      className={`bg-white rounded-lg shadow-md p-4 mb-4 hover:shadow-lg transition-shadow duration-300 mx-2 max-w-xl ${
         !isActive ? "opacity-50" : ""
       }`}
     >

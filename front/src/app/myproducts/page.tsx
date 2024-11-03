@@ -3,7 +3,7 @@ import React from "react";
 
 const MyProducts = () => {
   return (
-    <div>
+    <div className="min-h-screen">
       <MyProductsView />
     </div>
   );
