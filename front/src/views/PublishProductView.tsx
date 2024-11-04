@@ -6,23 +6,27 @@ import { getCategories, getProductById } from "@/server/getProduct";
 import { getUserSettings } from "@/server/getUserSettings";
 import { useUserStore } from "@/store/useUserStore";
 import { ISettingsUserProps } from "@/interface/types";
-import { useSearchParams } from "next/navigation";
 
-const PublishProductView: React.FC = () => {
+interface PublishProductViewProps {
+  companyParam?: string | null;
+  companyProductIdParam?: string | null;
+}
+
+const PublishProductView: React.FC<PublishProductViewProps> = ({
+  companyParam = null,
+  companyProductIdParam = null,
+}) => {
   const [showCertifications, setShowCertifications] = useState(false);
   const [userCompanies, setUserCompanies] = useState<{ company_id: string; company_name: string }[]>([]);
-  const [selectedCompany, setSelectedCompany] = useState<string | null>(null);
+  const [selectedCompany, setSelectedCompany] = useState<string | null>(companyParam);
   const [categories, setCategories] = useState<{ category_id: string; name_category: string }[]>([]);
-  const [companyProductId, setCompanyProductId] = useState<string | null>(null);
+  const [companyProductId, setCompanyProductId] = useState<string | null>(companyProductIdParam);
   const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(null);
   const [isImageUploaded, setIsImageUploaded] = useState(false);
 
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { token, user_id } = useUserStore();
-  const searchParams = useSearchParams();
-  const companyParam = searchParams.get("company_id");
-  const companyProductIdParam = searchParams.get("company_product_id");
 
   useEffect(() => {
     const fetchUserSettings = async () => {
@@ -41,8 +45,6 @@ const PublishProductView: React.FC = () => {
 
           setUserCompanies(validCompanies);
 
-          // En el modo de actualización (cuando `companyProductIdParam` existe), selecciona la empresa de `companyParam`.
-          // En el modo de creación, `companyParam` solo establece el valor inicial pero permite cambiarlo.
           if (companyProductIdParam) {
             setSelectedCompany(companyParam || validCompanies[0]?.company_id);
           } else if (!selectedCompany && companyParam) {
@@ -99,7 +101,6 @@ const PublishProductView: React.FC = () => {
   };
 
   const handleCompanyChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    // Permitir cambiar el valor en modo de creación (sin `companyProductIdParam`)
     if (!companyProductIdParam) {
       setSelectedCompany(event.target.value);
     }
