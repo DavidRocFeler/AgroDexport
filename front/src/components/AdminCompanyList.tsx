@@ -144,7 +144,7 @@ const AdminCompanyList: React.FC = () => {
 
   return (
     <section
-      className={`${styles.AdminCompanyList} max-h-[150px] overflow-hidden`}
+      className={`${styles.AdminCompanyList} max-h-[250px] overflow-hidden`}
     >
       <div className={styles.ChartContainer}>
         <div className={styles.BarChart}>

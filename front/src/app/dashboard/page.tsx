@@ -1,12 +1,12 @@
-import DashboardView from "@/views/DashboardView";
-import React from "react";
+// import DashboardView from "@/views/DashboardView";
+// import React from "react";
 
-const Dashboard = () => {
-  return (
-    <div>
-      <DashboardView />
-    </div>
-  );
-};
+// const Dashboard = () => {
+//   return (
+//     <div>
+//       <DashboardView />
+//     </div>
+//   );
+// };
 
-export default Dashboard;
+// export default Dashboard;
