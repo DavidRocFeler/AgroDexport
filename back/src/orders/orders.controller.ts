@@ -3,9 +3,9 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CreateOrderProductsDto } from './dtos/createOrderProducts.dto';
 import { OrdersService } from './orders.service';
 import { Order } from '@prisma/client';
-import { AuthGuard } from 'src/guards/auth.guard';
-import { RolesGuard } from 'src/guards/RolesGuard';
-import { Roles } from 'src/decorators/roles.decorator';
+import { AuthGuard } from '../guards/auth.guard';
+import { RolesGuard } from '../guards/RolesGuard';
+import { Roles } from '../decorators/roles.decorator';
 
 @ApiBearerAuth()
 @ApiTags("Orders")

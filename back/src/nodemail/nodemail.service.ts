@@ -121,4 +121,62 @@ htmlTemplate = htmlTemplate.replace(
         console.error('Error sending email:', error);
     }
 }
+
+
+async sendOrderEmail(
+  to: string,
+  subject: string,
+  userName: string,
+  supplierCompanyName: string,
+  buyerCompanyName: string,
+  subtotal: number,
+  logisticCost: number,
+  tariff: number,
+  tax: number,
+  discount: number,
+  total: number,
+  role: 'buyer' | 'supplier'
+): Promise<void> {
+  
+  const path = require('path');
+  const fs = require('fs');
+  
+  const templatePath = path.join(process.cwd(), 'src', 'template', 'order-email.html');
+  if (!fs.existsSync(templatePath)) {
+      console.error(`The template file does not exist at path: ${templatePath}`);
+      return;
+  }
+  
+  let htmlTemplate = fs.readFileSync(templatePath, 'utf8');
+  
+  // Configurar el mensaje inicial basado en el rol
+  const initialMessage = role === 'buyer'
+      ? `Your order has been successfully completed with ${supplierCompanyName}. Below, you’ll find the details of your order.`
+      : `The company ${buyerCompanyName} has placed a purchase order with your company, ${supplierCompanyName}. Below, you’ll find the order details.`;
+  
+  htmlTemplate = htmlTemplate.replace('{{initialMessage}}', initialMessage);
+  htmlTemplate = htmlTemplate.replace('{{userName}}', userName);
+  htmlTemplate = htmlTemplate.replace('{{buyerCompanyName}}', buyerCompanyName);
+  htmlTemplate = htmlTemplate.replace('{{supplierCompanyName}}', supplierCompanyName);
+  htmlTemplate = htmlTemplate.replace('{{subtotal}}', subtotal.toString());
+  htmlTemplate = htmlTemplate.replace('{{logisticCost}}', logisticCost.toString());
+  htmlTemplate = htmlTemplate.replace('{{tariff}}', tariff.toString());
+  htmlTemplate = htmlTemplate.replace('{{tax}}', tax.toString());
+  htmlTemplate = htmlTemplate.replace('{{discount}}', discount.toString());
+  htmlTemplate = htmlTemplate.replace('{{total}}', total.toString());
+  
+  const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to,
+      subject,
+      html: htmlTemplate,
+  };
+  
+  try {
+      const info = await this.transporter.sendMail(mailOptions);
+      console.log(`Order email sent to ${to}: ${info.response}`);
+  } catch (error) {
+      console.error('Error sending order email: ', error);
+  }
+}
 }
