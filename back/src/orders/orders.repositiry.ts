@@ -18,9 +18,65 @@ export class OrderRepository {
     
     getAllOrdersRepository(): Promise<Order[]> {
         return this.prisma.order.findMany({
-            include: { orderDetail: true}
-        })
+            include: {
+                orderDetail: true,
+                buyer: true,         
+                supplier: true        
+            }
+        });
     }
+
+    async getOrdersByBuyerName(buyerName: string): Promise<Order[]> {
+        return this.prisma.order.findMany({
+            where: {
+                buyer: {
+                    company_name: {
+                        contains: buyerName, 
+                        mode: 'insensitive' // Ignora mayúsculas/minúsculas
+                    }
+                }
+            },
+            include: {
+                orderDetail: true,
+                buyer: true,
+                supplier: true
+            }
+        });
+    }
+
+    async getOrdersBySupplierName(supplierName: string): Promise<Order[]> {
+        return this.prisma.order.findMany({
+            where: {
+                supplier: {
+                    company_name: {
+                        contains: supplierName, 
+                        mode: 'insensitive' // Ignora mayúsculas/minúsculas
+                    }
+                }
+            },
+            include: {
+                orderDetail: true,
+                buyer: true,
+                supplier: true
+            }
+        });
+    }
+    
+    async findOrderByBuyerSupplierAndTotal(buyerId: string, supplierId: string, total: number): Promise<Order | null> {
+        return this.prisma.order.findFirst({
+            where: {
+                id_company_buy: buyerId,
+                id_company_sell: supplierId,
+                orderDetail: {
+                    total: total,
+                  },
+                },
+                include: {
+                  orderDetail: true, 
+                },
+              });
+            }
+    
     
     async getOrderByIdRepository(orderId: string) {
         return this.prisma.order.findUnique({

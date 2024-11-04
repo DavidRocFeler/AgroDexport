@@ -5,6 +5,7 @@ import { AuthService } from './auth/auth.service';
 import { CompanyService } from './companies/companies.service';
 import { AddressesService } from './addresses/addresses.service';
 import { CompanyProductsService } from './company-products/company-products.service';
+import { OrdersService } from './orders/orders.service';
 
 @Injectable()
 export class PreloadService implements OnModuleInit {
@@ -15,6 +16,7 @@ export class PreloadService implements OnModuleInit {
     private readonly companyService: CompanyService,
     private readonly AddressService: AddressesService,
     private readonly companyProductsService: CompanyProductsService,
+    private readonly orderService: OrdersService
   ) {}
 
   async onModuleInit() {
@@ -61,8 +63,31 @@ export class PreloadService implements OnModuleInit {
     } catch (error) {
       console.error('Error during company products preload:', error.message);
     }
+
+    try {
+      const ordersResults = await this.orderService.preloadOrdersService();
+      // console.log('Orders preload results:', ordersResults);
+    } catch (error) {
+      console.error('Error during orders preload:', error.message);
+    }
+
+    try {
+      const paymentsFinishedResults = await this.orderService.preloadPaymentsFinished();
+      // console.log('Payments Finished preload results:', paymentsFinishedResults);
+    } catch (error) {
+      console.error('Error during payments finished preload:', error.message);
+    }
+
+    try {
+      const paymentsCancelledResults = await this.orderService.preloadPaymentsCancel();
+      // console.log('Payments Cancelled preload results:', paymentsCancelledResults);
+    } catch (error) {
+      console.error('Error during payments Cancelled preload:', error.message);
+    }
    
     console.log('Preload process completed...');
   }
+
+  
   
 }
