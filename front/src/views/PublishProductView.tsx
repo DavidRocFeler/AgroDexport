@@ -2,22 +2,27 @@
 import React, { useEffect, useState } from "react";
 import FormPublishProduct from "@/components/FormPublishProduct";
 import FarmerCertificationsForm from "@/components/FarmerCertificationsForm";
-import { getCategories } from "@/server/getProduct";
+import { getCategories, getProductById } from "@/server/getProduct";
 import { getUserSettings } from "@/server/getUserSettings";
 import { useUserStore } from "@/store/useUserStore";
 import { ISettingsUserProps } from "@/interface/types";
+import { useSearchParams } from "next/navigation";
 
 const PublishProductView: React.FC = () => {
   const [showCertifications, setShowCertifications] = useState(false);
   const [userCompanies, setUserCompanies] = useState<{ company_id: string; company_name: string }[]>([]);
   const [selectedCompany, setSelectedCompany] = useState<string | null>(null);
   const [categories, setCategories] = useState<{ category_id: string; name_category: string }[]>([]);
-  const [companyProductId, setCompanyProductId] = useState<string | null>(null); // Nuevo estado
-  const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(null); // Nuevo estado
+  const [companyProductId, setCompanyProductId] = useState<string | null>(null);
+  const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(null);
+  const [isImageUploaded, setIsImageUploaded] = useState(false);
 
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { token, user_id } = useUserStore();
+  const searchParams = useSearchParams();
+  const companyParam = searchParams.get("company_id");
+  const companyProductIdParam = searchParams.get("company_product_id");
 
   useEffect(() => {
     const fetchUserSettings = async () => {
@@ -36,8 +41,14 @@ const PublishProductView: React.FC = () => {
 
           setUserCompanies(validCompanies);
 
-          if (validCompanies.length > 0) {
-            setSelectedCompany(validCompanies[0].company_id); // Set the first company as default
+          // En el modo de actualización (cuando `companyProductIdParam` existe), selecciona la empresa de `companyParam`.
+          // En el modo de creación, `companyParam` solo establece el valor inicial pero permite cambiarlo.
+          if (companyProductIdParam) {
+            setSelectedCompany(companyParam || validCompanies[0]?.company_id);
+          } else if (!selectedCompany && companyParam) {
+            setSelectedCompany(companyParam);
+          } else if (!selectedCompany && validCompanies.length > 0) {
+            setSelectedCompany(validCompanies[0].company_id);
           }
         }
       } catch (err: any) {
@@ -50,19 +61,36 @@ const PublishProductView: React.FC = () => {
     const fetchCategories = async () => {
       try {
         const data = await getCategories();
-        setCategories(data); // Usar el arreglo de objetos completo
+        setCategories(data);
       } catch (err: any) {
         setError("Error loading categories.");
       }
     };
 
+    const fetchProductData = async () => {
+      if (companyProductIdParam && selectedCompany) {
+        try {
+          const productData = await getProductById(selectedCompany, companyProductIdParam);
+          if (productData) {
+            setCompanyProductId(companyProductIdParam);
+            setSelectedCompanyId(selectedCompany);
+            setIsImageUploaded(!!productData.company_product_img);
+          }
+        } catch (error) {
+          console.error("Error loading product data:", error);
+        }
+      }
+    };
+
     fetchUserSettings();
     fetchCategories();
-  }, [token, user_id]);
+    fetchProductData();
+  }, [token, user_id, companyParam, companyProductIdParam, selectedCompany]);
 
   const handleProductCreated = (productId: string, companyId: string) => {
     setCompanyProductId(productId);
     setSelectedCompanyId(companyId);
+    setIsImageUploaded(true);
     setShowCertifications(true);
   };
 
@@ -71,7 +99,10 @@ const PublishProductView: React.FC = () => {
   };
 
   const handleCompanyChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedCompany(event.target.value);
+    // Permitir cambiar el valor en modo de creación (sin `companyProductIdParam`)
+    if (!companyProductIdParam) {
+      setSelectedCompany(event.target.value);
+    }
   };
 
   if (isLoading) {
@@ -99,6 +130,7 @@ const PublishProductView: React.FC = () => {
             value={selectedCompany || ""}
             onChange={handleCompanyChange}
             className="border border-black px-4 py-2"
+            disabled={!!companyProductIdParam} // Deshabilita solo en modo de actualización
           >
             {userCompanies.map((company) => (
               <option key={company.company_id} value={company.company_id}>
@@ -109,23 +141,30 @@ const PublishProductView: React.FC = () => {
         </div>
       )}
 
-      {!showCertifications ? (
-        <div className="border border-black max-w-3xl mx-auto p-8">
-          <FormPublishProduct 
-            onUpdateClick={handleProductCreated} 
-            selectedCompany={selectedCompany} 
-            categories={categories} 
-          />
-        </div>
-      ) : (
-        <div className="border border-black max-w-3xl mx-auto p-8">
+      <div className="border border-black max-w-3xl mx-auto p-8">
+        {!showCertifications ? (
+          <>
+            <FormPublishProduct 
+              onUpdateClick={handleProductCreated} 
+              selectedCompany={selectedCompany} 
+              categories={categories} 
+            />
+            {isImageUploaded && (
+              <div className="flex justify-end mt-4">
+                <button onClick={() => setShowCertifications(true)} className="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600 transition-colors">
+                  Add or update Farmer Certifications
+                </button>
+              </div>
+            )}
+          </>
+        ) : (
           <FarmerCertificationsForm 
             onCancel={handleCancel} 
             companyId={selectedCompanyId || ""} 
             productId={companyProductId || ""} 
           />
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };

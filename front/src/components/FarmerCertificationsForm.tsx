@@ -8,9 +8,9 @@ import {
 } from "@/interface/types";
 import React, { useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { File as FileIcon } from "lucide-react"; // Renombra el ícono importado
+import { File as FileIcon } from "lucide-react";
 import { uploadDocumentsToCloudinary } from "@/server/cloudinarySetting";
-import { getProductById } from "@/server/getProduct"; // Importa el servicio getProductById
+import { getProductById } from "@/server/getProduct";
 import { useUserStore } from "@/store/useUserStore";
 
 const FarmerCertificationsForm: React.FC<FarmerCertificationsFormProps> = ({
@@ -36,13 +36,11 @@ const FarmerCertificationsForm: React.FC<FarmerCertificationsFormProps> = ({
   const [selectedFiles, setSelectedFiles] = useState<Record<string, File>>({});
   const [isLoading, setIsLoading] = useState(true);
 
-  // Función para convertir una URL a un archivo tipo File
   const urlToFile = async (url: string, fileName: string): Promise<File> => {
     const response = await fetch(url);
     const blob = await response.blob();
     return new File([blob], fileName, { type: blob.type });
   };
-
 
   useEffect(() => {
     const fetchProductCertification = async () => {
@@ -51,36 +49,41 @@ const FarmerCertificationsForm: React.FC<FarmerCertificationsFormProps> = ({
         if (product && product.farmerCertification) {
           const certification = product.farmerCertification;
 
-          // Convierte cada URL de certificado en un File y establece los valores en el formulario
+          const newPreviews: IPreviewState = {
+            phytosanitary_certificate: null,
+            agricultural_producer_cert: null,
+            organic_certification: null,
+            quality_certificate: null,
+            certificate_of_origin: null,
+          };
+
           if (certification.phytosanitary_certificate) {
             const file = await urlToFile(certification.phytosanitary_certificate, "phytosanitary_certificate.pdf");
             setValue("phytosanitary_certificate", createFileList(file));
+            newPreviews.phytosanitary_certificate = { name: "Current file", size: "Existing" };
           }
           if (certification.agricultural_producer_cert) {
             const file = await urlToFile(certification.agricultural_producer_cert, "agricultural_producer_cert.pdf");
             setValue("agricultural_producer_cert", createFileList(file));
+            newPreviews.agricultural_producer_cert = { name: "Current file", size: "Existing" };
           }
           if (certification.organic_certification) {
             const file = await urlToFile(certification.organic_certification, "organic_certification.pdf");
             setValue("organic_certification", createFileList(file));
+            newPreviews.organic_certification = { name: "Current file", size: "Existing" };
           }
           if (certification.quality_certificate) {
             const file = await urlToFile(certification.quality_certificate, "quality_certificate.pdf");
             setValue("quality_certificate", createFileList(file));
+            newPreviews.quality_certificate = { name: "Current file", size: "Existing" };
           }
           if (certification.certificate_of_origin) {
             const file = await urlToFile(certification.certificate_of_origin, "certificate_of_origin.pdf");
             setValue("certificate_of_origin", createFileList(file));
+            newPreviews.certificate_of_origin = { name: "Current file", size: "Existing" };
           }
 
-          // Configura las previsualizaciones
-          setPreviews({
-            phytosanitary_certificate: { name: "Current file", size: "Existing" },
-            agricultural_producer_cert: { name: "Current file", size: "Existing" },
-            organic_certification: { name: "Current file", size: "Existing" },
-            quality_certificate: { name: "Current file", size: "Existing" },
-            certificate_of_origin: { name: "Current file", size: "Existing" },
-          });
+          setPreviews(newPreviews); // Actualiza solo con los archivos existentes
         }
       } catch (error) {
         console.error("Error fetching product certification:", error);
@@ -97,7 +100,6 @@ const FarmerCertificationsForm: React.FC<FarmerCertificationsFormProps> = ({
     fetchProductCertification();
   }, [companyId, productId, setValue]);
 
-  // Crear un FileList desde un solo archivo
   const createFileList = (file: File): FileList => {
     const dataTransfer = new DataTransfer();
     dataTransfer.items.add(file);
@@ -147,7 +149,7 @@ const FarmerCertificationsForm: React.FC<FarmerCertificationsFormProps> = ({
           <h3 className="font-semibold text-gray-900">{label}</h3>
           <p className="text-sm text-gray-500">{description}</p>
         </div>
-        <FileIcon className="text-gray-400" size={24} /> {/* Usa FileIcon aquí */}
+        <FileIcon className="text-gray-400" size={24} />
       </div>
 
       <div className="relative">
@@ -172,7 +174,7 @@ const FarmerCertificationsForm: React.FC<FarmerCertificationsFormProps> = ({
         <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-blue-500 transition-colors">
           {previews[name] ? (
             <div className="flex items-center justify-center space-x-2">
-              <FileIcon size={20} className="text-blue-500" /> {/* Usa FileIcon aquí */}
+              <FileIcon size={20} className="text-blue-500" />
               <span className="text-sm text-gray-600">
                 {previews[name]?.name}
               </span>
@@ -200,10 +202,7 @@ const FarmerCertificationsForm: React.FC<FarmerCertificationsFormProps> = ({
   const onSubmit: SubmitHandler<ICertificationsProps> = async () => {
     if (!token) return;
     try {
-      console.log("Files to upload:", selectedFiles);
-
       if (Object.keys(selectedFiles).length === 0) {
-        console.error("No files selected for upload.");
         Swal.fire({
           icon: "warning",
           title: "No Files Selected",
@@ -222,7 +221,6 @@ const FarmerCertificationsForm: React.FC<FarmerCertificationsFormProps> = ({
         onCancel();
       });
     } catch (error) {
-      console.error("Error uploading certificates:", error);
       Swal.fire({
         icon: "error",
         title: "Upload Failed",

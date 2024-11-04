@@ -5,7 +5,8 @@ import { IAgriProduct, ISettingsUserProps } from "@/interface/types";
 import { getCategories, getCompanyProducts } from "@/server/getProduct";
 import { useUserStore } from "@/store/useUserStore";
 import { getUserSettings } from "@/server/getUserSettings";
-import { Fullscreen } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Plus } from "lucide-react";
 
 const MyProductsView: React.FC = () => {
   const [productsArray, setProductsArray] = useState<IAgriProduct[]>([]);
@@ -17,6 +18,7 @@ const MyProductsView: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { token, user_id } = useUserStore();
+  const router = useRouter();
 
   useEffect(() => {
     const fetchUserSettings = async () => {
@@ -51,10 +53,10 @@ const MyProductsView: React.FC = () => {
               setError(
                 "You currently have no products loaded for this company."
               );
-              setProductsArray([]); // Clear products array explicitly
+              setProductsArray([]);
             } else {
               setProductsArray(products);
-              setError(null); // Clear error if products are found
+              setError(null);
             }
           }
         }
@@ -99,15 +101,21 @@ const MyProductsView: React.FC = () => {
       const products = await getCompanyProducts(companyId);
       if (products.length === 0) {
         setError("You currently have no products loaded for this company.");
-        setProductsArray([]); // Clear products array explicitly
+        setProductsArray([]);
       } else {
         setProductsArray(products);
-        setError(null); // Clear error if products are found
+        setError(null);
       }
     } catch (err: any) {
       setError("You currently have no products loaded for this company.");
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleAddProduct = () => {
+    if (selectedCompany) {
+      router.push(`/publishproducts?company_id=${selectedCompany}`);
     }
   };
 
@@ -122,8 +130,7 @@ const MyProductsView: React.FC = () => {
 
   return (
     <div
-      className="min-h-screen mx-auto py-4  items-center "
-      // className="container mx-auto py-8 "
+      className="min-h-screen mx-auto py-4 items-center"
       style={{
         fontFamily: "'Roboto','sans-serif', serif",
         backgroundColor: "#C4E2FF",
@@ -139,11 +146,11 @@ const MyProductsView: React.FC = () => {
       </h1>
 
       {userCompanies.length === 0 ? (
-        <div className="text-center  text-gray-500">
+        <div className="text-center text-gray-500">
           No companies registered
         </div>
       ) : (
-        <div className="mb-4 text-center ">
+        <div className="mb-4 text-center flex justify-center items-center">
           <label htmlFor="companySelect" className="mr-2">
             Select Company:
           </label>
@@ -151,7 +158,7 @@ const MyProductsView: React.FC = () => {
             id="companySelect"
             value={selectedCompany || ""}
             onChange={handleCompanyChange}
-            className="border border-grey-500  px-4 py-2 rounded-lg"
+            className="border border-grey-500 px-4 py-2 rounded-lg mr-2"
           >
             {userCompanies.map((company) => (
               <option key={company.company_id} value={company.company_id}>
@@ -159,6 +166,9 @@ const MyProductsView: React.FC = () => {
               </option>
             ))}
           </select>
+          <button onClick={handleAddProduct} className="ml-2 p-2">
+            <Plus className="text-gray-600" />
+          </button>
         </div>
       )}
 
@@ -168,7 +178,7 @@ const MyProductsView: React.FC = () => {
         }grid grid-cols-2 gap-4 max-w-screen-lg mx-auto`}
       >
         {error ? (
-          <div className=" text-center text-gray-500">{error}</div>
+          <div className="text-center text-gray-500">{error}</div>
         ) : (
           productsArray.map((product) => (
             <MyProductList
@@ -176,6 +186,11 @@ const MyProductsView: React.FC = () => {
               {...product}
               onDeleteSuccess={(productId, newActiveStatus) =>
                 updateProductsArray(productId, newActiveStatus)
+              }
+              onClick={() =>
+                router.push(
+                  `/publishproducts?company_id=${selectedCompany}&company_product_id=${product.company_product_id}`
+                )
               }
             />
           ))

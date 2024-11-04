@@ -1,12 +1,11 @@
-"use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { File } from "lucide-react";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import { FormPublishProductProps, IPublishProductProps } from "@/interface/types";
-import { createCompanyProduct, updateCompanyProduct } from "@/server/getProduct";
+import { FormPublishProductProps, IAgriProductFormValues } from "@/interface/types";
+import { createCompanyProduct, updateCompanyProduct, getProductById } from "@/server/getProduct";
 import { uploadImageToCloudinary } from "@/server/cloudinarySetting";
 import { useUserStore } from "@/store/useUserStore";
 
@@ -18,32 +17,66 @@ const FormPublishProduct: React.FC<FormPublishProductProps> = ({
   selectedCompany
 }) => {
   const router = useRouter();
-  const { register, handleSubmit, formState: { errors } } = useForm<IPublishProductProps>();
+  const searchParams = useSearchParams();
+  const { register, handleSubmit, setValue, formState: { errors } } = useForm<IAgriProductFormValues>();
   const { token, user_id } = useUserStore();
 
   const [filePreview, setFilePreview] = useState<string | null>(null);
   const [isProductCreated, setIsProductCreated] = useState(false);
-  const [isImageUploaded, setIsImageUploaded] = useState(false);
   const [createdProductId, setCreatedProductId] = useState<string | null>(null);
-  const [isReadyForCertifications, setIsReadyForCertifications] = useState(false); // nuevo estado para manejar navegación a certificaciones
+  const [isReadyForCertifications, setIsReadyForCertifications] = useState(false);
+
+  // Check if there's a company_product_id in the URL
+  const companyProductId = searchParams.get("company_product_id");
+
+  useEffect(() => {
+    const loadProductData = async () => {
+      if (companyProductId && selectedCompany) {
+        try {
+          const productData = await getProductById(selectedCompany, companyProductId);
+          if (productData) {
+            setValue("company_product_name", productData.company_product_name);
+            setValue("company_product_description", productData.company_product_description);
+            setValue("category_id", productData.category_id || "");
+            setValue("stock", productData.stock.toString());
+            setValue("minimum_order", productData.minimum_order.toString());
+            setValue("origin", productData.origin);
+            setValue("discount", productData.discount.toString());
+            setValue("company_price_x_kg", productData.company_price_x_kg.toString());
+            setValue("harvest_date", new Date(productData.harvest_date).toISOString().substring(0, 10));
+            setFilePreview(productData.company_product_img || null);
+            setCreatedProductId(companyProductId);
+            setIsProductCreated(true);
+          }
+        } catch (error) {
+          console.error("Error fetching product data:", error);
+        }
+      }
+    };
+
+    if (companyProductId) {
+      loadProductData();
+    }
+  }, [companyProductId, selectedCompany, setValue]);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (file) {
+    if (file && createdProductId) {
       const reader = new FileReader();
       reader.onloadend = () => setFilePreview(reader.result as string);
       reader.readAsDataURL(file);
-      uploadImageAfterProductCreation(file); // Llamada a la carga de imagen
+      uploadImageAfterProductCreation(file);
     }
   };
 
   const handleComeBack = () => {
-    router.push("/userpanel");
+    router.push("/myproducts");
   };
 
-  const handleCreateOrUpdateProduct: SubmitHandler<IPublishProductProps> = async (data) => {
+  const handleCreateOrUpdateProduct: SubmitHandler<IAgriProductFormValues> = async (data) => {
     if (!token) return;
-  
+
+    // Convert text values to numbers before sending the data
     const productData = {
       ...data,
       company_id: selectedCompany,
@@ -52,7 +85,7 @@ const FormPublishProduct: React.FC<FormPublishProductProps> = ({
       discount: data.discount ? Number(data.discount) : 0,
       company_price_x_kg: Number(data.company_price_x_kg),
     };
-  
+
     try {
       if (isProductCreated && createdProductId) {
         await updateCompanyProduct(createdProductId, productData, token);
@@ -79,7 +112,7 @@ const FormPublishProduct: React.FC<FormPublishProductProps> = ({
         text: `There was an error ${isProductCreated ? 'updating' : 'creating'} your product`,
       });
       console.error("Error creating or updating product:", error);
-    }    
+    }
   };
 
   const uploadImageAfterProductCreation = async (file: File) => {
@@ -92,8 +125,7 @@ const FormPublishProduct: React.FC<FormPublishProductProps> = ({
       const response = await uploadImageToCloudinary(file, "companyProduct", createdProductId, token);
       if (response.secure_url) {
         setFilePreview(response.secure_url);
-        setIsImageUploaded(true);
-        setIsReadyForCertifications(true); // Ahora está listo para certificaciones
+        setIsReadyForCertifications(true);
         MySwal.fire({
           icon: 'success',
           title: 'Image Uploaded',
@@ -120,7 +152,7 @@ const FormPublishProduct: React.FC<FormPublishProductProps> = ({
 
   return (
     <div className="max-w-2xl mx-auto p-6 font-inter">
-      <h2 className="text-2xl font-bold mb-6">Publish Product</h2>
+      <h2 className="text-2xl font-bold mb-6">{companyProductId ? "Update Product" : "Add Product"}</h2>
       <form className="space-y-6" onSubmit={handleSubmit(handleCreateOrUpdateProduct)}>
         {/* Product Name */}
         <div className="form-group">
@@ -140,7 +172,7 @@ const FormPublishProduct: React.FC<FormPublishProductProps> = ({
           )}
         </div>
 
-        {/* Description */}
+         {/* Description */}
         <div className="form-group">
           <label className="block mb-2 font-semibold">Description</label>
           <textarea
@@ -277,7 +309,6 @@ const FormPublishProduct: React.FC<FormPublishProductProps> = ({
               )}
             </div>
           </div>
-          {errors.company_product_img && <p className="text-red-500 text-sm mt-1">{errors.company_product_img.message}</p>}
         </div>
 
         {/* Button to Go to Next Step */}
