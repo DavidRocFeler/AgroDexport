@@ -158,9 +158,20 @@ export interface ILabelComponentProps {
 }
 
 export interface IOrder {
-  id: number;
-  status: string;
-  date: Date;
+  order_id: string;
+  order_date: Date;
+  orderDetail: {
+    order_status: string;
+    total: number;
+  };
+  buyer: {
+    company_name: string;
+    role_name: string;
+  };
+  supplier: {
+    company_name: string;
+    role_name: string;
+  };
   products: IAgriProduct[];
 }
 
@@ -381,11 +392,8 @@ export interface FarmerCertificationsFormProps {
   productId: string;
 }
 
-<<<<<<< HEAD
-=======
 
 // for FileInput
->>>>>>> 7f0519376cc0279e0d4f6d1fb81e1cdf23cc281f
 export interface FileInputProps {
   name: keyof ICertificationsProps;
   label: string;
@@ -456,13 +464,6 @@ export interface ICompany {
   };
 }
 
-export interface IOrder {
-  order_date: DateTime,
-  orderDetail: {
-    status: string;
-    total: number;
-  }
-}
 
 export interface IOrderDetail {
 

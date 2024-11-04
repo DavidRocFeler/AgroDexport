@@ -41,6 +41,7 @@ const AdminDashboardRow: React.FC = () => {
     if (token) {
       try {
         const data: IOrder[] = await getOrders(token);
+        console.log("Orders Data:", data); // Verificar el formato de los datos
         setOrders(data);
       } catch (err) {
         console.error("Error loading orders", err);
@@ -73,14 +74,23 @@ const AdminDashboardRow: React.FC = () => {
   const percentageWithDiscount = products.length > 0 ? ((productsWithDiscount / products.length) * 100).toFixed(1) : "0";
   const percentageWithoutDiscount = (100 - parseFloat(percentageWithDiscount)).toFixed(1);
 
-  // Datos para el gráfico de barras (de ejemplo)
+// Calcular datos para el gráfico de barras (Ventas por día)
+const salesData = orders.reduce((acc, order) => {
+  if (order.orderDetail?.order_status === "finished") {
+    const date = new Date(order.order_date).toLocaleDateString(); // Formatear fecha como string
+    acc[date] = (acc[date] || 0) + (order.orderDetail?.total || 0); // Sumar al total del día
+  }
+  return acc;
+}, {} as Record<string, number>);
+
+const barLabels = Object.keys(salesData);
 const barData = {
-  labels: ["Fr", "Th", "We", "Tu", "Mo"],
+  labels: barLabels,
   datasets: [
     {
-      label: "Value",
-      data: [1000, 750, 800, 850, 600],
-      backgroundColor: ["#88c2c9", "#b8e0c4", "#f4e9a9", "#c2a2c4", "#7aadc6"],
+      label: "Total Sales",
+      data: barLabels.map(date => salesData[date]),
+      backgroundColor: "#88c2c9",
     },
   ],
 };
@@ -89,22 +99,22 @@ const barData = {
   // Calcular datos para el gráfico de línea (Order Status por fecha)
   const orderStatusData = orders.reduce((acc, order) => {
     const date = new Date(order.order_date).toLocaleDateString(); // Formatea la fecha
-    const status = order.orderDetail?.status;
+    const status = order.orderDetail?.order_status;
 
     if (!acc[date]) {
-      acc[date] = { pending: 0, cancelled: 0, finished: 0 };
+      acc[date] = { pending: 0, canceled: 0, finished: 0 };
     }
 
     if (status === "pending") {
       acc[date].pending += order.orderDetail?.total || 0;
-    } else if (status === "cancelled") {
-      acc[date].cancelled += order.orderDetail?.total || 0;
+    } else if (status === "canceled") {
+      acc[date].canceled += order.orderDetail?.total || 0;
     } else if (status === "finished") {
       acc[date].finished += order.orderDetail?.total || 0;
     }
 
     return acc;
-  }, {} as Record<string, { pending: number; cancelled: number; finished: number }>);
+  }, {} as Record<string, { pending: number; canceled: number; finished: number }>);
 
   // Preparar datos para el gráfico de líneas
   const lineLabels = Object.keys(orderStatusData);
@@ -119,8 +129,8 @@ const barData = {
         fill: false,
       },
       {
-        label: "Cancelled",
-        data: lineLabels.map(date => orderStatusData[date].cancelled),
+        label: "Canceled",
+        data: lineLabels.map(date => orderStatusData[date].canceled),
         borderColor: "#FF6384",
         backgroundColor: "#FF6384",
         fill: false,
@@ -159,7 +169,7 @@ const barData = {
       </div>
 
       <div className={styles.card}>
-        <div className={styles.header}>BARS</div>
+        <div className={styles.header}>SALES INFO</div>
         <div className={styles.chartContainer}>
           <Bar data={barData} options={{ responsive: true, maintainAspectRatio: false }} />
         </div>
