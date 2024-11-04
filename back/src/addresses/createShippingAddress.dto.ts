@@ -10,13 +10,14 @@ export class CreateShippingAddressDto {
 
     @ApiProperty({ description: 'User first name', example: "Juan", maxLength: 50 })
     @IsOptional()
-    @Matches(/^[a-zA-ZÀ-ÿÑñ]+$/, { message: 'The first name should only contain letters and no spaces' })
+    @Matches(/^[a-zA-ZÀ-ÿÑñ\s]+$/, { message: 'The first name should only contain letters and spaces' })
+
     @Length(1, 50)
     contact_name: string;
   
     @ApiProperty({ description: 'User last name',  example: "Perez", maxLength: 50 })
     @IsOptional()
-    @Matches(/^[a-zA-ZÀ-ÿÑñ]+$/, { message: 'The last name should only contain letters and no spaces' })
+    @Matches(/^[a-zA-ZÀ-ÿÑñ\s]+$/, { message: 'The first name should only contain letters and spaces' })
     @Length(1, 50)
     contact_lastname: string;
 
