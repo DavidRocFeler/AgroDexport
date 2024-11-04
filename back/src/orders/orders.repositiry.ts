@@ -20,11 +20,39 @@ export class OrderRepository {
         return this.prisma.order.findMany({
             include: {
                 orderDetail: true,
-                buyer: true,         
-                supplier: true        
+                buyer: {
+                    select: {
+                        company_name: true,
+                        user: {
+                            select: {
+                                role: {
+                                    select: {
+                                        role_name: true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                supplier: {
+                    select: {
+                        company_name: true,
+                        user: {
+                            select: {
+                                role: {
+                                    select: {
+                                        role_name: true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         });
     }
+    
+    
 
     async getOrdersByBuyerName(buyerName: string): Promise<Order[]> {
         return this.prisma.order.findMany({

@@ -12,6 +12,7 @@ import { getAllUsers } from "@/server/getAllUser";
 import { updateUserSettings } from "@/server/updateUserSettings";
 import { useUserStore } from "@/store/useUserStore";
 import Swal from "sweetalert2";
+import AdminOrderList from "@/components/AdminOrderList";
 
 const DashboardView: React.FC = () => {
   const [users, setUsers] = useState<ISettingsUserProps[]>([]);
@@ -228,7 +229,7 @@ const DashboardView: React.FC = () => {
               <AdminProductList />
             </div>
             <div className="bg-white rounded-lg shadow p-6 h-[400px] overflow-auto">
-              <h2>AdminOrdersList</h2>
+              <AdminOrderList />
             </div>
           </div>
 
