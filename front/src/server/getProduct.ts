@@ -149,18 +149,3 @@ export const getProductById = async (companyId: string, productId: string): Prom
     throw new Error(error.message || "Unexpected error fetching product by ID");
   }
 };
-
-
-
-
-
-// export async function getProductByCategorieId(categoryId: string): Promise<IAgroProduct[]> {
-//     try {
-//         const product: IAgroProduct[] = await getProductDB();
-//         const productFiltered = product.filter((product) => product.categoryId.toString() === categoryId);
-//         if(!productFiltered.length) throw new Error("Product by id not found")
-//             return productFiltered;
-//     } catch (error: any) {
-//         throw new Error(error)
-//     }
-// };
