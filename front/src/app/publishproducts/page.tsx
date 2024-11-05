@@ -3,7 +3,7 @@ import React from "react";
 
 const PublishProducts = () => {
   return (
-    <div>
+    <div className="bg-[#d8fba7]">
       <PublishProductView />
     </div>
   );
