@@ -1,13 +1,9 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { IShippingAddress } from "@/interface/types"; // Asegúrate de que esta ruta sea correcta
-import { getShippingAddressByCompany } from "@/server/getShippingAddressByCompany";
+import { IShippingAddress } from "@/interface/types"; 
 import { updateShippingAddress } from "@/server/updateShippingAddress";
 import { useUserStore } from "@/store/useUserStore";
-import Swal from "sweetalert2";
-import { validateShippingAddress } from "@/helpers/validateShippingAddress";
-import { getCompanyByUser } from "@/server/getCompanyByUser";
-import { getCompanySettings } from "@/server/getCompanyById";
+import Swal from "sweetalert2"
 import { getShippingAddressSettings } from "@/server/getShippingAddress";
 
 const ShippingAddressForm = () => {
@@ -25,33 +21,33 @@ const ShippingAddressForm = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [shippingData, setShippingData] = useState<IShippingAddress>(initialState);
   const [originalData, setOriginalData] = useState<IShippingAddress>(shippingData);
-  const { user_id, token } = useUserStore();
-  const company_id = localStorage.getItem("company_id");
+  const { token } = useUserStore();
   const [shippingAddressId, setShippingAddressId] = useState<string | null>(null);
+  const [companyId, setCompanyId] = useState<string | null>(null);
 
-  
   useEffect(() => {
-    const fetchShippingAddressByCompanyId = async () => {
-      if (company_id && token) {
-        try {
-          const data = await getShippingAddressSettings(company_id, token);
-
-          // Actualiza el estado local en lugar de `localStorage`
-          if (data.shipping_address_id) {
-            setShippingAddressId(data.shipping_address_id);
+    const fetchShippingAddressSettings = async () => {
+      const currentCompanyId = localStorage.getItem("company_id");
+      if (currentCompanyId && token) {
+        if (currentCompanyId !== companyId) {
+          setCompanyId(currentCompanyId);
+          try {
+            const data = await getShippingAddressSettings(currentCompanyId, token);
+            setShippingData(data);
+            setOriginalData(data);
+            // console.log('Data structure:', JSON.stringify(data, null, 1));
+          } catch (error) {
+            console.error("Error fetching shipping address settings:", error);
           }
-          setShippingData(data);
-          setOriginalData(data);
-          // Para debug
-          console.log('Data structure:', JSON.stringify(data, null, 1));
-        } catch (error) {
-          console.error("Failed fetching shipping address", error);
         }
       }
     };
 
-    fetchShippingAddressByCompanyId();
-  }, [company_id, token]);
+    const interval = setInterval(fetchShippingAddressSettings, 1000);
+    fetchShippingAddressSettings();
+
+    return () => clearInterval(interval);
+  }, [token, companyId]);
 
   useEffect(() => {
     if (shippingAddressId) {
@@ -69,6 +65,7 @@ const ShippingAddressForm = () => {
   };
 
   const handleSave = async () => {
+    const company_id = localStorage.getItem("company_id");
     if (JSON.stringify(shippingData) === JSON.stringify(originalData)) {
       Swal.fire({
         title: 'No changes to save',
@@ -79,7 +76,7 @@ const ShippingAddressForm = () => {
       setIsEditing(false);
       return;
     }
-
+  
     if (!token) {
       return;
     }
@@ -98,10 +95,19 @@ const ShippingAddressForm = () => {
     //   }
     //   return;
     // }
+  
+    console.log('Datos de envío que se van a guardar:', shippingData);
+    
+    const updatedFields: Partial<IShippingAddress> = {};
+    Object.keys(shippingData).forEach((key) => {
+      if (shippingData[key as keyof IShippingAddress] !== originalData[key as keyof IShippingAddress]) {
+        updatedFields[key as keyof IShippingAddress] = shippingData[key as keyof IShippingAddress];
+      }
+    });
 
     try {
-      if (shippingAddressId) {
-        await updateShippingAddress(shippingAddressId, shippingData, token);
+      if (company_id) {
+        await updateShippingAddress(company_id, updatedFields, token); 
         setOriginalData(shippingData);
         setIsEditing(false);
         await Swal.fire({
@@ -121,8 +127,9 @@ const ShippingAddressForm = () => {
       });
       console.error("Error saving:", error.message);
     }
-  };
+  };  
 
+ 
   const handleEdit = () => {
     setIsEditing(true);
   };

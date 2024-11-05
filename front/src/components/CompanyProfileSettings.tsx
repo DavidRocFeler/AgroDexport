@@ -79,24 +79,42 @@ const CompanyForms = () => {
       return;
     }
 
-    const errors = validateCompanySettings(companyData);
-    if (Object.keys(errors).length > 0) {
-      const firstErrorField = Object.keys(errors)[0];
-      const firstErrorMessage = errors[firstErrorField as keyof typeof errors];
+    // const errors = validateCompanySettings(companyData);
+    // if (Object.keys(errors).length > 0) {
+    //   const firstErrorField = Object.keys(errors)[0];
+    //   const firstErrorMessage = errors[firstErrorField as keyof typeof errors];
 
-      if (firstErrorMessage) {
-        Swal.fire({
-          icon: 'warning',
-          title: 'Validation Error',
-          text: `${firstErrorMessage}`,
-        });
+    //   if (firstErrorMessage) {
+    //     Swal.fire({
+    //       icon: 'warning',
+    //       title: 'Validation Error',
+    //       text: `${firstErrorMessage}`,
+    //     });
+    //   }
+    //   return;
+    // }
+
+    const updatedFields: Partial<ICompany> = {};
+    Object.keys(companyData).forEach((key) => {
+      if (companyData[key as keyof ICompany] !== originalData[key as keyof ICompany]) {
+        // Convertir tax_identification_number a número si es necesario
+        if (key === 'tax_identification_number' && typeof companyData[key] === 'string') {
+          updatedFields[key as keyof ICompany] = Number(companyData[key]);
+        } else {
+          updatedFields[key as keyof ICompany] = companyData[key as keyof ICompany];
+        }
       }
-      return;
-    }
+    });
 
     try {
       if (company_id) {
-        await updateCompanySettings(company_id, companyData, token);
+        
+        console.log("Datos a enviar al backend:", {
+          company_id,
+          companyData,
+        });
+        await updateCompanySettings(company_id, updatedFields, token);
+      
         setOriginalData(companyData);
         setIsEditing(false);
         await Swal.fire({
@@ -114,7 +132,7 @@ const CompanyForms = () => {
         title: 'Error',
         text: error,
       });
-      console.error("Error saving:", error.message);
+      console.error(error);
     }
   };
 
