@@ -217,7 +217,7 @@ const ProfileView: React.FC = () => {
   const renderButtons = () => {
     if (userIdExists && !companyIdExists) {
       // Mostrar botones si solo hay user_id
-      return ["Information contact", "Security settings", "Payments method"].map((item, index) => (
+      return ["Information contact", "Security settings"].map((item, index) => (
         <button
           key={index}
           onClick={() => setActiveSection(item)} 
@@ -230,7 +230,7 @@ const ProfileView: React.FC = () => {
       ));
     } else if (companyIdExists) {
       // Mostrar botones si hay company_id
-      return ["Company information", "Warehouse address", "Payments method"].map((item, index) => (
+      return ["Company information", "Warehouse address"].map((item, index) => (
         <button
           key={index}
           onClick={() => setActiveSection(item)} 
@@ -285,7 +285,7 @@ const ProfileView: React.FC = () => {
               <div className="col-span-3">
                 <div className="bg-white rounded-2xl shadow-lg p-4 h-[500px] relative">
                   <div className="space-y-10 mt-1 w-full">
-                    {["Information contact", "Security settings", "Payments methood"].map((item, index) => (
+                    {["Information contact", "Security settings"].map((item, index) => (
                       <button
                         key={index}
                         onClick={() => setActiveSection(item)} 

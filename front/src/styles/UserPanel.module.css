@@ -67,3 +67,14 @@
     transform: scale(0.95);
     box-shadow: none;
 }
+.ButtonDashboard {
+    left: 21.3rem;
+    position: absolute;
+    border: solid 1px black;
+    padding: 0.5rem 1rem 0.5rem 1rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.ButtonDashboard:active {
+    transform: scale(0.95);
+    box-shadow: none;
+}

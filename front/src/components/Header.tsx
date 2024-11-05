@@ -98,7 +98,7 @@ const Header: React.FC = () => {
           >
             User panel
           </button>
-          <Link
+          {/* <Link
             href="/tradecontract"
             className="text-[0.9rem]"
             style={{ color: textColor }}
@@ -111,7 +111,7 @@ const Header: React.FC = () => {
             style={{ color: textColor }}
           >
             B2B
-          </Link>
+          </Link> */}
           {isAuthenticated ? (
             <>
               <span

@@ -254,7 +254,7 @@ const NotificationsModal: React.FC<INotificationsProps> = ({
   if (!modalVisible) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-end pt-16">
+    <div className="fixed inset-0 z-50 flex items-start justify-end top-[5.5rem] ">
       <div className="w-full max-w-md bg-white rounded-lg shadow-lg">
         {/* Main Header */}
         <div className="px-4 py-3 border-b border-gray-200">

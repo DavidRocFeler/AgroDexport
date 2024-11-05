@@ -66,11 +66,11 @@ const ProductDetail: React.FC<IAgriProduct> = ({
   const handleProductId = () => {
     router.push("/supplierhistoryproduct");
   };
-
+  
   return (
-    <div className="md:flex flex-col pt-[2rem] pb-[2rem] ">
+    <div className="md:flex flex-col pt-[5rem] pb-[4rem] bg-gray-50">
       <div className="flex flex-row justify-evenly">
-        <div className="flex flex-col w-[40%] border-[1px] border-black border-solid ">
+        <div className="flex flex-col w-[40%] border-solid border-[#5c8b1b] border-[1px] ">
           <figure className={styles.MainPicture}>
             <img
               src={company_product_img}
@@ -78,7 +78,7 @@ const ProductDetail: React.FC<IAgriProduct> = ({
               className="w-[30rem] m-auto object-cover "
             />
           </figure>
-          <figure className="flex flex-row mt-[2rem] justify-evenly">
+          {/* <figure className="flex flex-row mt-[2rem] justify-evenly">
             <img
               src={company_product_img}
               alt="MainProduct"
@@ -94,11 +94,11 @@ const ProductDetail: React.FC<IAgriProduct> = ({
               alt="MainProduct"
               className="w-[9rem] h-auto mr.[1rem] "
             />
-          </figure>
+          </figure> */}
         </div>
-        <div className="border-[1px] border-black border-solid w-[45%] relative overflow-hidden  ">
+        <div className="w-[45%] relative overflow-hidden">
           <table className={styles.CustomTable}>
-            <tbody>
+            <tbody className={styles.Tbody} >
               <tr className={styles.Row}>
                 <td className={styles.ColLeft}> Name: </td>
                 <td className={styles.ColRight}> {company_product_name} </td>
@@ -129,13 +129,14 @@ const ProductDetail: React.FC<IAgriProduct> = ({
               </tr>
             </tbody>
           </table>
-          <div className="border-black border-solid border-[1px] m-auto absolute bottom-0 ">
-            <p className="p-[2rem] "> {company_product_description} </p>
-          </div>
+          
         </div>
       </div>
+      <div className={styles.Description}>
+          <p className="p-[2rem] "> {company_product_description} </p>
+      </div>
       <div className="flex flex-row justify-evenly mt-[2rem] ">
-        <div className="flex flex-row  w-[65%] border-[1px] border-solid border-black ">
+        <div className="flex flex-row  w-[65%]">
           <table className={styles.TableTwoColumns}>
             <tbody className={styles.BodyRows}>
               <tr className={styles.Row}>
@@ -148,7 +149,7 @@ const ProductDetail: React.FC<IAgriProduct> = ({
               </tr>
               <tr className={styles.Row}>
                 <td className={styles.LeftCol}> Fat: </td>
-                <td className={styles.RightCol}> {fat} </td>
+                <td className={styles.RightCol}> {fat}  </td>
               </tr>
               <tr className={styles.Row}>
                 <td className={styles.LeftCol}> Carbs: </td>
@@ -181,7 +182,7 @@ const ProductDetail: React.FC<IAgriProduct> = ({
             </tbody>
           </table>
         </div>
-        <div className="flex flex-col w-[20%] border-[1px] border-solid border-black ">
+        <div className="flex flex-col w-[20%]">
           <button onClick={handleAddShop} className={styles.ButtonCartshop}>
             {" "}
             Add to cart{" "}

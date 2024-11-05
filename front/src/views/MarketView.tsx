@@ -6,10 +6,12 @@ import ProductCard from '@/components/ProductCard';
 import { getProductDB } from '@/server/getProduct';
 import { IAgriProduct } from '@/interface/types';
 import { ArrowRight, ArrowLeft } from 'lucide-react';
+import Loading from '@/components/Loading';
 
 const MarketView: React.FC = () => {
   const [products, setProducts] = useState<IAgriProduct[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true); // Controla solo la carga de las cards
   const [currentPage, setCurrentPage] = useState(0);
 
   const ROWS = 3;
@@ -17,12 +19,16 @@ const MarketView: React.FC = () => {
   const PRODUCTS_PER_PAGE = ROWS * COLS;
 
   const loadProducts = async (filters = {}) => {
+    setIsLoading(true); // Inicia la carga solo para las cards
     try {
       const data: IAgriProduct[] = await getProductDB(filters);
       setProducts(data.filter(product => product.isActive));
+      setError(null);
     } catch (err) {
       console.error("Error loading products:", err);
       setError("No se pudieron cargar los productos");
+    } finally {
+      setIsLoading(false); // Finaliza la carga solo para las cards
     }
   };
 
@@ -46,23 +52,24 @@ const MarketView: React.FC = () => {
     }
   };
 
-    // Nueva función para manejar el cambio de filtros
-    const handleFilterChange = (filters: any) => {
-      setCurrentPage(0); // Reiniciar la página al aplicar filtros
-      loadProducts(filters); // Cargar productos con los nuevos filtros
-    };
+  const handleFilterChange = (filters: any) => {
+    setCurrentPage(0);
+    loadProducts(filters);
+  };
 
   return (
     <div className='pb-[3rem]' style={{ background: "white" }}>
       <div className='relative'>
         <Image src="https://res.cloudinary.com/deflfnoba/image/upload/v1730597274/Front/zacjtoy7yhx5bbms8ckg.png" alt="Market View" layout="responsive" width={500} height={300} />
-        <p className='text-[5rem] text-white w-[30rem] leading-[5rem] absolute top-[5rem] left-[4rem] ' style={{fontFamily: 'Times New Roman'}}> Track your product in real time </p>
+        <p className='text-[5rem] text-white w-[30rem] leading-[5rem] absolute top-[5rem] left-[4rem]' style={{ fontFamily: 'Times New Roman' }}> Track your product in real time </p>
       </div>
       <ProductSearch onFilterChange={handleFilterChange} />
       
       <div className='w-[95%] m-auto'>
         {error ? (
           <div>{error}</div>
+        ) : isLoading ? ( // Muestra Loading solo para las cards
+          <Loading />
         ) : (
           <>
             {products.length > 0 ? (
@@ -89,7 +96,7 @@ const MarketView: React.FC = () => {
                   ))}
                 </div>
 
-                <div className="flex justify-between px-8 mt-[4rem] ">
+                <div className="flex justify-between px-8 mt-[4rem]">
                   <button 
                     onClick={goLeft} 
                     disabled={!canGoLeft}
@@ -110,7 +117,7 @@ const MarketView: React.FC = () => {
                 </div>
               </div>
             ) : (
-              <div className="text-center py-4">No se encontraron productos.</div>
+              <div>No hay productos disponibles</div>
             )}
           </>
         )}

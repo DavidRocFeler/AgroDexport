@@ -66,22 +66,22 @@ const UserProfileForm = () => {
       return;
     }
 
-    const errors = validateUserSettings(userData);
-    if (Object.keys(errors).length > 0) {
-      // Encontrar el primer error
-      const firstErrorField = Object.keys(errors)[0];
-      const firstErrorMessage = errors[firstErrorField as keyof typeof errors];
+  //   const errors = validateUserSettings(userData);
+  //   if (Object.keys(errors).length > 0) {
+  //     // Encontrar el primer error
+  //     const firstErrorField = Object.keys(errors)[0];
+  //     const firstErrorMessage = errors[firstErrorField as keyof typeof errors];
 
-      if (firstErrorMessage) {
-        Swal.fire({
-          icon: 'warning',
-          title: 'Validation Error',
-          text: `${firstErrorMessage}`,
-        });
-      }
+  //     if (firstErrorMessage) {
+  //       Swal.fire({
+  //         icon: 'warning',
+  //         title: 'Validation Error',
+  //         text: `${firstErrorMessage}`,
+  //       });
+  //     }
 
-    return;
-  }
+  //   return;
+  // }
     
     const updatedFields: Partial<ISettingsUserProps> = {};
     Object.keys(userData).forEach((key) => {

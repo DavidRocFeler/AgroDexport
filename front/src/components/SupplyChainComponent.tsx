@@ -17,7 +17,7 @@ const SupplyChainComponent: React.FC<ISupplyChainProps> = ({
               {documentD && <li>{documentD}</li>}
               {documentE && <li>{documentE}</li>}
             </ul>
-            <button className='border-[#1A8917] border-[1px] border-solid rounded-[20px] pt-[0.3rem] pb-[0.3rem] pl-[1rem] pr-[1rem] text-[0.9rem] text-[#1A8917] '> See supply chain </button>
+            {/* <button className='border-[#1A8917] border-[1px] border-solid rounded-[20px] pt-[0.3rem] pb-[0.3rem] pl-[1rem] pr-[1rem] text-[0.9rem] text-[#1A8917] '> See supply chain </button> */}
         </div>
     </div>
   )
