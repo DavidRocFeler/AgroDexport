@@ -488,4 +488,53 @@ export interface IOrderDetail {
   total: number;
 }
 
+export interface IOrderHistory{
+
+  order_id: string;
+  id_company_sell: string;
+  shipping_address_id: string | null;
+  order_details_id: string;
+  order_date: string;
+  payment_id: string;
+  id_company_buy: string;
+  supply_chain_id: string | null;
+  account_paypal:string;
+  orderDetail : {
+      order_details_id: string;
+      subtotal: number;
+      logistic_cost: number;
+      tariff: number;
+      tax: number;
+      discount: number;
+      total: number;
+      order_status: string;
+  }
+  buyer:{
+    company_name: string;
+  }
+  supplier:{
+    company_name: string;
+  }
+}
+
+interface IOrderInfo {
+  company_product_id: string;
+  stock: number;
+}
+
+interface IInfoProduct {
+  company_product_name: string;
+  company_product_description: string;
+  origin: string;
+  company_price_x_kg: number;
+  harvest_date: string; // O Date
+  company_product_img: string;
+}
+
+export interface IProductDetails {
+  orderinfo: IOrderInfo;
+  infoProduct: IInfoProduct;
+}
+
+
 

@@ -248,7 +248,7 @@ model ProducStockOrderDetail {
   order_product_stock_id String                                    @id @default(uuid())
   order_details_id       String
   company_product_id     String
-  stock               Int
+  stock                   Int
   order_details          OrderDetail                               @relation(fields: [order_details_id], references: [order_details_id])
   companyProducts        ProductStockOrderDetailOnCompanyProduct[]
 

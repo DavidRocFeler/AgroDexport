@@ -158,34 +158,7 @@ export class OrderRepository {
             
             
     
-            async getOrdersByCompanyIdRepository(companyId: string): Promise<Order[]> {
-                const orders = await this.prisma.order.findMany({
-                    where: {
-                        OR: [
-                            { id_company_buy: companyId },  
-                            { id_company_sell: companyId }  
-                        ]
-                    },
-                    include: {
-                        orderDetail: true,
-                        buyer: { 
-                            select: {
-                                company_name: true, 
-                            }
-                        },
-                        supplier: { 
-                            select: {
-                                company_name: true, 
-                            }
-                        }
-                    }
-                });
-                return orders;
-            }
-            
-        
-        
-            async getOrderByIdRepository(orderId: string) {
+                 async getOrderByIdRepository(orderId: string) {
                 return this.prisma.order.findUnique({
                     where: { order_id: orderId },
                     include: {
@@ -221,6 +194,7 @@ export class OrderRepository {
                     }
                 });
             }
+  
     async createOrderProductsRepository(createOrderProductsDto: CreateOrderProductsDto) {
         let {subtotal, logistic_cost, tariff, tax, discount, total } = createOrderProductsDto
         const orderStatus = OrderStatus.Pending;

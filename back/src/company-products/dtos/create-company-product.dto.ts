@@ -65,10 +65,10 @@ export class CreateCompanyProductDto {
         example: 10,
     })
     @IsNumber({}, { message: 'discount must be a number.' })
-    @IsNotEmpty({ message: 'discount cannot be empty.' })
     @Min(0, { message: 'discount must be at least 0.' })
     @Max(99, { message: 'discount must be at most 99.' })
-    discount: number;
+    discount: number = 0;
+    
     
     @ApiProperty({
         description: 'Price per kilogram of the company',
