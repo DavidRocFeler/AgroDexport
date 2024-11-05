@@ -158,39 +158,43 @@ export class OrderRepository {
             
             
     
-            async getOrdersByCompanyIdRepository(companyId: string): Promise<Order[]> {
-                const orders = await this.prisma.order.findMany({
-                    where: {
-                        OR: [
-                            { id_company_buy: companyId },  
-                            { id_company_sell: companyId }  
-                        ]
-                    },
+                 async getOrderByIdRepository(orderId: string) {
+                return this.prisma.order.findUnique({
+                    where: { order_id: orderId },
                     include: {
                         orderDetail: true,
-                        buyer: { 
+                        buyer: {
                             select: {
-                                company_name: true, 
+                                company_name: true,
+                                user: {
+                                    select: {
+                                        user_id: true,
+                                        user_name: true,
+                                        credential: {
+                                            select: { email: true }
+                                        }
+                                    }
+                                }
                             }
                         },
-                        supplier: { 
+                        supplier: {
                             select: {
-                                company_name: true, 
+                                company_name: true,
+                                user: {
+                                    select: {
+                                        user_id: true,
+                                        user_name: true,
+                                        credential: {
+                                            select: { email: true }
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
                 });
-                return orders;
             }
-            
-        
-        
-    async getOrderByIdRepository(orderId: string) {
-        return this.prisma.order.findUnique({
-            where: {order_id: orderId },
-            include: {orderDetail: true}
-        })
-    }
+  
     async createOrderProductsRepository(createOrderProductsDto: CreateOrderProductsDto) {
         let {subtotal, logistic_cost, tariff, tax, discount, total } = createOrderProductsDto
         const orderStatus = OrderStatus.Pending;

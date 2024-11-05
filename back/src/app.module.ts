@@ -20,6 +20,7 @@ import { SupplyChainModule } from './supply-chain/supply-chain.module';
 import { JwtModule } from "@nestjs/jwt"
 import { PreloadService } from './preloadService';
 import { EmailModule } from './nodemail/nodemail.module';
+import { ChatbotModule } from './chatbot/chatbot.module';
 
 @Module({
   imports: [
@@ -40,11 +41,13 @@ import { EmailModule } from './nodemail/nodemail.module';
     FarmerCertificationsModule, 
     PrismaModule, 
     SupplyChainModule,
+    ChatbotModule,
     JwtModule.register({
       global: true,
       // signOptions: { expiresIn: "4h" },
       secret: process.env.JWT_SECRET,
     }),
+    ChatbotModule,
   ],
   controllers: [AppController],
   providers: [AppService, PreloadService],

@@ -1,117 +1,52 @@
-import type { NextPage } from "next";
-import styles from "../styles/ChatBot.module.css";
+"use client";
+import React, { useState } from 'react';
+import { useChatbotSocket } from '@/server/chatbotService';
 
-const ChatBot: NextPage = () => {
+const ChatBotComponent: React.FC = () => {
+  const { messages, sendMessage } = useChatbotSocket();
+  const [input, setInput] = useState('');
+
+  const handleSendMessage = () => {
+    if (input.trim()) {
+      sendMessage(input);
+      setInput('');
+    }
+  };
+
+  console.log("Rendered messages in component:", messages);
+
   return (
-    <div className={styles.previewPane}>
-      <div className={styles.chatContainer}>
-        <div className={styles.header}>
-          <div className={styles.header1} />
-          <div className={styles.editHeaderContent}>
-            <div className={styles.logoParent}>
-              <img
-                className={styles.logoIcon}
-                alt=""
-                src="../WappGPT - logo.svg"
-              />
-              <div className={styles.leftSide}>
-                <div className={styles.brandName}>
-                  <b className={styles.starklyai}>ChatBot</b>
-                </div>
-                <div className={styles.status}>
-                  <div className={styles.online}>Online</div>
-                  <div className={styles.statusChild} />
-                </div>
-              </div>
-            </div>
-            <img
-              className={styles.icons}
-              alt=""
-              src="/minus-cirlce_chatbot.svg"
-            />
+    <div className="chat-container bg-gray-100 p-4 rounded shadow-md max-w-md mx-auto">
+      <h2 className="text-lg font-bold mb-4 text-center">AgroDexports ChatBot</h2>
+      <div className="messages bg-white p-4 rounded overflow-y-auto h-64">
+        {messages.map((msg, index) => (
+          <div
+            key={index}
+            className={`p-2 my-1 rounded-md ${
+              msg.user === 'bot' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'
+            }`}
+          >
+            <strong>{msg.user === 'bot' ? 'Bot' : 'You'}:</strong> {msg.text || "No message"}
           </div>
-        </div>
-        <div className={styles.transcript}>
-          <div className={styles.systemMessage}>
-            <div className={styles.bubbleSender}>
-              <div className={styles.messages}>
-                <div className={styles.helloSystemMessageContainer}>
-                  <p className={styles.rapidlyBuildStunning}>
-                    Lorem ipsum asdas dasda da dadadd adasdd. Lorem ipsum asdas
-                    dasda da dadadd adasdd. Lorem ipsum asdas.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className={styles.userMessage}>
-            <div className={styles.bubbleSender1}>
-              <div className={styles.messages}>
-                <div
-                  className={styles.helloSystemMessageContainer}
-                >{`Lorem ipsum asdas dasda da dadadd adasdd. Lorem ipsum  `}</div>
-              </div>
-            </div>
-
-            <img className={styles.checkIcon1} alt="" src="check.png" />
-            <img
-              className={styles.avatars48x48}
-              alt=""
-              src="../avatar_chatbot.png"
-            />
-          </div>
-
-          <div className={styles.systemMessage}>
-            <div className={styles.bubbleSender}>
-              <div className={styles.messages}>
-                <div className={styles.helloSystemMessageContainer}>
-                  <p className={styles.rapidlyBuildStunning}>
-                    Lorem ipsum asdas dasda da dadadd adasdd. Lorem ipsum asdas
-                    dasda da dadadd adasdd. Lorem ipsum asdas.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="relative">
-              <div className="absolute inset-0 w-12 h-12 bg-black rounded-full"></div>
-              <img
-                className="relative z-10 translate-y-2 translate-x-1 "
-                alt=""
-                src="../logo_chatbot.svg"
-              />
-            </div>
-          </div>
-          <div className={styles.userMessage}>
-            <div className={styles.bubbleSender1}>
-              <div className={styles.messages}>
-                <div className={styles.helloSystemMessageContainer}>
-                  Lorem ipsum asdas dasda da dadadd adasdd. Lorem ipsum asdas
-                  dasda da dadadd adasdd. Lorem ipsum asdas.
-                </div>
-              </div>
-            </div>
-
-            <img className={styles.checkIcon1} alt="" src="check.png" />
-            <img
-              className={styles.avatars48x48}
-              alt=""
-              src="../avatar_chatbot.png"
-            />
-          </div>
-        </div>
-        <div className={styles.footer4}>
-          <div className={styles.textArea}>
-            <div className={styles.typeYourMessage}>
-              Type your message here...
-            </div>
-            <img className={styles.icons} alt="" src="../send_chatbot.svg" />
-          </div>
-        </div>
-        <div className={styles.shadow} />
+        ))}
+      </div>
+      <div className="input-container flex mt-4">
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="Type a message..."
+          className="flex-grow p-2 border border-gray-300 rounded-l"
+        />
+        <button
+          onClick={handleSendMessage}
+          className="bg-blue-500 text-white px-4 rounded-r hover:bg-blue-600 transition"
+        >
+          Send
+        </button>
       </div>
     </div>
   );
 };
 
-export default ChatBot;
+export default ChatBotComponent;
