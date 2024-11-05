@@ -1,0 +1,84 @@
+.DivCompany {
+    background-color: #f1f1f1;
+    justify-content: center;
+    text-align: center; 
+    color: #333; 
+    border: 1px solid #ddd; 
+    padding: 11px 20px; 
+    border-radius: 6px; 
+    width: 100%; 
+    font-size: 16px; 
+    appearance: none; 
+    transition: border-color 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease; 
+}
+
+
+.DivCompany:hover {
+    background-color: #f1f1f1; 
+    border-color: #ccc; 
+}
+
+
+.DivCompany:focus {
+    border-color: #ccc;
+    background-color: #ffffff;
+    justify-content: center;
+    text-align: center;  
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    outline: none; 
+}
+
+
+.DivNoOrders{
+    text-align: center;
+    padding-top: 10px;
+    border-top: 2px solid black;
+}
+
+.DivOrder {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    padding-bottom: 2rem;
+    border: 2px solid lightgrey;
+    border-radius: 8px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    transition: box-shadow 0.3s ease; 
+}
+
+.DivOrder:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); 
+}
+
+.DivSeparate{
+    border-top: 1px solid lightgrey;
+    margin-top: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.DivImage {
+    width: 15%; 
+    max-width: 500px; 
+    border: 2px solid #ccc;
+    border-radius: 8px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+    overflow: hidden; 
+    margin: 10px 0; 
+}
+
+.DivImage img {
+    width: 100%;
+    height: 100%; 
+    object-fit: cover; 
+}
+
+.DivInfoComplete {
+    border: 1px solid lightgrey; 
+    padding: 0.7rem; 
+    margin-top: 1rem; 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.1); 
+    border-radius: 4px; 
+    background-color: #fff; 
+}
+

@@ -1,10 +1,10 @@
-import { ICompany } from "@/interface/types";
+import { IOrderHistory } from "@/interface/types";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
  
-export const getCompanyByUser = async (user_id: string, token: string): Promise<ICompany[]> => {
+export const getOrderByCompany = async (company_id: string, token: string): Promise<IOrderHistory[]> => {
     try {
-        const res = await fetch(`${API_URL}/companies/user/${user_id}`, {
+        const res = await fetch(`${API_URL}/orders/companies/${company_id}`, {
             method: "GET",
             headers: {
                 "Content-type": "application/json",
@@ -13,7 +13,7 @@ export const getCompanyByUser = async (user_id: string, token: string): Promise<
         });
 
         if (!res.ok) {
-            throw new Error("Error al obtener los datos del usuario");
+            throw new Error("Error al obtener los datos de la ordernes");
         }
 
         return await res.json();
