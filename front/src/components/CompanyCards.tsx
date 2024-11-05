@@ -169,14 +169,14 @@ const StackedCompanyCards: React.FC = () => {
               <p className='font-medium text-gray-900'>{getFirstName(userSettingsStore?.user_lastname)}</p>
             </div>
           )}
-          <p className="text-gray-500">{message}</p> 
+          <p className="text-gray-500 mb-2">{message}</p> 
         <button
           onClick={handleAddCompany}
           className="text-sm text-blue-600 hover:text-blue-800 font-medium"
         >
           Add
         </button>
-        <span className="text-gray-300">|</span>
+        
       </div>
     </div>
   );

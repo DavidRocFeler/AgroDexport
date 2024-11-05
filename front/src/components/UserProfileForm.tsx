@@ -230,7 +230,7 @@ const UserProfileForm = () => {
             <>
               <button
                 type="button"
-                className="ml-auto bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+                className="ml-auto bg-[#5c8b1b] text-white py-2 px-4 rounded hover:bg-[#6ea520]"
                 onClick={handleSave}
               >
                 Save
@@ -246,7 +246,7 @@ const UserProfileForm = () => {
           ) : (
             <button
               type="button"
-              className="ml-auto bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600"
+              className="ml-auto bg-[#5c8b1b] text-white py-2 px-4 rounded hover:bg-[#6ea520]"
               onClick={handleEdit}
             >
               Edit
