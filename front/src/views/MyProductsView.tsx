@@ -119,6 +119,14 @@ const MyProductsView: React.FC = () => {
     }
   };
 
+  const handleEditProduct = (productId: string) => {
+    if (selectedCompany) {
+      router.push(
+        `/publishproducts?company_id=${selectedCompany}&company_product_id=${productId}`
+      );
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="container mx-auto py-1 font-inter">
@@ -188,9 +196,7 @@ const MyProductsView: React.FC = () => {
                 updateProductsArray(productId, newActiveStatus)
               }
               onClick={() =>
-                router.push(
-                  `/publishproducts?company_id=${selectedCompany}&company_product_id=${product.company_product_id}`
-                )
+                handleEditProduct(product.company_product_id)
               }
             />
           ))
