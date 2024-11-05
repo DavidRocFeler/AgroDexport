@@ -1,0 +1,20 @@
+.orderList {
+    padding-top: 1rem;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  .header {
+    font-size: 1rem;
+    color:dimgrey;
+    font-weight: 600;
+    /* margin-bottom: 1rem; */
+  }
+  
+  .chartContainer {
+    width: 83%; /* Reduce el tamaño al 30% */
+    margin: 0 auto; /* Centrar el gráfico */
+  }
+  

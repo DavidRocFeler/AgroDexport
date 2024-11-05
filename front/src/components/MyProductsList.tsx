@@ -1,17 +1,16 @@
 "use client";
 import React, { useEffect } from "react";
-import { Trash2, RefreshCw } from "lucide-react";
+import { Trash2, RefreshCw, Ban, EyeOff } from "lucide-react";
 import { IAgriProduct } from "@/interface/types";
 import { useUserStore } from "@/store/useUserStore";
-import {
-  deleteCompanyProduct,
-  updateCompanyProduct,
-} from "@/server/getProduct";
+import { deleteCompanyProduct, updateCompanyProduct } from "@/server/getProduct";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import { useRouter } from "next/navigation";
 
 interface MyProductListProps extends IAgriProduct {
   onDeleteSuccess: (productId: string, newActiveStatus: boolean) => void;
+  onClick: () => void;
 }
 
 const MyProductList: React.FC<MyProductListProps> = ({
@@ -27,6 +26,7 @@ const MyProductList: React.FC<MyProductListProps> = ({
   minimum_order,
   category,
   onDeleteSuccess,
+  onClick,
 }) => {
   const { token } = useUserStore();
   const MySwal = withReactContent(Swal);
@@ -57,13 +57,13 @@ const MyProductList: React.FC<MyProductListProps> = ({
     if (!token) return;
 
     const confirmResult = await MySwal.fire({
-      title: isActive ? "Confirm Deletion" : "Confirm Reactivation",
+      title: isActive ? "Confirm Deactivate" : "Confirm Reactivation",
       text: isActive
-        ? "Are you sure you want to delete this product?"
+        ? "Are you sure you want to deactivate this product?"
         : "Do you want to reactivate this product?",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: isActive ? "Yes, delete it!" : "Yes, reactivate it!",
+      confirmButtonText: isActive ? "Yes, deactivate it!" : "Yes, reactivate it!",
       cancelButtonText: "Cancel",
     });
 
@@ -72,37 +72,28 @@ const MyProductList: React.FC<MyProductListProps> = ({
         if (isActive) {
           await deleteCompanyProduct(company_product_id, token);
           onDeleteSuccess(company_product_id, false);
-          MySwal.fire("Deleted!", "The product has been deleted.", "success");
+          MySwal.fire("Deactivated!", "The product has been deactivate.", "success");
         } else {
-          await updateCompanyProduct(
-            company_product_id,
-            { isActive: true },
-            token
-          );
+          await updateCompanyProduct(company_product_id, { isActive: true }, token);
           onDeleteSuccess(company_product_id, true);
           MySwal.fire("Reactivated!", "The product is now active.", "success");
         }
       } catch (error) {
         console.error("Error updating product:", error);
-        MySwal.fire(
-          "Error",
-          "An error occurred while updating the product.",
-          "error"
-        );
+        MySwal.fire("Error", "An error occurred while updating the product.", "error");
       }
     }
   };
 
   const formattedStock = `${stock} Tons`;
-  const formattedHarvestDate = new Date(harvest_date).toLocaleDateString(
-    "en-GB"
-  );
+  const formattedHarvestDate = new Date(harvest_date).toLocaleDateString("en-GB");
 
   return (
     <div
-      className={`bg-white rounded-lg shadow-md p-4 mb-4 hover:shadow-lg transition-shadow duration-300 mx-2 max-w-xl ${
+      className={`bg-white rounded-lg shadow-md p-4 mb-4 hover:shadow-lg transition-shadow duration-300 mx-2 max-w-xl cursor-pointer ${
         !isActive ? "opacity-50" : ""
       }`}
+      onClick={onClick} // Activar la redirección en click
     >
       <div className="flex items-center gap-4">
         <div className="flex-shrink-0 overflow-hidden">{renderImage()}</div>
@@ -145,11 +136,14 @@ const MyProductList: React.FC<MyProductListProps> = ({
         </div>
 
         <button
-          onClick={handleDeleteOrReactivate}
+          onClick={(e) => {
+            e.stopPropagation(); // Evita que el clic en el botón active la redirección
+            handleDeleteOrReactivate();
+          }}
           className="p-2 text-blue-500 hover:text-blue-700 hover:bg-blue-50 rounded-full transition-colors duration-200"
           aria-label={isActive ? "Delete product" : "Reactivate product"}
         >
-          {isActive ? <Trash2 size={24} /> : <RefreshCw size={24} />}
+          {isActive ? <Ban size={24} /> : <RefreshCw size={24} />}
         </button>
       </div>
     </div>

@@ -106,6 +106,25 @@ export class CompanyRepository {
     
     return { account_paypal: company.account_paypal, statusCode: 200 };
   }
+
+  async findIncompleteCompanies(): Promise<Company[]> {
+    return this.prisma.company.findMany({
+      where: {
+        OR: [
+          { tax_identification_number: null },
+          { address: null },
+          { postal_code: null },
+          { city: null },
+          { state: null },
+          { country: null },
+          { industry: null },
+          { website: null },
+        ],
+        isActive: true,
+      },
+    });
+  }
+  
   
 
   async create(companyData: CreateCompanyDto) {

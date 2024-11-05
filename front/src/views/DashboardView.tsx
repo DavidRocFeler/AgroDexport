@@ -12,6 +12,7 @@ import { getAllUsers } from "@/server/getAllUser";
 import { updateUserSettings } from "@/server/updateUserSettings";
 import { useUserStore } from "@/store/useUserStore";
 import Swal from "sweetalert2";
+import AdminOrderList from "@/components/AdminOrderList";
 
 const DashboardView: React.FC = () => {
   const [users, setUsers] = useState<ISettingsUserProps[]>([]);
@@ -204,36 +205,36 @@ const DashboardView: React.FC = () => {
   return (
     <section className="min-h-screen bg-gray-100">
       <div className="bg-[#C4E2FF] pt-8 pb-16">
-        <div className="max-w-9xl mx-8 px-4 sm:px-6 lg:px-8">
-          {/* KPIs */}
-          <div className="mb-6 h-[400px]">
+        <div className="max-w-full mx-4 sm:mx-8 px-4 sm:px-6 lg:px-8">
+          {/* Primera fila - KPIs */}
+          <div className="mb-6 h-[280px] sm:h-[200px] md:h-auto">
             <div className="bg-white rounded-lg shadow p-6 h-full">
               <AdminDashboardRow />
             </div>
           </div>
 
-          {/* Users and Products */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-            <div className="bg-white rounded-lg shadow p-6 h-[200px] overflow-auto">
+          {/* Segunda fila - Usuarios y Productos */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div className="bg-white rounded-lg shadow p-4 sm:p-6 h-auto min-h-[200px] overflow-auto">
               <AdminUserList />
             </div>
-            <div className="bg-white rounded-lg shadow p-6 h-[200px] overflow-auto">
+            <div className="bg-white rounded-lg shadow p-4 sm:px-1 sm:py-6 h-auto min-h-[200px] overflow-auto">
               <AdminCompanyList />
             </div>
           </div>
 
-          {/* Companies and Orders */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-            <div className="col-span-2 bg-white rounded-lg shadow p-2 h-[400px] overflow-auto">
+          {/* Tercera fila - Empresas y Órdenes */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+            <div className="col-span-1 lg:col-span-2 bg-white rounded-lg shadow pt-8 md:pt-10 h-auto min-h-[250px] md:min-h-[300px] overflow-auto">
               <AdminProductList />
             </div>
-            <div className="bg-white rounded-lg shadow p-6 h-[400px] overflow-auto">
-              <h2>AdminOrdersList</h2>
+            <div className="bg-white rounded-lg shadow pt-4 md:pt-6 h-auto min-h-[250px] md:min-h-[300px] overflow-auto">
+              <AdminOrderList />
             </div>
           </div>
 
-          {/* Filters */}
-          <div className="flex space-x-4 mb-4">
+          {/* Filtros */}
+          <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 mb-4">
             <input
               type="text"
               placeholder="Search by name, lastname, email or company"
@@ -242,7 +243,7 @@ const DashboardView: React.FC = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
             <select
-              className="border rounded p-2"
+              className="border rounded p-2 w-full sm:w-auto"
               value={selectedRole || ""}
               onChange={(e) => setSelectedRole(e.target.value || null)}
             >
@@ -252,7 +253,7 @@ const DashboardView: React.FC = () => {
               <option value="supplier">Supplier</option>
             </select>
             <select
-              className="border rounded p-2"
+              className="border rounded p-2 w-full sm:w-auto"
               value={selectedCountry || ""}
               onChange={(e) => setSelectedCountry(e.target.value || null)}
             >
@@ -270,7 +271,7 @@ const DashboardView: React.FC = () => {
               ))}
             </select>
             <select
-              className="border rounded p-2"
+              className="border rounded p-2 w-full sm:w-auto"
               value={productOrder || ""}
               onChange={(e) =>
                 setProductOrder((e.target.value as "asc" | "desc") || null)
@@ -281,7 +282,7 @@ const DashboardView: React.FC = () => {
               <option value="desc">Descending</option>
             </select>
             <select
-              className="border rounded p-2"
+              className="border rounded p-2 w-full sm:w-auto"
               value={orderTotalOrder || ""}
               onChange={(e) =>
                 setOrderTotalOrder((e.target.value as "asc" | "desc") || null)
@@ -293,39 +294,39 @@ const DashboardView: React.FC = () => {
             </select>
           </div>
 
-          {/* Company Table */}
-          <div className="bg-white rounded-lg shadow p-6 overflow-x-auto">
-            <h2 className="text-xl font-semibold mb-4">
+          {/* Tabla de Empresas */}
+          <div className="bg-white rounded-lg shadow p-4 sm:p-6 overflow-x-auto">
+            <h2 className="text-lg sm:text-xl font-semibold mb-4">
               Users registered on the platform
             </h2>
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     User Name
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     User Last Name
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Company Name
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Country
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Role
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Email
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Products
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Total Orders Completed
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Active / Disabled
                   </th>
                 </tr>
@@ -338,31 +339,31 @@ const DashboardView: React.FC = () => {
                         key={`${user.user_id}-${company.company_id}`}
                         className={!user.isActive ? "opacity-50" : ""}
                       >
-                        <td className="px-6 py-4 whitespace-nowrap">
+                        <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
                           {user.user_name || "Pending"}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
+                        <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
                           {user.user_lastname || "Pending"}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
+                        <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
                           {company.company_name || "No Company"}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
+                        <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
                           {company.country || "Pending"}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
+                        <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
                           {user.role?.role_name || "Pending"}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
+                        <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
                           {user.credential?.email || "Pending"}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
+                        <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
                           {getTotalProductsCount(company, user.role?.role_name)}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
+                        <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
                           ${getTotalCompletedOrders(company).toLocaleString()}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
+                        <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
                           <button
                             onClick={() => handleToggleActiveStatus(user)}
                           >
@@ -380,25 +381,31 @@ const DashboardView: React.FC = () => {
                       key={user.user_id}
                       className={!user.isActive ? "opacity-50" : ""}
                     >
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
                         {user.user_name || "Pending"}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
                         {user.user_lastname || "Pending"}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
                         No Companies Registered
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">Pending</td>
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
+                        Pending
+                      </td>
+                      <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
                         {user.role?.role_name || "Pending"}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
                         {user.credential?.email || "Pending"}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">N/A</td>
-                      <td className="px-6 py-4 whitespace-nowrap">$0</td>
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
+                        N/A
+                      </td>
+                      <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
+                        $0
+                      </td>
+                      <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
                         <button onClick={() => handleToggleActiveStatus(user)}>
                           {user.isActive ? (
                             <X className="w-5 h-5 text-red-600" />

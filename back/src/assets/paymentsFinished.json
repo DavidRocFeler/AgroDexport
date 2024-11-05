@@ -1,0 +1,22 @@
+[
+    {
+        "company_buyer_name": "Gomez Holdings",
+        "company_supplier_name": "Fernandez Tech",
+        "total": 225818.28
+      },    
+    {
+    "company_buyer_name": "Martinez Foods",
+    "company_supplier_name": "Lopez Agr\u00edcola",
+    "total": 98200.52
+  },
+  {
+    "company_buyer_name": "Rodriguez Textiles",
+    "company_supplier_name": "Paredes Construction",
+    "total": 195912.88
+  },
+  {
+    "company_buyer_name": "Rodriguez Textiles",
+    "company_supplier_name": "Paredes Construction",
+    "total": 231806.08
+  }
+]

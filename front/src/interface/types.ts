@@ -118,6 +118,15 @@ export interface IAgriProduct {
   onDelete?: (name: string) => void;
 }
 
+// Nueva interfaz que permite `string` para ciertos campos de `IAgriProduct`
+export interface IAgriProductFormValues extends Omit<IAgriProduct, 'stock' | 'minimum_order' | 'discount' | 'company_price_x_kg'> {
+  stock: string;
+  minimum_order: string;
+  discount: string;
+  company_price_x_kg: string;
+}
+
+
 export interface IAgriProductErrors {
   company_product_id?: string | any;
   company_id?: string | any;
@@ -158,9 +167,20 @@ export interface ILabelComponentProps {
 }
 
 export interface IOrder {
-  id: number;
-  status: string;
-  date: Date;
+  order_id: string;
+  order_date: Date;
+  orderDetail: {
+    order_status: string;
+    total: number;
+  };
+  buyer: {
+    company_name: string;
+    role_name: string;
+  };
+  supplier: {
+    company_name: string;
+    role_name: string;
+  };
   products: IAgriProduct[];
 }
 
@@ -200,8 +220,9 @@ export interface IAgroProduct {
   }[];
 }
 
-export interface MyProductListProps extends IAgroProduct {
-  onDelete: (name: string) => void;
+export interface MyProductListProps extends IAgriProduct {
+  onDeleteSuccess: (productId: string, newActiveStatus: boolean) => void;
+  onClick: () => void; // Agrega esta propiedad
 }
 
 export interface ISupplyChainProps {
@@ -400,8 +421,9 @@ export interface FileInputProps {
 
 export interface FormPublishProductProps {
   onUpdateClick: (productId: string, companyId: string) => void;
-  selectedCompany: string | null;  
-  categories: { category_id: string; name_category: string }[];  
+  selectedCompany: string | null;
+  categories: { category_id: string; name_category: string }[];
+  productData?: IAgriProduct | null; 
 }
 
 export interface INotification {
@@ -451,13 +473,6 @@ export interface ICompany {
   };
 }
 
-export interface IOrder {
-  order_date: DateTime,
-  orderDetail: {
-    status: string;
-    total: number;
-  }
-}
 
 export interface IOrderDetail {
 

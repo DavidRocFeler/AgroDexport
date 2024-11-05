@@ -279,6 +279,15 @@ export class UsersRepository {
     return credential?.user || null;
   }
 
+  async findUsersWithoutCompanies(): Promise<User[]> {
+    return this.prisma.user.findMany({
+      where: {
+        companies: {
+          none: {}, // No hay compañías asociadas al usuario
+        },
+      },
+    });
+  }  
 
   async updateUser(id: string, updateData: Partial<User & { password?: string }>): Promise<User> {
     try {

@@ -1,10 +1,12 @@
 import { ConflictException, Injectable } from "@nestjs/common";
-import { PrismaService } from "src/prisma/prisma.service";
+import { PrismaService } from "../prisma/prisma.service";
 import { CreateOrderProductsDto } from "./dtos/createOrderProducts.dto";
-import { CompanyRepository } from "src/companies/companies.repository";
-import { AddressesRepository } from "src/addresses/adresses.repository";
+import { CompanyRepository } from "../companies/companies.repository";
+import { AddressesRepository } from "../addresses/adresses.repository";
 import { Order } from "@prisma/client";
-import { OrderStatus } from "src/helpers/orderStatus.enum";
+import { OrderStatus } from "../helpers/orderStatus.enum";
+import { NotificationsService } from "../notifications/notifications.service";
+import { EmailService } from '../nodemail/nodemail.service';
 
 @Injectable()
 export class OrderRepository {
@@ -13,21 +15,141 @@ export class OrderRepository {
     constructor (
         private readonly prisma: PrismaService,
         private readonly companyRepository: CompanyRepository,
-        private readonly addressesRepository: AddressesRepository
+        private readonly addressesRepository: AddressesRepository,
+        private readonly notificationsService: NotificationsService,
+        private readonly emailService: EmailService
     ) {}
     
     getAllOrdersRepository(): Promise<Order[]> {
         return this.prisma.order.findMany({
-            include: { orderDetail: true}
-        })
+            include: {
+                orderDetail: true,
+                buyer: {
+                    select: {
+                        company_name: true,
+                        user: {
+                            select: {
+                                role: {
+                                    select: {
+                                        role_name: true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                supplier: {
+                    select: {
+                        company_name: true,
+                        user: {
+                            select: {
+                                role: {
+                                    select: {
+                                        role_name: true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        });
     }
     
-    async getOrderByIdRepository(orderId: string) {
-        return this.prisma.order.findUnique({
-            where: {order_id: orderId },
-            include: {orderDetail: true}
-        })
+    
+
+    async getOrdersByBuyerName(buyerName: string): Promise<Order[]> {
+        return this.prisma.order.findMany({
+            where: {
+                buyer: {
+                    company_name: {
+                        contains: buyerName, 
+                        mode: 'insensitive' // Ignora mayúsculas/minúsculas
+                    }
+                }
+            },
+            include: {
+                orderDetail: true,
+                buyer: true,
+                supplier: true
+            }
+        });
     }
+
+    async getOrdersBySupplierName(supplierName: string): Promise<Order[]> {
+        return this.prisma.order.findMany({
+            where: {
+                supplier: {
+                    company_name: {
+                        contains: supplierName, 
+                        mode: 'insensitive' // Ignora mayúsculas/minúsculas
+                    }
+                }
+            },
+            include: {
+                orderDetail: true,
+                buyer: true,
+                supplier: true
+            }
+        });
+    }
+    
+    async findOrderByBuyerSupplierAndTotal(buyerId: string, supplierId: string, total: number): Promise<Order | null> {
+        return this.prisma.order.findFirst({
+            where: {
+                id_company_buy: buyerId,
+                id_company_sell: supplierId,
+                orderDetail: {
+                    total: total,
+                  },
+                },
+                include: {
+                  orderDetail: true, 
+                },
+              });
+            }
+    
+    
+            async getOrderByIdRepository(orderId: string) {
+                return this.prisma.order.findUnique({
+                    where: { order_id: orderId },
+                    include: {
+                        orderDetail: true,
+                        buyer: {
+                            select: {
+                                company_name: true,
+                                user: {
+                                    select: {
+                                        user_id: true,
+                                        user_name: true,
+                                        credential: {
+                                            select: { email: true }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        supplier: {
+                            select: {
+                                company_name: true,
+                                user: {
+                                    select: {
+                                        user_id: true,
+                                        user_name: true,
+                                        credential: {
+                                            select: { email: true }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            
+
+            
     async createOrderProductsRepository(createOrderProductsDto: CreateOrderProductsDto) {
         let {subtotal, logistic_cost, tariff, tax, discount, total } = createOrderProductsDto
         const orderStatus = OrderStatus.Pending;
@@ -151,7 +273,7 @@ export class OrderRepository {
     }
 
     async updateOrderStatusRepository(orderId: string) {
-        return this.prisma.order.update({
+        const updatedOrder = await this.prisma.order.update({
             where: { order_id: orderId },
             data: {
                 orderDetail: {
@@ -160,6 +282,54 @@ export class OrderRepository {
             },
             include: { orderDetail: true }
         });
+    
+        const orderDetails = await this.getOrderByIdRepository(orderId);
+    
+        if (orderDetails?.buyer?.user?.user_id) {
+            await this.notificationsService.createAndNotifyUser(
+                orderDetails.buyer.user.user_id,
+                'Your order has been successfully completed.',
+                'order_status_update'
+            );
+            await this.emailService.sendOrderEmail(
+                orderDetails.buyer.user.credential.email,
+                'Your order has been successfully completed',
+                orderDetails.buyer.user.user_name,
+                orderDetails.supplier.company_name,
+                orderDetails.buyer.company_name,
+                orderDetails.orderDetail.subtotal,
+                orderDetails.orderDetail.logistic_cost,
+                orderDetails.orderDetail.tariff,
+                orderDetails.orderDetail.tax,
+                orderDetails.orderDetail.discount,
+                orderDetails.orderDetail.total,
+                'buyer'
+            )
+        }
+    
+        if (orderDetails?.supplier?.user?.user_id) {
+            await this.notificationsService.createAndNotifyUser(
+                orderDetails.supplier.user.user_id,
+                'You have received a new purchase order. Please check your order history.',
+                'order_status_update'
+            );
+            await this.emailService.sendOrderEmail(
+                orderDetails.supplier.user.credential.email,
+                'You have received a new purchase order',
+                orderDetails.supplier.user.user_name,
+                orderDetails.supplier.company_name,
+                orderDetails.buyer.company_name,
+                orderDetails.orderDetail.subtotal,
+                orderDetails.orderDetail.logistic_cost,
+                orderDetails.orderDetail.tariff,
+                orderDetails.orderDetail.tax,
+                orderDetails.orderDetail.discount,
+                orderDetails.orderDetail.total,
+                'supplier'
+            )
+        }
+        
+        return updatedOrder;
     }
     
 
