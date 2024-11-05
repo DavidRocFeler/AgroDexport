@@ -21,11 +21,27 @@ export class OrdersController {
         return this.orderService.getAllOrdersServices()
     }
 
+
+
     @UseGuards(AuthGuard, RolesGuard)
     @Roles('admin', 'buyer')
     @Get(":id")
     async getOrderById(@Param("id") orderId: string){
         return await this.orderService.getOrderByIdService(orderId);
+    }
+
+    @UseGuards(AuthGuard, RolesGuard)
+    @Roles('admin', 'buyer', "supplier")
+    @Get("companies/:id")
+    async getOrdersByCompanyId(@Param("id") companyId: string ):Promise<Order[]>{
+        return await this.orderService.getOrdersByCompanyIdServices(companyId);
+    }
+
+    @UseGuards(AuthGuard, RolesGuard)
+    @Roles('admin', 'buyer', "supplier")
+    @Get("companies/order/:id")
+    async getInfoOrderByOderDetailId(@Param("id") ordeDatailId: string ){
+        return await this.orderService.getInfoOrderByOderDetailIdServices(ordeDatailId);
     }
 
     @UseGuards(AuthGuard, RolesGuard)

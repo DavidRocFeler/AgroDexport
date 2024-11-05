@@ -8,7 +8,6 @@ import { useRouter } from "next/navigation";
 
 const MySwal = withReactContent(Swal);
 
-
 interface Company {
   company_id: string;
   company_name: string;
@@ -30,7 +29,6 @@ interface ResumeShopProps {
   onOrderClick: () => void;
   isProductSelected: boolean;
   onCompanySelect: (companyId: string) => void;
-
 }
 
 const ResumeShopComponent: React.FC<ResumeShopProps> = ({
@@ -42,9 +40,8 @@ const ResumeShopComponent: React.FC<ResumeShopProps> = ({
   const [companies, setCompanies] = useState<Company[]>([]);
   const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(null);
   const { role_name, token, user_id } = useUserStore();
-  const router = useRouter;
+  const router = useRouter();
 
-  
   const formatPrice = (price: number) => {
     return `$ ${price.toFixed(2)}`;
   };
@@ -52,11 +49,11 @@ const ResumeShopComponent: React.FC<ResumeShopProps> = ({
   useEffect(() => {
     const fetchCompanies = async () => {
       try {
-        const response = await getCompaniesById(user_id, token)
+        const response = await getCompaniesById(user_id, token);
         if (!Array.isArray(response) || response.length === 0) {
           MySwal.fire({
             icon: 'error',
-            title: 'You don\'t have companies',
+            title: 'No companies found',
             text: 'Please add a company first.',
           });
           return;
@@ -76,8 +73,27 @@ const ResumeShopComponent: React.FC<ResumeShopProps> = ({
 
   const handleCompanyChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const companyId = event.target.value;
-    setSelectedCompanyId(event.target.value);
+    setSelectedCompanyId(companyId);
     onCompanySelect(companyId);
+  };
+
+  const handleOrderClick = () => {
+    if (!isProductSelected) {
+      return MySwal.fire({
+        icon: 'warning',
+        title: 'No Product Selected',
+        text: 'Please select a product before placing the order.',
+      });
+    }
+    console.log("este es mi consolelog")
+    if (!selectedCompanyId) {
+      return MySwal.fire({
+        icon: 'warning',
+        title: 'No Company Selected',
+        text: 'Please select a company before placing the order.',
+      });
+    }
+    onOrderClick();
   };
 
   return (
@@ -122,8 +138,7 @@ const ResumeShopComponent: React.FC<ResumeShopProps> = ({
       </div>
       <button
         className={styles.Order}
-        onClick={onOrderClick}
-        disabled={!isProductSelected || !selectedCompanyId} // Deshabilita si no hay producto seleccionado o no hay compañía elegida
+        onClick={handleOrderClick}
       >
         Order now
       </button>
