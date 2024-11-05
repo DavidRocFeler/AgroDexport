@@ -13,20 +13,20 @@ export const useChatbotSocket = () => {
       return;
     }
 
-    console.log('Connecting to WebSocket server for chatbot:', SOCKET_URL);
+    // console.log('Connecting to WebSocket server for chatbot:', SOCKET_URL);
     socketRef.current = io(SOCKET_URL, { transports: ['websocket'] });
 
     socketRef.current.on('connect', () => {
-      console.log('Connected to WebSocket server for chatbot');
+      // console.log('Connected to WebSocket server for chatbot');
     });
 
     socketRef.current.on('bot_response', (response) => {
-      console.log('Bot response received:', response);
-      
+      // console.log('Bot response received:', response);
+
       if (response && response.text) {
         setMessages((prevMessages) => {
           const updatedMessages = [...prevMessages, { text: response.text, user: 'bot' }];
-          console.log("Updated messages after bot response (inside setState):", updatedMessages);
+          // console.log("Updated messages after bot response (inside setState):", updatedMessages);
           return updatedMessages;
         });
       }
@@ -37,18 +37,19 @@ export const useChatbotSocket = () => {
     });
 
     return () => {
-      console.log('Disconnecting from WebSocket server for chatbot');
+      // console.log('Disconnecting from WebSocket server for chatbot');
       socketRef.current?.disconnect();
     };
   }, []);
 
-  const sendMessage = (message: string) => {
+  // Modified sendMessage function to include userId in the message
+  const sendMessage = (message: string, userId: string) => {
     if (socketRef.current) {
-      console.log('Sending message to server:', message);
-      socketRef.current.emit('user_message', message);
+      // console.log('Sending message to server:', message);
+      socketRef.current.emit('user_message', { message, userId }); // Send both message and userId
       setMessages((prevMessages) => {
         const updatedMessages = [...prevMessages, { text: message, user: 'user' }];
-        console.log("Updated messages after user message (inside setState):", updatedMessages);
+        // console.log("Updated messages after user message (inside setState):", updatedMessages);
         return updatedMessages;
       });
     }

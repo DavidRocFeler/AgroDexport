@@ -1,53 +1,57 @@
-.chat-container {
+/* ChatBot.module.css */
+.chatContainer {
 	background-color: #f7fafc;
 	padding: 1rem;
 	border-radius: 8px;
 	max-width: 400px;
 	margin: 0 auto;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .messages {
+}
+
+.messages {
 	background-color: #fff;
 	padding: 1rem;
 	border-radius: 8px;
-	height: 16rem;
+	height: 20.8rem;
 	overflow-y: auto;
 	margin-bottom: 1rem;
-  }
-  
-  .input-container {
+	font-size: 0.9rem;
+}
+
+.inputContainer {
 	display: flex;
-  }
-  
-  .input-container input {
+}
+
+.input {
 	flex-grow: 1;
 	padding: 0.5rem;
 	border: 1px solid #e2e8f0;
 	border-radius: 4px 0 0 4px;
-  }
-  
-  .input-container button {
+	font-size: 0.9rem;
+}
+
+.sendButton {
 	background-color: #4299e1;
 	color: #fff;
 	padding: 0.5rem 1rem;
 	border-radius: 0 4px 4px 0;
 	cursor: pointer;
-  }
-  
-  .bot-message {
+}
+
+.botMessage {
 	background-color: #ebf8ff;
 	color: #2c5282;
 	padding: 0.5rem;
 	border-radius: 8px;
 	margin: 0.25rem 0;
-  }
-  
-  .user-message {
+	font-size: 0.9rem;
+}
+
+.userMessage {
 	background-color: #c6f6d5;
 	color: #276749;
 	padding: 0.5rem;
 	border-radius: 8px;
 	margin: 0.25rem 0;
-  }
-  
+	font-size: 0.9rem;
+}

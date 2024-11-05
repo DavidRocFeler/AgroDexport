@@ -103,7 +103,9 @@ export class UsersRepository {
     const user = await this.prisma.user.findUnique({
         where: { user_id },
         include: {
+          credential: true,
             companies: true, 
+            role: true,
         },
     });
 
