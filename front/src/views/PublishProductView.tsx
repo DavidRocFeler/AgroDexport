@@ -17,11 +17,21 @@ const PublishProductView: React.FC<PublishProductViewProps> = ({
   companyProductIdParam = null,
 }) => {
   const [showCertifications, setShowCertifications] = useState(false);
-  const [userCompanies, setUserCompanies] = useState<{ company_id: string; company_name: string }[]>([]);
-  const [selectedCompany, setSelectedCompany] = useState<string | null>(companyParam);
-  const [categories, setCategories] = useState<{ category_id: string; name_category: string }[]>([]);
-  const [companyProductId, setCompanyProductId] = useState<string | null>(companyProductIdParam);
-  const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(null);
+  const [userCompanies, setUserCompanies] = useState<
+    { company_id: string; company_name: string }[]
+  >([]);
+  const [selectedCompany, setSelectedCompany] = useState<string | null>(
+    companyParam
+  );
+  const [categories, setCategories] = useState<
+    { category_id: string; name_category: string }[]
+  >([]);
+  const [companyProductId, setCompanyProductId] = useState<string | null>(
+    companyProductIdParam
+  );
+  const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(
+    null
+  );
   const [isImageUploaded, setIsImageUploaded] = useState(false);
 
   const [isLoading, setIsLoading] = useState(true);
@@ -32,11 +42,18 @@ const PublishProductView: React.FC<PublishProductViewProps> = ({
     const fetchUserSettings = async () => {
       try {
         if (token && user_id) {
-          const userData: ISettingsUserProps = await getUserSettings(user_id, token);
+          const userData: ISettingsUserProps = await getUserSettings(
+            user_id,
+            token
+          );
 
           const validCompanies = (userData.companies || [])
-            .filter((company): company is { company_id: string; company_name: string } =>
-              company.company_id !== undefined && company.company_name !== undefined
+            .filter(
+              (
+                company
+              ): company is { company_id: string; company_name: string } =>
+                company.company_id !== undefined &&
+                company.company_name !== undefined
             )
             .map((company) => ({
               company_id: company.company_id as string,
@@ -72,7 +89,10 @@ const PublishProductView: React.FC<PublishProductViewProps> = ({
     const fetchProductData = async () => {
       if (companyProductIdParam && selectedCompany) {
         try {
-          const productData = await getProductById(selectedCompany, companyProductIdParam);
+          const productData = await getProductById(
+            selectedCompany,
+            companyProductIdParam
+          );
           if (productData) {
             setCompanyProductId(companyProductIdParam);
             setSelectedCompanyId(selectedCompany);
@@ -108,16 +128,18 @@ const PublishProductView: React.FC<PublishProductViewProps> = ({
 
   if (isLoading) {
     return (
-      <div className="container mx-auto py-8 font-inter">
-        <h1 className="text-[96px] text-center mb-12 font-inter">Publish Products</h1>
+      <div className="container mx-auto py-8 font-inter ">
+        <h1 className="text-[96px] text-center mb-12 font-inter">
+          Publish Products
+        </h1>
         <div className="text-center">Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto py-8 font-inter">
-      <h1 className="text-[48px] md:text-[96px] text-center mb-12 font-inter">
+    <div className="container mx-auto py-5 font-inter">
+      <h1 className="text-[48px] md:text-[42px] text-center mb-4 font-inter">
         Publish Products
       </h1>
 
@@ -125,7 +147,9 @@ const PublishProductView: React.FC<PublishProductViewProps> = ({
         <div className="text-center text-gray-500">No companies registered</div>
       ) : (
         <div className="mb-4 text-center">
-          <label htmlFor="companySelect" className="mr-2">Select Company:</label>
+          <label htmlFor="companySelect" className="mr-2">
+            Select Company:
+          </label>
           <select
             id="companySelect"
             value={selectedCompany || ""}
@@ -142,27 +166,30 @@ const PublishProductView: React.FC<PublishProductViewProps> = ({
         </div>
       )}
 
-      <div className="border border-black max-w-3xl mx-auto p-8">
+      <div className="border border-black max-w-3xl mx-auto p-8 bg-white">
         {!showCertifications ? (
           <>
-            <FormPublishProduct 
-              onUpdateClick={handleProductCreated} 
-              selectedCompany={selectedCompany} 
-              categories={categories} 
+            <FormPublishProduct
+              onUpdateClick={handleProductCreated}
+              selectedCompany={selectedCompany}
+              categories={categories}
             />
             {isImageUploaded && (
               <div className="flex justify-end mt-4">
-                <button onClick={() => setShowCertifications(true)} className="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600 transition-colors">
+                <button
+                  onClick={() => setShowCertifications(true)}
+                  className="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600 transition-colors"
+                >
                   Add or update Farmer Certifications
                 </button>
               </div>
             )}
           </>
         ) : (
-          <FarmerCertificationsForm 
-            onCancel={handleCancel} 
-            companyId={selectedCompanyId || ""} 
-            productId={companyProductId || ""} 
+          <FarmerCertificationsForm
+            onCancel={handleCancel}
+            companyId={selectedCompanyId || ""}
+            productId={companyProductId || ""}
           />
         )}
       </div>
