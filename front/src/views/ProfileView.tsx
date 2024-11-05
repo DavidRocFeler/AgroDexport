@@ -12,6 +12,7 @@ import CompanyForms from "@/components/CompanyProfileSettings";
 import ShippingAddressForm from "@/components/ShippingAddressSettings";
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+import { getCompanySettings } from "@/server/getCompanyById";
 
 const ProfileView: React.FC = () => {
   const [activeSection, setActiveSection] = useState<string>("Information contact");
@@ -22,61 +23,143 @@ const ProfileView: React.FC = () => {
   const [companyIdExists, setCompanyIdExists] = useState(false);
   const [ company_id, setCompany_id ] = useState<string | null>(null);
   const [showUserProfile, setShowUserProfile] = useState(false);
+  const [triggerRefresh, setTriggerRefresh] = useState(false);
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+  const [currentCompanyId, setCurrentCompanyId] = useState<string | null>(null);
   const pathname = usePathname();
   
+  useEffect(() => {
+    const userId = localStorage.getItem("user_id");
+    const companyId = localStorage.getItem("company_id");
+    
+    setCurrentUserId(userId);
+    setCurrentCompanyId(companyId);
+  }, []);
+
   useEffect(() => {
     const storageCompanyId = localStorage.getItem("company_id");
     setCompany_id(storageCompanyId);
   }, []);
   
-  // Obtener la imagen del usuario al cargar el componente
-  useEffect(() => {
-    const fetchUserProfile = async () => {
-      if (user_id && token) {
-        try {
-          const userData = await getUserSettings(user_id, token);
-          if (userData.profile_picture) {
-            setProfileImage(userData.profile_picture); 
-          }
-        } catch (error) {
-          console.error("Error fetching user profile:", error);
+   // Este efecto monitorea los cambios en localStorage
+   useEffect(() => {
+    const checkStorage = () => {
+        const newUserId = localStorage.getItem("user_id");
+        const newCompanyId = localStorage.getItem("company_id");
+
+        // Solo actualizar si hay cambios
+        if (newUserId !== currentUserId) {
+            setCurrentUserId(newUserId);
         }
+        if (newCompanyId !== currentCompanyId) {
+            setCurrentCompanyId(newCompanyId);
+        }
+    };
+
+    // Verificar cada 100ms
+    const intervalId = setInterval(checkStorage, 100);
+    
+    return () => clearInterval(intervalId);
+  }, [currentUserId, currentCompanyId]);
+
+  // Este efecto se ejecuta cuando cambian los IDs  
+  useEffect(() => {
+    const fetchProfileImage = async () => {
+        if (!token) return;
+
+        try {
+          if (currentUserId && !currentCompanyId) {
+              const userData = await getUserSettings(currentUserId, token);
+              setProfileImage(userData.profile_picture || "/LogoIcon.png");
+              
+          } else if (currentCompanyId) {
+              const companyData = await getCompanySettings(currentCompanyId, token);
+              console.log("Company Data:", companyData);
+              setProfileImage(companyData.company_logo || "/LogoIcon.png");
+          } else {
+              setProfileImage("/LogoIcon.png");
+          }
+      } catch (error) {
+          console.error("Error fetching profile image:", error);
+          setProfileImage("/LogoIcon.png");
       }
     };
 
-    fetchUserProfile();
-  }, [user_id, token]);
+    fetchProfileImage();
+  }, [currentUserId, currentCompanyId, token]);
 
   const MySwal = withReactContent(Swal);
 
-  const handleImageUpload = async (file: File, type: string, id: string) => {
+  const handleUserImageUpload = async (file: File, type: string, id: string) => {
     if (!token || !user_id) {
-      console.error("Token or user ID not found");
-      return;
+        console.error("Token or user ID not found");
+        return;
     }
-  
+
     try {
-      const response = await uploadImageToCloudinary(file, type, id, token);
-  
-      if (response.secure_url) {
-        setProfileImage(response.secure_url);
-        MySwal.fire({
-          icon: 'success',
-          title: 'Image Uploaded',
-          text: 'Your image has been uploaded successfully!',
-        });
-      } else {
-        console.error("No secure URL in response:", response);
-      }
+        const response = await uploadImageToCloudinary(file, type, id, token);
+        if (response.secure_url) {
+            setProfileImage(response.secure_url);
+            setTriggerRefresh(prev => !prev); // Añade esto para forzar la recarga
+            MySwal.fire({
+                icon: 'success',
+                title: 'Image Uploaded',
+                text: 'Your image has been uploaded successfully!',
+            });
+        } else {
+            console.error("No secure URL in response:", response);
+        }
     } catch (error: any) {
-      
-      const errorMessage = error.response?.data?.message || error.message || "An error occurred";
-      
-      MySwal.fire({
-        icon: 'error',
-        title: 'Upload Failed',
-        text: errorMessage,
-      });
+        const errorMessage = error.response?.data?.message || error.message || "An error occurred";
+        MySwal.fire({
+            icon: 'error',
+            title: 'Upload Failed',
+            text: errorMessage,
+        });
+    }
+  };
+
+  const handleCompanyImageUpload = async (file: File, companyId: string) => {
+    if (!token || !companyId) {
+        console.error("Token or company ID not found");
+        return;
+    }
+
+    try {
+        const response = await uploadImageToCloudinary(file, "companyLogo", companyId, token);
+        if (response.secure_url) {
+            setProfileImage(response.secure_url);
+            setTriggerRefresh(prev => !prev);
+            MySwal.fire({
+                icon: 'success',
+                title: 'Image Uploaded',
+                text: 'Your image has been uploaded successfully!',
+            });
+        } else {
+            console.error("No secure URL in response:", response);
+        }
+    } catch (error: any) {
+        const errorMessage = error.response?.data?.message || error.message || "An error occurred";
+        MySwal.fire({
+            icon: 'error',
+            title: 'Upload Failed',
+            text: errorMessage,
+        });
+    }
+  };
+
+  const handleUpload = (file: File) => {
+    const userId = localStorage.getItem("user_id");
+    const companyId = localStorage.getItem("company_id");
+
+    if (userId && !companyId) {
+      // Si hay user_id, usar el manejador de usuario
+      handleUserImageUpload(file, "user", userId);
+    } else if (companyId) {
+      // Si hay company_id, usar el manejador de compañía
+      handleCompanyImageUpload(file, companyId);
+    } else {
+      console.error("No se encontró user_id ni company_id en localStorage");
     }
   };
 
@@ -253,9 +336,9 @@ const ProfileView: React.FC = () => {
             {/* Profile Section */}
             <div className="m-auto mb-[2.1rem] w-fit flex flex-col items-center space-y-4 relative">
               <img
-                className="w-60 h-60 rounded-full object-cover border-4"
-                src={profileImage}
-                alt="Profile"
+                  className="w-60 h-60 rounded-full object-cover border-4"
+                  src={profileImage}
+                  alt={currentCompanyId ? "Company Logo" : "User Profile"}
               />
               {/* Pencil Icon Button */}
               <div className="absolute bottom-0 right-0 mb-4 mr-4">
@@ -283,8 +366,8 @@ const ProfileView: React.FC = () => {
                     className="hidden"
                     onChange={(e) => {
                       const file = e.target.files?.[0];
-                      if (file && user_id) {
-                        handleImageUpload(file, "user", user_id); 
+                      if (file) {
+                        handleUpload(file); 
                       }
                     }}
                   />

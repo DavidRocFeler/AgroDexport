@@ -6,16 +6,19 @@ import { getCompanyByUser } from '@/server/getCompanyByUser';
 import { ICompany } from '@/interface/types';
 import { updateNewCompany } from '@/server/updateNewCompany';
 import useUserSettingsStore from '@/store/useUserSettingsStore';
+import { newShippingAddress } from '@/server/NewShippingAddress';
+import { IShippingAddress } from '@/interface/types';
 
 const StackedCompanyCards: React.FC = () => {
 
   const [showInitialView, setShowInitialView] = useState<boolean>(true);
   const [selectedCompany, setSelectedCompany] = useState<string>("");
   const [companiesData, setCompaniesData] = useState<ICompany[]>([]);
-  const [message, setMessage] = useState<string>("Select a company to see details");
+  const [message, setMessage] = useState<string>("Add a new company");
   const { user_id, token, role_name } = useUserStore();
   const userSettingsStore = useUserSettingsStore((state) => state.userSettings);
   const [isClient, setIsClient] = useState(false);
+  const [companyId, setCompanyId] = useState<string | null>(null);
 
   const capitalizeFirstLetter = (role_name: string | null) => {
     if (!role_name) return ""; 
@@ -49,6 +52,20 @@ const StackedCompanyCards: React.FC = () => {
 
   const selectedCompanyData = companiesData.find(company => company.company_id.toString() === selectedCompany);
 
+  const fetchShippingAddress = async (companyId: string | null, token: string) => {
+    if (companyId && token) {
+      try {
+        // Crea un objeto de tipo Partial<IShippingAddress> que solo incluye company_id
+        const requestData: Partial<IShippingAddress> = { company_id: companyId };
+  
+        const data = await newShippingAddress(requestData, token);
+        console.log('Dirección de envío:', data);
+      } catch (error) {
+        console.error('Error al obtener la dirección de envío:', error);
+      }
+    }
+  };
+  
   const handleAddCompany = async () => {
     if (!user_id || !token) {
       await Swal.fire('Error', 'User ID is required', 'error');
@@ -67,19 +84,34 @@ const StackedCompanyCards: React.FC = () => {
   
     if (result.isConfirmed && result.value) {
       try {
-        const newCompanyData: Partial<ICompany> = {
-          user_id: user_id, // Ahora sabemos que user_id no es null
+        const newCompanyData = {
+          user_id: user_id,
           company_name: result.value
         };
   
         const response = await updateNewCompany(newCompanyData, token);
-        console.log('Nueva compañía creada:', response);
+        console.log("Respuesta al crear la compañía:", response);
   
-        await Swal.fire(
-          `Company "${result.value}" added successfully!`,
-          '',
-          'success'
-        );
+        const { company_id, company_name } = response.data;
+  
+        if (company_id) {
+          
+          setCompaniesData(prevCompaniesData => [
+            ...prevCompaniesData,
+            { company_id, company_name } as ICompany 
+          ]);
+          setSelectedCompany(company_id.toString());
+  
+          await fetchShippingAddress(company_id, token);
+  
+          await Swal.fire(
+            `Company "${company_name}" added successfully!`,
+            '',
+            'success'
+          );
+        } else {
+          console.error("company_id no encontrado en la respuesta");
+        }
       } catch (error) {
         console.error('Error al crear la compañía:', error);
         await Swal.fire(
@@ -90,6 +122,7 @@ const StackedCompanyCards: React.FC = () => {
       }
     }
   };
+  
 
   const handleRemoveCompany = async () => {
     const result = await Swal.fire({
@@ -118,7 +151,7 @@ const StackedCompanyCards: React.FC = () => {
     localStorage.removeItem("company_id");
     localStorage.setItem("user_id", user_id!);
     setSelectedCompany("");
-    setMessage("Select a company to see details");
+    setMessage("Add a new company");
     setShowInitialView(true); // Mostrar la vista inicial al hacer clic en User
   };
   
@@ -129,14 +162,14 @@ const StackedCompanyCards: React.FC = () => {
   // Extraemos la vista inicial a un componente separado para mejor organización
   const InitialView = () => (
     <div>  
-      <div className="border-solid border-black border-[1px] ">
-        <p className="text-gray-500">{message}</p>
-        {isClient && (
-          <>
-            <p>{getFirstName(userSettingsStore?.user_name)}</p>
-            <p>{getFirstName(userSettingsStore?.user_lastname)}</p>
-          </>
-        )}
+      <div className="bg-white rounded-lg p-4 border border-gray-200 hover:border-gray-300 shadow-md">
+          {isClient && (
+            <div className='flex flex-row'>
+              <p className='font-medium text-gray-900 mr-[0.5rem] '>{getFirstName(userSettingsStore?.user_name)}</p>
+              <p className='font-medium text-gray-900'>{getFirstName(userSettingsStore?.user_lastname)}</p>
+            </div>
+          )}
+          <p className="text-gray-500">{message}</p> 
         <button
           onClick={handleAddCompany}
           className="text-sm text-blue-600 hover:text-blue-800 font-medium"

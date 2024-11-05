@@ -295,6 +295,12 @@ export interface IShippingAddress {
   city?: string;
   state?: string;
   country?: string;
+  isActive?: boolean | any;
+  company?: {
+    user?: {
+      user_id?: string;
+    };
+  };
 }
 
 export interface ICompanyRegister {
@@ -377,8 +383,6 @@ export interface IPublishProductProps {
   carbs?: number;
 }
 
-
-
 export interface ICertificationsProps {
   phytosanitary_certificate: FileList;
   agricultural_producer_cert: FileList;
@@ -402,8 +406,6 @@ export interface FarmerCertificationsFormProps {
   productId: string;
 }
 
-
-// for FileInput
 export interface FileInputProps {
   name: keyof ICertificationsProps;
   label: string;
@@ -417,15 +419,12 @@ export interface FileInputProps {
   previews: IPreviewState;
 }
 
-
-
 export interface FormPublishProductProps {
   onUpdateClick: (productId: string, companyId: string) => void;
   selectedCompany: string | null;
   categories: { category_id: string; name_category: string }[];
   productData?: IAgriProduct | null; 
 }
-
 
 export interface INotification {
   notification_id: string;

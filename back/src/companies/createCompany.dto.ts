@@ -21,8 +21,7 @@ export class CreateCompanyDto {
   @IsInt({ message: 'The tax identification number must be an integer.' })
   @IsOptional() 
   @IsPositive({ message: 'The tax identification number must be a positive number.' })
-  @Min(100000000, { message: 'The tax identification number must be at least 9 digits.' })
-  @Max(999999999, { message: 'The tax identification number cannot exceed 9 digits.' })
+  @Min(10000000, { message: 'The tax identification number must be at least 8 digits.' })
   @NotEquals(0, { message: 'The tax identification number cannot be all zeros.' })
   tax_identification_number: number;
 

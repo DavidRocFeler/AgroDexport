@@ -6,6 +6,8 @@ import { TasksRepository } from './tasks.repository';
 import { CreateTaskDto } from './task.dto';
 import { CompanyProductsRepository } from '../company-products/company-products.repository';
 import { EmailService } from '../nodemail/nodemail.service';
+import { CompanyRepository } from '../companies/companies.repository';
+import { OrderRepository } from '../orders/orders.repositiry';
 
 @Injectable()
 export class TasksService {
@@ -14,7 +16,9 @@ export class TasksService {
         private readonly notificationsService:  NotificationsService,
         private readonly tasksRepository: TasksRepository,
         private readonly companyProductsRepository: CompanyProductsRepository,
-        private readonly emailService: EmailService
+        private readonly emailService: EmailService,
+        private readonly companyRepository: CompanyRepository,
+        private readonly orderRepository: OrderRepository
     ) {}
 
 
@@ -48,6 +52,66 @@ export class TasksService {
         }
     }  
 
+    @Cron(CronExpression.EVERY_MINUTE)
+async remindUsersWithoutCompany() {
+    const taskData: CreateTaskDto = {
+        task_name: 'Reminder for Users Without Company',
+        task_status: 'pending',
+        task_message: 'Send reminders to users without registered company.',
+        nextRun_date: new Date(Date.now() + 86400000) // Próxima ejecución en 24 horas
+    };
+
+    const savedTask = await this.tasksRepository.createTask(taskData);
+
+    const usersWithoutCompanies = await this.usersRepository.findUsersWithoutCompanies();
+
+    if (usersWithoutCompanies.length === 0) {
+        console.log('No users without a registered company found');
+        return;
+    }
+
+    console.log(`Users without a registered company found: ${usersWithoutCompanies.length}`);
+
+    for (const user of usersWithoutCompanies) {
+        await this.notificationsService.createAndNotifyUser(
+            user.user_id,
+            'Please register a company on the platform.',
+            'reminder',
+            savedTask.task_id
+        );
+    }
+}
+
+// Tarea para recordar a los usuarios completar los datos de sus compañías
+@Cron(CronExpression.EVERY_MINUTE)
+async remindIncompleteCompanyData() {
+    const taskData: CreateTaskDto = {
+        task_name: 'Reminder for Incomplete Company Data',
+        task_status: 'pending',
+        task_message: 'Send reminders to users with incomplete company data.',
+        nextRun_date: new Date(Date.now() + 86400000) 
+    };
+
+    const savedTask = await this.tasksRepository.createTask(taskData);
+
+    const incompleteCompanies = await this.companyRepository.findIncompleteCompanies();
+
+    if (incompleteCompanies.length === 0) {
+        console.log('No incomplete company data found');
+        return;
+    }
+
+    console.log(`Companies with incomplete data found: ${incompleteCompanies.length}`);
+
+    for (const company of incompleteCompanies) {
+        await this.notificationsService.createAndNotifyUser(
+            company.user_id,
+            'Please complete your company details on the platform.',
+            'reminder',
+            savedTask.task_id
+        );
+    }
+}
 
 
     @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
