@@ -12,7 +12,7 @@ import { useRouter } from 'next/navigation';
 
 const MySwal = withReactContent(Swal);
 
-
+ 
 interface PayPalComponentProps {
   amount: number;
   companyId: string; 
@@ -68,9 +68,8 @@ const CarShopComponent: React.FC<ILabelComponentProps> = ({ products }) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const { role_name, token, user_id } = useUserStore();
   const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(null);
-  const handleCompanySelect = (companyId: string) => {
-    setSelectedCompanyId(companyId); // Actualiza el estado con el ID de la compañía seleccionada
-  };
+  const handleCompanySelect = (companyId: string) => {setSelectedCompanyId(companyId); };
+  const [totals, setTotals] = useState<any>(null);
   const router = useRouter();
  
   
@@ -96,6 +95,10 @@ const CarShopComponent: React.FC<ILabelComponentProps> = ({ products }) => {
   useEffect(() => {
     setProductList(products);
   }, [products]);
+
+  useEffect(() => {
+    setTotals(calculateTotals());
+  }, [selectedProduct]);
 
  
   const handleProductSelect = (product: IAgriProduct) => {
@@ -163,8 +166,14 @@ const CarShopComponent: React.FC<ILabelComponentProps> = ({ products }) => {
 
   const fetchCreateOrder = async () => {
 
-    if (!selectedProduct) return;
-
+    if (!selectedProduct) {
+      return MySwal.fire({
+        icon: 'warning',
+        title: 'No Product Selected',
+        text: 'Please select a product before placing the order.',
+      });
+    }
+    
     const totals = calculateTotals();
    
   
@@ -182,11 +191,11 @@ const CarShopComponent: React.FC<ILabelComponentProps> = ({ products }) => {
     };
 
     try {
-      const createdOrder = await createOrder (orderDetail, token);
-      console.log('Order created successfully:', createdOrder);
 
+      const createdOrder = await createOrder (orderDetail, token);
       const orderId = createdOrder.order.order_id
-      console.log('Order ID:', orderId);
+      
+
 
       await MySwal.fire({
         icon: 'success',
@@ -224,7 +233,7 @@ const CarShopComponent: React.FC<ILabelComponentProps> = ({ products }) => {
       const totals = calculateTotals();
   
       if (totals.productData) {
-        // Mostrar el modal de SweetAlert con solo el botón de cancelar
+        
         MySwal.fire({
           title: 'Complete Your Payment',
           html: (
@@ -245,8 +254,8 @@ const CarShopComponent: React.FC<ILabelComponentProps> = ({ products }) => {
                   handleRemoveProduct(selectedProduct.company_product_id);
                   await MySwal.fire({
                     icon: 'success',
-                    title: 'Pago exitoso',
-                    text: 'El pago se completó con éxito.',
+                    title: 'Payment Successful',
+                    text: 'The payment was completed successfully',
                   });
                   MySwal.close();
                   router.push("/orderstatus")
@@ -262,9 +271,9 @@ const CarShopComponent: React.FC<ILabelComponentProps> = ({ products }) => {
               />
             </PayPalScriptProvider>
           ),
-          showCancelButton: true, // Solo botón de cancelar
-          cancelButtonText: 'Cancelar Pago',
-          showConfirmButton: false, // Ocultar botón de confirmación
+          showCancelButton: true, 
+          cancelButtonText: 'Cancel Payment',
+          showConfirmButton: false, 
           showCloseButton: true,
           customClass: {
             popup: 'paypal-popup-class',
@@ -280,17 +289,16 @@ const CarShopComponent: React.FC<ILabelComponentProps> = ({ products }) => {
             await cancelOrder(orderId, token);
             MySwal.fire({
               icon: 'info',
-              title: 'Pago Cancelado',
-              text: 'El proceso de pago fue cancelado.',
+              title: 'Payment Canceled',
+              text: 'The payment process was canceled.',
             });
-            setIsProcessing(false); // Restaurar el estado de procesamiento
+            setIsProcessing(false); 
           }
         });
       } else {
         throw new Error('Product data is not available.');
       }
     } catch (error) {
-      // Mostrar mensaje de error
       MySwal.fire({
         icon: 'error',
         title: 'Payment Error',

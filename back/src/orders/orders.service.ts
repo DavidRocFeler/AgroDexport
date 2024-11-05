@@ -35,6 +35,8 @@ interface OrderData {
 @Injectable()
 export class OrdersService {
     
+    
+    
     constructor (
         private readonly companyRepository: CompanyRepository,
         private readonly companyProductRepository: CompanyProductsRepository,
@@ -48,6 +50,19 @@ export class OrdersService {
 
     async getOrderByIdService(orderId: string) {
         return this.orderRepository.getOrderByIdRepository(orderId);
+    }
+
+    async getOrdersByCompanyIdServices(companyId: string): Promise<Order[]> {
+        const companyExists  = await this.companyRepository.findById(companyId)
+        if(!companyExists){
+            throw new ForbiddenException('The company does not exist');
+        }
+        return this.orderRepository.getOrdersByCompanyIdRepository(companyId);
+    }
+
+    getInfoOrderByOderDetailIdServices(ordeDatailId: string) {
+        return this.orderRepository.getOrderByOderDetailIdRepository(ordeDatailId
+        )
     }
 
     async createOrderProductsServices(createOrderProductsDto: CreateOrderProductsDto) {

@@ -8,8 +8,8 @@ import { OrderStatus } from "src/helpers/orderStatus.enum";
 
 @Injectable()
 export class OrderRepository {
-    
-
+  
+     
     constructor (
         private readonly prisma: PrismaService,
         private readonly companyRepository: CompanyRepository,
@@ -104,8 +104,83 @@ export class OrderRepository {
                 },
               });
             }
+     
+            
+            async getOrderByOderDetailIdRepository(orderDetailId: string) {
+                
+                const orderDeatil = await this.prisma.order.findUnique({
+                    where: {order_id: orderDetailId},
+                    select: {order_details_id: true,}
+                })
+
+                orderDetailId =orderDeatil.order_details_id;
+                
+                const orderinfo = await this.prisma.producStockOrderDetail.findFirst({
+                    where: { order_details_id: orderDetailId },
+                    select: {
+                        company_product_id: true,
+                        stock: true,
+                    },
+                });
+            
+                
+                if (!orderinfo) {
+                    console.error(`Order detail with ID ${orderDetailId} not found.`);
+                    throw new Error(`Order detail not found for ID: ${orderDetailId}`);
+                }
+            
+                
+                const productId = orderinfo.company_product_id;
+                console.log("info product", productId);
+            
+                
+                const infoProduct = await this.prisma.companyProduct.findUnique({
+                    where: { company_product_id: productId },
+                    select: {
+                        company_product_name: true,
+                        company_product_description: true,
+                        origin: true,
+                        company_price_x_kg: true,
+                        harvest_date: true,
+                        company_product_img: true,
+                    },
+                });
+            
+                return {
+                    orderinfo,
+                    infoProduct,
+                };
+            }
+            
+            
     
-    
+            async getOrdersByCompanyIdRepository(companyId: string): Promise<Order[]> {
+                const orders = await this.prisma.order.findMany({
+                    where: {
+                        OR: [
+                            { id_company_buy: companyId },  
+                            { id_company_sell: companyId }  
+                        ]
+                    },
+                    include: {
+                        orderDetail: true,
+                        buyer: { 
+                            select: {
+                                company_name: true, 
+                            }
+                        },
+                        supplier: { 
+                            select: {
+                                company_name: true, 
+                            }
+                        }
+                    }
+                });
+                return orders;
+            }
+            
+        
+        
     async getOrderByIdRepository(orderId: string) {
         return this.prisma.order.findUnique({
             where: {order_id: orderId },
