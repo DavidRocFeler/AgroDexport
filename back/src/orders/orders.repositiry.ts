@@ -194,6 +194,50 @@ export class OrderRepository {
                     }
                 });
             }
+
+            async getOrdersByCompanyIdRepository(companyId: string): Promise<Order[]> {
+                const orders = await this.prisma.order.findMany({
+                    where: {
+                        OR: [
+                            { id_company_buy: companyId },
+                            { id_company_sell: companyId }
+                        ]
+                    },
+                    include: {
+                        orderDetail: true,
+                        buyer: {
+                            select: { // Asegura la selección del objeto
+                                company_name: true,
+                                user: {
+                                    select: {
+                                        user_id: true,
+                                        user_name: true,
+                                        credential: {
+                                            select: { email: true }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        supplier: {
+                            select: { // Asegura la selección del objeto
+                                company_name: true,
+                                user: {
+                                    select: {
+                                        user_id: true,
+                                        user_name: true,
+                                        credential: {
+                                            select: { email: true }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+                return orders;
+            }
+            
   
     async createOrderProductsRepository(createOrderProductsDto: CreateOrderProductsDto) {
         let {subtotal, logistic_cost, tariff, tax, discount, total } = createOrderProductsDto
