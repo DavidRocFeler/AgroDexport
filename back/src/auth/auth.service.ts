@@ -30,7 +30,6 @@ export class AuthService {
 
   async signInService(credentials: LoginUserDto) {
     const token = await this.usersRepository.singIn(credentials)
-    console.log(token)
     return token
   }
 

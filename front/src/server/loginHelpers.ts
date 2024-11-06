@@ -21,6 +21,7 @@ export const logginProps = async (userData: ILogin) => {
             throw new Error(errorMessage); 
         }
     } catch (error: any) {
+        
         console.error("Fetch error:", error.message);
         throw error; 
     }
