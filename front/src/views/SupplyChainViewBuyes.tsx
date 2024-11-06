@@ -1,4 +1,4 @@
-"use client"; // Añade esta línea al principio del archivo
+"use client"; 
 
 import React, { useEffect, useState } from "react";
 import Swal from 'sweetalert2';
@@ -53,7 +53,7 @@ const SupplyChainViewSupplier: React.FC = () => {
         fetchCompanies();
     }, [user_id, token]);
 
-    // Manejador para el cambio de la compañía seleccionada
+    
     const handleCompanyChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
         const companyId = event.target.value;
         setSelectedCompanyId(companyId); 
@@ -131,7 +131,7 @@ const SupplyChainViewSupplier: React.FC = () => {
                             name="Order List" 
                             id="" 
                             onChange={handleCompanyChange}
-                            value={selectedCompanyId || ""} // Establece el valor del select a la compañía seleccionada
+                            value={selectedCompanyId || ""} 
                         >
                             <option value=""> My companies</option>
                             {companies.map(company => (
