@@ -7,6 +7,6 @@ import { NotificationRepository } from './notifications.repository';
 @Module({
   controllers:[NotificationsController],
   providers: [NotificationsService, NotificationsGateway, NotificationRepository],
-  exports: [NotificationsService]
+  exports: [NotificationsService, NotificationsGateway]
 })
 export class NotificationsModule {}
