@@ -41,23 +41,35 @@ const MyProductsView: React.FC = () => {
               company_id: company.company_id as string,
               company_name: company.company_name as string,
             }));
-
+            // console.log(validCompanies);
           setUserCompanies(validCompanies);
 
           if (validCompanies.length > 0) {
+            // console.log("cuantas companies", validCompanies.length);
             setSelectedCompany(validCompanies[0].company_id);
-            const products = await getCompanyProducts(
-              validCompanies[0].company_id
-            );
-            if (products.length === 0) {
-              setError(
-                "You currently have no products loaded for this company."
-              );
-              setProductsArray([]);
-            } else {
-              setProductsArray(products);
-              setError(null);
+            // console.log(validCompanies[0].company_id);
+            try {
+              const products = await getCompanyProducts(validCompanies[0].company_id);
+              // console.log("Productos obtenidos:", products);
+            
+              if (products.length === 0) {
+                // console.log("Número de productos:", products.length);
+                setError("You currently have no products loaded for this company.");
+                setProductsArray([]);
+              } else {
+                setProductsArray(products);
+                setError(null);
+              }
+            } catch (error) {
+              if (error instanceof Error) {
+                console.error("Error al obtener productos:", error.message);
+                setError("You currently have no products loaded for this company.");
+              } else {
+                console.error("Error desconocido:", error);
+                setError("Unexpected error loading products.");
+              }
             }
+            
           }
         }
       } catch (err: any) {

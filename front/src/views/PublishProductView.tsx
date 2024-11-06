@@ -1,11 +1,16 @@
 "use client";
 import React, { useEffect, useState, useRef } from "react";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 import FormPublishProduct from "@/components/FormPublishProduct";
 import FarmerCertificationsForm from "@/components/FarmerCertificationsForm";
 import { getCategories, getProductById } from "@/server/getProduct";
 import { getUserSettings } from "@/server/getUserSettings";
 import { useUserStore } from "@/store/useUserStore";
 import { ISettingsUserProps } from "@/interface/types";
+import { useRouter } from "next/navigation";
+
+const MySwal = withReactContent(Swal);
 
 const PublishProductView: React.FC = () => {
   const [companyParam, setCompanyParam] = useState<string | null>(null);
@@ -18,9 +23,10 @@ const PublishProductView: React.FC = () => {
   const [isImageUploaded, setIsImageUploaded] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const { token, user_id } = useUserStore();
+  const router = useRouter();
 
   const isSelectDisabled = Boolean(companyProductIdParam);
-  const didSetCompany = useRef(false); // Controla que `selectedCompany` solo se configure una vez
+  const didSetCompany = useRef(false);
 
   // Obtener los parámetros de la URL
   useEffect(() => {
@@ -29,17 +35,11 @@ const PublishProductView: React.FC = () => {
     const companyProductIdParamFromURL = params.get("company_product_id");
     setCompanyParam(companyParamFromURL);
     setCompanyProductIdParam(companyProductIdParamFromURL);
-
-    // console.log(
-    //   "URL Params - company_id:", companyParamFromURL, 
-    //   "company_product_id:", companyProductIdParamFromURL
-    // );
   }, []);
 
   // Cargar configuración de usuario y categorías
   useEffect(() => {
     const fetchUserSettingsAndCategories = async () => {
-      // console.log("Fetching user settings and categories...");
       try {
         if (token && user_id) {
           const userData: ISettingsUserProps = await getUserSettings(user_id, token);
@@ -49,18 +49,30 @@ const PublishProductView: React.FC = () => {
             company_name: company.company_name as string,
           }));
           setUserCompanies(validCompanies);
-          // console.log("Valid companies:", validCompanies);
 
-          if (!didSetCompany.current && companyParam) {
-            const isValidCompany = validCompanies.some((c) => c.company_id === companyParam);
-            setSelectedCompany(isValidCompany ? companyParam : validCompanies[0].company_id);
-            // console.log("Setting selectedCompany from companyParam or first valid company:", selectedCompany);
+          if (validCompanies.length === 0) {
+            MySwal.fire({
+              title: "No companies registered",
+              text: "You need to have a registered company to create a product.",
+              icon: "warning",
+              confirmButtonText: "Go to Profile",
+            }).then(() => {
+              router.push("/profile");
+            });
+          }
+
+          // Lógica para establecer selectedCompany
+          if (!didSetCompany.current) {
+            const isValidCompany = companyParam && validCompanies.some((c) => c.company_id === companyParam);
+            const companyToSet = isValidCompany ? companyParam : validCompanies[0]?.company_id;
+
+            setSelectedCompany(companyToSet);
             didSetCompany.current = true;
+            console.log("Setting selectedCompany to:", companyToSet);
           }
 
           const categoryData = await getCategories();
           setCategories(categoryData);
-          // console.log("Categories:", categoryData);
         }
       } catch (err: any) {
         console.error("Error loading user settings or categories:", err);
@@ -76,13 +88,11 @@ const PublishProductView: React.FC = () => {
   useEffect(() => {
     const fetchProductData = async () => {
       if (companyProductIdParam && selectedCompany) {
-        // console.log("Fetching product data...");
         try {
           const productData = await getProductById(selectedCompany, companyProductIdParam);
           if (productData) {
             setCompanyProductId(companyProductIdParam);
             setIsImageUploaded(Boolean(productData.company_product_img));
-            // console.log("Product data loaded. Image uploaded:", Boolean(productData.company_product_img));
           }
         } catch (error) {
           console.error("Error loading product data:", error);
@@ -97,18 +107,15 @@ const PublishProductView: React.FC = () => {
     setCompanyProductId(productId);
     setIsImageUploaded(true);
     setShowCertifications(true);
-    // console.log("Product created - ID:", productId, "Company ID:", companyId);
   };
 
   const handleCancel = () => {
     setShowCertifications(false);
-    // console.log("Certifications view cancelled");
   };
 
   const handleCompanyChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     if (!isSelectDisabled) {
       setSelectedCompany(event.target.value);
-      // console.log("Company changed to:", event.target.value);
     }
   };
 
