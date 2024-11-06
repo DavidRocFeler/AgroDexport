@@ -8,6 +8,7 @@ import Swal from "sweetalert2";
 import { X } from "lucide-react";
 import CustomCheckbox from "./CustomCheckbox";
 import { useRouter } from "next/navigation";
+import { validateRegister } from "@/helpers/validateRegister";
 
 const SignUp: React.FC<ISignUpComponentProps> = ({ onCloseSignUp, onSwitchToLogin }) => {
     const initialState: ISignUpForm = {
@@ -22,19 +23,9 @@ const SignUp: React.FC<ISignUpComponentProps> = ({ onCloseSignUp, onSwitchToLogi
     const [userData, setUserData] = useState<ISignUpForm>(initialState);
     const [isButtonDisabled, setIsButtonDisabled] = useState(true);
     const [isAuthButtonDisabled, setIsAuthButtonDisabled] = useState(true);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const router = useRouter();
-    
-    const validateForm = (data: ISignUpForm): string[] => {
-        const errors: string[] = [];
-        if (data.user_name.trim() === "") errors.push("Name is required");
-        if (data.user_lastname.trim() === "") errors.push("Last name is required");
-        if (data.email.trim() === "") errors.push("Email is required");
-        if (data.password.trim() === "") errors.push("Password is required");
-        if (data.password !== data.confirm_password) errors.push("Passwords do not match");
-        if (data.role_name === null) errors.push("Please select if you are a buyer or supplier");
-        if (!data.isOlder) errors.push("You must confirm that you are of legal age");
-        return errors;
-    }
+
 
     const handleChangeRegister = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value, type, checked } = event.target;
@@ -52,7 +43,7 @@ const SignUp: React.FC<ISignUpComponentProps> = ({ onCloseSignUp, onSwitchToLogi
                 (updatedData as any)[name] = value;
             }
         
-            const errors = validateForm(updatedData);
+            const errors = validateRegister(updatedData);
             setIsButtonDisabled(errors.length > 0);
             return updatedData;
         });
@@ -60,12 +51,15 @@ const SignUp: React.FC<ISignUpComponentProps> = ({ onCloseSignUp, onSwitchToLogi
 
     const handleOnSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        const errors = validateForm(userData);
+        
+        const errors = validateRegister(userData); // Validación del formulario
         if (errors.length === 0) {
             try {
-                console.log("Sending to backend:", JSON.stringify(userData));
+                setIsSubmitting(true); // Marca el inicio del proceso de envío
                 
-                await registerProps(userData);
+                await registerProps(userData); // Llamada para registrar los datos
+    
+                // Muestra la alerta de éxito
                 await Swal.fire({
                     title: `Welcome!`,
                     text: `You have successfully registered.`,
@@ -73,20 +67,27 @@ const SignUp: React.FC<ISignUpComponentProps> = ({ onCloseSignUp, onSwitchToLogi
                     confirmButtonText: 'OK',
                     allowOutsideClick: false
                 });
-                setUserData(initialState); // Reset form after successful submission
+    
+                // Resetear formulario después del envío exitoso
+                setUserData(initialState); 
                 onCloseSignUp();
-                router.push("/");
+                router.push("/"); // Redirige después del registro exitoso
             } catch (error: any) {
                 console.error("Registration error:", error.message);
+    
+                // Muestra la alerta de error si algo falla
                 Swal.fire({
                     icon: "error",
                     title: "Registration Failed",
-                    text: error.message, // Muestra el mensaje de error enviado por el backend
+                    text: error.message, // Muestra el mensaje de error del backend
                     confirmButtonText: 'OK',
                     allowOutsideClick: false
                 });
+            } finally {
+                setIsSubmitting(false); // Finaliza el proceso de envío
             }
         } else {
+            // Muestra la alerta de errores si no pasa la validación
             Swal.fire({
                 title: "Please correct the following errors:",
                 text: errors.join("\n"),
@@ -95,40 +96,67 @@ const SignUp: React.FC<ISignUpComponentProps> = ({ onCloseSignUp, onSwitchToLogi
                 allowOutsideClick: false
             });
         }
-    };    
-    
-    const handleOnSubmitAuth = async (event: React.SyntheticEvent) => {
-    event.preventDefault();
-    console.log("UserData before submission:", userData);
-
-    // Verifica si se seleccionó un rol
-    if (!userData.role_name) {
-        await Swal.fire({
-            title: 'Role required',
-            text: 'Please select if you are a buyer or supplier before signing up.',
-            icon: 'warning',
-            confirmButtonText: 'OK',
-            allowOutsideClick: false
-        });
-        return; // Detener el flujo si no hay rol seleccionado
-    }
-
-    // Continúa si se ha seleccionado un rol
-    const newUser: IGoogleSession = {
-        name: userData.user_name || "",
-        email: userData.email || "",
-        role_name: userData.role_name,
     };
 
-    localStorage.setItem('userRole', userData.role_name);
-
-    await signIn("google");
-};
-
-        useEffect(() => {
-            const isRoleSelected = userData.role_name !== null;
-            setIsAuthButtonDisabled(!isRoleSelected);
-        }, [userData.role_name, userData.isOlder]);
+    const handleOnSubmitAuth = async (event: React.SyntheticEvent) => {
+        event.preventDefault();
+        console.log("UserData before submission:", userData);
+    
+        // Verifica si se seleccionó un rol
+        if (!userData.role_name) {
+            await Swal.fire({
+                title: 'Role required',
+                text: 'Please select if you are a buyer or supplier before signing up.',
+                icon: 'warning',
+                confirmButtonText: 'OK',
+                allowOutsideClick: false
+            });
+            return; // Detener el flujo si no hay rol seleccionado
+        }
+    
+        // Continúa si se ha seleccionado un rol
+        const newUser: IGoogleSession = {
+            name: userData.user_name || "",
+            email: userData.email || "",
+            role_name: userData.role_name,
+        };
+    
+        localStorage.setItem('userRole', userData.role_name);
+    
+        setIsSubmitting(true); // Marca el inicio de la autenticación
+    
+        try {
+            // Mostrar el modal de carga mientras se procesa
+            Swal.fire({
+                title: 'Connecting to Google...',
+                text: 'Please wait while we sign you up.',
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                showConfirmButton: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+    
+            // Aquí va la llamada al método de autenticación
+            await signIn("google");
+    
+        } catch (error) {
+            console.error("Authentication error:", error);
+            Swal.close();
+    
+            await Swal.fire({
+                title: 'Sign Up Error',
+                text: 'An error occurred while signing you up.',
+                icon: 'error',
+                confirmButtonText: 'OK',
+                allowOutsideClick: false
+            });
+        } finally {
+            // Finalizar el proceso y volver a habilitar el botón
+            setIsSubmitting(false);
+        }
+    };
     
     return (
         <section className={styles.LogSign}>
@@ -207,13 +235,26 @@ const SignUp: React.FC<ISignUpComponentProps> = ({ onCloseSignUp, onSwitchToLogi
                         </label>
                     </div>
 
-                    <button type="submit" className={styles.ButtonLogin}>Continue</button>
+                    <button
+                        type="submit"
+                        className={styles.ButtonLogin}
+                        disabled={isSubmitting} 
+                    >
+                        {isSubmitting ? "Submitting..." : "Continue"}
+                    </button>
                 </div>
                 <p className={styles.OR}> ------------------- OR -------------------</p>
                 <div>
-                    <button className={styles.ButtonGoogle} onClick={async (event) => { await handleOnSubmitAuth(event);}} >
+                    <button
+                        className={styles.ButtonGoogle}
+                        onClick={async (event) => {
+                            if (isSubmitting) return; // Evita ejecutar si ya está en proceso
+                            await handleOnSubmitAuth(event);
+                        }}
+                        disabled={isSubmitting} // Deshabilitar solo si está enviando
+                    >
                         <FaGoogle />
-                        Sign up with Google
+                        {isSubmitting ? 'Signing Up...' : 'Sign up with Google'}
                     </button>
                     <div className="mb-[2rem] w-[40%] m-auto flex flex-row">
                         <label htmlFor="" className="bg-red-500 w-[8rem]" >
