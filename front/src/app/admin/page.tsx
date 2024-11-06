@@ -11,7 +11,7 @@
 // export default Admin;
 
 //----------------------------------------------------------
-("use client");
+"use client";
 
 import React, { useEffect } from "react";
 import DashboardView from "@/views/DashboardView";
