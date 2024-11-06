@@ -216,7 +216,7 @@ export class UsersRepository {
    
     if (account) {
       if (!account.user.isActive) {
-        throw new UnauthorizedException("Account is inactive. Please contact support.");
+        throw new UnauthorizedException("Account is inactive. Please contact support@agrodexports.com");
       }
   
       const user = await this.prisma.user.findUnique({
