@@ -27,12 +27,12 @@ const AuthWrapper: React.FC<IAuthWrapperProps> = ({ children }) => {
                       popup: "custom-swal-popup",
                   },
               });
-          } catch (error) {
-              console.error("Error en el registro del backend:", error);
+          } catch (error:any) {
+                const errorMessage = error.toString().split(":").pop().trim();
               Swal.fire({
                   icon: "error",
                   title: "Error",
-                  text: "There was an error during registration.",
+                  text: `${errorMessage}`,
               });
           } finally {
               clearAllSessions();
