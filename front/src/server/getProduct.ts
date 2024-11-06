@@ -149,3 +149,20 @@ export const getProductById = async (companyId: string, productId: string): Prom
     throw new Error(error.message || "Unexpected error fetching product by ID");
   }
 };
+
+export const getProductByCompanyId = async (companyId: string): Promise<IAgriProduct[]> => {
+  try {
+    const url = `${APIURL}/company-products/company/${companyId}`;
+    const res = await fetch(url, {
+      method: "GET",
+      headers: { "Content-type": "application/json" },
+    });
+
+    if (!res.ok) throw new Error("Error fetching product by ID");
+
+    const product: IAgriProduct[] = await res.json();
+    return product;
+  } catch (error: any) {
+    throw new Error(error.message || "Unexpected error fetching product by ID");
+  }
+};

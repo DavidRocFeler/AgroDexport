@@ -3,35 +3,28 @@ import Swal from "sweetalert2";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-export const logginProps = async ( userData: ILogin ) => {
+export const logginProps = async (userData: ILogin) => {
     try {
         const res = await fetch(`${API_URL}/auth/signin`, {
             method: "POST",
             headers: {
-                "Content-type": "application/json"
+                "Content-Type": "application/json"
             },
             body: JSON.stringify(userData)
-        })
-        if(res.ok) {
-            return res.json();
+        });
+
+        if (res.ok) {
+            return await res.json();
         } else {
-            Swal.fire({
-                icon: "error",
-                title: "Error",
-                text: "User not found",
-                width: 400,
-                padding: "3rem",
-                customClass: {
-                    popup: "custom-swual-popup"
-                }
-            });
+            const errorResponse = await res.json();
+            const errorMessage = errorResponse.message || "User not found";
+            throw new Error(errorMessage); 
         }
-        throw new Error("Failed Logged")
     } catch (error: any) {
-        throw new Error(error)
+        console.error("Fetch error:", error.message);
+        throw error; 
     }
 };
-
 
 export const logginAuthProps = async ( userData: ILoginAuth ) => {
     try {

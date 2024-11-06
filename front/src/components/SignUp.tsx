@@ -68,7 +68,7 @@ const SignUp: React.FC<ISignUpComponentProps> = ({ onCloseSignUp, onSwitchToLogi
                 await registerProps(userData);
                 await Swal.fire({
                     title: `Welcome!`,
-                    text: `You have successfully register.`,
+                    text: `You have successfully registered.`,
                     icon: 'success',
                     confirmButtonText: 'OK',
                     allowOutsideClick: false
@@ -76,8 +76,15 @@ const SignUp: React.FC<ISignUpComponentProps> = ({ onCloseSignUp, onSwitchToLogi
                 setUserData(initialState); // Reset form after successful submission
                 onCloseSignUp();
                 router.push("/");
-            } catch (error) {
-                console.error("Registration error:", error);
+            } catch (error: any) {
+                console.error("Registration error:", error.message);
+                Swal.fire({
+                    icon: "error",
+                    title: "Registration Failed",
+                    text: error.message, // Muestra el mensaje de error enviado por el backend
+                    confirmButtonText: 'OK',
+                    allowOutsideClick: false
+                });
             }
         } else {
             Swal.fire({
@@ -88,7 +95,7 @@ const SignUp: React.FC<ISignUpComponentProps> = ({ onCloseSignUp, onSwitchToLogi
                 allowOutsideClick: false
             });
         }
-    };
+    };    
     
     const handleOnSubmitAuth = async (event: React.SyntheticEvent) => {
     event.preventDefault();

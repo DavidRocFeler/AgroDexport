@@ -22,6 +22,7 @@ const MarketView: React.FC = () => {
     setIsLoading(true); // Inicia la carga solo para las cards
     try {
       const data: IAgriProduct[] = await getProductDB(filters);
+      console.log(data)
       setProducts(data.filter(product => product.isActive));
       setError(null);
     } catch (err) {

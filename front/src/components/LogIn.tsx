@@ -45,30 +45,32 @@ const LogIn: React.FC<ILoginComponentProps> = ({ onCloseLogin, onSwitchToSignUp 
             // backend response
             const { user_id, token, role_name } = response;
             
-            // Actualize the global status 
+            // Actualizar el estado global
             setUserData(user_id, token, role_name);
             
             await Swal.fire({
                 title: `Welcome!`,
-                text: `Logged in succesfully`,
+                text: `Logged in successfully`,
                 icon: 'success',
                 confirmButtonText: 'OK',
                 allowOutsideClick: false
             });
             
-            router.push("/")
+            router.push("/");
             onCloseLogin();
             
-        } catch (error) {
+        } catch (error: any) {
+            console.error("Login error:", error.message);
             await Swal.fire({
                 title: 'Login Error',
-                text: 'User not found wrong password',
+                text: error.message, // Muestra el mensaje de error específico del backend
                 icon: 'error',
                 confirmButtonText: 'OK',
                 allowOutsideClick: false
             });
         }
     };
+    
 
     return (
         <section className={styles.LogSign}>

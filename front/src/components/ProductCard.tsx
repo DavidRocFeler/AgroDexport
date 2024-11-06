@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { ShoppingCart } from 'lucide-react'
 
-const ProductCard: React.FC<IAgriProduct> = ({company_product_id ,company_id, carbs, fat, calories, protein, category_id, stock, minimum_order, harvest_date, company_product_name, company_product_img, company_product_description, company_price_x_kg, discount}) => {
+const ProductCard: React.FC<IAgriProduct> = ({company_product_id, company ,company_id, carbs, fat, calories, protein, category, stock, minimum_order, harvest_date, company_product_name, company_product_img, company_product_description, company_price_x_kg, discount, origin}) => {
   
   const router = useRouter();
 
@@ -23,7 +23,8 @@ const ProductCard: React.FC<IAgriProduct> = ({company_product_id ,company_id, ca
           company_id,
           company_product_img,
           company_product_name,
-          category_id,
+          category,
+          company,
           origin,
           harvest_date,
           company_price_x_kg,
@@ -44,6 +45,10 @@ const ProductCard: React.FC<IAgriProduct> = ({company_product_id ,company_id, ca
          //guardar product ID por separado
          localStorage.setItem("productId", company_product_id);
 
+         window.dispatchEvent(new CustomEvent('productSelected', { 
+          detail: product 
+        }));
+
         // Redirigir a la página del producto con el id
         router.push(`/detailproduct/${company_id}`);
     }
@@ -61,7 +66,7 @@ const ProductCard: React.FC<IAgriProduct> = ({company_product_id ,company_id, ca
           <p className="text-gray-600">{truncateDescription(company_product_description)}</p>
           <p className="text-green-700 font-bold absolute bottom-20 ">${company_price_x_kg}</p>
           <button onClick={handleButtonProduct} className="absolute bottom-5 bg-[#242424] text-white px-4 py-2 rounded w-[12.3rem] flex items-center m-auto">
-            <p className="text-white text-[1rem] absolute right-5 ">Add to cart shop</p>
+            <p className="text-white text-[1rem] absolute right-7 ">Product details</p>
             <ShoppingCart/>
           </button>
         </div>

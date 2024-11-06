@@ -1,8 +1,8 @@
 import React from "react";
 import AllDetailView from "@/views/AllDetailView";
 
-const DetailProduct: React.FC<{params: {product_id: string}}> = ({params}) => {
-    console.log(params.product_id)
+const DetailProduct: React.FC<{params: {company_id: string}}> = ({params}) => {
+    console.log(params.company_id)
     return(
         <>
             <AllDetailView/>

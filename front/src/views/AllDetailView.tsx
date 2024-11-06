@@ -33,10 +33,10 @@ const AllDetailView: React.FC = () => {
   }, []);
 
   return (
-    <>
+    <div className="pb-[3rem] bg-gray-50">
       {productData && <ProductDetail {...productData} />}
-      {/* {companyId && <ListCard companyId={companyId} />} */}
-    </>
+      {companyId && <ListCard companyId={companyId} {...productData} />}
+    </div>
   );
 };
 

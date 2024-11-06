@@ -18,7 +18,7 @@ const ProfileView: React.FC = () => {
   const [activeSection, setActiveSection] = useState<string>("Information contact");
   const [isHydrated, setIsHydrated] = React.useState(false);
   const { token, user_id } = useUserStore()
-  const [profileImage, setProfileImage] = useState<string>("/LogoIcon.png"); 
+  const [profileImage, setProfileImage] = useState<string>("https://media.istockphoto.com/id/1451587807/es/vector/vector-de-icono-de-perfil-de-usuario-avatar-o-icono-de-persona-foto-de-perfil-s%C3%ADmbolo-de.jpg?s=612x612&w=0&k=20&c=JZU0xsfmOHOx4UoiAITFEIwhe16aweLW3Ev4w5PgL2Y="); 
   const [userIdExists, setUserIdExists] = useState(false);
   const [companyIdExists, setCompanyIdExists] = useState(false);
   const [ company_id, setCompany_id ] = useState<string | null>(null);
@@ -70,18 +70,18 @@ const ProfileView: React.FC = () => {
         try {
           if (currentUserId && !currentCompanyId) {
               const userData = await getUserSettings(currentUserId, token);
-              setProfileImage(userData.profile_picture || "/LogoIcon.png");
+              setProfileImage(userData.profile_picture || "https://media.istockphoto.com/id/1451587807/es/vector/vector-de-icono-de-perfil-de-usuario-avatar-o-icono-de-persona-foto-de-perfil-s%C3%ADmbolo-de.jpg?s=612x612&w=0&k=20&c=JZU0xsfmOHOx4UoiAITFEIwhe16aweLW3Ev4w5PgL2Y=");
               
           } else if (currentCompanyId) {
               const companyData = await getCompanySettings(currentCompanyId, token);
               console.log("Company Data:", companyData);
-              setProfileImage(companyData.company_logo || "/LogoIcon.png");
+              setProfileImage(companyData.company_logo || "https://media.istockphoto.com/id/1451587807/es/vector/vector-de-icono-de-perfil-de-usuario-avatar-o-icono-de-persona-foto-de-perfil-s%C3%ADmbolo-de.jpg?s=612x612&w=0&k=20&c=JZU0xsfmOHOx4UoiAITFEIwhe16aweLW3Ev4w5PgL2Y=");
           } else {
-              setProfileImage("/LogoIcon.png");
+              setProfileImage("https://media.istockphoto.com/id/1451587807/es/vector/vector-de-icono-de-perfil-de-usuario-avatar-o-icono-de-persona-foto-de-perfil-s%C3%ADmbolo-de.jpg?s=612x612&w=0&k=20&c=JZU0xsfmOHOx4UoiAITFEIwhe16aweLW3Ev4w5PgL2Y=");
           }
       } catch (error) {
           console.error("Error fetching profile image:", error);
-          setProfileImage("/LogoIcon.png");
+          setProfileImage("https://media.istockphoto.com/id/1451587807/es/vector/vector-de-icono-de-perfil-de-usuario-avatar-o-icono-de-persona-foto-de-perfil-s%C3%ADmbolo-de.jpg?s=612x612&w=0&k=20&c=JZU0xsfmOHOx4UoiAITFEIwhe16aweLW3Ev4w5PgL2Y=");
       }
     };
 
@@ -273,7 +273,7 @@ const ProfileView: React.FC = () => {
               <div className="m-auto mb-[2.1rem] w-fit flex flex-col items-center space-y-4">
                   <img
                     className="w-60 h-60 rounded-full object-cover border-4"
-                    src="/LogoIcon.png"
+                    src="https://media.istockphoto.com/id/1451587807/es/vector/vector-de-icono-de-perfil-de-usuario-avatar-o-icono-de-persona-foto-de-perfil-s%C3%ADmbolo-de.jpg?s=612x612&w=0&k=20&c=JZU0xsfmOHOx4UoiAITFEIwhe16aweLW3Ev4w5PgL2Y="
                     alt="Profile"
                   />
               </div>
@@ -311,7 +311,7 @@ const ProfileView: React.FC = () => {
                       {/* Renderiza UserProfileForm por defecto, y PasswordProfileForm cuando se selecciona "Security settings" */}
                       {activeSection === "Information contact" && <UserProfileForm />}
                       {activeSection === "Security settings" && <PasswordProfileForm />}
-                      {activeSection === "Payments method" && <Paypal />}
+                      {/* {activeSection === "Payments method" && <Paypal />} */}
                       {activeSection === "Company information" && <CompanyForms />}
                     </div>
                   </div>
@@ -399,7 +399,7 @@ const ProfileView: React.FC = () => {
                   <div className="flex-1 flex items-center justify-center text-gray-500">
                     {activeSection === "Information contact" && <UserProfileForm />}
                     {activeSection === "Security settings" && <PasswordProfileForm />}
-                    {activeSection === "Payments method" && <Paypal />}
+                    {/* {activeSection === "Payments method" && <Paypal />} */}
                     {activeSection === "Company information" && <CompanyForms />}
                     {activeSection === "Warehouse address" && <ShippingAddressForm />}
                   </div>
@@ -413,5 +413,6 @@ const ProfileView: React.FC = () => {
   };
 
 export default ProfileView;
+
 
 

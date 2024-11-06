@@ -449,6 +449,9 @@ export interface IUserPanel {
 
 export interface ICompany {
   company_id: string;
+  company?: {
+    company_id?: string;
+  }
   user_id?: string;
   company_name: string | any;
   tax_identification_number: number | null;
@@ -462,11 +465,21 @@ export interface ICompany {
   account_paypal?: string;
   company_description?: string;
   company_logo?: string;
-  isActive: boolean;
+  isActive?: boolean;
   shippingAddresses?: {
     shipping_address_id?: string;
   }
   user?: {
+    user_id?: string;
+    user_name?: string;
+    user_lastname?: string;
+    nDni?: string;
+    birthday?: string;
+    phone?: string;
+    country?: string;
+    profile_picture?: string;
+    isOlder?: boolean;
+    isActive?: boolean;
     role?: {
       role_name: string;
     };
