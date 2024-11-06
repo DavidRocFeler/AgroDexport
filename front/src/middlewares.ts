@@ -44,7 +44,6 @@
 //   matcher: ['/userpanel/:path*', '/profile/:path*']
 // };
 
-
 // // middleware.ts
 // import { NextResponse } from 'next/server'
 // import type { NextRequest } from 'next/server'
@@ -60,7 +59,7 @@
 //   const pathname = request.nextUrl.pathname
 
 //   // Verifica si la ruta actual necesita protección
-//   const isProtectedRoute = protectedRoutes.some(route => 
+//   const isProtectedRoute = protectedRoutes.some(route =>
 //     pathname.startsWith(route)
 //   )
 
