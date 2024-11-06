@@ -1,7 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import axios from 'axios';
 import { UsersRepository } from '../users/users.repository'; 
-import { User } from '@prisma/client';
+import { User, Company } from '@prisma/client';
+
+type UserWithCompanies = User & {
+  companies: Company[];
+};
 
 @Injectable()
 export class ChatbotService {
@@ -14,8 +18,8 @@ export class ChatbotService {
   private updateState: { [userId: string]: { fields: string[]; awaitingValues: boolean } } = {};
 
   async processMessage(message: string, userId: string): Promise<string> {
-    // console.log('Received message:', message);
-    // console.log('Received userId:', userId);
+    console.log('Received message:', message);
+    console.log('Received userId:', userId);
 
     try {
       // Si estamos esperando nuevos valores para una actualización
@@ -33,16 +37,16 @@ export class ChatbotService {
         },
       });
 
-      // console.log('Wit.ai Response:', response.data);
+      console.log('Wit.ai Response:', response.data);
 
       const intents = response.data.intents;
       const entities = response.data.entities;
 
       // Obtiene la información del usuario desde la base de datos
-      let userInfo: User | null = null;
+      let userInfo: UserWithCompanies | null = null;
       try {
-        userInfo = await this.usersRepository.getUserById(userId);
-        // console.log('User info fetched:', userInfo);
+        userInfo = await this.usersRepository.getUserById(userId) as UserWithCompanies;
+        console.log('User info fetched:', userInfo);
       } catch (error) {
         if (error instanceof NotFoundException) {
           return "I couldn't find your information. Please make sure you're registered.";
@@ -62,8 +66,14 @@ export class ChatbotService {
           case 'greeting':
             return `Hello ${userInfo?.user_name || 'there'}, welcome to AgroDexports! How can I assist you today?`;
 
+          case 'capabilities':
+            return `Our chatbot is here to help! It can answer your questions, provide platform information, and assist with creating, updating, and managing your user profile and associated companies. Let us know how we can assist you!`;
+
+          case 'app_info':
+              return `AgroDexports is a B2B platform focused on connecting buyers with trusted agricultural suppliers from Latin America to Europe and the U.S. We prioritize transparency, efficiency, and high-quality bulk exports to streamline your business operations. Join us in transforming agricultural trade!`;
+
           case 'query':
-            // console.log('Entities detected in Wit.ai response:', entities);
+            console.log('Entities detected in Wit.ai response:', entities);
             return this.handleEntityResponse(entities, userInfo);
 
           case 'update':
@@ -76,7 +86,7 @@ export class ChatbotService {
         return "I'm sorry, I didn't understand that. Could you please rephrase?";
       }
     } catch (error) {
-      // console.error(`Error in Wit.ai request: ${error.message}`);
+      console.error(`Error in Wit.ai request: ${error.message}`);
       return "Bot message not available due to an error.";
     }
   }
@@ -95,37 +105,76 @@ export class ChatbotService {
   }
 
   // Método para manejar `query` y responder solo con los campos relevantes detectados
-  private handleEntityResponse(entities: any, userInfo: User): string {
-    const responses = [];
+// Método para manejar `query` y responder solo con los campos relevantes detectados
+private handleEntityResponse(entities: any, userInfo: UserWithCompanies): string {
+  const responses = [];
 
-    // Procesa solo las entidades presentes y relevantes, sin valores ambiguos
-    if (entities['user_lastname:user_lastname'] && entities['user_lastname:user_lastname'][0].value !== '?') {
-        responses.push(`Your last name is ${userInfo.user_lastname || 'not registered'}.`);
-    }
-
-    if (entities['user_name:user_name'] && entities['user_name:user_name'][0].value !== '?') {
-        responses.push(`Your name is ${userInfo.user_name || 'not registered'}.`);
-    }
-
-    if (entities['nDni:nDni'] && entities['nDni:nDni'][0].value !== '?') {
-        responses.push(`Your DNI is ${userInfo.nDni || 'not registered'}.`);
-    }
-
-    if (entities['country:country'] && entities['country:country'][0].value !== '?') {
-        responses.push(`Your country is ${userInfo.country || 'not registered'}.`);
-    }
-
-    if (entities['birthday:birthday'] && entities['birthday:birthday'][0].value !== '?') {
-        responses.push(`Your birthday is ${userInfo.birthday || 'not registered'}.`);
-    }
-
-    if (entities['phone:phone'] && entities['phone:phone'][0].value !== '?') {
-        responses.push(`Your phone number is ${userInfo.phone || 'not registered'}.`);
-    }
-
-    // Unimos todas las respuestas en una sola cadena
-    return responses.length > 0 ? responses.join(' ') : "I couldn't find any information to answer your query.";
+  // Caso 1: Consultar sobre las compañías del usuario
+  if (entities['company_name:company_name'] && entities['company_name:company_name'][0].value !== '?') {
+      if (userInfo.companies && userInfo.companies.length > 0) {
+          const companyNames = userInfo.companies.map(company => company.company_name);
+          responses.push(`Your company/companies are: ${companyNames.join(', ')}.`);
+      } else {
+          responses.push("You don't have any registered companies.");
+      }
   }
+
+  // Caso 2: Consultar atributos específicos de cada compañía en función de los atributos disponibles
+  const companyAttributes = {
+      'tax_identification_number:tax_identification_number': 'tax_identification_number',
+      'address:address': 'address',
+      'postal_code:postal_code': 'postal_code',
+      'city:city': 'city',
+      'state:state': 'state',
+      'company_country:company_country': 'country',
+      'industry:industry': 'industry',
+      'website:website': 'website',
+      'company_description:company_description': 'company_description'
+  };
+
+  Object.entries(companyAttributes).forEach(([entityKey, attributeKey]) => {
+      if (entities[entityKey]) {
+          if (userInfo.companies && userInfo.companies.length > 0) {
+              userInfo.companies.forEach(company => {
+                  const attributeValue = company[attributeKey] || 'not registered';
+                  responses.push(`The ${attributeKey.replace('_', ' ')} of your company ${company.company_name} is ${attributeValue}.`);
+              });
+          } else {
+              responses.push("You don't have any registered companies.");
+          }
+      }
+  });
+
+  // Procesa solo las entidades presentes y relevantes, sin valores ambiguos
+  if (entities['user_lastname:user_lastname'] && entities['user_lastname:user_lastname'][0].value !== '?') {
+      responses.push(`Your last name is ${userInfo.user_lastname || 'not registered'}.`);
+  }
+
+  if (entities['user_name:user_name'] && entities['user_name:user_name'][0].value !== '?') {
+      responses.push(`Your name is ${userInfo.user_name || 'not registered'}.`);
+  }
+
+  if (entities['nDni:nDni'] && entities['nDni:nDni'][0].value !== '?') {
+      responses.push(`Your DNI is ${userInfo.nDni || 'not registered'}.`);
+  }
+
+  if (entities['country:country'] && entities['country:country'][0].value !== '?') {
+      responses.push(`Your country is ${userInfo.country || 'not registered'}.`);
+  }
+
+  if (entities['birthday:birthday'] && entities['birthday:birthday'][0].value !== '?') {
+      responses.push(`Your birthday is ${userInfo.birthday || 'not registered'}.`);
+  }
+
+  if (entities['phone:phone'] && entities['phone:phone'][0].value !== '?') {
+      responses.push(`Your phone number is ${userInfo.phone || 'not registered'}.`);
+  }
+
+  // Unimos todas las respuestas en una sola cadena
+  return responses.length > 0 ? responses.join(' ') : "I couldn't find any information to answer your query.";
+}
+
+
 
   // Maneja el intent `update` para múltiples campos
   private async handleUpdateIntent(entities: any, userId: string): Promise<string> {

@@ -158,6 +158,8 @@ async saveUrlsToDatabase(
     company_product_ids: [companyProductId], // Asegurar que se incluya company_product_ids
   };
 
+  console.log("Datos a guardar en la base de datos:", updateData);
+
   // Guardar en la base de datos
   await this.farmerCertificationsRepository.create(updateData);
 
@@ -165,7 +167,7 @@ async saveUrlsToDatabase(
   return updateData;
 }
 
-// Método existente para subir múltiples archivos (sin cambios)
+// Método para subir múltiples archivos
 async uploadMultipleFiles(
   companyId: string,
   companyProductId: string,
@@ -176,32 +178,51 @@ async uploadMultipleFiles(
   for (const [key, file] of Object.entries(fileMap)) {
     try {
       const result = await this.uploadFileToCloudinary(file, companyId, companyProductId);
-      fileUrls[key] = result.url;
+      console.log(`Archivo ${key} subido a Cloudinary:`, result); // Log del resultado de Cloudinary
+      fileUrls[key] = result.secure_url || result.url; // Usar secure_url si está disponible
     } catch (error) {
+      console.error(`Error al subir ${key} a Cloudinary:`, error.message);
       throw new BadRequestException(`Failed to upload ${key}: ${error.message}`);
     }
   }
 
+  console.log("URLs de los archivos subidos:", fileUrls);
   return fileUrls;
 }
 
-// Método para subir un archivo a Cloudinary (sin cambios)
+// Método para subir un archivo a Cloudinary
 private async uploadFileToCloudinary(
   file: Express.Multer.File,
   companyId: string,
   companyProductId: string,
 ): Promise<UploadApiResponse> {
+
+  // Determinar si el archivo es una imagen o debe ser tratado como 'raw'
+  const isImage = file.mimetype.startsWith("image/");
+  const resourceType = isImage ? "image" : "raw";
+
+  // Eliminar espacios en blanco al principio o al final del nombre del archivo
+  const sanitizedFileName = file.originalname.split('.').slice(0, -1).join('.').trim();
+
   return new Promise((resolve, reject) => {
     Cloudinary.uploader.upload_stream(
       {
-        folder: `companies/${companyId}/products/${companyProductId}`,
-        resource_type: 'auto',
+        folder: `farmer-certifications/companies/${companyId}/products/${companyProductId}`,
+        resource_type: resourceType,
+        use_filename: true,
+        unique_filename: false,
+        public_id: sanitizedFileName, // Usar el nombre sin espacios adicionales
       },
       (error, result) => {
-        if (error) return reject(error);
+        if (error) {
+          console.error("Error en Cloudinary al subir el archivo:", error);
+          return reject(error);
+        }
+        console.log("Resultado de la subida en Cloudinary:", result); // Log del resultado de la subida
         resolve(result);
       },
     ).end(file.buffer);
   });
 }
+
 }
