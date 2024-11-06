@@ -1,3 +1,4 @@
+
 // import React, { useEffect, useState } from "react";
 // import { useForm, SubmitHandler } from "react-hook-form";
 // import { useRouter, useSearchParams } from "next/navigation";
@@ -440,6 +441,7 @@
 
 // export default FormPublishProduct;
 
+
 //-----------------------------------------------------------------------------------------------------------------------------------------------
 import React, { useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -546,15 +548,20 @@ const FormPublishProduct: React.FC<FormPublishProductProps> = ({
   > = async (data) => {
     if (!token) return;
 
-    // Convert text values to numbers before sending the data
-    const productData = {
-      ...data,
-      company_id: selectedCompany,
-      stock: Number(data.stock),
-      minimum_order: Number(data.minimum_order),
-      discount: data.discount ? Number(data.discount) : 0,
-      company_price_x_kg: Number(data.company_price_x_kg),
-    };
+// Convert text values to numbers before sending the data
+const productData = {
+  ...data,
+  company_id: selectedCompany,
+  stock: Number(data.stock),
+  minimum_order: Number(data.minimum_order),
+  discount: data.discount ? Number(data.discount) : 0,
+  company_price_x_kg: Number(data.company_price_x_kg),
+  calories: data.calories ? Number(data.calories) : null,
+  fat: data.fat ? Number(data.fat) : null,
+  protein: data.protein ? Number(data.protein) : null,
+  carbs: data.carbs ? Number(data.carbs) : null,
+};
+
 
     try {
       if (isProductCreated && createdProductId) {
@@ -811,6 +818,42 @@ const FormPublishProduct: React.FC<FormPublishProductProps> = ({
           </div>
         </div>
 
+        {/* Additional Nutritional Information */}
+        <div className="grid grid-cols-4 gap-2">
+          <div className="form-group">
+            <label className="block mb-1 font-medium">Calories</label>
+            <input
+              type="number"
+              {...register("calories")}
+              className="w-full p-1 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+          </div>
+          <div className="form-group">
+            <label className="block mb-1 font-medium">Fat (g)</label>
+            <input
+              type="number"
+              {...register("fat")}
+              className="w-full p-1 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+          </div>
+          <div className="form-group">
+            <label className="block mb-1 font-medium">Protein (g)</label>
+            <input
+              type="number"
+              {...register("protein")}
+              className="w-full p-1 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+          </div>
+          <div className="form-group">
+            <label className="block mb-1 font-medium">Carbs (g)</label>
+            <input
+              type="number"
+              {...register("carbs")}
+              className="w-full p-1 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+          </div>
+        </div>
+
         {/* Buttons */}
         <div className="flex justify-end space-x-2">
           <button
@@ -818,7 +861,7 @@ const FormPublishProduct: React.FC<FormPublishProductProps> = ({
             onClick={handleComeBack}
             className="px-3 py-1 text-gray-700 transition duration-200 ease-in-out border border-gray-400 rounded-md hover:bg-gray-100 hover:border-gray-500 hover:text-gray-800"
           >
-            Come back
+            My products
           </button>
           <button
             type="submit"
@@ -835,7 +878,17 @@ const FormPublishProduct: React.FC<FormPublishProductProps> = ({
             <input
               type="file"
               accept="image/*"
-              disabled={!isProductCreated}
+              onClick={(event) => {
+                if (!isProductCreated) {
+                  event.preventDefault();
+                  Swal.fire({
+                    icon: "warning",
+                    title: "Product Not Created",
+                    text: "Please create the product before uploading an image.",
+                    confirmButtonText: "OK",
+                  });
+                }
+              }}
               onChange={handleFileChange}
               className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
             />
