@@ -40,14 +40,24 @@ export const registerAuthProps = async (userData: IGoogleSession) => {
         });
 
         if (res.ok) {
-            // Si la respuesta es exitosa, devuelves los datos
+            // Si la respuesta es exitosa, devuelve los datos
             return await res.json();
         } else {
-            const errorMessage = await res.text(); 
+            // Si el backend devuelve un error, intenta obtener el mensaje de error
+            let errorMessage = "An error occurred during registration.";
+            try {
+                const errorData = await res.json();
+                errorMessage = errorData.message || errorMessage;
+            } catch {
+                // Si no es un JSON válido, usa el texto de la respuesta como mensaje de error
+                errorMessage = await res.text();
+            }
+            
+            // Mostrar el mensaje exacto del backend en Swal
             Swal.fire({
                 icon: "error",
                 title: "Error",
-                text: errorMessage || "An error occurred during registration.",
+                text: errorMessage,
                 width: 400,
                 padding: "3rem",
                 customClass: {

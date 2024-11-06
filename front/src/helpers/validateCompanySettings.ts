@@ -3,48 +3,53 @@ import { ICompany } from '@/interface/types';
 export const validateCompanySettings = (values: ICompany): Partial<Record<keyof ICompany, string>> => {
   const newErrors: Partial<Record<keyof ICompany, string>> = {};
 
-  const regexName = /^[a-zA-ZÀ-ÿ\s]{3,50}$/; // Nombre de la empresa: 3 a 50 letras y espacios
-  const regexPostalCode = /^\d{5}$/; // Código postal: 5 dígitos
-  const regexWebsite = /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w- ./?%&=]*)?$/; // Validación de URL
+  const regexName = /^[a-zA-ZÀ-ÿ\s]{3,50}$/; // Company name: 3 to 50 letters and spaces
+  const regexPostalCode = /^\d{5}$/; // Postal code: 5 digits
+  const regexWebsite = /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w- ./?%&=]*)?$/; // URL validation
 
-  // Validación del nombre de la empresa
+  // Company name validation
   if (!values.company_name || !regexName.test(values.company_name)) {
-    newErrors.company_name = 'El nombre de la empresa es obligatorio y debe contener entre 3 y 50 caracteres válidos.';
+    newErrors.company_name = 'The company name is required and must contain between 3 and 50 valid characters.';
   }
 
-  // Validación del número de identificación fiscal
+  // Tax identification number validation
   if (values.tax_identification_number === undefined || typeof values.tax_identification_number !== 'number' || values.tax_identification_number <= 0) {
-    newErrors.tax_identification_number = 'El número de identificación fiscal debe ser un número válido y mayor que cero.';
+    newErrors.tax_identification_number = 'The tax identification number must be a valid number greater than zero.';
   }
 
-  // Validación de la dirección
+  // Address validation
   if (!values.address || values.address.length < 5) {
-    newErrors.address = 'La dirección es obligatoria y debe tener al menos 5 caracteres.';
+    newErrors.address = 'The address is required and must be at least 5 characters long.';
   }
 
-  // Validación del código postal
+  // Postal code validation
   if (values.postal_code && !regexPostalCode.test(values.postal_code)) {
-    newErrors.postal_code = 'El código postal debe ser un número de 5 dígitos.';
+    newErrors.postal_code = 'The postal code must be a 5-digit number.';
   }
 
-  // Validación de la ciudad
+  // City validation
   if (!values.city || !regexName.test(values.city)) {
-    newErrors.city = 'La ciudad es obligatoria y debe contener entre 3 y 50 caracteres válidos.';
+    newErrors.city = 'The city is required and must contain between 3 and 50 valid characters.';
   }
 
-  // Validación del estado
+  // State validation
   if (!values.state || !regexName.test(values.state)) {
-    newErrors.state = 'El estado es obligatorio y debe contener entre 3 y 50 caracteres válidos.';
+    newErrors.state = 'The state is required and must contain between 3 and 50 valid characters.';
   }
 
-  // Validación del país
+  // Country validation
   if (!values.country || !regexName.test(values.country)) {
-    newErrors.country = 'El país es obligatorio y debe contener entre 3 y 50 caracteres válidos.';
+    newErrors.country = 'The country is required and must contain between 3 and 50 valid characters.';
   }
 
-  // Validación de la industria
+  // Industry validation
   if (!values.industry || !regexName.test(values.industry)) {
-    newErrors.industry = 'La industria es obligatoria y debe contener entre 3 y 50 caracteres válidos.';
+    newErrors.industry = 'The industry is required and must contain between 3 and 50 valid characters.';
+  }
+
+  // Company description validation
+  if (values.company_description && values.company_description.length < 10) {
+    newErrors.company_description = 'The company description must be at least 10 characters long.';
   }
 
   // Validación del sitio web
@@ -52,10 +57,7 @@ export const validateCompanySettings = (values: ICompany): Partial<Record<keyof 
     newErrors.website = 'El sitio web debe ser una URL válida.';
   }
 
-  // Validación de la descripción de la empresa
-  if (values.company_description && values.company_description.length < 10) {
-    newErrors.company_description = 'La descripción de la empresa debe tener al menos 10 caracteres.';
-  }
-
   return newErrors;
 };
+
+
