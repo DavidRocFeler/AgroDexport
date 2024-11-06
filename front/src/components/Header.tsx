@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import styles from "../styles/Header.module.css";
@@ -25,7 +25,9 @@ const Header: React.FC = () => {
     ? "/LogoTypographic.png"
     : "/LogoTypographicWhite.png";
 
-  const [modalType, setModalType] = React.useState<"login" | "signup" | null>(null);
+  const [modalType, setModalType] = React.useState<"login" | "signup" | null>(
+    null
+  );
   const { clearUserSettings } = useUserSettingsStore();
   const userSettingsStore = useUserSettingsStore((state) => state.userSettings);
 
@@ -45,8 +47,8 @@ const Header: React.FC = () => {
   };
 
   const getFirstName = (fullName: string | undefined) => {
-    if (!fullName) return ''; 
-    return fullName.split(' ')[0];
+    if (!fullName) return "";
+    return fullName.split(" ")[0];
   };
 
   const handleUserPanelClick = () => {
@@ -61,8 +63,12 @@ const Header: React.FC = () => {
     router.push("/admin")
   }
 
+  const handleMarketClick = () => {
+      router.push("/market");
+  };
+
   React.useEffect(() => {
-    setIsHydrated(true);    
+    setIsHydrated(true);
   }, []);
 
   if (!isHydrated) {
@@ -112,6 +118,13 @@ const Header: React.FC = () => {
             User panel
           </button>
           )}
+          <button
+              onClick={handleMarketClick}
+              className="text-[0.9rem] mr-6"
+              style={{ color: textColor }}
+            >
+              Market
+            </button>
           {/* <Link
             href="/tradecontract"
             className="text-[0.9rem]"
@@ -128,15 +141,20 @@ const Header: React.FC = () => {
           </Link> */}
           {isAuthenticated ? (
             <>
-              <span
-                className="mr-[1rem] ml-[1rem] text-[0.9rem]"
-                style={{ color: textColor }}
-              >
-                {capitalizeFirstLetter(role_name)}
-              </span>
-              <span className="text-[0.9rem] text-center flex items-center justify-center" style={{ color: textColor}}>
-                {getFirstName(userSettingsStore?.user_name)} 
-              </span>
+              <div className="flex flex-col items-center">
+                <span
+                  className="text-[1.2rem] text-black font-bold text-center"
+                  style={{ color: textColor }}
+                >
+                  {getFirstName(userSettingsStore?.user_name)}
+                </span>
+                <span
+                  className="text-[0.5rem] text-gray-600" // Tamaño y color de role
+                  style={{ color: textColor }}
+                >
+                  {capitalizeFirstLetter(role_name)}
+                </span>
+              </div>
 
               <button
                 onClick={handleLogout}

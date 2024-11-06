@@ -1,11 +1,12 @@
 import { IUserState } from "@/interface/types";
 import { create } from "zustand";
-import Cookies from 'js-cookie';
-import CryptoJS from 'crypto-js'; 
+import Cookies from "js-cookie";
+import CryptoJS from "crypto-js";
 
 // Clave secreta para encriptación (guárdala en variables de entorno)
 
-const ENCRYPTION_KEY = process.env.NEXT_PUBLIC_ENCRYPTION_KEY || 'tu-clave-secreta';
+const ENCRYPTION_KEY =
+  process.env.NEXT_PUBLIC_ENCRYPTION_KEY || "tu-clave-secreta";
 
 const encryptData = (data: any) => {
   return CryptoJS.AES.encrypt(JSON.stringify(data), ENCRYPTION_KEY).toString();
@@ -22,65 +23,67 @@ const decryptData = (encryptedData: string) => {
 
 // Función para obtener el estado inicial
 const getInitialState = () => {
-  if (typeof window === 'undefined') {
+  if (typeof window === "undefined") {
     return {
       user_id: null,
       token: null,
       role_name: null,
-      isAuthenticated: false
+      isAuthenticated: false,
     };
   }
 
-  const encryptedData = Cookies.get('userState');
+  const encryptedData = Cookies.get("userState");
   if (!encryptedData) {
     return {
       user_id: null,
       token: null,
       role_name: null,
-      isAuthenticated: false
+      isAuthenticated: false,
     };
   }
 
   const decryptedData = decryptData(encryptedData);
-  return decryptedData || {
-    user_id: null,
-    token: null,
-    role_name: null,
-    isAuthenticated: false
-  };
+  return (
+    decryptedData || {
+      user_id: null,
+      token: null,
+      role_name: null,
+      isAuthenticated: false,
+    }
+  );
 };
 
 export const useUserStore = create<IUserState>((set) => ({
   ...getInitialState(),
-  
+
   setUserData: (user_id: string, token: string, role_name: string) => {
-    const userData = { 
-      user_id, 
-      token, 
-      role_name, 
-      isAuthenticated: true 
+    const userData = {
+      user_id,
+      token,
+      role_name,
+      isAuthenticated: true,
     };
-    
-    if (typeof window !== 'undefined') {
-      Cookies.set('userState', encryptData(userData), {
+
+    if (typeof window !== "undefined") {
+      Cookies.set("userState", encryptData(userData), {
         expires: 1,
         secure: true,
-        sameSite: 'strict'
+        sameSite: "strict",
       });
     }
-    
+
     set(userData);
   },
-  
+
   clearUser: () => {
-    if (typeof window !== 'undefined') {
-      Cookies.remove('userState');
+    if (typeof window !== "undefined") {
+      Cookies.remove("userState");
     }
-    set({ 
-      user_id: null, 
-      token: null, 
-      role_name: null, 
-      isAuthenticated: false 
+    set({
+      user_id: null,
+      token: null,
+      role_name: null,
+      isAuthenticated: false,
     });
-  }
+  },
 }));
