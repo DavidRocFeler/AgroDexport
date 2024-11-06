@@ -60,7 +60,8 @@ export const getCompanyProducts = async (companyId: string): Promise<any[]> => {
     });
 
     if (!res.ok) {
-      throw new Error("You currently have no products loaded for this company.");
+      const errorData = await res.json();
+      throw new Error(errorData.message || "Error fetching company products");
     }
 
     return await res.json();
@@ -68,6 +69,7 @@ export const getCompanyProducts = async (companyId: string): Promise<any[]> => {
     throw new Error(error.message || "Unexpected error fetching company products");
   }
 };
+
 
 
 export const deleteCompanyProduct = async (productId: string, token: string): Promise<void> => {
