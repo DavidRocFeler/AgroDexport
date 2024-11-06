@@ -186,8 +186,8 @@
 //   };
 
 //   return (
-//     <div className="max-w-2xl mx-auto p-6 font-inter">
-//       <h2 className="text-2xl font-bold mb-6">
+//     <div className="max-w-2xl p-6 mx-auto font-inter">
+//       <h2 className="mb-6 text-2xl font-bold">
 //         {companyProductId ? "Update Product" : "Add Product"}
 //       </h2>
 //       <form
@@ -208,7 +208,7 @@
 //             className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
 //           />
 //           {errors.company_product_name && (
-//             <p className="text-red-500 text-sm mt-1">
+//             <p className="mt-1 text-sm text-red-500">
 //               {errors.company_product_name.message}
 //             </p>
 //           )}
@@ -225,7 +225,7 @@
 //             rows={4}
 //           />
 //           {errors.company_product_description && (
-//             <p className="text-red-500 text-sm mt-1">
+//             <p className="mt-1 text-sm text-red-500">
 //               {errors.company_product_description.message}
 //             </p>
 //           )}
@@ -248,7 +248,7 @@
 //             ))}
 //           </select>
 //           {errors.category_id && (
-//             <p className="text-red-500 text-sm mt-1">
+//             <p className="mt-1 text-sm text-red-500">
 //               {errors.category_id.message}
 //             </p>
 //           )}
@@ -267,7 +267,7 @@
 //               className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
 //             />
 //             {errors.stock && (
-//               <p className="text-red-500 text-sm mt-1">
+//               <p className="mt-1 text-sm text-red-500">
 //                 {errors.stock.message}
 //               </p>
 //             )}
@@ -289,7 +289,7 @@
 //               className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
 //             />
 //             {errors.minimum_order && (
-//               <p className="text-red-500 text-sm mt-1">
+//               <p className="mt-1 text-sm text-red-500">
 //                 {errors.minimum_order.message}
 //               </p>
 //             )}
@@ -305,7 +305,7 @@
 //               className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
 //             />
 //             {errors.origin && (
-//               <p className="text-red-500 text-sm mt-1">
+//               <p className="mt-1 text-sm text-red-500">
 //                 {errors.origin.message}
 //               </p>
 //             )}
@@ -324,7 +324,7 @@
 //               className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
 //             />
 //             {errors.discount && (
-//               <p className="text-red-500 text-sm mt-1">
+//               <p className="mt-1 text-sm text-red-500">
 //                 {errors.discount.message}
 //               </p>
 //             )}
@@ -345,7 +345,7 @@
 //               className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
 //             />
 //             {errors.company_price_x_kg && (
-//               <p className="text-red-500 text-sm mt-1">
+//               <p className="mt-1 text-sm text-red-500">
 //                 {errors.company_price_x_kg.message}
 //               </p>
 //             )}
@@ -361,7 +361,7 @@
 //               className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
 //             />
 //             {errors.harvest_date && (
-//               <p className="text-red-500 text-sm mt-1">
+//               <p className="mt-1 text-sm text-red-500">
 //                 {errors.harvest_date.message}
 //               </p>
 //             )}
@@ -373,20 +373,20 @@
 //           <button
 //             type="button"
 //             onClick={handleComeBack}
-//             className="px-6 py-2 border border-black text-black hover:bg-gray-50 transition-colors"
+//             className="px-6 py-2 text-black transition-colors border border-black hover:bg-gray-50"
 //           >
 //             Come back
 //           </button>
 //           <button
 //             type="submit"
-//             className="bg-white border border-black text-black px-6 py-2 hover:bg-gray-50 transition-colors"
+//             className="px-6 py-2 text-black transition-colors bg-white border border-black hover:bg-gray-50"
 //           >
 //             {isProductCreated ? "Update Product" : "Create Product"}
 //           </button>
 //         </div>
 
 //         {/* Product Image Upload */}
-//         <div className="form-group space-y-4 mt-6">
+//         <div className="mt-6 space-y-4 form-group">
 //           <label className="block mb-2 font-semibold">Product Image</label>
 //           <div className="relative">
 //             <input
@@ -406,12 +406,12 @@
 //                   <img
 //                     src={filePreview}
 //                     alt="Preview"
-//                     className="max-h-40 object-contain"
+//                     className="object-contain max-h-40"
 //                   />
 //                 </div>
 //               ) : (
 //                 <div className="text-gray-500">
-//                   <File className="mx-auto h-12 w-12 text-gray-400" />
+//                   <File className="w-12 h-12 mx-auto text-gray-400" />
 //                   <p className="mt-1">
 //                     Drop your image here or click to browse
 //                   </p>
@@ -427,7 +427,7 @@
 //           <div className="flex justify-end mt-4">
 //             <button
 //               onClick={handleAddCertificationsClick}
-//               className="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600 transition-colors"
+//               className="px-6 py-2 text-white transition-colors bg-green-500 rounded hover:bg-green-600"
 //             >
 //               Add Farmer Certifications
 //             </button>
@@ -629,8 +629,8 @@ const FormPublishProduct: React.FC<FormPublishProductProps> = ({
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6 font-inter bg-white">
-      <h2 className="text-xl font-bold mb-2">
+    <div className="max-w-2xl p-6 mx-auto bg-white font-inter">
+      <h2 className="mb-2 text-xl font-bold">
         {companyProductId ? "Update Product" : "Add Product"}
       </h2>
       <form
@@ -651,7 +651,7 @@ const FormPublishProduct: React.FC<FormPublishProductProps> = ({
             className="w-full p-1 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
           {errors.company_product_name && (
-            <p className="text-red-500 text-xs mt-1">
+            <p className="mt-1 text-xs text-red-500">
               {errors.company_product_name.message}
             </p>
           )}
@@ -668,7 +668,7 @@ const FormPublishProduct: React.FC<FormPublishProductProps> = ({
             rows={3}
           />
           {errors.company_product_description && (
-            <p className="text-red-500 text-xs mt-1">
+            <p className="mt-1 text-xs text-red-500">
               {errors.company_product_description.message}
             </p>
           )}
@@ -691,7 +691,7 @@ const FormPublishProduct: React.FC<FormPublishProductProps> = ({
             ))}
           </select>
           {errors.category_id && (
-            <p className="text-red-500 text-xs mt-1">
+            <p className="mt-1 text-xs text-red-500">
               {errors.category_id.message}
             </p>
           )}
@@ -710,7 +710,7 @@ const FormPublishProduct: React.FC<FormPublishProductProps> = ({
               className="w-full p-1 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
             {errors.stock && (
-              <p className="text-red-500 text-xs mt-1">
+              <p className="mt-1 text-xs text-red-500">
                 {errors.stock.message}
               </p>
             )}
@@ -732,7 +732,7 @@ const FormPublishProduct: React.FC<FormPublishProductProps> = ({
               className="w-full p-1 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
             {errors.minimum_order && (
-              <p className="text-red-500 text-xs mt-1">
+              <p className="mt-1 text-xs text-red-500">
                 {errors.minimum_order.message}
               </p>
             )}
@@ -748,7 +748,7 @@ const FormPublishProduct: React.FC<FormPublishProductProps> = ({
               className="w-full p-1 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
             {errors.origin && (
-              <p className="text-red-500 text-xs mt-1">
+              <p className="mt-1 text-xs text-red-500">
                 {errors.origin.message}
               </p>
             )}
@@ -767,7 +767,7 @@ const FormPublishProduct: React.FC<FormPublishProductProps> = ({
               className="w-full p-1 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
             {errors.discount && (
-              <p className="text-red-500 text-xs mt-1">
+              <p className="mt-1 text-xs text-red-500">
                 {errors.discount.message}
               </p>
             )}
@@ -788,7 +788,7 @@ const FormPublishProduct: React.FC<FormPublishProductProps> = ({
               className="w-full p-1 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
             {errors.company_price_x_kg && (
-              <p className="text-red-500 text-xs mt-1">
+              <p className="mt-1 text-xs text-red-500">
                 {errors.company_price_x_kg.message}
               </p>
             )}
@@ -804,7 +804,7 @@ const FormPublishProduct: React.FC<FormPublishProductProps> = ({
               className="w-full p-1 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
             {errors.harvest_date && (
-              <p className="text-red-500 text-xs mt-1">
+              <p className="mt-1 text-xs text-red-500">
                 {errors.harvest_date.message}
               </p>
             )}
@@ -816,20 +816,20 @@ const FormPublishProduct: React.FC<FormPublishProductProps> = ({
           <button
             type="button"
             onClick={handleComeBack}
-            className="px-3 py-1 rounded-md border border-gray-400 text-gray-700 hover:bg-gray-100 hover:border-gray-500 hover:text-gray-800 transition duration-200 ease-in-out"
+            className="px-3 py-1 text-gray-700 transition duration-200 ease-in-out border border-gray-400 rounded-md hover:bg-gray-100 hover:border-gray-500 hover:text-gray-800"
           >
             Come back
           </button>
           <button
             type="submit"
-            className="px-3 py-1 rounded-md bg-blue-600 text-white font-semibold hover:bg-blue-700 border border-transparent hover:border-blue-700 transition duration-200 ease-in-out"
+            className="px-3 py-1 font-semibold text-white transition duration-200 ease-in-out bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 hover:border-blue-700"
           >
             {isProductCreated ? "Update Product" : "Create Product"}
           </button>
         </div>
 
         {/* Product Image Upload */}
-        <div className="form-group space-y-2 mt-4">
+        <div className="mt-4 space-y-2 form-group">
           <label className="block mb-1 font-medium">Product Image</label>
           <div className="relative">
             <input
@@ -849,12 +849,12 @@ const FormPublishProduct: React.FC<FormPublishProductProps> = ({
                   <img
                     src={filePreview}
                     alt="Preview"
-                    className="max-h-30 object-contain"
+                    className="object-contain max-h-30"
                   />
                 </div>
               ) : (
                 <div className="text-gray-500">
-                  <File className="mx-auto h-10 w-10 text-gray-400" />
+                  <File className="w-10 h-10 mx-auto text-gray-400" />
                   <p className="mt-1">
                     Drop your image here or click to browse
                   </p>
@@ -870,7 +870,7 @@ const FormPublishProduct: React.FC<FormPublishProductProps> = ({
           <div className="flex justify-end mt-2">
             <button
               onClick={handleAddCertificationsClick}
-              className="bg-green-500 text-white px-4 py-1 rounded hover:bg-green-600 transition-colors"
+              className="px-4 py-1 text-white transition-colors bg-green-500 rounded hover:bg-green-600"
             >
               Add Farmer Certifications
             </button>

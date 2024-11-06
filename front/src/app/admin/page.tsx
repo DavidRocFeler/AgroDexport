@@ -1,4 +1,17 @@
-"use client";
+// import DashboardView from "@/views/DashboardView";
+
+// const Admin: React.FC = () => {
+//   return (
+//     <>
+//       <DashboardView />
+//     </>
+//   );
+// };
+
+// export default Admin;
+
+//----------------------------------------------------------
+("use client");
 
 import React, { useEffect } from "react";
 import DashboardView from "@/views/DashboardView";
