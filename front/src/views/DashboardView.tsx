@@ -368,9 +368,9 @@ const DashboardView: React.FC = () => {
                             onClick={() => handleToggleActiveStatus(user)}
                           >
                             {user.isActive ? (
-                              <X className="w-5 h-5 text-red-600" />
+                              <Check className="w-5 h-5 text-red-600" />
                             ) : (
-                              <Check className="w-5 h-5 text-green-600" />
+                              <X className="w-5 h-5 text-green-600" />
                             )}
                           </button>
                         </td>

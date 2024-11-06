@@ -11,6 +11,7 @@ import NotificationsModal from '@/components/NotificationsModal';
 import { useRouter } from 'next/navigation';
 import { useSocket } from '../server/useSocket';
 import { getNotifications, markNotificationAsRead } from "@/server/notificationsSetting";
+import ChatBotComponent from '@/components/ChatBot';
 
 const PanelUserView: React.FC = () => {
   const supplyChain: ISupplyChainProps[] = supplyChainArray;
@@ -21,6 +22,7 @@ const PanelUserView: React.FC = () => {
   const [isHydrated, setIsHydrated] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [viewAsSupplier, setViewAsSupplier] = useState(true); 
+  const [isChatbotOpen, setIsChatbotOpen] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -85,6 +87,14 @@ const PanelUserView: React.FC = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
     handleMarkAllAsRead();
+  };
+
+  const handleOpenChatbot = () => {
+    setIsChatbotOpen(true);
+  };
+  
+  const handleCloseChatbot = () => {
+    setIsChatbotOpen(false);
   };
 
   const handleRedirectProfile = () => {
@@ -157,6 +167,10 @@ const PanelUserView: React.FC = () => {
             <Bell />
             {unreadCount > 0 && <span className='text-[0.7rem] text-white z-20 absolute bottom-5 right-0 bg-red-700 rounded-full pt-[0.1rem] pb-[0.05rem] pl-[0.5rem] pr-[0.5rem] font-bold '>{unreadCount}</span>}
           </button>
+            {/* Chatbot */}
+          <button onClick={handleOpenChatbot} className='ml-[1rem] w-[2rem] h-[2rem] relative z-10'>
+            <MessageCircle />
+          </button>
         </aside>
 
         <h1 className={styles.UserPanel}>User Panel</h1>
@@ -220,6 +234,22 @@ const PanelUserView: React.FC = () => {
           onClose={handleCloseModal}
         />
       )}
+      
+
+ {/* Modal del Chatbot */}
+{isChatbotOpen && (
+  <div 
+    className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+    onClick={handleCloseChatbot} 
+  >
+    <div 
+      className="bg-white p-4 rounded-lg shadow-lg w-full max-w-lg"
+      onClick={(e) => e.stopPropagation()} 
+    >
+      <ChatBotComponent />
+    </div>
+  </div>
+)}
     </section>
   );
 };
