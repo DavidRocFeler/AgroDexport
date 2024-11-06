@@ -212,6 +212,8 @@ export class UsersRepository {
     const { email, password } = credentials;
     const account = await this.findCredentialByEmail(email);
     
+       
+   
     if (account) {
       if (!account.user.isActive) {
         throw new UnauthorizedException("Account is inactive. Please contact support.");
@@ -221,13 +223,20 @@ export class UsersRepository {
         where: { credential_id: account.credential_id },
         include: { role: true },
       });
+     
   
       const userId = user.user_id;
       const accountPassword = account.password;
+      
+      
       const isPasswordValid = await bcrypt.compare(password, accountPassword);
-  
+      
+      if(isPasswordValid === false) {
+        throw new BadRequestException("Your password or Email is incorrect");
+      }
+
       if (isPasswordValid) {
-        const userPayload = {
+          const userPayload = {
           sub: userId,
           user_id: userId,
           user_name: user.user_name,
@@ -247,7 +256,7 @@ export class UsersRepository {
   }
 
   async findCredentialByEmail(email: string) {
-    return this.prisma.credential.findUnique({
+    const response = await this.prisma.credential.findUnique({
       where: { email },
       include: {
         user: {
@@ -263,7 +272,9 @@ export class UsersRepository {
         },
       },
     });
+    return response
   }
+
   
 
   async findUserByCredentialId(credential_id: string): Promise<User | null> {
