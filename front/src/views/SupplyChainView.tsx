@@ -171,7 +171,7 @@ const SupplyChainView: React.FC = () => {
               <div className="bg-white rounded-2xl shadow-lg p-8 h-[680px]">
                 <div className="h-full flex flex-col justify-between">
                   <div className="flex-1 flex items-center justify-center text-gray-500">
-                    {activeSection === "Farmer" && <FarmerCertificationsGet/>}
+                    {activeSection === "Farmer" && <FarmerCertificationsGet orderId ={selectedOrderId} token={token}/>}
                   </div>
                 </div>
               </div>

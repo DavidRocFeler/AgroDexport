@@ -37,6 +37,19 @@ export class FarmerCertificationController {
         return this.farmerCertificationService.getCertificationsByFarmer(farmerId);
     }
 
+
+    @HttpCode(200)
+    @Get("/order/:orderId")
+    @UseGuards(AuthGuard, RolesGuard)
+    @Roles('buyer', 'admin') 
+    @ApiParam({ name: 'orderId', description: 'ID of the order' })
+    async getFarmerByOrderId(@Param('orderId') orderId: string){
+        console.log("en el controller",orderId);
+        return this.farmerCertificationService.getFarmerByOrderIdService(orderId); 
+    }
+
+
+
     @HttpCode(200)
     @Put(':farmerId')
     @UseGuards(AuthGuard, RolesGuard)
