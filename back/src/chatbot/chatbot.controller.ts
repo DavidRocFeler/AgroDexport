@@ -29,9 +29,14 @@ export class ChatbotController implements OnGatewayConnection, OnGatewayDisconne
 
   // Maneja el mensaje de un usuario y responde con el mensaje del bot
   @SubscribeMessage('user_message')
-  async handleMessage(@MessageBody() message: string, @ConnectedSocket() client: Socket) {
+  async handleMessage(
+    @MessageBody() data: { message: string; userId: string }, // Modificado para recibir un objeto con message y userId
+    @ConnectedSocket() client: Socket
+  ) {
+    const { message, userId } = data; // Desestructurar para obtener message y userId
+
     try {
-      const botResponse = await this.chatbotService.processMessage(message);
+      const botResponse = await this.chatbotService.processMessage(message, userId); // Pasar userId a processMessage
       console.log("Sending bot response to client:", botResponse);
       client.emit('bot_response', { text: botResponse }); // Enviar la respuesta solo al cliente específico
     } catch (error) {

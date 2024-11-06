@@ -1,0 +1,41 @@
+.container {
+    display: flex;
+    flex-direction: column; 
+    justify-content: flex-start; 
+    height: 100vh; 
+  }
+  
+  .FarmeH2 {
+    font-size: 40px;
+    margin: 0;
+    margin-left: -1.5rem;
+    text-align: left; 
+  }
+
+  .FarmeButton {
+    margin-top: 1rem;
+    display: inline-block;
+    justify-content: flex-start; 
+    width: 20rem;  
+    height: 3rem;  
+    line-height: 2rem; 
+    padding: 0.5rem 2rem;
+    font-size: 16px;
+    text-align: center;
+    background-color: black; 
+    color: white;
+    border-radius: 5px; 
+    text-decoration: none; 
+    transition: background-color 0.3s, transform 0.2s; 
+  }
+  
+  .FarmeButton:hover {
+    background-color: #5c8b1b; 
+    transform: scale(1.05); 
+  }
+  
+  .FarmeButton:active {
+    transform: scale(0.98); 
+  }
+  
+  

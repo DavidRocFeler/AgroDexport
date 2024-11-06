@@ -78,82 +78,84 @@ export class CloudinaryController {
   @HttpCode(200)
   @UseGuards(AuthGuard, RolesGuard)
   @Roles('admin', 'supplier')
-@Post('/uploadDocuments/:companyId/:companyProductId')
-@UseInterceptors(FileFieldsInterceptor([
-  { name: 'phytosanitary_certificate', maxCount: 1 },
-  { name: 'agricultural_producer_cert', maxCount: 1 },
-  { name: 'organic_certification', maxCount: 1 },
-  { name: 'quality_certificate', maxCount: 1 },
-  { name: 'certificate_of_origin', maxCount: 1 },
-]))
-@ApiParam({ name: 'companyId', description: 'ID of the company', type: 'string' })
-@ApiParam({ name: 'companyProductId', description: 'ID of the product', type: 'string' })
-@ApiConsumes('multipart/form-data')
-@ApiBody({
-  description: 'Upload specific documents (PDF, DOCX, images) to Cloudinary',
-  required: true,
-  schema: {
-    type: 'object',
-    properties: {
-      phytosanitary_certificate: { type: 'string', format: 'binary' },
-      agricultural_producer_cert: { type: 'string', format: 'binary' },
-      organic_certification: { type: 'string', format: 'binary' },
-      quality_certificate: { type: 'string', format: 'binary' },
-      certificate_of_origin: { type: 'string', format: 'binary' },
+  @Post('/uploadDocuments/:companyId/:companyProductId')
+  @UseInterceptors(FileFieldsInterceptor([
+    { name: 'phytosanitary_certificate', maxCount: 1 },
+    { name: 'agricultural_producer_cert', maxCount: 1 },
+    { name: 'organic_certification', maxCount: 1 },
+    { name: 'quality_certificate', maxCount: 1 },
+    { name: 'certificate_of_origin', maxCount: 1 },
+  ]))
+  @ApiParam({ name: 'companyId', description: 'ID of the company', type: 'string' })
+  @ApiParam({ name: 'companyProductId', description: 'ID of the product', type: 'string' })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    description: 'Upload specific documents (PDF, DOCX, images) to Cloudinary',
+    required: true,
+    schema: {
+      type: 'object',
+      properties: {
+        phytosanitary_certificate: { type: 'string', format: 'binary' },
+        agricultural_producer_cert: { type: 'string', format: 'binary' },
+        organic_certification: { type: 'string', format: 'binary' },
+        quality_certificate: { type: 'string', format: 'binary' },
+        certificate_of_origin: { type: 'string', format: 'binary' },
+      },
     },
-  },
-})
-async uploadDocuments(
-  @Param('companyId') companyId: string,
-  @Param('companyProductId') companyProductId: string,
-  @UploadedFiles() files: {
-    phytosanitary_certificate?: Express.Multer.File[],
-    agricultural_producer_cert?: Express.Multer.File[],
-    organic_certification?: Express.Multer.File[],
-    quality_certificate?: Express.Multer.File[],
-    certificate_of_origin?: Express.Multer.File[],
-  },
-) {
-  // console.log("Archivos recibidos:", files);
-
-  const uploadedFiles = Object.values(files).flat().filter(file => file);
-  if (uploadedFiles.length === 0) {
-    throw new BadRequestException('No files were uploaded.');
+  })
+  async uploadDocuments(
+    @Param('companyId') companyId: string,
+    @Param('companyProductId') companyProductId: string,
+    @UploadedFiles() files: {
+      phytosanitary_certificate?: Express.Multer.File[],
+      agricultural_producer_cert?: Express.Multer.File[],
+      organic_certification?: Express.Multer.File[],
+      quality_certificate?: Express.Multer.File[],
+      certificate_of_origin?: Express.Multer.File[],
+    },
+  ) {
+    console.log("Archivos recibidos en el controlador:", files);
+  
+    const uploadedFiles = Object.values(files).flat().filter(file => file);
+    if (uploadedFiles.length === 0) {
+      throw new BadRequestException('No files were uploaded.');
+    }
+  
+    const fileMap: Record<string, Express.Multer.File> = {};
+    if (files.phytosanitary_certificate?.[0]) {
+      fileMap['phytosanitary_certificate'] = files.phytosanitary_certificate[0];
+    }
+    if (files.agricultural_producer_cert?.[0]) {
+      fileMap['agricultural_producer_cert'] = files.agricultural_producer_cert[0];
+    }
+    if (files.organic_certification?.[0]) {
+      fileMap['organic_certification'] = files.organic_certification[0];
+    }
+    if (files.quality_certificate?.[0]) {
+      fileMap['quality_certificate'] = files.quality_certificate[0];
+    }
+    if (files.certificate_of_origin?.[0]) {
+      fileMap['certificate_of_origin'] = files.certificate_of_origin[0];
+    }
+  
+    console.log("Mapa de archivos para subir a Cloudinary:", fileMap);
+  
+    const fileUrls = await this.cloudinaryService.uploadMultipleFiles(companyId, companyProductId, fileMap);
+  
+    const savedCertification = await this.cloudinaryService.saveUrlsToDatabase(
+      companyId,
+      companyProductId,
+      fileUrls,
+    );
+  
+    console.log("Datos guardados en la base de datos:", savedCertification);
+  
+    return {
+      message: 'Files uploaded and certification saved successfully!',
+      data: savedCertification,
+    };
   }
-
-  // Crear un fileMap usando los nombres de archivo especificados
-  const fileMap: Record<string, Express.Multer.File> = {};
-  if (files.phytosanitary_certificate?.[0]) {
-    fileMap['phytosanitary_certificate'] = files.phytosanitary_certificate[0];
-  }
-  if (files.agricultural_producer_cert?.[0]) {
-    fileMap['agricultural_producer_cert'] = files.agricultural_producer_cert[0];
-  }
-  if (files.organic_certification?.[0]) {
-    fileMap['organic_certification'] = files.organic_certification[0];
-  }
-  if (files.quality_certificate?.[0]) {
-    fileMap['quality_certificate'] = files.quality_certificate[0];
-  }
-  if (files.certificate_of_origin?.[0]) {
-    fileMap['certificate_of_origin'] = files.certificate_of_origin[0];
-  }
-
-  console.log("Archivos recibidos:", fileMap);
-
-  const fileUrls = await this.cloudinaryService.uploadMultipleFiles(companyId, companyProductId, fileMap);
-
-  const savedCertification = await this.cloudinaryService.saveUrlsToDatabase(
-    companyId,
-    companyProductId,
-    fileUrls,
-  );
-
-  return {
-    message: 'Files uploaded and certification saved successfully!',
-    data: savedCertification,
-  };
-}
+  
 
 
   
