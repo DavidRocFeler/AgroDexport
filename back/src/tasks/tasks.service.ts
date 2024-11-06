@@ -36,11 +36,11 @@ export class TasksService {
         const incompleteUsers = await this.usersRepository.findUsersWithIncompleteProfiles();
     
         if (incompleteUsers.length === 0) {
-            console.log('No se encontraron usuarios con perfil incompleto');
+            // console.log('No se encontraron usuarios con perfil incompleto');
             return;
         }
     
-        console.log(`Usuarios con perfil incompleto encontrados: ${incompleteUsers.length}`);
+        // console.log(`Usuarios con perfil incompleto encontrados: ${incompleteUsers.length}`);
     
         for (const user of incompleteUsers) {
             await this.notificationsService.createAndNotifyUser(
@@ -66,11 +66,11 @@ async remindUsersWithoutCompany() {
     const usersWithoutCompanies = await this.usersRepository.findUsersWithoutCompanies();
 
     if (usersWithoutCompanies.length === 0) {
-        console.log('No users without a registered company found');
+        // console.log('No users without a registered company found');
         return;
     }
 
-    console.log(`Users without a registered company found: ${usersWithoutCompanies.length}`);
+    // console.log(`Users without a registered company found: ${usersWithoutCompanies.length}`);
 
     for (const user of usersWithoutCompanies) {
         await this.notificationsService.createAndNotifyUser(
@@ -97,11 +97,11 @@ async remindIncompleteCompanyData() {
     const incompleteCompanies = await this.companyRepository.findIncompleteCompanies();
 
     if (incompleteCompanies.length === 0) {
-        console.log('No incomplete company data found');
+        // console.log('No incomplete company data found');
         return;
     }
 
-    console.log(`Companies with incomplete data found: ${incompleteCompanies.length}`);
+    // console.log(`Companies with incomplete data found: ${incompleteCompanies.length}`);
 
     for (const company of incompleteCompanies) {
         await this.notificationsService.createAndNotifyUser(
