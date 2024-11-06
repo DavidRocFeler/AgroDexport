@@ -57,6 +57,10 @@ const Header: React.FC = () => {
     }
   };
 
+  const handleDashboardClick = () => {
+    router.push("/admin")
+  }
+
   React.useEffect(() => {
     setIsHydrated(true);    
   }, []);
@@ -91,13 +95,23 @@ const Header: React.FC = () => {
           <img src={logoSrc} alt="Logo" className={styles.LogoTypo} />
         </Link>
         <nav className="ml-auto flex items-center space-x-[2rem] mr-[1rem]">
-          <button
+          {role_name === "admin" ? (
+            <button
+            onClick={handleDashboardClick}
+            className="text-[0.9rem]"
+            style={{ color: textColor }}
+          >
+            Dashboard
+          </button>
+          ) : (
+            <button
             onClick={handleUserPanelClick}
             className="text-[0.9rem]"
             style={{ color: textColor }}
           >
             User panel
           </button>
+          )}
           {/* <Link
             href="/tradecontract"
             className="text-[0.9rem]"

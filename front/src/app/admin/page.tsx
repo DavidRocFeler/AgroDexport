@@ -25,7 +25,7 @@ const Admin: React.FC = () => {
   useEffect(() => {
     //If the user is not authenticated or is not an administrator, we redirect.
     if (!isAuthenticated || role_name !== "admin") {
-      router.push("/home");
+      router.push("/");
     }
   }, [role_name, isAuthenticated, router]);
 
