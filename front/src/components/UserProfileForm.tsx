@@ -90,7 +90,7 @@ const UserProfileForm = () => {
       }
     });
 
-    console.log("Field update:", updatedFields);
+    // console.log("Field update:", updatedFields);
 
     try {
       if (user_id) {

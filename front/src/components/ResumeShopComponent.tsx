@@ -85,7 +85,7 @@ const ResumeShopComponent: React.FC<ResumeShopProps> = ({
         text: 'Please select a product before placing the order.',
       });
     }
-    console.log("este es mi consolelog")
+    // console.log("este es mi consolelog")
     if (!selectedCompanyId) {
       return MySwal.fire({
         icon: 'warning',

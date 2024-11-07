@@ -109,10 +109,10 @@ const CompanyForms = () => {
     try {
       if (company_id) {
         
-        console.log("Datos a enviar al backend:", {
-          company_id,
-          companyData,
-        });
+        // console.log("Datos a enviar al backend:", {
+        //   company_id,
+        //   companyData,
+        // });
         await updateCompanySettings(company_id, updatedFields, token);
       
         setOriginalData(companyData);

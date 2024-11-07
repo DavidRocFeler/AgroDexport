@@ -51,7 +51,7 @@ const ShippingAddressForm = () => {
 
   useEffect(() => {
     if (shippingAddressId) {
-      console.log("Shipping Address ID updated to:", shippingAddressId);
+      // console.log("Shipping Address ID updated to:", shippingAddressId);
     }
   }, [shippingAddressId]);
 
@@ -96,7 +96,7 @@ const ShippingAddressForm = () => {
     //   return;
     // }
   
-    console.log('Datos de envío que se van a guardar:', shippingData);
+    // console.log('Datos de envío que se van a guardar:', shippingData);
     
     const updatedFields: Partial<IShippingAddress> = {};
     Object.keys(shippingData).forEach((key) => {

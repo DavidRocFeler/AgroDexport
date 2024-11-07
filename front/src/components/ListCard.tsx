@@ -50,7 +50,7 @@ const ListCard: React.FC<IListCardProps> = ({companyId}) => {
       try {
         const data = await getCompanySettings(companyId, token)
         setCompanyData(data)
-        console.log(data)
+        // console.log(data)
       } catch (error) {
         console.error("failled to get company")
       }

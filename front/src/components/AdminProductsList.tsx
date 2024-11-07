@@ -51,7 +51,7 @@ const AdminProductList: React.FC = () => {
     fetchData();
     const interval = setInterval(() => {
       fetchData();
-    }, 5000); 
+    }, 10000); 
   
     return () => clearInterval(interval);
   }, []);

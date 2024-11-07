@@ -22,7 +22,7 @@ export class TasksService {
     ) {}
 
 
-    @Cron(CronExpression.EVERY_MINUTE)
+    @Cron(CronExpression.EVERY_10_MINUTES)
     async remindIncompleteProfiles() {
         const taskData: CreateTaskDto = {
             task_name: 'Reminder for Incomplete Profiles',
@@ -52,7 +52,7 @@ export class TasksService {
         }
     }  
 
-    @Cron(CronExpression.EVERY_MINUTE)
+    @Cron(CronExpression.EVERY_10_MINUTES)
 async remindUsersWithoutCompany() {
     const taskData: CreateTaskDto = {
         task_name: 'Reminder for Users Without Company',
@@ -83,7 +83,7 @@ async remindUsersWithoutCompany() {
 }
 
 // Tarea para recordar a los usuarios completar los datos de sus compañías
-@Cron(CronExpression.EVERY_MINUTE)
+@Cron(CronExpression.EVERY_10_MINUTES)
 async remindIncompleteCompanyData() {
     const taskData: CreateTaskDto = {
         task_name: 'Reminder for Incomplete Company Data',

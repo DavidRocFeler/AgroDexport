@@ -31,7 +31,7 @@ const UserView: React.FC = () => {
   }, [role_name]);
 
   const handleDelete = (user_id: string) => {
-    console.log(`Deleting user with id: ${user_id}`);
+    // console.log(`Deleting user with id: ${user_id}`);
     // Logic to delete the user
   };
 

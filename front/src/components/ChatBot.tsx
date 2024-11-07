@@ -30,7 +30,7 @@ const ChatBotComponent: React.FC = () => {
       messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages]);
 
-  console.log("Rendered messages in component:", messages);
+  // console.log("Rendered messages in component:", messages);
 
   return (
     <div

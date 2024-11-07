@@ -51,7 +51,7 @@ export const uploadImageToCloudinary = async (
   
     // Verifica el contenido de formData antes de enviarlo
     Array.from(formData.entries()).forEach(([key, value]) => {
-      console.log(`${key}:`, value);
+      // console.log(`${key}:`, value);
     });
   
     try {

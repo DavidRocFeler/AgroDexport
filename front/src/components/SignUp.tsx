@@ -100,7 +100,7 @@ const SignUp: React.FC<ISignUpComponentProps> = ({ onCloseSignUp, onSwitchToLogi
 
     const handleOnSubmitAuth = async (event: React.SyntheticEvent) => {
         event.preventDefault();
-        console.log("UserData before submission:", userData);
+        // console.log("UserData before submission:", userData);
     
         // Verifica si se seleccionó un rol
         if (!userData.role_name) {
