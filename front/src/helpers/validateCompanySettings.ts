@@ -12,14 +12,22 @@ export const validateCompanySettings = (values: ICompany): Partial<Record<keyof 
     newErrors.company_name = 'The company name is required and must contain between 3 and 50 valid characters.';
   }
 
-  // Tax identification number validation
-  if (values.tax_identification_number === undefined || typeof values.tax_identification_number !== 'number' || values.tax_identification_number <= 0) {
-    newErrors.tax_identification_number = 'The tax identification number must be a valid number greater than zero.';
+  // Tax identification number validation (convert to number if it's a string)
+  const taxIdNumber = typeof values.tax_identification_number === 'string'
+    ? Number(values.tax_identification_number)
+    : values.tax_identification_number;
+
+  if (
+    taxIdNumber === undefined ||
+    typeof taxIdNumber !== 'number' ||
+    !/^\d{8,15}$/.test(taxIdNumber.toString())
+  ) {
+    newErrors.tax_identification_number = 'The tax identification number must be a valid number with 8 to 15 digits.';
   }
 
   // Address validation
-  if (!values.address || values.address.length < 5) {
-    newErrors.address = 'The address is required and must be at least 5 characters long.';
+  if (!values.address || values.address.length < 3) {
+    newErrors.address = 'The address is required and must be at least 3 characters long.';
   }
 
   // Postal code validation
@@ -52,9 +60,9 @@ export const validateCompanySettings = (values: ICompany): Partial<Record<keyof 
     newErrors.company_description = 'The company description must be at least 10 characters long.';
   }
 
-  // Validación del sitio web
+  // Website validation
   if (values.website && !regexWebsite.test(values.website)) {
-    newErrors.website = 'El sitio web debe ser una URL válida.';
+    newErrors.website = 'The website must be a valid URL.';
   }
 
   return newErrors;

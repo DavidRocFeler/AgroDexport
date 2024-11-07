@@ -79,20 +79,27 @@ const CompanyForms = () => {
       return;
     }
 
-    const errors = validateCompanySettings(companyData);
-    if (Object.keys(errors).length > 0) {
-      const firstErrorField = Object.keys(errors)[0];
-      const firstErrorMessage = errors[firstErrorField as keyof typeof errors];
+    // const errors = validateCompanySettings(companyData);
+    // if (Object.keys(errors).length > 0) {
+    //   const firstErrorField = Object.keys(errors)[0];
+    //   const firstErrorMessage = errors[firstErrorField as keyof typeof errors];
 
-      if (firstErrorMessage) {
-        Swal.fire({
-          icon: 'warning',
-          title: 'Validation Error',
-          text: `${firstErrorMessage}`,
-        });
-      }
-      return;
-    }
+    //   if (firstErrorMessage) {
+    //     Swal.fire({
+    //       icon: 'warning',
+    //       title: 'Validation Error',
+    //       text: `${firstErrorMessage}`,
+    //     });
+    //   }
+    //   return;
+    // }
+
+    // const updatedFields: Partial<ICompany> = {};
+    // Object.keys(companyData).forEach((key) => {
+    //   if (companyData[key as keyof ICompany] !== originalData[key as keyof ICompany]) {
+    //     updatedFields[key as keyof ICompany] = companyData[key as keyof ICompany];
+    //   }
+    // });
 
     const updatedFields: Partial<ICompany> = {};
     Object.keys(companyData).forEach((key) => {
@@ -130,7 +137,7 @@ const CompanyForms = () => {
       Swal.fire({
         icon: 'warning',
         title: 'Error',
-        text: error,
+        text: error.message || 'An unexpected error occurred.',
       });
       console.error(error);
     }

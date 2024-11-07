@@ -82,20 +82,20 @@ const ShippingAddressForm = () => {
       return;
     }
 
-    const errors = validateShippingAddress(shippingData);
-    if (Object.keys(errors).length > 0) {
-      const firstErrorField = Object.keys(errors)[0];
-      const firstErrorMessage = errors[firstErrorField as keyof typeof errors];
+    // const errors = validateShippingAddress(shippingData);
+    // if (Object.keys(errors).length > 0) {
+    //   const firstErrorField = Object.keys(errors)[0];
+    //   const firstErrorMessage = errors[firstErrorField as keyof typeof errors];
 
-      if (firstErrorMessage) {
-        Swal.fire({
-          icon: 'warning',
-          title: 'Validation Error',
-          text: `${firstErrorMessage}`,
-        });
-      }
-      return;
-    }
+    //   if (firstErrorMessage) {
+    //     Swal.fire({
+    //       icon: 'warning',
+    //       title: 'Validation Error',
+    //       text: `${firstErrorMessage}`,
+    //     });
+    //   }
+    //   return;
+    // }
   
     console.log('Datos de envío que se van a guardar:', shippingData);
     
@@ -124,7 +124,7 @@ const ShippingAddressForm = () => {
       Swal.fire({
         icon: 'warning',
         title: 'Error',
-        text: error.message,
+        text: error.message || 'An unexpected error occurred.'
       });
       console.error("Error saving:", error.message);
     }

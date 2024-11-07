@@ -112,12 +112,12 @@ const StackedCompanyCards: React.FC = () => {
         } else {
           console.error("company_id no encontrado en la respuesta");
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error('Error al crear la compañía:', error);
         await Swal.fire(
-          'Error',
-          'There was an error creating the company',
-          'error'
+            'Error',
+            error.message || 'There was an error creating the company',
+            'error'
         );
       }
     }

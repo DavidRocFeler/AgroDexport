@@ -6,7 +6,7 @@ export const validateShippingAddress = (
   const newErrors: Partial<Record<keyof IShippingAddress, string>> = {};
 
   const regexName = /^[a-zA-ZÀ-ÿÑñ\s]+$/; // Name and surname: only letters and spaces
-  const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Email validation
+  const regexEmail = /^[A-Za-z0-9._%+-]+@(gmail\.com|yahoo\.com|outlook\.com|hotmail\.com|icloud\.com|protonmail\.com|zoho\.com|aol\.com|mail\.com|gmx\.com|yandex\.com|tutanota\.com|fastmail\.com|rediffmail\.com|qq\.com|163\.com)$/;
   const regexPostalCode = /^[a-zA-Z0-9\s\-]+$/; // Postal code: letters, numbers, spaces, and hyphens
   const regexAddress = /^[a-zA-Z0-9\s\-,.#/]+$/; // Address: letters, numbers, spaces, commas, periods, hyphens, and slashes
 

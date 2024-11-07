@@ -484,6 +484,7 @@ export interface ICompany {
       role_name: string;
     };
   };
+  updatedFields?: Partial<ICompany>;
 }
 
 
