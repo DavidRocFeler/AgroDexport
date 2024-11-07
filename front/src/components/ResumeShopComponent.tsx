@@ -55,7 +55,9 @@ const ResumeShopComponent: React.FC<ResumeShopProps> = ({
             icon: 'error',
             title: 'No companies found',
             text: 'Please add a company first.',
+            
           });
+          router.push("/profile");
           return;
         }
         setCompanies(response);

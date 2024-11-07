@@ -270,7 +270,7 @@ const CarShopComponent: React.FC<ILabelComponentProps> = ({ products }) => {
                     text: "The payment was completed successfully",
                   });
                   MySwal.close();
-                  router.push("/orderstatus");
+                  router.push("/purchasehistory");
                 }}
                 onError={(error) => {
                   console.error("Payment failed:", error);
