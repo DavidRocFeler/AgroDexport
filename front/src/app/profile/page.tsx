@@ -6,16 +6,16 @@ import { useUserStore } from "@/store/useUserStore";
 import { useRouter } from "next/navigation";
 
 const Profile: React.FC = () => {
-  const { isAuthenticated } = useUserStore();
+  const { isAuthenticated, token } = useUserStore();
   const router = useRouter();
 
   useEffect(() => {
-    if (!isAuthenticated) {
-      router.push("/home");
+    if (!isAuthenticated || !token) {
+      router.push("/");
     }
-  }, [isAuthenticated, router]);
+  }, [isAuthenticated, token, router]);
 
-  return <>{isAuthenticated && <ProfileView />}</>;
+  return <>{isAuthenticated && token && <ProfileView />}</>;
 };
 
 export default Profile;

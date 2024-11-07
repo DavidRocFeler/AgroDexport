@@ -8,17 +8,16 @@ import { useRouter } from "next/navigation";
 const DetailProduct: React.FC<{ params: { company_id: string } }> = ({
   params,
 }) => {
-  const { isAuthenticated } = useUserStore();
+  const { isAuthenticated, token } = useUserStore();
   const router = useRouter();
 
   useEffect(() => {
-    // Redirige a /home si el usuario no está autenticado
-    if (!isAuthenticated) {
-      router.push("/home");
+    if (!isAuthenticated || !token) {
+      router.push("/");
     }
-  }, [isAuthenticated, router]);
+  }, [isAuthenticated, token, router]);
 
-  return <>{isAuthenticated && <AllDetailView />}</>;
+  return <>{isAuthenticated && token && <AllDetailView />}</>;
 };
 
 export default DetailProduct;
