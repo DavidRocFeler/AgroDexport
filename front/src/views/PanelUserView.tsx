@@ -183,7 +183,7 @@ const PanelUserView: React.FC = () => {
         <nav className='flex flex-row justify-center'>        
           {viewAsSupplier && role_name === "admin" && (
             <>
-              <Link className={styles.RedirectPanel} href="/userpanel">Order Status</Link>
+              <Link className={styles.RedirectPanel} href="/userpanel">Send Order</Link>
               <Link className={styles.RedirectPanel} href="/userpanel">My products</Link>
               <Link className={styles.RedirectPanel} href="/userpanel">Publish Product</Link>
               {/* <Link className={styles.RedirectPanel} href="/payments">Payments</Link>
@@ -192,7 +192,7 @@ const PanelUserView: React.FC = () => {
           )}
           {!viewAsSupplier && role_name === "admin" && (
             <>
-              <Link className={styles.RedirectPanel} href="/userpanel">Order Status</Link>
+              <Link className={styles.RedirectPanel} href="/userpanel">Send Order</Link>
               <Link className={styles.RedirectPanel} href="/userpanel">Cart Shop</Link>
               <Link className={styles.RedirectPanel} href="/userpanel">See Market</Link>
               {/* <Link className={styles.RedirectPanel} href="/payments">Payments</Link>
@@ -201,7 +201,7 @@ const PanelUserView: React.FC = () => {
           )}
           {role_name === "supplier" && ( // Mostrar enlaces para supplier
             <>
-              <Link className={styles.RedirectPanel} href="/orderstatus">Order Status</Link>
+              <Link className={styles.RedirectPanel} href="/orderstatus">Send Order</Link>
               <Link className={styles.RedirectPanel} href="/myproducts">My products</Link>
               <Link className={styles.RedirectPanel} href="/publishproducts">Publish Product</Link>
               {/* <Link className={styles.RedirectPanel} href="/payments">Payments</Link>
@@ -210,7 +210,7 @@ const PanelUserView: React.FC = () => {
           )} 
           {role_name === "buyer" && (
             <>
-              <Link className={styles.RedirectPanel} href="/orderstatus">Order Status</Link>
+              <Link className={styles.RedirectPanel} href="/orderstatus">Send Order</Link>
               <Link className={styles.RedirectPanel} href="/cartshop">Cart Shop</Link>
               <Link className={styles.RedirectPanel} href="/market">See Market</Link>
               {/* <Link className={styles.RedirectPanel} href="/payments">Payments</Link>
