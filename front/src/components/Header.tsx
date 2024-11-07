@@ -9,6 +9,8 @@ import { useRouter } from "next/navigation";
 import { useUserStore } from "@/store/useUserStore";
 import { signOut } from "next-auth/react";
 import useUserSettingsStore from "@/store/useUserSettingsStore";
+import { useState } from "react";
+import ChatBotComponent from "./ChatBot";
 
 const Header: React.FC = () => {
   const pathname = usePathname();
@@ -16,6 +18,19 @@ const Header: React.FC = () => {
   const router = useRouter();
   const [isHydrated, setIsHydrated] = React.useState(false);
   const { clearUser, role_name, isAuthenticated } = useUserStore();
+  const [isChatbotOpen, setIsChatbotOpen] = useState(false);
+
+  const handleOpenChatbot = () => {
+    setIsChatbotOpen(true);
+  };
+  
+  const handleCloseChatbot = () => {
+    setIsChatbotOpen(false);
+  };
+
+  const handleRedirectProfile = () => {
+    router.push("/profile")
+  } 
 
   const backgroundColor = isHomePage ? "#D8FBA7" : "#242424";
   const textColor = isHomePage ? "#000000" : "#D6D6D6";
@@ -102,13 +117,29 @@ const Header: React.FC = () => {
         </Link>
         <nav className="ml-auto flex items-center space-x-[2rem] mr-[1rem]">
           {role_name === "admin" ? (
+            <>
             <button
-            onClick={handleDashboardClick}
-            className="text-[0.9rem]"
-            style={{ color: textColor }}
-          >
-            Dashboard
-          </button>
+              onClick={handleDashboardClick}
+              className="text-[0.9rem]"
+              style={{ color: textColor }}
+            >
+              Dashboard
+            </button>
+            <button
+              onClick={handleRedirectProfile}
+              className="text-[0.9rem]"
+              style={{ color: textColor }}
+            >
+              Profile
+            </button>
+            <button
+              onClick={handleOpenChatbot}
+              className="text-[0.9rem]"
+              style={{ color: textColor }}
+            >
+              Chat bot
+            </button>
+            </>
           ) : (
             <button
             onClick={handleUserPanelClick}
@@ -198,6 +229,19 @@ const Header: React.FC = () => {
             onCloseSignUp={handleCloseModal}
             onSwitchToLogin={() => handleSwitchModal("login")}
           />
+        </div>
+      )}
+      {isChatbotOpen && (
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+          onClick={handleCloseChatbot} 
+        >
+          <div 
+            className="bg-white p-4 rounded-lg shadow-lg w-full max-w-lg"
+            onClick={(e) => e.stopPropagation()} 
+          >
+            <ChatBotComponent />
+          </div>
         </div>
       )}
     </>

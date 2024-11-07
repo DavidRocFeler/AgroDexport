@@ -236,20 +236,20 @@ const PanelUserView: React.FC = () => {
       )}
       
 
- {/* Modal del Chatbot */}
-{isChatbotOpen && (
-  <div 
-    className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
-    onClick={handleCloseChatbot} 
-  >
-    <div 
-      className="bg-white p-4 rounded-lg shadow-lg w-full max-w-lg"
-      onClick={(e) => e.stopPropagation()} 
-    >
-      <ChatBotComponent />
-    </div>
-  </div>
-)}
+    {/* Modal del Chatbot */}
+    {isChatbotOpen && (
+      <div 
+        className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+        onClick={handleCloseChatbot} 
+      >
+        <div 
+          className="bg-white p-4 rounded-lg shadow-lg w-full max-w-lg"
+          onClick={(e) => e.stopPropagation()} 
+        >
+          <ChatBotComponent />
+        </div>
+      </div>
+    )}
     </section>
   );
 };

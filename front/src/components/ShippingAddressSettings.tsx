@@ -5,6 +5,7 @@ import { updateShippingAddress } from "@/server/updateShippingAddress";
 import { useUserStore } from "@/store/useUserStore";
 import Swal from "sweetalert2"
 import { getShippingAddressSettings } from "@/server/getShippingAddress";
+import { validateShippingAddress } from "@/helpers/validateShippingAddress";
 
 const ShippingAddressForm = () => {
   const initialState: IShippingAddress = {
@@ -81,20 +82,20 @@ const ShippingAddressForm = () => {
       return;
     }
 
-    // const errors = validateShippingAddress(shippingData);
-    // if (Object.keys(errors).length > 0) {
-    //   const firstErrorField = Object.keys(errors)[0];
-    //   const firstErrorMessage = errors[firstErrorField as keyof typeof errors];
+    const errors = validateShippingAddress(shippingData);
+    if (Object.keys(errors).length > 0) {
+      const firstErrorField = Object.keys(errors)[0];
+      const firstErrorMessage = errors[firstErrorField as keyof typeof errors];
 
-    //   if (firstErrorMessage) {
-    //     Swal.fire({
-    //       icon: 'warning',
-    //       title: 'Validation Error',
-    //       text: `${firstErrorMessage}`,
-    //     });
-    //   }
-    //   return;
-    // }
+      if (firstErrorMessage) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Validation Error',
+          text: `${firstErrorMessage}`,
+        });
+      }
+      return;
+    }
   
     console.log('Datos de envío que se van a guardar:', shippingData);
     

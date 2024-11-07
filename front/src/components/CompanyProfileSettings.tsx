@@ -79,20 +79,20 @@ const CompanyForms = () => {
       return;
     }
 
-    // const errors = validateCompanySettings(companyData);
-    // if (Object.keys(errors).length > 0) {
-    //   const firstErrorField = Object.keys(errors)[0];
-    //   const firstErrorMessage = errors[firstErrorField as keyof typeof errors];
+    const errors = validateCompanySettings(companyData);
+    if (Object.keys(errors).length > 0) {
+      const firstErrorField = Object.keys(errors)[0];
+      const firstErrorMessage = errors[firstErrorField as keyof typeof errors];
 
-    //   if (firstErrorMessage) {
-    //     Swal.fire({
-    //       icon: 'warning',
-    //       title: 'Validation Error',
-    //       text: `${firstErrorMessage}`,
-    //     });
-    //   }
-    //   return;
-    // }
+      if (firstErrorMessage) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Validation Error',
+          text: `${firstErrorMessage}`,
+        });
+      }
+      return;
+    }
 
     const updatedFields: Partial<ICompany> = {};
     Object.keys(companyData).forEach((key) => {
