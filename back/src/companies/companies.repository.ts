@@ -125,6 +125,15 @@ export class CompanyRepository {
     });
   }
   
+  async findByUserIdAndName(userId: string, companyName: string): Promise<Company | null> {
+    return this.prisma.company.findFirst({
+      where: {
+        user_id: userId,
+        company_name: companyName,
+        isActive: true,
+      },
+    });
+  }
   
 
   async create(companyData: CreateCompanyDto) {

@@ -23,7 +23,7 @@ export class CreateCompanyDto {
   @IsPositive({ message: 'The tax identification number must be a positive number.' })
   @Min(10000000, { message: 'The tax identification number must be at least 8 digits.' })
   @NotEquals(0, { message: 'The tax identification number cannot be all zeros.' })
-  tax_identification_number: number;
+  tax_identification_number?: number;
 
   @ApiProperty({ description: 'Address of the company', example: "Camino del Sol 123", maxLength: 255 })
   @IsOptional() 
@@ -31,7 +31,7 @@ export class CreateCompanyDto {
   @Length(1, 255, { message: 'The address must be between 1 and 255 characters.' })
   @Matches(/^[a-zA-Z0-9\s\-,.#/]+$/, { message: 'The address can only contain letters, numbers, spaces, commas, periods, hyphens, and slashes.' })
   @Matches(/\S/, { message: 'The address cannot consist only of spaces.' })
-  address: string;
+  address?: string;
 
   @ApiProperty({ description: 'Postal code of the company', example: "111112", maxLength: 20 })
   @IsOptional() 
@@ -40,7 +40,7 @@ export class CreateCompanyDto {
   @MaxLength(20, { message: 'The postal code cannot exceed 20 characters.' })
   @Matches(/^[a-zA-Z0-9\s\-]+$/, { message: 'The postal code can only contain letters, numbers, spaces, and hyphens.' })
   @Matches(/\S/, { message: 'The postal code cannot consist only of spaces.' })
-  postal_code: string;
+  postal_code?: string;
  
   @ApiProperty({ description: 'City where the company is located', example: "Zipaquira" })
   @IsOptional() 
@@ -48,7 +48,7 @@ export class CreateCompanyDto {
   @Length(1, 100, { message: 'The city name must be between 1 and 100 characters.' })
   @Matches(/^[a-zA-Z\s\-\'\.]+$/, { message: 'The city can only contain letters, spaces, hyphens, apostrophes, and periods.' })
   @Matches(/\S/, { message: 'The city cannot consist only of spaces.' })
-  city: string;
+  city?: string;
 
   @ApiProperty({ description: 'State where the company is located', example: "Cundinamarca" })
   @IsOptional() 
@@ -56,7 +56,7 @@ export class CreateCompanyDto {
   @Length(1, 100, { message: 'The state name must be between 1 and 100 characters.' })
   @Matches(/^[a-zA-Z\s\-\'\.]+$/, { message: 'The state can only contain letters, spaces, hyphens, apostrophes, and periods.' })
   @Matches(/\S/, { message: 'The state cannot consist only of spaces.' })
-  state: string;
+  state?: string;
 
   @ApiProperty({ description: 'Country where the company is located', example: "Colombia" })
   @IsOptional() 
@@ -64,7 +64,7 @@ export class CreateCompanyDto {
   @Length(1, 100, { message: 'The country name must be between 1 and 100 characters.' })
   @Matches(/^[a-zA-Z\s\-\'\.]+$/, { message: 'The country can only contain letters, spaces, hyphens, apostrophes, and periods.' })
   @Matches(/\S/, { message: 'The country cannot consist only of spaces.' })
-  country: string;
+  country?: string;
 
   @ApiProperty({ description: 'Industry in which the company operates', example: "Cafetera" })
   @IsOptional() 
@@ -72,7 +72,7 @@ export class CreateCompanyDto {
   @Length(1, 100, { message: 'The industry name must be between 1 and 100 characters.' }) 
   @Matches(/^[a-zA-Z\s\-\'\.]+$/, { message: 'The industry can only contain letters, spaces, hyphens, apostrophes, and periods.' }) 
   @Matches(/\S/, { message: 'The industry cannot consist only of spaces.' }) 
-  industry: string;
+  industry?: string;
 
   @ApiProperty({ description: 'Website of the company', example: "www.agroverde.com.co" })
   @IsOptional() 
@@ -85,7 +85,7 @@ export class CreateCompanyDto {
   @IsString({ message: 'The PayPal account must be a string.' })
   @Matches(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, { message: 'The PayPal account must be a valid email format.' }) 
   @Length(1, 255, { message: 'The PayPal account must be between 1 and 255 characters.' }) 
-  account_paypal: string;
+  account_paypal?: string;
 
 
   @ApiProperty({ description: 'Description of the company', example: "Distruibuidora de Cafe", required: false })
@@ -101,11 +101,11 @@ export class CreateCompanyDto {
   @IsOptional() 
   @Matches(/^https?:\/\/[^\s]+$/, { message: 'The company logo must be a valid URL.' }) 
   @Length(1, 255, { message: 'The company logo must be between 1 and 255 characters.' }) 
-  company_logo: string = "https://i.mkt.lu/assets/logo_empresa_5.png"; 
+  company_logo?: string = "https://i.mkt.lu/assets/logo_empresa_5.png"; 
   
   @ApiProperty({ description: 'Indicates whether the company is active or inactive', default: true })
   @IsOptional() 
   @IsBoolean({ message: 'The isActive field must be a boolean value.' }) 
-  isActive: boolean; 
+  isActive?: boolean; 
 
 }

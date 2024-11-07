@@ -149,7 +149,7 @@ const Header: React.FC = () => {
                   {getFirstName(userSettingsStore?.user_name)}
                 </span>
                 <span
-                  className="text-[0.5rem] text-gray-600" // Tamaño y color de role
+                  className="text-[0.7rem] text-gray-600" // Tamaño y color de role
                   style={{ color: textColor }}
                 >
                   {capitalizeFirstLetter(role_name)}

@@ -1,46 +1,31 @@
-// import { ISignUp, ISignUpErrors} from "@/interface/types";
+import { ISignUpForm } from "@/interface/types";
 
-// export const validateRegister = (values: ISignUp) => {
-//     const errors: ISignUpErrors = {};
+export const validateRegister = (data: ISignUpForm): string[] => {
+  const errors: string[] = [];
 
-//     // Validación de name
-//     if (!values.name) {
-//         errors.name = "The name field is required.";
-//     } else {
-//         if (values.name.length < 3) {
-//             errors.name = "The name must have at least 3 characters.";
-//         }
-//         if (values.name.length > 20) {
-//             errors.name = "The name must be less than 20 characters.";
-//         }
-//     }
+  // Validación del nombre
+  const nameRegex = /^[A-Za-zÁ-ÿ]{2,}(?:\s[A-Za-zÁ-ÿ]{2,})*$/;
+  if (data.user_name.trim() === "") errors.push("Name is required");
+  else if (!nameRegex.test(data.user_name)) errors.push("Name must only contain letters and spaces");
 
-//     // Validación de email
-//     if (!values.email) {
-//         errors.email = "The email field is required.";
-//     } else {
-//         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-//         if (!emailRegex.test(values.email)) {
-//             errors.email = "The email must be a valid email address.";
-//         }
-//     }
+  // Validación del apellido
+  if (data.user_lastname.trim() === "") errors.push("Last name is required");
+  else if (!nameRegex.test(data.user_lastname)) errors.push("Last name must only contain letters and spaces");
 
+  // Validación del correo
+  const emailRegex = /^[A-Za-z0-9._%+-]+@(gmail\.com|yahoo\.com|outlook\.com|hotmail\.com|icloud\.com|protonmail\.com|zoho\.com|aol\.com|mail\.com|gmx\.com|yandex\.com|tutanota\.com|fastmail\.com|rediffmail\.com|qq\.com|163\.com)$/;
+  if (data.email.trim() === "") errors.push("Email is required");
+  else if (!emailRegex.test(data.email)) errors.push("Email is not valid");
 
-//     // Validación de password
-//     if (!values.password) {
-//         errors.password = "The password field is required.";
-//     } else {
-//         if (values.password.length < 4) {
-//             errors.password = "The password must have at least 4 characters.";
-//         }
-//         if (values.password.length > 20) {
-//             errors.password = "The password must be less than 20 characters.";
-//         }
-//         const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&€£]).*$/;
-//         if (!passwordRegex.test(values.password)) {
-//             errors.password = "The password must contain at least one letter, one number, and one special character";
-//         }
-//     }
+  // Validación de la contraseña
+  if (data.password.trim() === "") errors.push("Password is required");
+  if (data.password !== data.confirm_password) errors.push("Passwords do not match");
 
-//     return errors;
-// };
+  // Validación del rol
+  if (data.role_name === null) errors.push("Please select if you are a buyer or supplier");
+
+  // Validación de la edad
+  if (!data.isOlder) errors.push("You must confirm that you are of legal age");
+
+  return errors;
+};

@@ -327,7 +327,7 @@ const DashboardView: React.FC = () => {
                     Total Orders Completed
                   </th>
                   <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Active / Disabled
+                    Active / Disable
                   </th>
                 </tr>
               </thead>
@@ -368,9 +368,9 @@ const DashboardView: React.FC = () => {
                             onClick={() => handleToggleActiveStatus(user)}
                           >
                             {user.isActive ? (
-                              <Check className="w-5 h-5 text-red-600" />
+                              <X className="w-5 h-5 text-red-600" />
                             ) : (
-                              <X className="w-5 h-5 text-green-600" />
+                              <Check className="w-5 h-5 text-green-600" />
                             )}
                           </button>
                         </td>
