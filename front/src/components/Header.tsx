@@ -23,14 +23,14 @@ const Header: React.FC = () => {
   const handleOpenChatbot = () => {
     setIsChatbotOpen(true);
   };
-  
+
   const handleCloseChatbot = () => {
     setIsChatbotOpen(false);
   };
 
   const handleRedirectProfile = () => {
-    router.push("/profile")
-  } 
+    router.push("/profile");
+  };
 
   const backgroundColor = isHomePage ? "#D8FBA7" : "#242424";
   const textColor = isHomePage ? "#000000" : "#D6D6D6";
@@ -74,12 +74,20 @@ const Header: React.FC = () => {
     }
   };
 
+  const handleCartShopClick = () => {
+    if (!isAuthenticated) {
+      handleShowLogIn();
+    } else {
+      router.push("/cartshop");
+    }
+  };
+
   const handleDashboardClick = () => {
-    router.push("/admin")
-  }
+    router.push("/admin");
+  };
 
   const handleMarketClick = () => {
-      router.push("/market");
+    router.push("/market");
   };
 
   React.useEffect(() => {
@@ -118,58 +126,78 @@ const Header: React.FC = () => {
         <nav className="ml-auto flex items-center space-x-[2rem] mr-[1rem]">
           {role_name === "admin" ? (
             <>
-            <button
-              onClick={handleDashboardClick}
-              className="text-[0.9rem]"
-              style={{ color: textColor }}
-            >
-              Dashboard
-            </button>
-            <button
-              onClick={handleRedirectProfile}
-              className="text-[0.9rem]"
-              style={{ color: textColor }}
-            >
-              Profile
-            </button>
-            <button
-              onClick={handleOpenChatbot}
-              className="text-[0.9rem]"
-              style={{ color: textColor }}
-            >
-              Chat bot
-            </button>
+              <button
+                onClick={handleDashboardClick}
+                className="text-[0.9rem]"
+                style={{ color: textColor }}
+              >
+                Dashboard
+              </button>
+              <button
+                onClick={handleRedirectProfile}
+                className="text-[0.9rem]"
+                style={{ color: textColor }}
+              >
+                Profile
+              </button>
+              <button
+                onClick={handleOpenChatbot}
+                className="text-[0.9rem]"
+                style={{ color: textColor }}
+              >
+                Chat bot
+              </button>
             </>
           ) : (
-            <button
-            onClick={handleUserPanelClick}
-            className="text-[0.9rem]"
-            style={{ color: textColor }}
-          >
-            User panel
-          </button>
+            // <div>
+            //   <button
+            //     onClick={handleMarketClick}
+            //     className="text-[0.9rem] mr-6"
+            //     style={{ color: textColor }}
+            //   >
+            //     Market
+            //   </button>
+            //   <button
+            //     onClick={handleUserPanelClick}
+            //     className="text-[0.9rem]"
+            //     style={{ color: textColor }}
+            //   >
+            //     User panel
+            //   </button>
+
+            //   <button
+            //     onClick={handleCartShopClick}
+            //     className="text-[0.9rem]"
+            //     style={{ color: textColor }}
+            //   >
+            //     Cart shop
+            //   </button>
+            // </div>
+            <div className="flex gap-2 mr-8">
+              <button
+                onClick={handleMarketClick}
+                className="text-[0.9rem] mr-6"
+                style={{ color: textColor }}
+              >
+                Market
+              </button>
+              <button
+                onClick={handleUserPanelClick}
+                className="text-[0.9rem] mr-6"
+                style={{ color: textColor }}
+              >
+                User panel
+              </button>
+              <button
+                onClick={handleCartShopClick}
+                className="text-[0.9rem]"
+                style={{ color: textColor }}
+              >
+                Cart shop
+              </button>
+            </div>
           )}
-          <button
-              onClick={handleMarketClick}
-              className="text-[0.9rem] mr-6"
-              style={{ color: textColor }}
-            >
-              Market
-            </button>
-          {/* <Link
-            href="/tradecontract"
-            className="text-[0.9rem]"
-            style={{ color: textColor }}
-          >
-            Trade contract
-          </Link>
-          <Link
-            href="/p2p"
-            className="text-[0.9rem]"
-            style={{ color: textColor }}
-          >
-            B2B
-          </Link> */}
+
           {isAuthenticated ? (
             <>
               <div className="flex flex-col items-center">
@@ -180,7 +208,7 @@ const Header: React.FC = () => {
                   {getFirstName(userSettingsStore?.user_name)}
                 </span>
                 <span
-                  className="text-[0.7rem] text-gray-600" // Tamaño y color de role
+                  className="text-[0.7rem] text-gray-600"
                   style={{ color: textColor }}
                 >
                   {capitalizeFirstLetter(role_name)}
@@ -232,13 +260,13 @@ const Header: React.FC = () => {
         </div>
       )}
       {isChatbotOpen && (
-        <div 
+        <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
-          onClick={handleCloseChatbot} 
+          onClick={handleCloseChatbot}
         >
-          <div 
-            className="bg-white p-4 rounded-lg shadow-lg w-full max-w-lg"
-            onClick={(e) => e.stopPropagation()} 
+          <div
+            className="w-full max-w-lg p-4 bg-white rounded-lg shadow-lg"
+            onClick={(e) => e.stopPropagation()}
           >
             <ChatBotComponent />
           </div>
