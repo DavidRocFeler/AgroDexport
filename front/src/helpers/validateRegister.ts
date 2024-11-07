@@ -4,13 +4,14 @@ export const validateRegister = (data: ISignUpForm): string[] => {
   const errors: string[] = [];
 
   // Validación del nombre
-  const nameRegex = /^[A-Za-zÁ-ÿ]{2,}(?:\s[A-Za-zÁ-ÿ]{2,})*$/;
+  const nameRegex = /^[A-Za-zÁ-ÿ]{3,}(?:\s[A-Za-zÁ-ÿ]{3,})*$/;
   if (data.user_name.trim() === "") errors.push("Name is required");
-  else if (!nameRegex.test(data.user_name)) errors.push("Name must only contain letters and spaces");
+  else if (!nameRegex.test(data.user_name)) errors.push("Name must contain only letters and spaces, with each word having at least 3 letters.");
+
 
   // Validación del apellido
   if (data.user_lastname.trim() === "") errors.push("Last name is required");
-  else if (!nameRegex.test(data.user_lastname)) errors.push("Last name must only contain letters and spaces");
+  else if (!nameRegex.test(data.user_lastname)) errors.push("Last name must only contain letters and spaces, with each word having at least 3 letters.");
 
   // Validación del correo
   const emailRegex = /^[A-Za-z0-9._%+-]+@(gmail\.com|yahoo\.com|outlook\.com|hotmail\.com|icloud\.com|protonmail\.com|zoho\.com|aol\.com|mail\.com|gmx\.com|yandex\.com|tutanota\.com|fastmail\.com|rediffmail\.com|qq\.com|163\.com)$/;
