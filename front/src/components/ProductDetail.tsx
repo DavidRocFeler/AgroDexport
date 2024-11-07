@@ -308,10 +308,10 @@ const ProductDetail: React.FC<IAgriProduct> = () => {
             Supplier{" "}
           </button>
           {styles.ButtonSuppier}
-          <button onClick={handleProductId} className={styles.ButtonSupply}>
+          {/* <button onClick={handleProductId} className={styles.ButtonSupply}>
             {" "}
             Supply chain{" "}
-          </button>
+          </button> */}
         </div>
       </div>
     </div>
