@@ -1,9 +1,10 @@
-import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateCompanyDto } from './createCompany.dto';
 import { UpdateCompanyDto } from './updateCompany.dto';
 import { NotificationsService } from '../notifications/notifications.service';
 import { Company } from '@prisma/client';
+import { basename } from 'path';
 
 @Injectable()
 export class CompanyRepository {
@@ -137,6 +138,9 @@ export class CompanyRepository {
   
 
   async create(companyData: CreateCompanyDto) {
+    console.log(companyData)
+
+  
     if (companyData.tax_identification_number && companyData.country) {
         const existingCompany = await this.prisma.company.findFirst({
             where: {

@@ -61,7 +61,7 @@ const AdminDashboardRow: React.FC = () => {
     if (token) {
       try {
         const data: IOrder[] = await getOrders(token);
-        console.log("Orders Data:", data); // Verificar el formato de los datos
+        // console.log("Orders Data:", data); // Verificar el formato de los datos
         setOrders(data);
       } catch (err) {
         console.error("Error loading orders", err);

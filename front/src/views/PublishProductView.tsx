@@ -68,7 +68,7 @@ const PublishProductView: React.FC = () => {
 
             setSelectedCompany(companyToSet);
             didSetCompany.current = true;
-            console.log("Setting selectedCompany to:", companyToSet);
+            // console.log("Setting selectedCompany to:", companyToSet);
           }
 
           const categoryData = await getCategories();
