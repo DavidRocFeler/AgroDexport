@@ -1,4 +1,4 @@
-import { Injectable, ConflictException, NotFoundException } from '@nestjs/common';
+import { Injectable, ConflictException, NotFoundException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateCompanyDto } from './createCompany.dto';
 import * as companiesData from '../assets/companies.json';
@@ -41,6 +41,10 @@ export class CompanyService {
       if (!userExists) {
         throw new NotFoundException('User not found. Please provide a valid user ID.');
       }
+      const companyName = await this.companyRepository.findByName(companyData.company_name);
+      if (companyName) {
+        throw new BadRequestException("A company with the same name already exists");
+    }
   
       return this.companyRepository.create(companyData);
     }

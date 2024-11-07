@@ -260,7 +260,7 @@ const CarShopComponent: React.FC<ILabelComponentProps> = ({ products }) => {
                 amount={totals.total}
                 companyId={totals.productData.company_id}
                 onSuccess={async (details) => {
-                  console.log(details);
+                  // console.log(details);
                   isPaymentSuccessful = true; // Marcar el pago como exitoso
                   await finishedOrder(orderId, token);
                   handleRemoveProduct(selectedProduct.company_product_id);

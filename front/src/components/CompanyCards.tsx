@@ -59,7 +59,7 @@ const StackedCompanyCards: React.FC = () => {
         const requestData: Partial<IShippingAddress> = { company_id: companyId };
   
         const data = await newShippingAddress(requestData, token);
-        console.log('Dirección de envío:', data);
+        // console.log('Dirección de envío:', data);
       } catch (error) {
         console.error('Error al obtener la dirección de envío:', error);
       }
@@ -90,7 +90,7 @@ const StackedCompanyCards: React.FC = () => {
         };
   
         const response = await updateNewCompany(newCompanyData, token);
-        console.log("Respuesta al crear la compañía:", response);
+        // console.log("Respuesta al crear la compañía:", response);
   
         const { company_id, company_name } = response.data;
   

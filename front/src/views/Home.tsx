@@ -89,13 +89,13 @@ const HomeView: React.FC = () => {
   }, [googleSession, handleBackendRegistration, isSessionSent, hasInitialized]);
 
   useEffect(() => {
-    console.log("State currently", {
-      sessionStatus,
-      hasGoogleSession: !!googleSession,
-      isSessionSent,
-      hasInitialized,
-      role: localStorage.getItem("userRole"),
-    });
+    // console.log("State currently", {
+    //   sessionStatus,
+    //   hasGoogleSession: !!googleSession,
+    //   isSessionSent,
+    //   hasInitialized,
+    //   role: localStorage.getItem("userRole"),
+    // });
   }, [sessionStatus, googleSession, isSessionSent, hasInitialized]);
 
   useEffect(() => {

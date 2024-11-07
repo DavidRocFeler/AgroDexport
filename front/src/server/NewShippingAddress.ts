@@ -14,7 +14,7 @@ export const newShippingAddress = async (updatedFields: Partial<IShippingAddress
       });
   
       const data = await response.json();
-      console.log("Data de la dirección de envío:", data); // <-- Aquí
+      // console.log("Data de la dirección de envío:", data); // <-- Aquí
       return data;
     } catch (error) {
       console.error("Error en la actualización de los datos del usuario:", error);
