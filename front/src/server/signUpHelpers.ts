@@ -30,7 +30,7 @@ export const registerProps = async (userData: ISignUpForm) => {
 // front/src/helpers/signUpHelpers.ts
 export const registerAuthProps = async (userData: IGoogleSession) => {
     try {
-        console.log("Sending to backend:", JSON.stringify(userData));
+        // console.log("Sending to backend:", JSON.stringify(userData));
         const res = await fetch(`${API_URL}/auth/thirdsignup`, {
             method: "POST",
             headers: {
@@ -69,7 +69,7 @@ export const registerAuthProps = async (userData: IGoogleSession) => {
     } catch (error: any) {
         // En caso de error en la petición o en el procesamiento
         console.error("Error sending data:", error.message);
-        console.log("Data that failed to send:", JSON.stringify(userData));
+        // console.log("Data that failed to send:", JSON.stringify(userData));
         
         Swal.fire({
             icon: "error",

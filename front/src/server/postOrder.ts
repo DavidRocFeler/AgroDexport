@@ -120,7 +120,7 @@ export const finishedOrder = async (orderId: string, token:string) => {
       console.error('Error al finalizar la orden:', errorText);
       throw new Error('Failed to finished the order');
     }
-    console.log(response)
+    // console.log(response)
     return response
   } catch (error) {
     console.error("Error fetching finished order")

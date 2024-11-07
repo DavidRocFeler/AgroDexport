@@ -32,7 +32,7 @@ const MyProductList: React.FC<MyProductListProps> = ({
   const MySwal = withReactContent(Swal);
 
   useEffect(() => {
-    console.log("Image received:", company_product_img);
+    // console.log("Image received:", company_product_img);
   }, [company_product_img]);
 
   const renderImage = () => {
