@@ -76,6 +76,13 @@ const FormPublishProduct: React.FC<FormPublishProductProps> = ({
               "harvest_date",
               new Date(productData.harvest_date).toISOString().substring(0, 10)
             );
+
+          // Agregar los campos adicionales para carbs, fat, calories y protein
+          setValue("calories", productData.calories ?? null);
+          setValue("fat", productData.fat ?? null);
+          setValue("protein", productData.protein ?? null);
+          setValue("carbs", productData.carbs ?? null);
+
             setFilePreview(productData.company_product_img || null);
             setCreatedProductId(companyProductId);
             setIsProductCreated(true);

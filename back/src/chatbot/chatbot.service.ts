@@ -233,7 +233,7 @@ export class ChatbotService {
 
     if (fields.length > 0) {
       this.updateState[userId] = { fields, awaitingValues: true, isCompanyUpdate };
-      return `Alright, please provide the new values for ${fields.map(f => f.replace('_', ' ')).join(' and ')} in the same order, separated by commas.`;
+      return `Alright, please provide the new value for ${fields[0].replace('_', ' ')}.`;
     }
 
     return "I'm sorry, I couldn't identify which fields you'd like to update.";
