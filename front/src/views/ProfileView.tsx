@@ -74,7 +74,7 @@ const ProfileView: React.FC = () => {
               
           } else if (currentCompanyId) {
               const companyData = await getCompanySettings(currentCompanyId, token);
-              console.log("Company Data:", companyData);
+              // console.log("Company Data:", companyData);
               setProfileImage(companyData.company_logo || "https://media.istockphoto.com/id/1451587807/es/vector/vector-de-icono-de-perfil-de-usuario-avatar-o-icono-de-persona-foto-de-perfil-s%C3%ADmbolo-de.jpg?s=612x612&w=0&k=20&c=JZU0xsfmOHOx4UoiAITFEIwhe16aweLW3Ev4w5PgL2Y=");
           } else {
               setProfileImage("https://media.istockphoto.com/id/1451587807/es/vector/vector-de-icono-de-perfil-de-usuario-avatar-o-icono-de-persona-foto-de-perfil-s%C3%ADmbolo-de.jpg?s=612x612&w=0&k=20&c=JZU0xsfmOHOx4UoiAITFEIwhe16aweLW3Ev4w5PgL2Y=");
