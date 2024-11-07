@@ -35,7 +35,7 @@ const AdminOrderList: React.FC = () => {
   
     const interval = setInterval(() => {
       fetchOrders();
-    }, 50000); 
+    }, 300000); 
   
     return () => clearInterval(interval); 
   }, [token]); 

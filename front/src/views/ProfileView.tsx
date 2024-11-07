@@ -57,7 +57,7 @@ const ProfileView: React.FC = () => {
     };
 
     // Verificar cada 100ms
-    const intervalId = setInterval(checkStorage, 100);
+    const intervalId = setInterval(checkStorage, 10000);
     
     return () => clearInterval(intervalId);
   }, [currentUserId, currentCompanyId]);

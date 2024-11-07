@@ -48,7 +48,7 @@ const CompanyForms = () => {
       }
     };
   
-    const interval = setInterval(fetchCompanySettings, 1000); // Comprueba cada segundo
+    const interval = setInterval(fetchCompanySettings, 10000); // Comprueba cada segundo
     fetchCompanySettings(); // Ejecuta inmediatamente al montar
   
     return () => clearInterval(interval);
