@@ -108,11 +108,6 @@ const UserProfileForm = () => {
         alert("The user's ID could not be obtained.");
       }
     } catch (error: any) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Incomplete Field',
-        text: 'You need to complete a field.',
-      });
       console.error("Error saving:", error.message);
     }
   };
