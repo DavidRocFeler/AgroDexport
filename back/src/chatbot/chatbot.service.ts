@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import axios from 'axios';
 import { UsersRepository } from '../users/users.repository'; 
 import { User, Company } from '@prisma/client';
+import { CompanyRepository } from '../companies/companies.repository';
 
 type UserWithCompanies = User & {
   companies: Company[];
@@ -12,10 +13,15 @@ export class ChatbotService {
   private readonly witUrl = 'https://api.wit.ai/message';
   private readonly accessToken = process.env.WIT_ACCESS_TOKEN;
 
-  constructor(private readonly usersRepository: UsersRepository) {}
+  constructor(private readonly usersRepository: UsersRepository,
+    private readonly companyRepository: CompanyRepository
+  ) {}
 
   // Estado para manejar el flujo de actualización
-  private updateState: { [userId: string]: { fields: string[]; awaitingValues: boolean } } = {};
+  private updateState: { [userId: string]: { fields: string[]; awaitingValues: boolean; isCompanyUpdate?: boolean } } = {};
+  
+  // Estado para manejar el flujo de creación de compañía
+  private createState: { [userId: string]: { fields: string[]; awaitingValues: boolean } } = {};
 
   async processMessage(message: string, userId: string): Promise<string> {
     console.log('Received message:', message);
@@ -25,8 +31,20 @@ export class ChatbotService {
       // Si estamos esperando nuevos valores para una actualización
       if (this.updateState[userId]?.awaitingValues) {
         const fieldsToUpdate = this.updateState[userId].fields;
+        const isCompanyUpdate = this.updateState[userId].isCompanyUpdate;
         delete this.updateState[userId];
+        
+        if (isCompanyUpdate) {
+          return await this.handleUpdateCompanyFields(fieldsToUpdate, message, userId);
+        }
         return await this.handleUpdateFields(fieldsToUpdate, message, userId);
+      }
+
+      // Si estamos esperando el nombre de la compañía para creación
+      if (this.createState[userId]?.awaitingValues) {
+        const fieldsToCreate = this.createState[userId].fields;
+        delete this.createState[userId];
+        return await this.handleCreateCompany(fieldsToCreate, message, userId);
       }
 
       // Solicitud a Wit.ai
@@ -79,6 +97,9 @@ export class ChatbotService {
           case 'update':
             return await this.handleUpdateIntent(entities, userId);
 
+          case 'create':
+            return await this.handleCreateIntent(entities, userId);
+
           default:
             return "I'm sorry, I didn't understand that. Could you please rephrase?";
         }
@@ -104,81 +125,73 @@ export class ChatbotService {
     `;
   }
 
-  // Método para manejar `query` y responder solo con los campos relevantes detectados
-// Método para manejar `query` y responder solo con los campos relevantes detectados
-private handleEntityResponse(entities: any, userInfo: UserWithCompanies): string {
-  const responses = [];
+  private handleEntityResponse(entities: any, userInfo: UserWithCompanies): string {
+    const responses = [];
 
-  // Caso 1: Consultar sobre las compañías del usuario
-  if (entities['company_name:company_name'] && entities['company_name:company_name'][0].value !== '?') {
+    if (entities['company_name:company_name'] && entities['company_name:company_name'][0].value !== '?') {
       if (userInfo.companies && userInfo.companies.length > 0) {
           const companyNames = userInfo.companies.map(company => company.company_name);
           responses.push(`Your company/companies are: ${companyNames.join(', ')}.`);
       } else {
           responses.push("You don't have any registered companies.");
       }
+    }
+
+    const companyAttributes = {
+        'tax_identification_number:tax_identification_number': 'tax_identification_number',
+        'address:address': 'address',
+        'postal_code:postal_code': 'postal_code',
+        'city:city': 'city',
+        'state:state': 'state',
+        'company_country:company_country': 'country',
+        'industry:industry': 'industry',
+        'website:website': 'website',
+        'company_description:company_description': 'company_description'
+    };
+
+    Object.entries(companyAttributes).forEach(([entityKey, attributeKey]) => {
+        if (entities[entityKey]) {
+            if (userInfo.companies && userInfo.companies.length > 0) {
+                userInfo.companies.forEach(company => {
+                    const attributeValue = company[attributeKey] || 'not registered';
+                    responses.push(`The ${attributeKey.replace('_', ' ')} of your company ${company.company_name} is ${attributeValue}.`);
+                });
+            } else {
+                responses.push("You don't have any registered companies.");
+            }
+        }
+    });
+
+    if (entities['user_lastname:user_lastname'] && entities['user_lastname:user_lastname'][0].value !== '?') {
+        responses.push(`Your last name is ${userInfo.user_lastname || 'not registered'}.`);
+    }
+
+    if (entities['user_name:user_name'] && entities['user_name:user_name'][0].value !== '?') {
+        responses.push(`Your name is ${userInfo.user_name || 'not registered'}.`);
+    }
+
+    if (entities['nDni:nDni'] && entities['nDni:nDni'][0].value !== '?') {
+        responses.push(`Your DNI is ${userInfo.nDni || 'not registered'}.`);
+    }
+
+    if (entities['country:country'] && entities['country:country'][0].value !== '?') {
+        responses.push(`Your country is ${userInfo.country || 'not registered'}.`);
+    }
+
+    if (entities['birthday:birthday'] && entities['birthday:birthday'][0].value !== '?') {
+        responses.push(`Your birthday is ${userInfo.birthday || 'not registered'}.`);
+    }
+
+    if (entities['phone:phone'] && entities['phone:phone'][0].value !== '?') {
+        responses.push(`Your phone number is ${userInfo.phone || 'not registered'}.`);
+    }
+
+    return responses.length > 0 ? responses.join(' ') : "I couldn't find any information to answer your query.";
   }
 
-  // Caso 2: Consultar atributos específicos de cada compañía en función de los atributos disponibles
-  const companyAttributes = {
-      'tax_identification_number:tax_identification_number': 'tax_identification_number',
-      'address:address': 'address',
-      'postal_code:postal_code': 'postal_code',
-      'city:city': 'city',
-      'state:state': 'state',
-      'company_country:company_country': 'country',
-      'industry:industry': 'industry',
-      'website:website': 'website',
-      'company_description:company_description': 'company_description'
-  };
-
-  Object.entries(companyAttributes).forEach(([entityKey, attributeKey]) => {
-      if (entities[entityKey]) {
-          if (userInfo.companies && userInfo.companies.length > 0) {
-              userInfo.companies.forEach(company => {
-                  const attributeValue = company[attributeKey] || 'not registered';
-                  responses.push(`The ${attributeKey.replace('_', ' ')} of your company ${company.company_name} is ${attributeValue}.`);
-              });
-          } else {
-              responses.push("You don't have any registered companies.");
-          }
-      }
-  });
-
-  // Procesa solo las entidades presentes y relevantes, sin valores ambiguos
-  if (entities['user_lastname:user_lastname'] && entities['user_lastname:user_lastname'][0].value !== '?') {
-      responses.push(`Your last name is ${userInfo.user_lastname || 'not registered'}.`);
-  }
-
-  if (entities['user_name:user_name'] && entities['user_name:user_name'][0].value !== '?') {
-      responses.push(`Your name is ${userInfo.user_name || 'not registered'}.`);
-  }
-
-  if (entities['nDni:nDni'] && entities['nDni:nDni'][0].value !== '?') {
-      responses.push(`Your DNI is ${userInfo.nDni || 'not registered'}.`);
-  }
-
-  if (entities['country:country'] && entities['country:country'][0].value !== '?') {
-      responses.push(`Your country is ${userInfo.country || 'not registered'}.`);
-  }
-
-  if (entities['birthday:birthday'] && entities['birthday:birthday'][0].value !== '?') {
-      responses.push(`Your birthday is ${userInfo.birthday || 'not registered'}.`);
-  }
-
-  if (entities['phone:phone'] && entities['phone:phone'][0].value !== '?') {
-      responses.push(`Your phone number is ${userInfo.phone || 'not registered'}.`);
-  }
-
-  // Unimos todas las respuestas en una sola cadena
-  return responses.length > 0 ? responses.join(' ') : "I couldn't find any information to answer your query.";
-}
-
-
-
-  // Maneja el intent `update` para múltiples campos
   private async handleUpdateIntent(entities: any, userId: string): Promise<string> {
     const fields = [];
+    let isCompanyUpdate = false;
 
     if (entities['user_name:user_name']) {
       fields.push("user_name");
@@ -195,21 +208,41 @@ private handleEntityResponse(entities: any, userInfo: UserWithCompanies): string
     if (entities['birthday:birthday']) {
       fields.push("birthday");
     }
+    if (entities['nDni:nDni']) {
+      fields.push("nDni");
+    }
+
+    const companyAttributes = {
+      'tax_identification_number:tax_identification_number': 'tax_identification_number',
+      'address:address': 'address',
+      'postal_code:postal_code': 'postal_code',
+      'city:city': 'city',
+      'state:state': 'state',
+      'company_country:company_country': 'country',
+      'industry:industry': 'industry',
+      'website:website': 'website',
+      'company_description:company_description': 'company_description'
+    };
+
+    Object.keys(companyAttributes).forEach(entityKey => {
+      if (entities[entityKey]) {
+        fields.push(companyAttributes[entityKey]);
+        isCompanyUpdate = true;
+      }
+    });
 
     if (fields.length > 0) {
-      this.updateState[userId] = { fields, awaitingValues: true };
-      return `Alright, please provide the new values for ${fields.map(f => f.replace('_', ' ')).join(' and ')} and only for multiple changes, in the same order, separated by commas.`;
+      this.updateState[userId] = { fields, awaitingValues: true, isCompanyUpdate };
+      return `Alright, please provide the new values for ${fields.map(f => f.replace('_', ' ')).join(' and ')} in the same order, separated by commas.`;
     }
 
     return "I'm sorry, I couldn't identify which fields you'd like to update.";
   }
 
-  // Maneja la actualización de múltiples campos
   private async handleUpdateFields(fields: string[], values: string, userId: string): Promise<string> {
     const updates: Record<string, string> = {};
     const valuesArray = values.split(',').map(value => value.trim());
 
-    // Asegura que el número de valores coincida con el de los campos
     if (valuesArray.length !== fields.length) {
       return `The number of values provided (${valuesArray.length}) does not match the number of fields to update (${fields.length}). Please provide values in the correct format, separated by commas.`;
     }
@@ -224,6 +257,74 @@ private handleEntityResponse(entities: any, userInfo: UserWithCompanies): string
     } catch (error) {
       console.error("Error updating user information:", error);
       return "An error occurred while updating your information. Please try again later.";
+    }
+  }
+
+  private async handleUpdateCompanyFields(fields: string[], values: string, userId: string): Promise<string> {
+    const updates: Record<string, string> = {};
+    const valuesArray = values.split(',').map(value => value.trim());
+
+    if (valuesArray.length !== fields.length) {
+      return `The number of values provided (${valuesArray.length}) does not match the number of fields to update (${fields.length}). Please provide values in the correct format, separated by commas.`;
+    }
+
+    fields.forEach((field, index) => {
+      updates[field] = valuesArray[index];
+    });
+
+    try {
+      const userCompanies = await this.companyRepository.findCompaniesByUserId(userId);
+      if (userCompanies.length === 0) {
+        return "You don't have any registered companies to update.";
+      }
+
+      await this.companyRepository.update(userCompanies[0].company_id, updates);
+      return `The ${fields.map(f => f.replace('_', ' ')).join(' and ')} for your company has been successfully updated to "${valuesArray.join(', ')}".`;
+    } catch (error) {
+      console.error("Error updating company information:", error);
+      return "An error occurred while updating your company information. Please try again later.";
+    }
+  }
+
+  private async handleCreateIntent(entities: any, userId: string): Promise<string> {
+    const fields = [];
+
+    if (entities['company_name:company_name']) {
+      fields.push("company_name");
+    }
+
+    if (fields.length > 0) {
+      this.createState[userId] = { fields, awaitingValues: true };
+      return `Please provide the name for your new company.`;
+    }
+
+    return "I'm sorry, I couldn't identify the company name. Could you please provide it?";
+  }
+
+  private async handleCreateCompany(fields: string[], values: string, userId: string): Promise<string> {
+    const valuesArray = values.split(',').map(value => value.trim());
+
+    if (fields.length !== valuesArray.length) {
+      return `The number of values provided does not match the expected fields. Please provide only the company name.`;
+    }
+
+    try {
+      const companyName = valuesArray[0];
+
+      const existingCompany = await this.companyRepository.findByUserIdAndName(userId, companyName);
+      if (existingCompany) {
+        return `You already have a company named "${companyName}". Please choose a different name.`;
+      }
+
+      const newCompany = await this.companyRepository.create({
+        company_name: companyName,
+        user_id: userId,
+      });
+
+      return `The company "${newCompany.company_name}" has been successfully created!`;
+    } catch (error) {
+      console.error("Error creating company:", error);
+      return "An error occurred while creating your company. Please try again later.";
     }
   }
 }
