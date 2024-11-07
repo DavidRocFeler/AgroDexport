@@ -9,6 +9,13 @@ import { getCompanyByUser } from '@/server/getCompanyByUser';
 import { getOrderByCompany } from '@/server/getOrdersHistory';
 import Style from "../styles/SupplyChainView.module.css";
 import FarmerCertificationsGet from '@/components/FarmerCertificationsGet';
+import InternalLogisticGet from '@/components/InternalLogisticGet';
+import { ICustomOfDestiny, ICustomOfOrigin, IDestinyLogistic, IInternalLogistic, IInternationalLogistic } from '@/interface/certificationsTypes';
+import { customOfDestiny, customOfOrigin, destinyLogistic, internalLogistic, internationalLogistic } from '@/helpers/certificationsHelpers';
+import CustomOfOriginGet from '@/components/CustomOfOriginGet';
+import InternationalLogisticGet from '@/components/InternationalLogisticGet';
+import CustomOfDestinyGet from '@/components/CustomOfDestinyGet';
+import DestinyLogisticGet from '@/components/DestinyLogisticGet';
 
 const MySwal = withReactContent(Swal);
 
@@ -20,6 +27,36 @@ const SupplyChainView: React.FC = () => {
     const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(null);
     const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
     const [activeSection, setActiveSection] = useState<string>("Information contact");
+    const [internalLogisticState, setInternalLogisticState] = useState<IInternalLogistic | null>(null);
+    const [customOriginState, setCustomOriginState] = useState<ICustomOfOrigin | null>(null);
+    const [internationalLogisticState, setInternationalLogisticState] = useState<IInternationalLogistic | null>(null);
+    const [customDetinyState, setCustomDestinyState] = useState<ICustomOfDestiny | null>(null);
+    const [destinyLogisticState, setdestinyLogisticState] = useState<IDestinyLogistic | null>(null);
+
+    useEffect(() => {
+        const data = destinyLogistic;
+        setdestinyLogisticState(data); 
+      }, []);
+
+    useEffect(() => {
+        const data = customOfDestiny;
+        setCustomDestinyState(data); 
+      }, []);
+
+    useEffect(() => {
+        const data = internationalLogistic;
+        setInternationalLogisticState(data); 
+      }, []);
+
+    useEffect(() => {
+        const data = customOfOrigin;
+        setCustomOriginState(data); 
+      }, []);
+
+    useEffect(() => {
+        const data = internalLogistic;
+        setInternalLogisticState(data); 
+      }, []);
 
     useEffect(() => {
         const fetchCompanies = async () => {
@@ -91,7 +128,7 @@ const SupplyChainView: React.FC = () => {
 
     const renderButtons = () => {
         if (user_id) {
-          return ["Farmer", "Internal logistic", "Custom of Origin", "International Logistic", "Custom of destiny", "Destiny logistic", "Sent"].map((item, index) => (
+          return ["Farmer", "Internal logistic", "Custom of Origin", "International Logistic", "Custom of destiny", "Destiny logistic"].map((item, index) => (
             <button
               key={index}
               onClick={() => setActiveSection(item)} 
@@ -172,6 +209,21 @@ const SupplyChainView: React.FC = () => {
                 <div className="h-full flex flex-col justify-between">
                   <div className="flex-1 flex items-center justify-center text-gray-500">
                     {activeSection === "Farmer" && <FarmerCertificationsGet orderId ={selectedOrderId} token={token}/>}
+                    {activeSection === "Internal logistic" && internalLogistic && (
+                        <InternalLogisticGet internalLogistic={internalLogistic} />
+                    )}
+                    {activeSection === "Custom of Origin" && customOfOrigin && (
+                        <CustomOfOriginGet customOfOrigin={customOfOrigin} />
+                    )}
+                    {activeSection === "International Logistic" && internationalLogistic && (
+                        <InternationalLogisticGet internationalLogistic={internationalLogistic} />
+                    )}
+                     {activeSection === "Custom of destiny" && customOfDestiny && (
+                        <CustomOfDestinyGet customOfDestiny={customOfDestiny} />
+                    )}
+                    {activeSection === "Destiny logistic" && destinyLogistic && (
+                        <DestinyLogisticGet destinyLogistic={destinyLogistic} />
+                    )}
                   </div>
                 </div>
               </div>

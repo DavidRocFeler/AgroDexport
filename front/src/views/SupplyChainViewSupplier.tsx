@@ -127,7 +127,7 @@ const SupplyChainViewSupplier: React.FC = () => {
   return (
     <main className="pl-[1.5rem] pr-[1.5rem] pt-[2rem] pb-[2rem]  h-[90vh]">
       <div className="flex flex-row items-center mb-[2rem]  ">
-        <h1 className="text-[6rem]  "> Purchase history </h1>
+        <h1 className="text-[6rem]  "> Sales history </h1>
         <div className="ml-auto mt-[2rem] ">
           {loading ? (
             <span className="mr-[1rem]  pb-[0.5rem] pr-[1rem] pl-[1rem]">

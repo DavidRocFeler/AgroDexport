@@ -111,7 +111,7 @@ const UserProfileForm = () => {
       Swal.fire({
         icon: 'warning',
         title: 'Incomplete Field',
-        text: 'You need to complete a field.',
+        text: error.message || 'You need to complete a field.',
       });
       console.error("Error saving:", error.message);
     }

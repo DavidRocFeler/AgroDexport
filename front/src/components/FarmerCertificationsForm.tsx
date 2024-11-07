@@ -12,6 +12,7 @@ import { File as FileIcon } from "lucide-react";
 import { uploadDocumentsToCloudinary } from "@/server/cloudinarySetting";
 import { getProductById } from "@/server/getProduct";
 import { useUserStore } from "@/store/useUserStore";
+import { useRouter } from "next/navigation";
 
 const FarmerCertificationsForm: React.FC<FarmerCertificationsFormProps> = ({
   onCancel,
@@ -35,6 +36,7 @@ const FarmerCertificationsForm: React.FC<FarmerCertificationsFormProps> = ({
   });
   const [selectedFiles, setSelectedFiles] = useState<Record<string, File>>({});
   const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
 
   const urlToFile = async (url: string, fileName: string): Promise<File> => {
     const response = await fetch(url);
@@ -85,6 +87,8 @@ const FarmerCertificationsForm: React.FC<FarmerCertificationsFormProps> = ({
 
           setPreviews(newPreviews); // Actualiza solo con los archivos existentes
         }
+
+        router.push("/myproducts")
       } catch (error) {
         console.error("Error fetching product certification:", error);
         Swal.fire({
