@@ -1,16 +1,3 @@
-// import DashboardView from "@/views/DashboardView";
-
-// const Admin: React.FC = () => {
-//   return (
-//     <>
-//       <DashboardView />
-//     </>
-//   );
-// };
-
-// export default Admin;
-
-//----------------------------------------------------------
 "use client";
 
 import React, { useEffect } from "react";
@@ -19,17 +6,20 @@ import { useUserStore } from "@/store/useUserStore";
 import { useRouter } from "next/navigation";
 
 const Admin: React.FC = () => {
-  const { role_name, isAuthenticated } = useUserStore();
+  const { role_name, isAuthenticated, token } = useUserStore();
   const router = useRouter();
 
   useEffect(() => {
-    //If the user is not authenticated or is not an administrator, we redirect.
-    if (!isAuthenticated || role_name !== "admin") {
+    if (!isAuthenticated || !token || role_name !== "admin") {
       router.push("/");
     }
-  }, [role_name, isAuthenticated, router]);
+  }, [role_name, isAuthenticated, token, router]);
 
-  return <>{isAuthenticated && role_name === "admin" && <DashboardView />}</>;
+  return (
+    <>
+      {isAuthenticated && token && role_name === "admin" && <DashboardView />}
+    </>
+  );
 };
 
 export default Admin;

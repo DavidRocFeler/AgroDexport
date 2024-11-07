@@ -44,7 +44,7 @@ const ShippingAddressForm = () => {
       }
     };
 
-    const interval = setInterval(fetchShippingAddressSettings, 1000);
+    const interval = setInterval(fetchShippingAddressSettings, 10000);
     fetchShippingAddressSettings();
 
     return () => clearInterval(interval);

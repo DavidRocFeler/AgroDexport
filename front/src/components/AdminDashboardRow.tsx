@@ -79,7 +79,7 @@ const AdminDashboardRow: React.FC = () => {
 
     const interval = setInterval(() => {
       fetchData();
-    }, 50000);
+    }, 300000);
 
     return () => clearInterval(interval);
   }, []);

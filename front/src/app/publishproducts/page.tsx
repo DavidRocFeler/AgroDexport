@@ -1,12 +1,22 @@
+"use client";
+
+import React, { useEffect } from "react";
 import PublishProductView from "@/views/PublishProductView";
-import React from "react";
+import { useUserStore } from "@/store/useUserStore";
+import { useRouter } from "next/navigation";
 
 const PublishProducts = () => {
-  return (
-    <div className="bg-[#d8fba7]">
-      <PublishProductView />
-    </div>
-  );
+  const { isAuthenticated, token } = useUserStore();
+  const router = useRouter();
+
+  useEffect(() => {
+    // Redirige a /home si el usuario no está autenticado o no tiene token
+    if (!isAuthenticated || !token) {
+      router.push("/");
+    }
+  }, [isAuthenticated, token, router]);
+
+  return <>{isAuthenticated && token && <PublishProductView />}</>;
 };
 
 export default PublishProducts;
