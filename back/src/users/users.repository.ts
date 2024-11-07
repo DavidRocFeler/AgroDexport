@@ -320,6 +320,11 @@ export class UsersRepository {
         delete updateData.confirm_password;
       }
 
+          // Conversión de `nDni` a BigInt si es un número
+    if (updateData.nDni && typeof updateData.nDni === 'number') {
+      updateData.nDni = BigInt(updateData.nDni);
+    }
+
       const updatedUser = await this.prisma.user.update({
         where: { user_id: id },
         data: updateData,

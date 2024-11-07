@@ -21,6 +21,8 @@ import { JwtModule } from "@nestjs/jwt"
 import { PreloadService } from './preloadService';
 import { EmailModule } from './nodemail/nodemail.module';
 import { ChatbotModule } from './chatbot/chatbot.module';
+import { BigIntInterceptor } from './interceptors/bigint.interceptor';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -50,6 +52,13 @@ import { ChatbotModule } from './chatbot/chatbot.module';
     ChatbotModule,
   ],
   controllers: [AppController],
-  providers: [AppService, PreloadService],
+  providers: [
+    AppService,
+    PreloadService,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: BigIntInterceptor,
+    },
+  ],
 })
 export class AppModule {}

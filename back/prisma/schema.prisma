@@ -11,7 +11,7 @@ model User {
   user_id         String         @id @default(uuid())
   user_name       String         @db.VarChar(50)
   user_lastname   String         @db.VarChar(50)
-  nDni            Int?           @unique
+  nDni            BigInt?           @unique
   birthday        String?
   phone           String?
   country         String?

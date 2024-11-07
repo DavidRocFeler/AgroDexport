@@ -10,7 +10,7 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
     })
     @IsOptional()
     @IsInt()
-    nDni?: number; 
+    nDni?: bigint; 
   
     @ApiProperty({
       description: 'Fecha de nacimiento del usuario',

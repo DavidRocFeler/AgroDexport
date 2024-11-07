@@ -323,9 +323,9 @@ const DashboardView: React.FC = () => {
                   <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Products
                   </th>
-                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  {/* <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Total Orders Completed
-                  </th>
+                  </th> */}
                   <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Active / Disable
                   </th>
@@ -360,9 +360,9 @@ const DashboardView: React.FC = () => {
                         <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
                           {getTotalProductsCount(company, user.role?.role_name)}
                         </td>
-                        <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
+                        {/* <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
                           ${getTotalCompletedOrders(company).toLocaleString()}
-                        </td>
+                        </td> */}
                         <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
                           <button
                             onClick={() => handleToggleActiveStatus(user)}
@@ -402,9 +402,9 @@ const DashboardView: React.FC = () => {
                       <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
                         N/A
                       </td>
-                      <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
+                      {/* <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
                         $0
-                      </td>
+                      </td> */}
                       <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
                         <button onClick={() => handleToggleActiveStatus(user)}>
                           {user.isActive ? (
