@@ -198,13 +198,13 @@ const StackedCompanyCards: React.FC = () => {
           >
             Add
           </button>
-          <span className="text-gray-300">|</span>
+          {/* <span className="text-gray-300">|</span>
           <button
             onClick={handleRemoveCompany}
             className="text-sm text-red-600 hover:text-red-800 font-medium"
           >
             Remove
-          </button>
+          </button> */}
         </div>
       </div>
     </div>
@@ -214,8 +214,8 @@ const StackedCompanyCards: React.FC = () => {
     <div className="relative w-full max-w-md p-6">
       <div className="flex justify-between items-center mb-4">
         <button onClick={handleUserButtonClick} className="text-xl font-semibold text-gray-800 mr-[2rem]">User</button>
-        <Select value={selectedCompany} onValueChange={setSelectedCompany}>
-          <SelectTrigger className="w-48">
+        <Select value={selectedCompany} onValueChange={setSelectedCompany} disabled={companiesData.length === 0}>
+          <SelectTrigger className={`w-48 ${companiesData.length === 0 ? "cursor-not-allowed opacity-50" : ""}`}>
             <SelectValue placeholder="Select company" />
           </SelectTrigger>
           <SelectContent>

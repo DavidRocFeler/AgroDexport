@@ -1,5 +1,5 @@
 "use client";
-import { Bell, MessageCircle } from 'lucide-react';
+import { Bell, MessageCircle, Bot } from 'lucide-react';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import styles from "../styles/UserPanel.module.css";
@@ -163,13 +163,13 @@ const PanelUserView: React.FC = () => {
           </aside>
         )}
         <aside className='w-fit ml-auto mb-[4rem] mr-[2rem]'>
+            {/* Chatbot */}
+          <button onClick={handleOpenChatbot} className='ml-[1rem] w-[2rem] h-[2rem] relative z-10'>
+            <Bot/>
+          </button>
           <button onClick={handleOpenModal} className='ml-[1rem] w-[2rem] h-[2rem] relative z-10'>
             <Bell />
             {unreadCount > 0 && <span className='text-[0.7rem] text-white z-20 absolute bottom-5 right-0 bg-red-700 rounded-full pt-[0.1rem] pb-[0.05rem] pl-[0.5rem] pr-[0.5rem] font-bold '>{unreadCount}</span>}
-          </button>
-            {/* Chatbot */}
-          <button onClick={handleOpenChatbot} className='ml-[1rem] w-[2rem] h-[2rem] relative z-10'>
-            <MessageCircle />
           </button>
         </aside>
 
