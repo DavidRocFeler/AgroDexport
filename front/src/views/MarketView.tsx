@@ -1,5 +1,5 @@
 "use client"
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import ProductSearch from "@/components/ProductSearch";
 import Image from 'next/image';
 import ProductCard from '@/components/ProductCard';
@@ -14,24 +14,24 @@ const MarketView: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [hasMoreProducts, setHasMoreProducts] = useState(true);
+  const [lastFilters, setLastFilters] = useState({}); // Guardar los últimos filtros aplicados
 
   const ROWS = 3;
   const COLS = 4;
   const PRODUCTS_PER_PAGE = ROWS * COLS;
 
-  const loadProducts = async (filters = {}, page = 1, limit = PRODUCTS_PER_PAGE) => {
+  const loadProducts = useCallback(async (filters = {}, page = 1, limit = PRODUCTS_PER_PAGE) => {
     setIsLoading(true);
     try {
       const data: IAgriProduct[] = await getProductDB(filters, limit, page);
 
-      // Actualizar productos solo si hay datos en la respuesta
-      setProducts(data.filter(product => product.isActive));
+      setProducts((prevProducts) => {
+        const newProducts = data.filter((product) => product.isActive);
+        return JSON.stringify(prevProducts) === JSON.stringify(newProducts) ? prevProducts : newProducts;
+      });
       setError(null);
 
-      // Verificar si hay más productos en la página actual
       setHasMoreProducts(data.length === limit);
-      
-      // Si no hay productos y no es la primera página, volver a la página anterior
       if (data.length === 0 && page > 1) {
         setCurrentPage((prevPage) => prevPage - 1);
       }
@@ -41,31 +41,31 @@ const MarketView: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  };
-
-  useEffect(() => {
-    loadProducts({}, currentPage, PRODUCTS_PER_PAGE);
-  }, [currentPage]); // Asegura la recarga cada vez que cambia `currentPage`
-
-  const canGoLeft = currentPage > 1;
-  const canGoRight = hasMoreProducts;
+  }, []);
 
   const goLeft = () => {
-    if (canGoLeft) {
-      setCurrentPage(currentPage - 1);
+    if (currentPage > 1) {
+      setCurrentPage((page) => page - 1);
     }
   };
 
   const goRight = () => {
-    if (canGoRight) {
-      setCurrentPage(currentPage + 1);
+    if (hasMoreProducts) {
+      setCurrentPage((page) => page + 1);
     }
   };
 
   const handleFilterChange = (filters: any) => {
-    setCurrentPage(1);
-    loadProducts(filters, 1, PRODUCTS_PER_PAGE);
+    if (JSON.stringify(filters) !== JSON.stringify(lastFilters)) {
+      setLastFilters(filters);
+      setCurrentPage(1);
+      loadProducts(filters, 1, PRODUCTS_PER_PAGE);
+    }
   };
+
+  useEffect(() => {
+    loadProducts(lastFilters, currentPage, PRODUCTS_PER_PAGE);
+  }, [currentPage, loadProducts, lastFilters]);
 
   return (
     <div className='pb-[3rem]' style={{ background: "white" }}>
@@ -96,8 +96,8 @@ const MarketView: React.FC = () => {
                 <div className="flex justify-between px-8 mt-[4rem]">
                   <button 
                     onClick={goLeft} 
-                    disabled={!canGoLeft}
-                    className={`px-4 py-2 rounded flex flex-row bg-[#5c8b1b] text-white ${!canGoLeft ? 'opacity-50' : 'hover:bg-[#6ea520]'}`}
+                    disabled={currentPage === 1}
+                    className={`px-4 py-2 rounded flex flex-row bg-[#5c8b1b] text-white ${currentPage === 1 ? 'opacity-50' : 'hover:bg-[#6ea520]'}`}
                   >
                     <ArrowLeft/> Prev
                   </button>
@@ -106,8 +106,8 @@ const MarketView: React.FC = () => {
                   </span>
                   <button 
                     onClick={goRight} 
-                    disabled={!canGoRight}
-                    className={`px-4 py-2 rounded flex flex-row bg-[#5c8b1b] text-white ${!canGoRight ? 'opacity-50' : 'hover:bg-[#6ea520]'}`}
+                    disabled={!hasMoreProducts}
+                    className={`px-4 py-2 rounded flex flex-row bg-[#5c8b1b] text-white ${!hasMoreProducts ? 'opacity-50' : 'hover:bg-[#6ea520]'}`}
                   >
                     Next <ArrowRight/>
                   </button>
