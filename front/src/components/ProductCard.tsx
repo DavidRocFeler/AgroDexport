@@ -37,27 +37,24 @@ const ProductCard: React.FC<IAgriProduct> = React.memo(({ company_product_id, co
       discount
     };
 
-    // Usar sessionStorage para datos de sesión
     sessionStorage.setItem("selectedProduct", JSON.stringify(product));
     sessionStorage.setItem("companyId", company_id);
     sessionStorage.setItem("productId", company_product_id);
 
-    // Enviar evento de selección de producto
     window.dispatchEvent(new CustomEvent('productSelected', { detail: product }));
 
-    // Redirigir a la página de detalles del producto
     router.push(`/detailproduct/${company_id}`);
   };
   
   return (
     <div className="relative border h-[28rem] p-[2rem] rounded shadow-lg w-[100%]">
       <Image 
-        src={company_product_img || '/placeholder-image.png'} // Reemplazar con imagen por defecto si es undefined
+        src={company_product_img || '/placeholder-image.png'}
         alt={company_product_name || 'Product Image'} 
         width={300}
         height={200}
         className="w-full h-48 object-cover mb-4 rounded"
-        loading="lazy" // Cargar imágenes de forma perezosa
+        loading="lazy"
       />
       <h2 className="text-lg text-black font-bold">{company_product_name}</h2>
       <p className="text-gray-600">{truncateDescription(company_product_description)}</p>
@@ -69,5 +66,8 @@ const ProductCard: React.FC<IAgriProduct> = React.memo(({ company_product_id, co
     </div>
   );
 });
+
+// Definir el display name para ayudar en la depuración
+ProductCard.displayName = 'ProductCard';
 
 export default ProductCard;
