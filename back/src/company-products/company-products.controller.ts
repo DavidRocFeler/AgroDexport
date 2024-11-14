@@ -23,59 +23,49 @@ export class CompanyProductsController {
   @ApiQuery({ name: 'companyName', required: false, description: 'Name of the company', type: String })
   @ApiQuery({ name: 'minPrice', required: false, description: 'Minimum price per kg', type: Number })
   @ApiQuery({ name: 'maxPrice', required: false, description: 'Maximum price per kg', type: Number })
+  @ApiQuery({ name: 'page', required: false, example: 1, description: 'Page number', type: Number })
+  @ApiQuery({ name: 'limit', required: false, example: 5, description: 'Number of products per page', type: Number })
   async allCompanyProducts(
     @Query('category') category?: string,
     @Query('productName') productName?: string,
     @Query('origin') origin?: string,
     @Query('companyName') companyName?: string,
     @Query('minPrice') minPrice?: number,
-    @Query('maxPrice') maxPrice?: number
+    @Query('maxPrice') maxPrice?: number,
+    @Query('page') page?: number,
+    @Query('limit') limit?: number
   ): Promise<CompanyProduct[]> {
     const filters: any = {};
   
     if (category) {
-      filters.category = {
-        name_category: category,
-      };
+      filters.category = { name_category: category };
     }
   
     if (productName) {
-      filters.company_product_name = {
-        contains: productName,
-        mode: 'insensitive', 
-      };
+      filters.company_product_name = { contains: productName, mode: 'insensitive' };
     }
   
     if (origin) {
-      filters.origin = {
-        contains: origin,
-        mode: 'insensitive'
-      };
+      filters.origin = { contains: origin, mode: 'insensitive' };
     }
   
     if (companyName) {
-      filters.company = {
-        company_name: companyName,
-      };
+      filters.company = { company_name: companyName };
     }
   
     if (minPrice || maxPrice) {
       filters.company_price_x_kg = {};
-      if (minPrice) {
-        filters.company_price_x_kg.gte = minPrice; 
-      }
-      if (maxPrice) {
-        filters.company_price_x_kg.lte = maxPrice; 
-      }
-    }
-
-   
-    if (Object.keys(filters).length === 0) {
-      return this.companyProductsService.findAllServices();
+      if (minPrice) filters.company_price_x_kg.gte = minPrice;
+      if (maxPrice) filters.company_price_x_kg.lte = maxPrice;
     }
   
-    return this.companyProductsService.findAllWithFilters(filters);
+    // Llamada al servicio con filtros, página y límite
+    return this.companyProductsService.findAllWithFilters(filters, page, limit);
   }
+  
+  
+  
+  
   
 
 

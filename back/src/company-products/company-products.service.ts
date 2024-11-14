@@ -17,14 +17,23 @@ export class CompanyProductsService {
   ) {}
 
   
-  async findAllWithFilters(filters: any): Promise<CompanyProduct[]> {
-    return this.companyProductsRepository.findAllWithFilters(filters);
-  }
-
+  async findAllWithFilters(filters: any, page?: number, limit?: number): Promise<CompanyProduct[]> {
+    const pagination: { skip?: number; take?: number } = {};
   
-  async findAllServices(): Promise<CompanyProduct[]> { 
+    if (page && limit) {
+      pagination.skip = (page - 1) * limit;
+      pagination.take = limit;
+    }
+  
+    return this.companyProductsRepository.findAllWithFilters(filters, pagination);
+  }
+  
+  async findAllServices(): Promise<CompanyProduct[]> {
     return this.companyProductsRepository.findAll();
   }
+  
+  
+  
   
   async findAllByCompanyIdServices(companyId: string) {
     

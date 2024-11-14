@@ -11,35 +11,44 @@ import Loading from '@/components/Loading';
 const MarketView: React.FC = () => {
   const [products, setProducts] = useState<IAgriProduct[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true); // Controla solo la carga de las cards
-  const [currentPage, setCurrentPage] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [hasMoreProducts, setHasMoreProducts] = useState(true);
 
   const ROWS = 3;
   const COLS = 4;
   const PRODUCTS_PER_PAGE = ROWS * COLS;
 
-  const loadProducts = async (filters = {}) => {
-    setIsLoading(true); // Inicia la carga solo para las cards
+  const loadProducts = async (filters = {}, page = 1, limit = PRODUCTS_PER_PAGE) => {
+    setIsLoading(true);
     try {
-      const data: IAgriProduct[] = await getProductDB(filters);
-      // console.log(data)
+      const data: IAgriProduct[] = await getProductDB(filters, limit, page);
+
+      // Actualizar productos solo si hay datos en la respuesta
       setProducts(data.filter(product => product.isActive));
       setError(null);
+
+      // Verificar si hay más productos en la página actual
+      setHasMoreProducts(data.length === limit);
+      
+      // Si no hay productos y no es la primera página, volver a la página anterior
+      if (data.length === 0 && page > 1) {
+        setCurrentPage((prevPage) => prevPage - 1);
+      }
     } catch (err) {
       console.error("Error loading products:", err);
-      setError("No se pudieron cargar los productos");
+      setError("Products could not be loaded");
     } finally {
-      setIsLoading(false); // Finaliza la carga solo para las cards
+      setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    loadProducts();
-  }, []);
+    loadProducts({}, currentPage, PRODUCTS_PER_PAGE);
+  }, [currentPage]); // Asegura la recarga cada vez que cambia `currentPage`
 
-  const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
-  const canGoLeft = currentPage > 0;
-  const canGoRight = currentPage < totalPages - 1;
+  const canGoLeft = currentPage > 1;
+  const canGoRight = hasMoreProducts;
 
   const goLeft = () => {
     if (canGoLeft) {
@@ -54,8 +63,8 @@ const MarketView: React.FC = () => {
   };
 
   const handleFilterChange = (filters: any) => {
-    setCurrentPage(0);
-    loadProducts(filters);
+    setCurrentPage(1);
+    loadProducts(filters, 1, PRODUCTS_PER_PAGE);
   };
 
   return (
@@ -65,35 +74,22 @@ const MarketView: React.FC = () => {
         <p className='text-[5rem] text-white w-[30rem] leading-[5rem] absolute top-[5rem] left-[4rem]' style={{ fontFamily: 'Times New Roman' }}> Track your product in real time </p>
       </div>
       <ProductSearch onFilterChange={handleFilterChange} />
-      
+
       <div className='w-[95%] m-auto'>
         {error ? (
           <div>{error}</div>
-        ) : isLoading ? ( // Muestra Loading solo para las cards
+        ) : isLoading ? (
           <Loading />
         ) : (
           <>
             {products.length > 0 ? (
               <div className='relative overflow-hidden'>
-                <div className='flex transition-transform duration-500 ease-in-out' 
-                     style={{ transform: `translateX(-${currentPage * 100}%)` }}>
-                  {Array.from({ length: Math.ceil(products.length / PRODUCTS_PER_PAGE) }).map((_, pageIndex) => (
-                    <div 
-                      key={pageIndex}
-                      className='w-full flex-shrink-0'
-                      style={{ minWidth: '100%' }}
-                    >
-                      <div className='grid grid-cols-4 gap-y-[3rem] gap-x-[3rem]'>
-                        {products
-                          .slice(pageIndex * PRODUCTS_PER_PAGE, (pageIndex + 1) * PRODUCTS_PER_PAGE)
-                          .map((product) => (
-                            <ProductCard 
-                              key={String(product.company_product_id)}
-                              {...product}
-                            />
-                          ))}
-                      </div>
-                    </div>
+                <div className='grid grid-cols-4 gap-y-[3rem] gap-x-[3rem]'>
+                  {products.map((product) => (
+                    <ProductCard 
+                      key={String(product.company_product_id)}
+                      {...product}
+                    />
                   ))}
                 </div>
 
@@ -106,7 +102,7 @@ const MarketView: React.FC = () => {
                     <ArrowLeft/> Prev
                   </button>
                   <span className="py-2">
-                    {currentPage + 1} - {Math.ceil(products.length / PRODUCTS_PER_PAGE)}
+                    {currentPage} - {Math.ceil(120 / PRODUCTS_PER_PAGE)}
                   </span>
                   <button 
                     onClick={goRight} 
@@ -118,7 +114,7 @@ const MarketView: React.FC = () => {
                 </div>
               </div>
             ) : (
-              <div>No hay productos disponibles</div>
+              <div>Products could not be loaded</div>
             )}
           </>
         )}
