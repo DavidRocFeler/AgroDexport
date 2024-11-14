@@ -16,18 +16,18 @@ export class CompanyProductsRepository {
   async findAll(): Promise<CompanyProduct[]> {
     return this.prisma.companyProduct.findMany({
       include: {
-        farmerCertification: true, 
+        farmerCertification: true,
         category: true,
-        company: {  
+        company: {
           select: {
-            company_name: true,  
+            company_name: true,
           },
         },
       },
     });
   }
-
-  async findAllWithFilters(filters: any): Promise<CompanyProduct[]> {
+  
+  async findAllWithFilters(filters: any, pagination: { skip?: number; take?: number } = {}): Promise<CompanyProduct[]> {
     return this.prisma.companyProduct.findMany({
       where: {
         ...filters,
@@ -52,6 +52,8 @@ export class CompanyProductsRepository {
           },
         }),
       },
+      skip: pagination.skip,
+      take: pagination.take,
       include: {
         farmerCertification: true,
         category: true,
@@ -59,6 +61,9 @@ export class CompanyProductsRepository {
       },
     });
   }
+  
+  
+  
   
   
 

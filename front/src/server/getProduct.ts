@@ -2,7 +2,7 @@ import { IAgriProduct } from "@/interface/types";
 
 const APIURL = process.env.NEXT_PUBLIC_API_URL;
 
-export async function getProductDB(filters: any = {}): Promise<IAgriProduct[]> {
+export async function getProductDB(filters: any = {}, limit?: number, page?: number): Promise<IAgriProduct[]> {
   try {
     // Construir query params desde el objeto de filtros
     const queryParams = new URLSearchParams();
@@ -13,6 +13,15 @@ export async function getProductDB(filters: any = {}): Promise<IAgriProduct[]> {
         queryParams.append(key, String(value));
       }
     });
+
+    // Agregar `limit` y `page` si están definidos
+    if (limit !== undefined) {
+      queryParams.append('limit', String(limit));
+    }
+
+    if (page !== undefined) {
+      queryParams.append('page', String(page));
+    }
 
     const url = `${APIURL}/company-products?${queryParams.toString()}`;
 
@@ -30,6 +39,7 @@ export async function getProductDB(filters: any = {}): Promise<IAgriProduct[]> {
     throw Error(error.message || "Unexpected error while fetching products");
   }
 }
+
 
 export const getCategories = async (): Promise<any[]> => {
   try {
@@ -69,7 +79,7 @@ export const getCompanyProducts = async (companyId: string): Promise<any[]> => {
     throw new Error(error.message || "Unexpected error fetching company products");
   }
 };
-
+  
 
 
 export const deleteCompanyProduct = async (productId: string, token: string): Promise<void> => {
