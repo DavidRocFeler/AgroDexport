@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import ProductSearch from "@/components/ProductSearch";
 import Image from 'next/image';
 import ProductCard from '@/components/ProductCard';
@@ -11,46 +11,60 @@ import Loading from '@/components/Loading';
 const MarketView: React.FC = () => {
   const [products, setProducts] = useState<IAgriProduct[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(0);
+  const [isLoading, setIsLoading] = useState(false); // Evitar iniciar en `true`
+  const [currentPage, setCurrentPage] = useState(1);
+  const [hasMoreProducts, setHasMoreProducts] = useState(true);
+  const [lastFilters, setLastFilters] = useState({});
 
   const ROWS = 3;
   const COLS = 4;
   const PRODUCTS_PER_PAGE = ROWS * COLS;
 
-  const loadProducts = async (filters = {}) => {
+  // Función para cargar productos
+  const loadProducts = useCallback(async (filters = {}, page = 1, limit = PRODUCTS_PER_PAGE) => {
+    if (isLoading) return; // Evitar múltiples solicitudes simultáneas
     setIsLoading(true);
+    setProducts([]); // Limpia los productos mientras carga
     try {
-      const data: IAgriProduct[] = await getProductDB(filters);
-      setProducts(data.filter(product => product.isActive));
+      const data: IAgriProduct[] = await getProductDB(filters, limit, page);
+      console.log(`Loaded products for page ${page}:`, data);
+
+      if (data.length > 0) {
+        setProducts(data.filter(product => product.isActive));
+        setHasMoreProducts(data.length === limit);
+      } else {
+        setCurrentPage(1); // Si no hay productos, reinicia a la página 1
+        setHasMoreProducts(false); // No hay más productos para cargar
+      }
       setError(null);
     } catch (err) {
       console.error("Error loading products:", err);
       setError("No se pudieron cargar los productos");
     } finally {
-      setIsLoading(false);
+      setIsLoading(false); // Asegurarse de que el loading finalice
     }
-  };
+  }, [isLoading]);
 
+  // Efecto para cargar productos al cambiar de página o filtros
   useEffect(() => {
-    loadProducts();
-  }, []);
-
-  const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
-  const canGoLeft = currentPage > 0;
-  const canGoRight = currentPage < totalPages - 1;
+    loadProducts(lastFilters, currentPage, PRODUCTS_PER_PAGE);
+  }, [currentPage, lastFilters]); // Dependencias mínimas para evitar bucles
 
   const goLeft = () => {
-    if (canGoLeft) setCurrentPage(currentPage - 1);
+    if (currentPage > 1) setCurrentPage(prev => prev - 1);
   };
 
   const goRight = () => {
-    if (canGoRight) setCurrentPage(currentPage + 1);
+    if (hasMoreProducts) {
+      setCurrentPage(prev => prev + 1);
+    } else {
+      setCurrentPage(1); // Volver a la página 1 si no hay más productos
+    }
   };
 
   const handleFilterChange = (filters: any) => {
-    setCurrentPage(0);
-    loadProducts(filters);
+    setLastFilters(filters);
+    setCurrentPage(1); // Reinicia la página al cambiar filtros
   };
 
   return (
@@ -79,41 +93,28 @@ const MarketView: React.FC = () => {
           <>
             {products.length > 0 ? (
               <div className="relative overflow-hidden">
-                <div
-                  className="flex transition-transform duration-500 ease-in-out"
-                  style={{ transform: `translateX(-${currentPage * 100}%)` }}
-                >
-                  {Array.from({ length: Math.ceil(products.length / PRODUCTS_PER_PAGE) }).map((_, pageIndex) => (
-                    <div key={pageIndex} className="w-full flex-shrink-0" style={{ minWidth: '100%' }}>
-                      <div className="grid grid-cols-4 gap-y-[3rem] gap-x-[3rem]">
-                        {products
-                          .slice(pageIndex * PRODUCTS_PER_PAGE, (pageIndex + 1) * PRODUCTS_PER_PAGE)
-                          .map((product) => (
-                            <ProductCard key={String(product.company_product_id)} {...product} />
-                          ))}
-                      </div>
-                    </div>
+                <div className="grid grid-cols-4 gap-y-[3rem] gap-x-[3rem]">
+                  {products.map(product => (
+                    <ProductCard key={product.company_product_id} {...product} />
                   ))}
                 </div>
 
                 <div className="flex justify-between px-8 mt-[4rem]">
                   <button
                     onClick={goLeft}
-                    disabled={!canGoLeft}
+                    disabled={currentPage === 1}
                     className={`px-4 py-2 rounded flex flex-row bg-[#5c8b1b] text-white ${
-                      !canGoLeft ? 'opacity-50' : 'hover:bg-[#6ea520]'
+                      currentPage === 1 ? 'opacity-50' : 'hover:bg-[#6ea520]'
                     }`}
                   >
                     <ArrowLeft /> Prev
                   </button>
-                  <span className="py-2">
-                    {currentPage + 1} - {Math.ceil(products.length / PRODUCTS_PER_PAGE)}
-                  </span>
+                  <span className="py-2">Page {currentPage}</span>
                   <button
                     onClick={goRight}
-                    disabled={!canGoRight}
+                    disabled={!hasMoreProducts}
                     className={`px-4 py-2 rounded flex flex-row bg-[#5c8b1b] text-white ${
-                      !canGoRight ? 'opacity-50' : 'hover:bg-[#6ea520]'
+                      !hasMoreProducts ? 'opacity-50' : 'hover:bg-[#6ea520]'
                     }`}
                   >
                     Next <ArrowRight />

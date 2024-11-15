@@ -1,6 +1,6 @@
 "use client";
 import { IAgriProduct } from '@/interface/types';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { ShoppingCart } from 'lucide-react';
@@ -27,9 +27,12 @@ const ProductCard: React.FC<IAgriProduct> = React.memo(
   }) => {
     const router = useRouter();
 
-    const truncateDescription = (description: string) => {
-      return description.length > 44 ? `${description.slice(0, 44)}...` : description;
-    };
+    // Memoizar la descripción truncada para evitar cálculos innecesarios
+    const truncatedDescription = useMemo(() => {
+      return company_product_description.length > 44
+        ? `${company_product_description.slice(0, 44)}...`
+        : company_product_description;
+    }, [company_product_description]);
 
     const handleButtonProduct = () => {
       const product = {
@@ -52,9 +55,12 @@ const ProductCard: React.FC<IAgriProduct> = React.memo(
         discount,
       };
 
-      localStorage.setItem("selectedProduct", JSON.stringify(product));
-      localStorage.setItem("companyId", company_id);
-      localStorage.setItem("productId", company_product_id);
+      // Almacenar en localStorage solo si es necesario
+      if (localStorage.getItem("selectedProduct") !== JSON.stringify(product)) {
+        localStorage.setItem("selectedProduct", JSON.stringify(product));
+        localStorage.setItem("companyId", company_id);
+        localStorage.setItem("productId", company_product_id);
+      }
 
       window.dispatchEvent(new CustomEvent("productSelected", { detail: product }));
       router.push(`/detailproduct/${company_id}`);
@@ -67,13 +73,12 @@ const ProductCard: React.FC<IAgriProduct> = React.memo(
           alt={company_product_name || 'Product Image'}
           width={300}
           height={200}
-          className="w-full h-48 object-cover mb-4 rounded" // Asegurando que mantenga el estilo original
+          className="w-full h-48 object-cover mb-4 rounded"
           quality={75}
           loading="lazy"
-          style={{ objectFit: 'cover', width: '100%', height: '200px', borderRadius: '8px' }} // Tamaño y estilo personalizado
         />
         <h2 className="text-lg text-black font-bold">{company_product_name}</h2>
-        <p className="text-gray-600">{truncateDescription(company_product_description)}</p>
+        <p className="text-gray-600">{truncatedDescription}</p>
         <p className="text-green-700 font-bold absolute bottom-20">${company_price_x_kg}</p>
         <button
           onClick={handleButtonProduct}
